@@ -13,11 +13,30 @@ class AddCurrencyPage extends StatefulWidget {
 
 class _AddCurrencyPageState extends State<AddCurrencyPage> {
   List<Currency> selectedCurrencies = [];
+  List<Currency> filteredCurrencies = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    filteredCurrencies = widget.existingCurrencies; // Start with all currencies
     _loadSelectedCurrencies();
+    searchController.addListener(_filterCurrencies);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterCurrencies() {
+    String searchTerm = searchController.text.toLowerCase();
+    setState(() {
+      filteredCurrencies = widget.existingCurrencies
+          .where((currency) => currency.name.toLowerCase().contains(searchTerm))
+          .toList();
+    });
   }
 
   void _loadSelectedCurrencies() async {
@@ -55,27 +74,44 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: widget.existingCurrencies.length,
-        itemBuilder: (context, index) {
-          Currency currency = widget.existingCurrencies[index];
-          bool isSelected = selectedCurrencies.contains(currency);
-          return ListTile(
-            title: Text(currency.name),
-            trailing: isSelected
-                ? const Icon(Icons.check_circle)
-                : const Icon(Icons.check_circle_outline),
-            onTap: () {
-              setState(() {
-                if (isSelected) {
-                  selectedCurrencies.remove(currency);
-                } else {
-                  selectedCurrencies.add(currency);
-                }
-              });
-            },
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                labelText: 'Search',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredCurrencies.length,
+              itemBuilder: (context, index) {
+                Currency currency = filteredCurrencies[index];
+                bool isSelected = selectedCurrencies.contains(currency);
+                return ListTile(
+                  title: Text(currency.name),
+                  trailing: isSelected
+                      ? const Icon(Icons.check_circle)
+                      : const Icon(Icons.check_circle_outline),
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        selectedCurrencies.remove(currency);
+                      } else {
+                        selectedCurrencies.add(currency);
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

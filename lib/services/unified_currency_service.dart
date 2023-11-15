@@ -21,6 +21,7 @@ class UnifiedCurrencyService {
     extraCurrencies.removeWhere(
         (extraCurrency) => coreCurrenciesMap.containsKey(extraCurrency.name));
     // Combine and return the list
+    
     return [...coreCurrencies, ...extraCurrencies];
   }
 }
