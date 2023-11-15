@@ -24,9 +24,9 @@ bool isCacheValid(Map<String, dynamic> cachedData) {
     // Algeria's timezone offset (UTC+1)
     const int algeriaTimezoneOffset = 1;
     DateTime cachedDateInAlgeriaTime =
-        cachedDate.add(Duration(hours: algeriaTimezoneOffset));
+        cachedDate.add(const Duration(hours: algeriaTimezoneOffset));
     DateTime currentDateInAlgeriaTime =
-        nowUtc.add(Duration(hours: algeriaTimezoneOffset));
+        nowUtc.add(const Duration(hours: algeriaTimezoneOffset));
 
     return currentDateInAlgeriaTime
             .difference(cachedDateInAlgeriaTime)

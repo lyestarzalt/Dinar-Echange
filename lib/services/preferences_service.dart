@@ -3,7 +3,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<List<String>> getSelectedCurrencies() async {
     final SharedPreferences prefs = await _prefs;

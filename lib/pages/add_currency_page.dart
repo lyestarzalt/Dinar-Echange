@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
 
-  AddCurrencyPage({required this.existingCurrencies});
+  const AddCurrencyPage({super.key, required this.existingCurrencies});
 
   @override
   _AddCurrencyPageState createState() => _AddCurrencyPageState();

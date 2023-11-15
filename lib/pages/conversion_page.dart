@@ -131,9 +131,9 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
             right: 8,
             child: FloatingActionButton(
               onPressed: _swapCurrencies,
-              child: const Icon(Icons.swap_vert),
               elevation: 2,
-              backgroundColor: Colors.white, // Change as needed
+              backgroundColor: Colors.white,
+              child: const Icon(Icons.swap_vert), // Change as needed
             ),
           ),
         ],

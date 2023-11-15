@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'pages/currency_list_screen.dart';
-import 'pages/conversion_page.dart'; // Placeholder for conversion page
+// Placeholder for conversion page
 import 'pages/history_page.dart'; // Placeholder for history page
 import 'pages/settings_page.dart'; // Placeholder for settings page
 
@@ -11,10 +11,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,12 +25,14 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }

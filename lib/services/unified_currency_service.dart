@@ -13,9 +13,6 @@ class UnifiedCurrencyService {
     Map<String, Currency> coreCurrenciesMap = {
       for (var c in coreCurrencies) c.name: c
     };
-    coreCurrencies.forEach((element) {
-      print(element.isCore);
-    });
     // Assuming 'USD' is the base currency for extra currencies
     List<Currency> extraCurrencies =
         await _extraCurrencyConverter.calculateConvertedCurrencies('USD', {});
@@ -23,7 +20,6 @@ class UnifiedCurrencyService {
     // Filter out extra currencies that overlap with core currencies
     extraCurrencies.removeWhere(
         (extraCurrency) => coreCurrenciesMap.containsKey(extraCurrency.name));
-    print(extraCurrencies.length);
     // Combine and return the list
     return [...coreCurrencies, ...extraCurrencies];
   }

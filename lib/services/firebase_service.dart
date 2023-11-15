@@ -41,9 +41,7 @@ class FirestoreService {
 
     await _cacheManager.setCache(key,
         {'dateSaved': key, 'data': currencies.map((e) => e.toJson()).toList()});
-    currencies.forEach((element) {
-      print(element.isCore);
-    });
+
     return currencies;
   }
 
