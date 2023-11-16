@@ -5,6 +5,7 @@ import 'pages/currency_list_screen.dart';
 // Placeholder for conversion page
 import 'pages/history_page.dart'; // Placeholder for history page
 import 'pages/settings_page.dart'; // Placeholder for settings page
+import 'theme_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Currency App',
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeManager.lightTheme, // Default theme
+      darkTheme: ThemeManager.darkTheme, // Dark theme
+      themeMode: ThemeMode
+          .system, // Decides which theme to show based on the system preference
       home: const MainScreen(),
     );
   }

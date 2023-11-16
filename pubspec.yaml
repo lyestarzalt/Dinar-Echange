@@ -39,6 +39,9 @@ dependencies:
   intl: ^0.18.1
   shared_preferences: ^2.2.2
   http: ^1.1.0
+  logger: ^2.0.2+1
+  fl_chart: ^0.64.0
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

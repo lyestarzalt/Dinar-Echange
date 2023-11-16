@@ -164,7 +164,7 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
             ),
           ),
 
-          SizedBox(
+         const SizedBox(
               height:
                   20), // Add space between the stack and the rate information
           Container(

@@ -68,9 +68,17 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
       appBar: AppBar(
         title: const Text('Add Extra Currencies'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _addSelectedCurrencies,
+          Hero(
+            tag:
+                'addCurrencyButton', // Same tag as the FloatingActionButton's Hero tag
+            child: Material(
+              color:
+                  Colors.transparent, // Ensures the Hero widget works correctly
+              child: IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: _addSelectedCurrencies,
+              ),
+            ),
           ),
         ],
       ),
@@ -95,9 +103,20 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
                 bool isSelected = selectedCurrencies.contains(currency);
                 return ListTile(
                   title: Text(currency.name),
-                  trailing: isSelected
-                      ? const Icon(Icons.check_circle)
-                      : const Icon(Icons.check_circle_outline),
+                  trailing: Checkbox(
+                    value: isSelected,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        if (value != null) {
+                          if (value) {
+                            selectedCurrencies.add(currency);
+                          } else {
+                            selectedCurrencies.remove(currency);
+                          }
+                        }
+                      });
+                    },
+                  ),
                   onTap: () {
                     setState(() {
                       if (isSelected) {

@@ -32,7 +32,7 @@ class FirestoreService {
         .data()!
         .entries
         .map((e) => Currency(
-            name: e.key,
+            name: e.key.toUpperCase(),
             buy: e.value['buy'],
             sell: e.value['sell'],
             date: docDate,
@@ -59,7 +59,6 @@ class FirestoreService {
     }
   }
 
-  // Decode the cached currency history data
   CurrencyHistory _decodeCurrencyHistory(
       Map<String, dynamic> cachedHistory, String currencyName) {
     var data = cachedHistory['data'] as List;
@@ -68,18 +67,10 @@ class FirestoreService {
     return CurrencyHistory(name: currencyName, history: history);
   }
 
-  // Fetch and cache the currency history from Firestore
   Future<CurrencyHistory> _fetchAndCacheCurrencyHistory(
       String currencyName, int lastDays, String key) async {
-    DateTime startDate = DateTime.now().subtract(Duration(days: lastDays));
-    String startKey = DateFormat('yyyy-MM-dd').format(startDate);
-
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('exchange-daily')
-        .orderBy(FieldPath.documentId, descending: true)
-        .startAt([startKey])
-        .limit(lastDays)
-        .get();
+    QuerySnapshot querySnapshot =
+        await _firestore.collection('exchange-daily').limit(lastDays).get();
 
     List<Currency> history = [];
     for (var doc in querySnapshot.docs) {
@@ -87,18 +78,23 @@ class FirestoreService {
       var data = doc.data() as Map<String, dynamic>;
       if (data.containsKey(currencyName)) {
         history.add(Currency(
-            name: currencyName,
-            buy: data[currencyName]['buy'],
-            sell: data[currencyName]['sell'],
+            name: currencyName.toUpperCase(),
+            buy: (data[currencyName]['buy'] as num)
+                .toDouble(), // Convert to double
+            sell: (data[currencyName]['sell'] as num)
+                .toDouble(), // Convert to double
             date: docDate,
             isCore: true));
+
       }
     }
 
+    // Optionally cache the data and then return it
     await _cacheManager.setCache(key, {
       'dateSaved': DateFormat('yyyy-MM-dd').format(DateTime.now()),
       'data': history.map((e) => e.toJson()).toList()
     });
+
     return CurrencyHistory(name: currencyName, history: history);
   }
 }

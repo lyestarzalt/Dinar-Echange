@@ -71,40 +71,96 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
+  String _formatCurrencyValue(double value) {
+    return value % 1 == 0 ? value.toInt().toString() : value.toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Currency List')),
-      body: ListView.builder(
+      body: ListView.separated(
         itemCount: _currencies.length,
+        separatorBuilder: (context, index) =>
+            Divider(), // Divider between each item
         itemBuilder: (context, index) {
           final Currency currency = _currencies[index];
           return ListTile(
             onTap: () {
-              // Handle tap on ListTile
+              // Navigate to CurrencyConverterPage
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CurrencyConverterPage(currency: currency)));
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CurrencyConverterPage(currency: currency),
+                ),
+              );
             },
+            leading: Container(
+              width: 40,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
+                  currency.name.substring(0, 2),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             title: Hero(
-              // Wrap the currency name in a Hero widget
               tag: 'hero_currency_${currency.name}',
               child: Material(
                 color: Colors.transparent,
-                child: Text(currency.name),
+                child: Text(
+                  currency.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-            subtitle: Text(
-                'Buy: ${currency.buy}, Sell: ${currency.sell}, Date: ${DateFormat('yyyy-MM-dd').format(currency.date)}'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 70, // Width of the container for the currency values
+                  child: Text(
+                    _formatCurrencyValue(currency.buy), // Buy value
+                    style: const TextStyle(
+                        fontFamily: 'Courier', // Monospace font for uniformity
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                    textAlign: TextAlign.left, // Align text to the left
+                  ),
+                ),
+                const Text(
+                  " DZD", // Currency unit
+                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
+                ),
+                const SizedBox(width: 15), // Space between DZD and arrow icon
+                Icon(
+                  Icons.arrow_forward_ios, // Small arrow icon
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  size: 16,
+                ),
+              ],
+            ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddCurrencyPage,
         tooltip: 'Add Currency',
-        child: const Icon(Icons.add),
+        child: Hero(
+          tag: 'addCurrencyButton',
+          child: Material(
+            // Wrap the icon with Material to avoid visual errors
+            color: Colors.transparent,
+            child: const Icon(Icons.add),
+          ),
+        ),
       ),
     );
   }
