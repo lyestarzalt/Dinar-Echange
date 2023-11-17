@@ -22,21 +22,17 @@ class ExtraCurrencyConverter {
     Map<String, double> rates = await fetchExchangeRates(baseCurrencyCode);
     List<Currency> convertedCurrencies = [];
 
-    double baseCurrencyBuyRateInDZD = coreCurrencies[baseCurrencyCode]?.buy ??
-        1; // Fallback to 1 if not found
-    double baseCurrencySellRateInDZD =
-        coreCurrencies[baseCurrencyCode]?.sell ?? 1;
+    double baseCurrencyRateInDZD = coreCurrencies[baseCurrencyCode]?.buy ?? 1;
 
     rates.forEach((convertedCurrencyCode, rateToBase) {
       if (convertedCurrencyCode != baseCurrencyCode) {
-        double convertedBuyRate = baseCurrencyBuyRateInDZD * rateToBase;
-        double convertedSellRate = baseCurrencySellRateInDZD * rateToBase;
+        double convertedRate = baseCurrencyRateInDZD / rateToBase;
 
         convertedCurrencies.add(
           Currency(
               name: convertedCurrencyCode,
-              buy: convertedBuyRate,
-              sell: convertedSellRate,
+              buy: convertedRate,
+              sell: convertedRate,
               date: DateTime.now(),
               isCore: false),
         );

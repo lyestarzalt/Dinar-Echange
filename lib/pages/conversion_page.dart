@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/currency.dart'; // Replace with your actual import path
+import 'package:dinar_watch/theme_manager.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
@@ -111,88 +112,91 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
       appBar: AppBar(
         title: const Text('Convert'),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height *
-                0.5, // Adjust the height as needed
-
-            child: Stack(
-              children: [
-                // DZD input field
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  top: isDZDtoCurrency
-                      ? fieldStartingTopPosition
-                      : fieldStartingTopPosition * 2,
-                  left: 16,
-                  right: 16,
-                  child: _buildCurrencyInput(
-                    isDZDtoCurrency ? amountController : resultController,
-                    'DZD',
-                    flagPlaceholder,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height *
+                  0.5, // Adjust the height as needed
+              child: Stack(
+                children: [
+                  // DZD input field
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    top: isDZDtoCurrency
+                        ? fieldStartingTopPosition
+                        : fieldStartingTopPosition * 2,
+                    left: 16,
+                    right: 16,
+                    child: _buildCurrencyInput(
+                      isDZDtoCurrency ? amountController : resultController,
+                      'DZD',
+                      flagPlaceholder,
+                    ),
                   ),
-                ),
-                // Foreign currency input field
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  top: isDZDtoCurrency
-                      ? fieldStartingTopPosition * 2
-                      : fieldStartingTopPosition,
-                  left: 16,
-                  right: 16,
-                  child: _buildCurrencyInput(
-                    isDZDtoCurrency ? resultController : amountController,
-                    widget.currency.name,
-                    flagPlaceholder,
+                  // Foreign currency input field
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    top: isDZDtoCurrency
+                        ? fieldStartingTopPosition * 2
+                        : fieldStartingTopPosition,
+                    left: 16,
+                    right: 16,
+                    child: _buildCurrencyInput(
+                      isDZDtoCurrency ? resultController : amountController,
+                      widget.currency.name,
+                      flagPlaceholder,
+                    ),
                   ),
-                ),
-                // Switch button placed in the middle
-                Positioned(
-                  top: switchButtonTopPosition * 1.1,
-                  right: 8,
-                  child: FloatingActionButton(
-                    onPressed: _swapCurrencies,
-                    child: const Icon(Icons.swap_vert),
-                    elevation: 2,
-                    backgroundColor: Colors.white, // Change as needed
+                  // Switch button placed in the middle
+                  Positioned(
+                    top: switchButtonTopPosition * 1.1,
+                    right: 8,
+                    child: FloatingActionButton(
+                      onPressed: _swapCurrencies,
+                      child: const Icon(Icons.swap_vert),
+                      elevation: 2,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-         const SizedBox(
-              height:
-                  20), // Add space between the stack and the rate information
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 20), // Increased padding for a bigger container
-            decoration: BoxDecoration(
-              color:
-                  Colors.grey[200], // Use a light grey color for the container
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              _getConversionRateText(), // Rounded to two decimal places
-              style: TextStyle(
-                color: Colors.grey[600], // Darker grey for the text
-                fontSize: 18, // Increased font size for better readability
+                ],
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(
+                height:
+                    20), // Add space between the stack and the rate information
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 20), // Increased padding for a bigger container
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceVariant, // Use a light grey color for the container
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                _getConversionRateText(), // Rounded to two decimal places
+                style: ThemeManager.moneyNumberStyle(context),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildCurrencyInput(
       TextEditingController controller, String currencyCode, Widget flag) {
+    bool isInputEnabled =
+        controller == amountController; // Enable input only for the top field
+    var cardTheme = ThemeManager.currencyInputCardTheme(context);
     return Card(
-      elevation: 2,
+      elevation: cardTheme.elevation,
+      shape: cardTheme.shape,
+      margin: cardTheme.margin,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
@@ -202,13 +206,17 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
             Expanded(
               child: TextField(
                 controller: controller,
-                decoration: InputDecoration(
-                  labelText: currencyCode.toUpperCase(), // Convert to uppercase
-                  border: InputBorder.none,
+                decoration:
+                    ThemeManager.currencyInputDecoration(context, currencyCode),
+                style: TextStyle(
+                  fontSize: 24.0,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface, // Explicit text color
                 ),
-                style: const TextStyle(fontSize: 24.0),
                 keyboardType: TextInputType.number,
-                textAlign: TextAlign.left, // Align text to the left
+                textAlign: TextAlign.left,
+                enabled: isInputEnabled,
               ),
             ),
           ],

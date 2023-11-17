@@ -67,25 +67,25 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Extra Currencies'),
-        actions: [
-          Hero(
-            tag:
-                'addCurrencyButton', // Same tag as the FloatingActionButton's Hero tag
-            child: Material(
-              color:
-                  Colors.transparent, // Ensures the Hero widget works correctly
-              child: IconButton(
-                icon: const Icon(Icons.check),
-                onPressed: _addSelectedCurrencies,
-              ),
-            ),
-          ),
-        ],
+        // Other AppBar configurations...
       ),
+      floatingActionButton: Padding(
+        padding:
+            EdgeInsets.only(top: 0), // Adjust this value to move FAB upwards
+        child: Transform.scale(
+          scale: 0.8, // Adjust the size of the FAB
+          child: FloatingActionButton(
+            onPressed: _addSelectedCurrencies,
+            child: const Icon(Icons.check),
+            tooltip: 'Add Selected Currencies',
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(5, 30, 5, 0),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(

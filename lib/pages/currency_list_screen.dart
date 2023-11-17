@@ -5,6 +5,7 @@ import '../models/currency.dart';
 import 'add_currency_page.dart';
 import '../services/preferences_service.dart';
 import 'conversion_page.dart'; // Import your CurrencyConverterPage
+import 'package:dinar_watch/theme_manager.dart';
 
 // Use Dart documentation style for comments.
 /// Displays a list of currencies.
@@ -26,6 +27,17 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
   void initState() {
     super.initState();
     _loadInitialCurrencies();
+  }
+
+  Future<void> _refreshCurrencies() async {
+    // Add your logic to refresh the currency data here
+    await _loadInitialCurrencies(); // Reload the currencies
+    // Optionally, you can show a toast or snackbar to indicate that the refresh is complete.
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Currencies refreshed'),
+      ),
+    );
   }
 
   Future<void> _loadInitialCurrencies() async {
@@ -79,88 +91,90 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Currency List')),
-      body: ListView.separated(
-        itemCount: _currencies.length,
-        separatorBuilder: (context, index) =>
-            Divider(), // Divider between each item
-        itemBuilder: (context, index) {
-          final Currency currency = _currencies[index];
-          return ListTile(
-            onTap: () {
-              // Navigate to CurrencyConverterPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      CurrencyConverterPage(currency: currency),
+      body: RefreshIndicator(
+        color: Theme.of(context).primaryColor, // Customize the color
+        backgroundColor: Theme.of(context).backgroundColor,
+        onRefresh: _refreshCurrencies,
+        child: ListView.separated(
+          itemCount: _currencies.length,
+          separatorBuilder: (context, index) =>
+              Divider(), // Divider between each item
+          itemBuilder: (context, index) {
+            final Currency currency = _currencies[index];
+            return ListTile(
+              onTap: () {
+                // Navigate to CurrencyConverterPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CurrencyConverterPage(currency: currency),
+                  ),
+                );
+              },
+              leading: Container(
+                width: 40,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              );
-            },
-            leading: Container(
-              width: 40,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  currency.name.substring(0, 2),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            title: Hero(
-              tag: 'hero_currency_${currency.name}',
-              child: Material(
-                color: Colors.transparent,
-                child: Text(
-                  currency.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 70, // Width of the container for the currency values
+                child: Center(
                   child: Text(
-                    _formatCurrencyValue(currency.buy), // Buy value
-                    style: const TextStyle(
-                        fontFamily: 'Courier', // Monospace font for uniformity
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                    textAlign: TextAlign.left, // Align text to the left
+                    currency.name.substring(0, 2),
+                    style: ThemeManager.currencyCodeStyle(context),
                   ),
                 ),
-                const Text(
-                  " DZD", // Currency unit
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
+              ),
+              title: Hero(
+                tag: 'hero_currency_${currency.name}',
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    currency.name,
+                    style: ThemeManager.currencyCodeStyle(context),
+                  ),
                 ),
-                const SizedBox(width: 15), // Space between DZD and arrow icon
-                Icon(
-                  Icons.arrow_forward_ios, // Small arrow icon
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                  size: 16,
-                ),
-              ],
-            ),
-          );
-        },
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 70, // Width of the container for the currency values
+                    child: Text(
+                      _formatCurrencyValue(currency.buy), // Buy value
+                      style: ThemeManager.moneyNumberStyle(context),
+                      textAlign: TextAlign.left, // Align text to the left
+                    ),
+                  ),
+                  Text(
+                    " DZD", // Currency unit
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 12,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface, // Adapts to theme
+                    ),
+                  ),
+                  const SizedBox(width: 15), // Space between DZD and arrow icon
+                  Icon(
+                    Icons.arrow_forward_ios, // Small arrow icon
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.5),
+                    size: 16,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddCurrencyPage,
         tooltip: 'Add Currency',
-        child: Hero(
-          tag: 'addCurrencyButton',
-          child: Material(
-            // Wrap the icon with Material to avoid visual errors
-            color: Colors.transparent,
-            child: const Icon(Icons.add),
-          ),
-        ),
+        child: const Icon(Icons.add),
       ),
     );
   }

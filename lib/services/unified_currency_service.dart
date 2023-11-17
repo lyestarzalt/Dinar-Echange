@@ -10,11 +10,11 @@ class UnifiedCurrencyService {
   var logger = Logger(
     printer: PrettyPrinter(),
   );
+
   Future<List<Currency>> getUnifiedCurrencies() async {
     // Fetch core currencies from Firebase
     List<Currency> coreCurrencies =
         await _firestoreService.fetchDailyCurrencies();
-    
 
     // Create a map of core currencies for easy lookup
     Map<String, Currency> coreCurrenciesMap = {
@@ -22,9 +22,8 @@ class UnifiedCurrencyService {
     };
 
     // Fetch extra currencies
-    List<Currency> extraCurrencies =
-        await _extraCurrencyConverter.calculateConvertedCurrencies('USD', {});
-    
+    List<Currency> extraCurrencies = await _extraCurrencyConverter
+        .calculateConvertedCurrencies('USD', coreCurrenciesMap);
 
     // Filter out extra currencies that overlap with core currencies
     extraCurrencies.removeWhere(
