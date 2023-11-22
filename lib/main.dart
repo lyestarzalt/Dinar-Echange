@@ -5,12 +5,16 @@ import 'pages/currency_list_screen.dart';
 import 'pages/history_page.dart';
 import 'pages/settings_page.dart';
 import 'theme_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAuth.instance.signInAnonymously();
+
+
   runApp(MyApp());
 }
 
