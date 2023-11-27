@@ -14,7 +14,6 @@ void main() async {
   );
   await FirebaseAuth.instance.signInAnonymously();
 
-
   runApp(MyApp());
 }
 
@@ -73,8 +72,9 @@ class _MainScreenState extends State<MainScreen> {
       darkTheme: ThemeManager.darkTheme,
       themeMode: _themeMode,
       home: Scaffold(
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
