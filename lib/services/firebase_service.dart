@@ -45,17 +45,15 @@ class FirestoreService {
     return currencies;
   }
 
-  Future<CurrencyHistory> fetchCurrencyHistory(
-      String currencyName, int lastDays) async {
-    String historyKey = 'history_${currencyName}_$lastDays';
+  Future<CurrencyHistory> fetchCurrencyHistory(String currencyName) async {
+    String historyKey = 'history_$currencyName';
     Map<String, dynamic>? cachedHistory =
         await _cacheManager.getCache(historyKey);
 
     if (cachedHistory != null && _cacheManager.isCacheValid(cachedHistory)) {
       return _decodeCurrencyHistory(cachedHistory, currencyName);
     } else {
-      return await _fetchAndCacheCurrencyHistory(
-          currencyName, lastDays, historyKey);
+      return await _fetchAndCacheCurrencyHistory(currencyName, historyKey);
     }
   }
 
@@ -68,25 +66,23 @@ class FirestoreService {
   }
 
   Future<CurrencyHistory> _fetchAndCacheCurrencyHistory(
-      String currencyName, int lastDays, String key) async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection('exchange-daily').limit(lastDays).get();
+      String currencyName, String key) async {
+    DocumentSnapshot docSnapshot = await _firestore
+        .collection('exchange-rate-trends')
+        .doc(currencyName)
+        .get();
 
     List<Currency> history = [];
-    for (var doc in querySnapshot.docs) {
-      DateTime docDate = DateTime.parse(doc.id);
-      var data = doc.data() as Map<String, dynamic>;
-      if (data.containsKey(currencyName)) {
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      data.forEach((date, buyRate) {
         history.add(Currency(
             name: currencyName.toUpperCase(),
-            buy: (data[currencyName]['buy'] as num)
-                .toDouble(), // Convert to double
-            sell: (data[currencyName]['sell'] as num)
-                .toDouble(), // Convert to double
-            date: docDate,
-            isCore: true));
-
-      }
+            sell: 0,
+            buy: buyRate.toDouble(), // Assuming buyRate is already a num
+            date: DateTime.parse(date),
+            isCore: true)); // 'sell' field can be removed if not used
+      });
     }
 
     // Optionally cache the data and then return it

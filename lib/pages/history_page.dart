@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/currency_history.dart';
 import '../services/firebase_service.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/models/currency_history.dart';
+import 'package:dinar_watch/theme_manager.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -14,7 +16,10 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late CurrencyHistory _currencyHistory;
+  late List<Currency> _filteredHistory;
+
   late double _maxYValue, _minYValue, _midYValue;
+  double _maxX = 0;
   bool _isLoading = true;
   int _timeSpan = 30; // default to 1 month
   String _selectedCurrency = 'EUR'; // default currency
@@ -25,45 +30,60 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    _loadCurrencyHistory(_selectedCurrency, _timeSpan).then((_) {
-      if (_currencyHistory.history.isNotEmpty) {
-        final lastIndex = _currencyHistory.history.length - 1;
-        final latestDataPoint = _currencyHistory.history[lastIndex];
-        setState(() {
-          _selectedValue = '${latestDataPoint.sell.toStringAsFixed(2)} DZD';
-          _selectedDate = DateFormat('dd/MM/yyyy').format(latestDataPoint.date);
-          _touchedIndex =
-              lastIndex; // Set the initial touched index to the last index
-        });
-      }
-    });
+    _loadCurrencyHistory(_selectedCurrency);
   }
 
-  Future<void> _loadCurrencyHistory(String currency, int days) async {
-    _currencyHistory =
-        await FirestoreService().fetchCurrencyHistory(currency, days);
-    final List<double> allValues = _currencyHistory.history
-        .expand((data) => [data.sell, data.buy])
+  Future<void> _loadCurrencyHistory(String currency) async {
+    print('Loading currency history for $currency');
+    _currencyHistory = await FirestoreService().fetchCurrencyHistory(currency);
+    _processDataAndSetState();
+  }
+
+  void _processDataAndSetState() {
+    final cutOffDate = DateTime.now().subtract(Duration(days: _timeSpan));
+
+    final filteredHistory = _currencyHistory.history
+        .where((data) => data.date.isAfter(cutOffDate))
         .toList();
 
-    // Set a buffer value that will be used to extend the max and min values by a certain percentage.
-    final bufferPercent = 0.02; // 2% buffer
-    final maxDataValue = allValues.reduce(math.max);
-    final minDataValue = allValues.reduce(math.min);
+    print(
+        'Number of data points for $_timeSpan days: ${filteredHistory.length}');
+
+    final List<double> allBuyValues =
+        filteredHistory.map((data) => data.buy).toList();
+    final bufferPercentX = 0.05; // 5% buffer
+    final bufferValueX = filteredHistory.length * bufferPercentX;
+
+// Set a buffer value that will be used to extend the max and min values by a certain percentage.
+    const bufferPercent = 0.02; // 2% buffer
+    final maxDataValue = allBuyValues.reduce(math.max);
+    final minDataValue = allBuyValues.reduce(math.min);
     final bufferValue = (maxDataValue - minDataValue) * bufferPercent;
 
     setState(() {
+      _selectedValue = filteredHistory.last.buy.toString();
+      _filteredHistory = filteredHistory;
       _isLoading = false;
       _maxYValue = maxDataValue + bufferValue; // Add buffer to the max value
       _minYValue =
           minDataValue - bufferValue; // Subtract buffer from the min value
       _midYValue = (_maxYValue + _minYValue) / 2;
+      _maxX = filteredHistory.length - 1; // Apply buffer to maxX
     });
+    print('maxX: $_maxX, maxY: $_maxYValue, minY: $_minYValue');
+  }
+
+  void _onTimeSpanButtonClicked(int days) {
+    setState(() {
+      _timeSpan = days;
+      _isLoading = true;
+    });
+    _processDataAndSetState();
   }
 
   LineChartData _mainData() {
     return LineChartData(
-      gridData: FlGridData(show: false),
+      gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
         rightTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -75,16 +95,17 @@ class _HistoryPageState extends State<HistoryPage> {
                     value == _maxYValue
                 ? Text('${value.toStringAsFixed(2)}',
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                         fontSize: 14),
                     textAlign: TextAlign.right)
                 : Container(),
           ),
         ),
-        bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        bottomTitles:
+            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       extraLinesData: ExtraLinesData(
         horizontalLines: [_minYValue, _midYValue, _maxYValue]
@@ -118,7 +139,7 @@ class _HistoryPageState extends State<HistoryPage> {
           tooltipRoundedRadius: 0,
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots
-                .map((spot) => LineTooltipItem(
+                .map((spot) => const LineTooltipItem(
                       '', // Empty string for tooltip content
                       TextStyle(
                           color: Colors.transparent), // Transparent text style
@@ -131,12 +152,12 @@ class _HistoryPageState extends State<HistoryPage> {
           return spotIndexes.map((index) {
             if (index == _touchedIndex) {
               // Check if the index matches the touched index
-              return TouchedSpotIndicatorData(
+              return const TouchedSpotIndicatorData(
                 FlLine(color: Colors.transparent),
                 FlDotData(show: true), // Show the dot
               );
             } else {
-              return TouchedSpotIndicatorData(
+              return const TouchedSpotIndicatorData(
                 FlLine(color: Colors.transparent),
                 FlDotData(show: false), // Hide the dot for other indexes
               );
@@ -145,12 +166,12 @@ class _HistoryPageState extends State<HistoryPage> {
         },
       ),
       borderData: FlBorderData(show: false),
-      maxX: _currencyHistory.history.length.toDouble() - 1,
+      maxX: _maxX,
       maxY: _maxYValue,
       minY: _minYValue,
       lineBarsData: [
         LineChartBarData(
-          spots: _currencyHistory.history
+          spots: _filteredHistory
               .asMap()
               .entries
               .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
@@ -159,7 +180,7 @@ class _HistoryPageState extends State<HistoryPage> {
           barWidth: 5,
           color: Theme.of(context).colorScheme.primary,
           isStrokeCapRound: true,
-          dotData: FlDotData(show: false),
+          dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
         ),
       ],
@@ -172,123 +193,72 @@ class _HistoryPageState extends State<HistoryPage> {
           title: const Text('Currency History'),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: const  Icon(Icons.refresh),
               onPressed: () {
-                // Add your refresh action here
+                // Refresh action
               },
             ),
           ],
         ),
-        body: Center(
-          child: _isLoading
-              ? const CircularProgressIndicator()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '1 $_selectedCurrency = $_selectedValue',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Text(
-                          _selectedDate,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    AspectRatio(
-                      aspectRatio: 1.2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: LineChart(_mainData()),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            // Handle 1M option
-                            setState(() {
-                              _timeSpan = 30;
-                            });
-                            _loadCurrencyHistory(_selectedCurrency, _timeSpan);
-                          },
-                          child: Text(
-                            '1M',
-                            style: TextStyle(
-                              color:
-                                  _timeSpan == 30 ? Colors.blue : Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Handle 6M option
-                            setState(() {
-                              _timeSpan = 180;
-                            });
-                            _loadCurrencyHistory(_selectedCurrency, _timeSpan);
-                          },
-                          child: Text(
-                            '6M',
-                            style: TextStyle(
-                              color:
-                                  _timeSpan == 180 ? Colors.blue : Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Handle 1Y option
-                            setState(() {
-                              _timeSpan = 365;
-                            });
-                            _loadCurrencyHistory(_selectedCurrency, _timeSpan);
-                          },
-                          child: Text(
-                            '1Y',
-                            style: TextStyle(
-                              color:
-                                  _timeSpan == 365 ? Colors.blue : Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Handle 2Y option
-                            setState(() {
-                              _timeSpan = 730;
-                            });
-                            _loadCurrencyHistory(_selectedCurrency, _timeSpan);
-                          },
-                          child: Text(
-                            '2Y',
-                            style: TextStyle(
-                              color:
-                                  _timeSpan == 730 ? Colors.blue : Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // Align to start
+            children: [
+              if (!_isLoading) ...[
+                Text(
+                  '1 $_selectedCurrency = $_selectedValue',
+                  style: ThemeManager.moneyNumberStyle(context),
                 ),
+               const SizedBox(height: 8),
+                Text(
+                  _selectedDate,
+                  style: ThemeManager.currencyCodeStyle(context),
+                ),
+               const SizedBox(height: 16),
+                AspectRatio(
+                  aspectRatio: 1.2,
+                  child: LineChart(_mainData()),
+                ),
+               const SizedBox(height: 16),
+                _buildTimeSpanButtons(),
+              ] else
+              const  Expanded(child: Center(child: CircularProgressIndicator())),
+            ],
+          ),
         ),
       );
+  Widget _buildTimeSpanButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildTimeSpanButton('1M', 30),
+        _buildTimeSpanButton('6M', 180),
+        _buildTimeSpanButton('1Y', 365),
+        _buildTimeSpanButton('2Y', 730),
+      ],
+    );
+  }
+
+  Widget _buildTimeSpanButton(String label, int days) {
+    Color textColor = _timeSpan == days
+        ? Theme.of(context).colorScheme.primary // Active color
+        : Theme.of(context).colorScheme.onSurface; // Inactive color
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _timeSpan = days;
+        });
+        _onTimeSpanButtonClicked(days);
+      },
+      child: Text(
+        label,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 }

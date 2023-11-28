@@ -4,11 +4,9 @@ import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/services/cache_service.dart';
 import 'package:intl/intl.dart';
 
-class CurrencyFirestoreService    {
+class CurrencyFirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CacheManager _cacheManager = CacheManager();
-
-
 
   Future<List<Currency>> fetchDailyCurrencies() async {
     String todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -47,17 +45,15 @@ class CurrencyFirestoreService    {
     return currencies;
   }
 
-  Future<CurrencyHistory> fetchCurrencyHistory(
-      String currencyName, int lastDays) async {
-    String historyKey = 'history_${currencyName}_$lastDays';
+  Future<CurrencyHistory> fetchCurrencyHistory(String currencyName) async {
+    String historyKey = 'history_$currencyName';
     Map<String, dynamic>? cachedHistory =
         await _cacheManager.getCache(historyKey);
 
     if (cachedHistory != null && _cacheManager.isCacheValid(cachedHistory)) {
       return _decodeCurrencyHistory(cachedHistory, currencyName);
     } else {
-      return await _fetchAndCacheCurrencyHistory(
-          currencyName, lastDays, historyKey);
+      return await _fetchAndCacheCurrencyHistory(currencyName, historyKey);
     }
   }
 
@@ -70,24 +66,23 @@ class CurrencyFirestoreService    {
   }
 
   Future<CurrencyHistory> _fetchAndCacheCurrencyHistory(
-      String currencyName, int lastDays, String key) async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection('exchange-daily').limit(lastDays).get();
+      String currencyName, String key) async {
+    DocumentSnapshot docSnapshot = await _firestore
+        .collection('exchange-rate-trends')
+        .doc(currencyName)
+        .get();
 
     List<Currency> history = [];
-    for (var doc in querySnapshot.docs) {
-      DateTime docDate = DateTime.parse(doc.id);
-      var data = doc.data() as Map<String, dynamic>;
-      if (data.containsKey(currencyName)) {
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      data.forEach((date, buyRate) {
         history.add(Currency(
             name: currencyName.toUpperCase(),
-            buy: (data[currencyName]['buy'] as num)
-                .toDouble(), // Convert to double
-            sell: (data[currencyName]['sell'] as num)
-                .toDouble(), // Convert to double
-            date: docDate,
+            sell: 0, // Assuming 'sell' field is not used
+            buy: buyRate.toDouble(), // Convert to double
+            date: DateTime.parse(date),
             isCore: true));
-      }
+      });
     }
 
     // Optionally cache the data and then return it
@@ -99,4 +94,3 @@ class CurrencyFirestoreService    {
     return CurrencyHistory(name: currencyName, history: history);
   }
 }
-

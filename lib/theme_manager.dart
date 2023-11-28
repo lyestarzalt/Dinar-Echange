@@ -53,7 +53,11 @@ class ThemeManager {
     return ThemeData(
       useMaterial3: true,
       brightness: colorScheme.brightness,
-      colorScheme: colorScheme,
+      colorScheme: colorScheme.copyWith(
+        primary: colorScheme.brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black,
+      ),
       primaryColor: colorScheme.primary,
 
       appBarTheme: AppBarTheme(
