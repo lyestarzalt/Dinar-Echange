@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../services/unified_currency_service.dart';
 import '../models/currency.dart';
 import 'add_currency_page.dart';
 import '../services/preferences_service.dart';
-import 'conversion_page.dart'; // Import your CurrencyConverterPage
-import 'package:dinar_watch/theme_manager.dart';
+import 'package:dinar_watch/widgets/currency_list_item.dart';
 
 // Use Dart documentation style for comments.
 /// Displays a list of currencies.
@@ -83,91 +81,19 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
-  String _formatCurrencyValue(double value) {
-    return value % 1 == 0 ? value.toInt().toString() : value.toStringAsFixed(2);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Currency List')),
       body: RefreshIndicator(
-        color: Theme.of(context).primaryColor, // Customize the color
-        backgroundColor: Theme.of(context).backgroundColor,
         onRefresh: _refreshCurrencies,
         child: ListView.separated(
           itemCount: _currencies.length,
-          separatorBuilder: (context, index) =>
-              Divider(), // Divider between each item
+          separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) {
             final Currency currency = _currencies[index];
-            return ListTile(
-              onTap: () {
-                // Navigate to CurrencyConverterPage
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CurrencyConverterPage(currency: currency),
-                  ),
-                );
-              },
-              leading: Container(
-                width: 40,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    currency.name.substring(0, 2),
-                    style: ThemeManager.currencyCodeStyle(context),
-                  ),
-                ),
-              ),
-              title: Hero(
-                tag: 'hero_currency_${currency.name}',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    currency.name,
-                    style: ThemeManager.currencyCodeStyle(context),
-                  ),
-                ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: 70, // Width of the container for the currency values
-                    child: Text(
-                      _formatCurrencyValue(currency.buy), // Buy value
-                      style: ThemeManager.moneyNumberStyle(context),
-                      textAlign: TextAlign.left, // Align text to the left
-                    ),
-                  ),
-                  Text(
-                    " DZD", // Currency unit
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface, // Adapts to theme
-                    ),
-                  ),
-                  const SizedBox(width: 15), // Space between DZD and arrow icon
-                  Icon(
-                    Icons.arrow_forward_ios, // Small arrow icon
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.5),
-                    size: 16,
-                  ),
-                ],
-              ),
-            );
+            return CurrencyListItem(currency: currency); // Use the new widget
           },
         ),
       ),

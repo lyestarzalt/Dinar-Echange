@@ -4,12 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 class ThemeManager {
   static CardTheme currencyInputCardTheme(BuildContext context) {
     return CardTheme(
-      elevation: 2,
+      elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Classy rounded corners
+        borderRadius: BorderRadius.circular(5), // Rounded corners
+        // Default border settings
+        side: BorderSide(
+          color: Colors.grey.withOpacity(0.3), // Neutral border color
+          width: 1.0,
+        ),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       color: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.background,
     );
   }
 
@@ -42,7 +48,7 @@ class ThemeManager {
 
   static TextStyle currencyCodeStyle(BuildContext context) {
     return TextStyle(
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: FontWeight.bold,
       color: Theme.of(context).colorScheme.onSurface, // Adapt to theme
     );
@@ -51,18 +57,16 @@ class ThemeManager {
   static ThemeData _baseTheme(
       ColorScheme colorScheme, Color bodyTextColor, Color displayTextColor) {
     return ThemeData(
+      scaffoldBackgroundColor: colorScheme.background,
       useMaterial3: true,
       brightness: colorScheme.brightness,
-      colorScheme: colorScheme.copyWith(
-        primary: colorScheme.brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black,
-      ),
+      colorScheme: colorScheme,
       primaryColor: colorScheme.primary,
-
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
+        backgroundColor: colorScheme.primary, // Background color of AppBar
+        foregroundColor: colorScheme.brightness == Brightness.light
+            ? Colors.black // Dark text for light theme AppBar
+            : Colors.white, // Light text for dark theme AppBar
         elevation: 0,
       ),
       textTheme: GoogleFonts.latoTextTheme().apply(
@@ -79,8 +83,8 @@ class ThemeManager {
         fillColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             if (states.contains(MaterialState.selected)) {
-              return const Color.fromARGB(
-                  255, 230, 255, 201); // Greenish color for selected Checkbox
+              return Color.fromARGB(
+                  255, 43, 255, 0); // Greenish color for selected Checkbox
             }
             return colorScheme.onSurface.withOpacity(0.6); // Default color
           },
@@ -98,8 +102,18 @@ class ThemeManager {
     ColorScheme.fromSeed(
       seedColor: Colors.grey,
       brightness: Brightness.dark,
+      primary: Colors.black, // Explicitly set the primary color for dark theme
+      primaryContainer: Colors.black, // Consider setting this if needed
       secondary: Colors.white,
+      secondaryContainer: Colors.white, // Adjust if needed
       onSecondary: Colors.black,
+      surfaceTint: Colors.grey[850],
+      surface: Colors
+          .grey[850], // Or another appropriate color for dark theme surfaces
+      background:
+          Colors.grey[900], // Or another appropriate dark color for backgrounds
+      error: Colors.red, // Adjust error color as needed
+      // ... define other colors as needed ...
     ),
     Colors.white, // White text for dark theme
     Colors.white, // White display text for dark theme
@@ -109,8 +123,16 @@ class ThemeManager {
     ColorScheme.fromSeed(
       seedColor: Colors.white,
       brightness: Brightness.light,
+      primary: Colors.white, // Explicitly set the primary color for light theme
+      primaryContainer: Colors.white, // Consider setting this if needed
       secondary: Colors.black,
+      secondaryContainer: Colors.black, // Adjust if needed
+      surfaceTint: Colors.white,
       onSecondary: Colors.white,
+      surface:
+          Colors.grey[200], // Or another appropriate light color for surfaces
+      background: Colors.white, // Background color for the light theme
+      error: Colors.red, // Adjust error color as needed
     ),
     Colors.black, // Black text for light theme
     Colors.black, // Black display text for light theme

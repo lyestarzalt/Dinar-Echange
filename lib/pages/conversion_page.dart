@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/currency.dart'; // Replace with your actual import path
 import 'package:dinar_watch/theme_manager.dart';
+import 'package:dinar_watch/utils/finance_utils.dart';
+import 'package:decimal/decimal.dart';
+import 'package:dinar_watch/widgets/conversion_rate_info.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
@@ -17,24 +20,31 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
   // Controllers for the two text fields
   TextEditingController amountController = TextEditingController();
   TextEditingController resultController = TextEditingController();
-
+  FocusNode amountFocusNode = FocusNode();
+  FocusNode resultFocusNode = FocusNode();
   // Placeholder for flags, replace with actual Image.asset or similar
-  Widget flagPlaceholder = Container(width: 32, height: 32, color: Colors.grey);
+  Widget flagPlaceholder = Container(
+      width: 32, height: 32, color: const Color.fromARGB(255, 255, 0, 0));
 
   bool isDZDtoCurrency = true; // Conversion direction flag
 
   late AnimationController _animationController;
+  void _updateFocus() {
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
     );
 
     // Whenever the amount changes, update the result.
     amountController.addListener(_convertCurrency);
+    amountFocusNode.addListener(_updateFocus);
+    resultFocusNode.addListener(_updateFocus);
   }
 
   @override
@@ -43,6 +53,8 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
     amountController.dispose();
     resultController.dispose();
     amountController.removeListener(_onAmountChanged);
+    amountFocusNode.dispose();
+    resultFocusNode.dispose();
     super.dispose();
   }
 
@@ -67,11 +79,12 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
     }
 
     double amount = double.tryParse(amountController.text) ?? 0.0;
-    double conversionRate =
-        isDZDtoCurrency ? 1 / widget.currency.sell : widget.currency.buy;
-    double convertedAmount = amount * conversionRate;
+    String convertedAmount = FinanceUtils.convertAmount(
+        amount,
+        isDZDtoCurrency ? widget.currency.buy : widget.currency.sell,
+        isDZDtoCurrency);
 
-    resultController.text = convertedAmount.toStringAsFixed(2);
+    resultController.text = convertedAmount;
   }
 
   void _swapCurrencies() {
@@ -91,68 +104,87 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
   String _getConversionRateText() {
     if (isDZDtoCurrency) {
       // Displaying conversion from DZD to the selected currency
-      return '100 DZD = ${(100 / widget.currency.buy).toStringAsFixed(2)} ${widget.currency.name.toUpperCase()}';
+      Decimal conversionRate =
+          Decimal.parse((100 / widget.currency.buy).toString());
+      return '100 DZD = ${conversionRate.toStringAsFixed(2)} ${widget.currency.name.toUpperCase()}';
     } else {
       // Displaying conversion from the selected currency to DZD
-      return '1 ${widget.currency.name.toUpperCase()} = ${(widget.currency.sell * 1).toStringAsFixed(2)} DZD';
+      Decimal conversionRate =
+          Decimal.parse((widget.currency.sell * 1).toString());
+      return '1 ${widget.currency.name.toUpperCase()} = ${conversionRate.toStringAsFixed(2)} DZD';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Adjust the starting top position based on your preference
-    final double fieldStartingTopPosition =
-        MediaQuery.of(context).size.height * 0.15; // Increased spacing
+    // Calculate the middle point of the screen
+    final screenHeight = MediaQuery.of(context).size.height;
+    final middlePoint = screenHeight * 0.5;
 
-    // Calculate the top position for the switch button to place it in the middle
-    final switchButtonTopPosition =
-        (fieldStartingTopPosition + (fieldStartingTopPosition * 2)) / 2;
+    // Calculate the height for each card
+    const cardHeight = 100.0;
+
+    // Calculate the top positions for the animated positioned cards
+    const cardsgap = 5;
+    final topCardTopPosition = middlePoint - cardHeight;
+    final bottomCardTopPosition = middlePoint + cardsgap;
+
+    // Calculate the FAB position
+    const fabSize = 56.0;
+    final fabTopPosition = middlePoint - (fabSize / 2);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Convert'),
-      ),
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(title: const Text('Convert') ,) ,
       body: SingleChildScrollView(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height *
-                  0.5, // Adjust the height as needed
+            SizedBox(
+              height: screenHeight * 0.7,
               child: Stack(
                 children: [
-                  // DZD input field
+                  // Top Card - DZD input field
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     top: isDZDtoCurrency
-                        ? fieldStartingTopPosition
-                        : fieldStartingTopPosition * 2,
+                        ? topCardTopPosition
+                        : bottomCardTopPosition,
                     left: 16,
                     right: 16,
+                    height: cardHeight,
                     child: _buildCurrencyInput(
                       isDZDtoCurrency ? amountController : resultController,
                       'DZD',
                       flagPlaceholder,
+                      isDZDtoCurrency
+                          ? amountFocusNode
+                          : resultFocusNode, // Pass the FocusNode
                     ),
                   ),
-                  // Foreign currency input field
+                  // Bottom Card - Foreign currency input field
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     top: isDZDtoCurrency
-                        ? fieldStartingTopPosition * 2
-                        : fieldStartingTopPosition,
+                        ? bottomCardTopPosition
+                        : topCardTopPosition,
                     left: 16,
                     right: 16,
+                    height: cardHeight,
                     child: _buildCurrencyInput(
                       isDZDtoCurrency ? resultController : amountController,
                       widget.currency.name,
                       flagPlaceholder,
+                      isDZDtoCurrency
+                          ? resultFocusNode
+                          : amountFocusNode, // Pass the FocusNode
                     ),
                   ),
-                  // Switch button placed in the middle
+                  // FAB positioned in the middle of the cards, aligned to the right
                   Positioned(
-                    top: switchButtonTopPosition * 1.1,
+                    top: fabTopPosition,
                     right: 8,
                     child: FloatingActionButton(
                       onPressed: _swapCurrencies,
@@ -163,24 +195,10 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
                 ],
               ),
             ),
-
-            const SizedBox(
-                height:
-                    20), // Add space between the stack and the rate information
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 20), // Increased padding for a bigger container
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .surfaceVariant, // Use a light grey color for the container
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                _getConversionRateText(), // Rounded to two decimal places
-                style: ThemeManager.moneyNumberStyle(context),
-              ),
+            ConversionRateInfo(
+              conversionRateText: _getConversionRateText(),
+              textStyle: ThemeManager.moneyNumberStyle(context),
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
             ),
           ],
         ),
@@ -188,34 +206,50 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
     );
   }
 
-  Widget _buildCurrencyInput(
-      TextEditingController controller, String currencyCode, Widget flag) {
-    bool isInputEnabled =
-        controller == amountController; // Enable input only for the top field
+  Widget _buildCurrencyInput(TextEditingController controller,
+      String currencyCode, Widget flag, FocusNode focusNode) {
+    bool isInputEnabled = controller == amountController;
     var cardTheme = ThemeManager.currencyInputCardTheme(context);
-    return Card(
+
+    // Determine border color based on theme brightness
+    var themeBrightness = Theme.of(context).brightness;
+    Color borderColor =
+        themeBrightness == Brightness.dark ? Colors.white : Colors.black;
+    borderColor = focusNode.hasFocus
+        ? borderColor
+        : borderColor.withOpacity(0.3); // Adjust opacity for unfocused state
+ return Card(
+   
+    
       elevation: cardTheme.elevation,
-      shape: cardTheme.shape,
+      shape: RoundedRectangleBorder(
+        borderRadius: (cardTheme.shape as RoundedRectangleBorder).borderRadius,
+        side: BorderSide(
+          color: borderColor,
+          width: focusNode.hasFocus
+              ? 2.0
+              : 1.0, // Adjust border width based on focus
+        ),
+      ),
       margin: cardTheme.margin,
+      color: cardTheme.color,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
           children: [
             flag,
-            const SizedBox(width: 8.0),
+            const SizedBox(
+              width: 8.0,),
             Expanded(
               child: TextField(
+                
+                focusNode: focusNode,
                 controller: controller,
                 decoration:
                     ThemeManager.currencyInputDecoration(context, currencyCode),
-                style: TextStyle(
-                  fontSize: 24.0,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface, // Explicit text color
-                ),
+                style: ThemeManager.currencyCodeStyle(context),
                 keyboardType: TextInputType.number,
-                textAlign: TextAlign.left,
+                textAlign: TextAlign.right,
                 enabled: isInputEnabled,
               ),
             ),

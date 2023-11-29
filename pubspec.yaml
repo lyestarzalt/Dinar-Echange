@@ -44,6 +44,7 @@ dependencies:
   google_fonts: ^6.1.0
   firebase_app_check: ^0.2.1+4
   firebase_auth: ^4.14.0
+  decimal: ^2.3.3
 
 dev_dependencies:
   flutter_test:

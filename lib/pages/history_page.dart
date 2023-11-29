@@ -178,7 +178,7 @@ class _HistoryPageState extends State<HistoryPage> {
               .toList(),
           isCurved: false,
           barWidth: 5,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
@@ -193,7 +193,7 @@ class _HistoryPageState extends State<HistoryPage> {
           title: const Text('Currency History'),
           actions: <Widget>[
             IconButton(
-              icon: const  Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
               onPressed: () {
                 // Refresh action
               },
@@ -210,20 +210,21 @@ class _HistoryPageState extends State<HistoryPage> {
                   '1 $_selectedCurrency = $_selectedValue',
                   style: ThemeManager.moneyNumberStyle(context),
                 ),
-               const SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   _selectedDate,
                   style: ThemeManager.currencyCodeStyle(context),
                 ),
-               const SizedBox(height: 16),
+                const SizedBox(height: 16),
                 AspectRatio(
                   aspectRatio: 1.2,
                   child: LineChart(_mainData()),
                 ),
-               const SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildTimeSpanButtons(),
               ] else
-              const  Expanded(child: Center(child: CircularProgressIndicator())),
+                const Expanded(
+                    child: Center(child: CircularProgressIndicator())),
             ],
           ),
         ),
@@ -241,10 +242,6 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildTimeSpanButton(String label, int days) {
-    Color textColor = _timeSpan == days
-        ? Theme.of(context).colorScheme.primary // Active color
-        : Theme.of(context).colorScheme.onSurface; // Inactive color
-
     return InkWell(
       onTap: () {
         setState(() {
@@ -255,7 +252,6 @@ class _HistoryPageState extends State<HistoryPage> {
       child: Text(
         label,
         style: TextStyle(
-          color: textColor,
           fontWeight: FontWeight.bold,
         ),
       ),
