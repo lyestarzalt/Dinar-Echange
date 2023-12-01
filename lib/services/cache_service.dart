@@ -31,7 +31,6 @@ bool isCacheValid(Map<String, dynamic> cachedData) {
 
     return currentDateInAlgeriaTime
             .difference(cachedDateInAlgeriaTime)
-            .inDays ==
-        0;
+            .inDays ==0;
   }
 }

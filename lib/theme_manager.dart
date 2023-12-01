@@ -54,9 +54,38 @@ class ThemeManager {
     );
   }
 
+  static NavigationBarThemeData navigationBarTheme(ColorScheme colorScheme) {
+    return NavigationBarThemeData(
+      backgroundColor:
+          colorScheme.background, // Background color from the color scheme
+      indicatorColor: colorScheme.primary, // Primary color for the indicator
+      labelTextStyle: MaterialStateProperty.all(
+        TextStyle(
+          fontSize: 14,
+          color: colorScheme.onBackground, // Text color on the background
+        ),
+      ),
+      iconTheme: MaterialStateProperty.all(
+        IconThemeData(
+          color: colorScheme.onBackground
+              .withOpacity(0.6), // Slightly transparent icons
+          size: 24, // Icon size
+        ),
+      ),
+      indicatorShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+            2), // Subtle rounded corners for the indicator
+      ),
+      height: 56, // Height of the navigation bar
+      labelBehavior: NavigationDestinationLabelBehavior
+          .onlyShowSelected, // Show labels only for selected item
+    );
+  }
+
   static ThemeData _baseTheme(
       ColorScheme colorScheme, Color bodyTextColor, Color displayTextColor) {
     return ThemeData(
+      navigationBarTheme: navigationBarTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
       useMaterial3: true,
       brightness: colorScheme.brightness,

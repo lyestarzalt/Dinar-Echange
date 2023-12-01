@@ -14,7 +14,7 @@ class ExternalRateConverter {
 
         convertedCurrencies.add(
           Currency(
-              name: convertedCurrencyCode,
+              currencyCode: convertedCurrencyCode,
               buy: convertedRate,
               sell: convertedRate,
               date: DateTime.now(),

@@ -34,7 +34,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     String searchTerm = searchController.text.toLowerCase();
     setState(() {
       filteredCurrencies = widget.existingCurrencies
-          .where((currency) => currency.name.toLowerCase().contains(searchTerm))
+          .where((currency) => currency.currencyCode.toLowerCase().contains(searchTerm))
           .toList();
     });
   }
@@ -46,14 +46,14 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     setState(() {
       // Initialize with all existing currencies marked as selected if they are in saved preferences
       selectedCurrencies = widget.existingCurrencies
-          .where((currency) => savedCurrencyNames.contains(currency.name))
+          .where((currency) => savedCurrencyNames.contains(currency.currencyCode))
           .toList();
     });
   }
 
   void _saveSelectedCurrencies() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> currencyNames = selectedCurrencies.map((c) => c.name).toList();
+    List<String> currencyNames = selectedCurrencies.map((c) => c.currencyCode).toList();
     await prefs.setStringList('selectedCurrencies', currencyNames);
   }
 
@@ -102,7 +102,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
                 Currency currency = filteredCurrencies[index];
                 bool isSelected = selectedCurrencies.contains(currency);
                 return ListTile(
-                  title: Text(currency.name),
+                  title: Text(currency.currencyCode),
                   trailing: Checkbox(
                     value: isSelected,
                     onChanged: (bool? value) {

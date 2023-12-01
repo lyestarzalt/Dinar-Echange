@@ -106,12 +106,12 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
       // Displaying conversion from DZD to the selected currency
       Decimal conversionRate =
           Decimal.parse((100 / widget.currency.buy).toString());
-      return '100 DZD = ${conversionRate.toStringAsFixed(2)} ${widget.currency.name.toUpperCase()}';
+      return '100 DZD = ${conversionRate.toStringAsFixed(2)} ${widget.currency.currencyCode.toUpperCase()}';
     } else {
       // Displaying conversion from the selected currency to DZD
       Decimal conversionRate =
           Decimal.parse((widget.currency.sell * 1).toString());
-      return '1 ${widget.currency.name.toUpperCase()} = ${conversionRate.toStringAsFixed(2)} DZD';
+      return '1 ${widget.currency.currencyCode.toUpperCase()} = ${conversionRate.toStringAsFixed(2)} DZD';
     }
   }
 
@@ -175,7 +175,7 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
                     height: cardHeight,
                     child: _buildCurrencyInput(
                       isDZDtoCurrency ? resultController : amountController,
-                      widget.currency.name,
+                      widget.currency.currencyCode,
                       flagPlaceholder,
                       isDZDtoCurrency
                           ? resultFocusNode

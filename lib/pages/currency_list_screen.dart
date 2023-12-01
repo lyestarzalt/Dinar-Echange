@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/unified_currency_service.dart';
+import '../data/repositories/unified_currency_service.dart';
 import '../models/currency.dart';
 import 'add_currency_page.dart';
 import '../services/preferences_service.dart';
@@ -28,14 +28,16 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
   }
 
   Future<void> _refreshCurrencies() async {
-    // Add your logic to refresh the currency data here
-    await _loadInitialCurrencies(); // Reload the currencies
-    // Optionally, you can show a toast or snackbar to indicate that the refresh is complete.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Currencies refreshed'),
-      ),
-    );
+    await _loadInitialCurrencies();
+    await Future.delayed(const Duration(seconds: 1)); //Firestore is too fast!
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Currencies refreshed'),
+        ),
+      );
+    }
   }
 
   Future<void> _loadInitialCurrencies() async {
@@ -46,7 +48,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     if (savedCurrencyNames.isEmpty) {
       final List<String> coreCurrencyNames = _allCurrencies
           .where((currency) => currency.isCore)
-          .map((currency) => currency.name)
+          .map((currency) => currency.currencyCode)
           .toList();
 
       await _preferencesService.setSelectedCurrencies(coreCurrencyNames);
@@ -54,7 +56,8 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
 
     setState(() {
       _currencies = _allCurrencies
-          .where((currency) => savedCurrencyNames.contains(currency.name))
+          .where(
+              (currency) => savedCurrencyNames.contains(currency.currencyCode))
           .toList();
     });
   }
@@ -71,7 +74,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     if (newCurrencies != null && newCurrencies.isNotEmpty) {
       // Update the list of selected currencies in SharedPreferences
       await _preferencesService.setSelectedCurrencies(
-        newCurrencies.map((c) => c.name).toList(),
+        newCurrencies.map((c) => c.currencyCode).toList(),
       );
 
       // Update the local list of currencies to display
@@ -81,12 +84,15 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Currency List')),
       body: RefreshIndicator(
+        color: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        strokeWidth: 2.0,
+        // Other properties as needed...
         onRefresh: _refreshCurrencies,
         child: ListView.separated(
           itemCount: _currencies.length,

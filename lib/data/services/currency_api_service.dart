@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 
 class ExtraCurrency {
 
-
-
   Future<Map<String, double>> fetchExchangeRates(
       String baseCurrencyCode) async {
     var url = Uri.parse('https://open.er-api.com/v6/latest/$baseCurrencyCode');
@@ -18,6 +16,5 @@ class ExtraCurrency {
       throw Exception('Failed to fetch exchange rates');
     }
   }
-
 
 }

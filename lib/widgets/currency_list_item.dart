@@ -36,17 +36,17 @@ class CurrencyListItem extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            currency.name.substring(0, 2),
+            currency.currencyCode.substring(0, 2),
             style: ThemeManager.currencyCodeStyle(context),
           ),
         ),
       ),
       title: Hero(
-        tag: 'hero_currency_${currency.name}',
+        tag: 'hero_currency_${currency.currencyCode}',
         child: Material(
           color: Colors.transparent,
           child: Text(
-            currency.name,
+            currency.currencyCode,
             style: ThemeManager.currencyCodeStyle(context),
           ),
         ),

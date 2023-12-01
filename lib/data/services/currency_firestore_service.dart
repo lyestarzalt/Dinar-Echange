@@ -3,11 +3,12 @@ import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/services/cache_service.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CacheManager _cacheManager = CacheManager();
-
+  var logger = Logger(printer: PrettyPrinter());
   Future<List<Currency>> fetchDailyCurrencies() async {
     String todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
     Map<String, dynamic>? cachedData = await _cacheManager.getCache(todayKey);
@@ -23,7 +24,7 @@ class FirestoreService {
   }
 
   // Fetch and cache the daily currency data from Firestore
-  Future<List<Currency>> _fetchAndCacheDailyCurrencies(String key) async {
+Future<List<Currency>> _fetchAndCacheDailyCurrencies(String key) async {
     var snapshot = await _firestore.collection('exchange-daily').doc(key).get();
     if (!snapshot.exists) throw Exception('No data available for today.');
 
@@ -32,11 +33,15 @@ class FirestoreService {
         .data()!
         .entries
         .map((e) => Currency(
-            name: e.key.toUpperCase(),
+            currencyCode: e.key.toUpperCase(),
             buy: e.value['buy'],
             sell: e.value['sell'],
             date: docDate,
-            isCore: true))
+            isCore:
+                e.value['is_core'] ?? false, // Correctly map the is_core field
+            currencyName: e.value['name'], // Assuming you have a name field
+            currencySymbol: e.value['symbol'], // Assuming you have a symbol field
+            flag: e.value['flag'])) // Assuming you have a flag field
         .toList();
 
     await _cacheManager.setCache(key,
@@ -45,12 +50,14 @@ class FirestoreService {
     return currencies;
   }
 
+
   Future<CurrencyHistory> fetchCurrencyHistory(String currencyName) async {
     String historyKey = 'history_$currencyName';
     Map<String, dynamic>? cachedHistory =
         await _cacheManager.getCache(historyKey);
 
     if (cachedHistory != null && _cacheManager.isCacheValid(cachedHistory)) {
+      logger.i('fetching history from cache');
       return _decodeCurrencyHistory(cachedHistory, currencyName);
     } else {
       return await _fetchAndCacheCurrencyHistory(currencyName, historyKey);
@@ -71,13 +78,13 @@ class FirestoreService {
         .collection('exchange-rate-trends')
         .doc(currencyName)
         .get();
-
+    logger.i('getting history from firebase $docSnapshot');
     List<Currency> history = [];
     if (docSnapshot.exists) {
       Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
       data.forEach((date, buyRate) {
         history.add(Currency(
-            name: currencyName.toUpperCase(),
+            currencyCode: currencyName.toUpperCase(),
             sell: 0,
             buy: buyRate.toDouble(), // Assuming buyRate is already a num
             date: DateTime.parse(date),

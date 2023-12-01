@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:dinar_watch/data/services/currency_firestore_service.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:fl_chart/fl_chart.dart';
+import 'package:dinar_watch/data/services/currency_firestore_service.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/theme_manager.dart';
