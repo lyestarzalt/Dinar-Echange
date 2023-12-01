@@ -10,17 +10,22 @@ class UnifiedCurrencyService {
   UnifiedCurrencyService()
       : _mainCurrenciesRepository = MainRepository(FirestoreService());
 
-  Future<List<Currency>> getUnifiedCurrencies() async {
+Future<List<Currency>> getUnifiedCurrencies() async {
     try {
       // Fetch all currencies (core and extra) directly from Firestore
       List<Currency> currencies =
           await _mainCurrenciesRepository.getDailyCurrencies();
 
-      // Return the list of currencies
+      for (var currency in currencies) {
+        print(
+            'Currency: ${currency.currencyCode}, Buy: ${currency.buy}, Sell: ${currency.sell}');
+      }
+
       return currencies;
     } catch (e) {
       logger.e('Error getting unified currencies: $e');
       return [];
     }
   }
+
 }

@@ -6,6 +6,8 @@ import 'pages/history_page.dart';
 import 'pages/settings_page.dart';
 import 'theme_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dinar_watch/data/repositories/unified_currency_service.dart';
+import 'package:dinar_watch/models/currency.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   ThemeMode _themeMode = ThemeMode.light;
+  final UnifiedCurrencyService currencyService = UnifiedCurrencyService();
+  late Future<List<Currency>> _currenciesFuture;
+
+  List<Currency> _currencies = [];
 
   void _toggleTheme(bool isDark) {
     setState(() {
@@ -49,11 +55,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    print(_toggleTheme);
+        _currenciesFuture = currencyService.getUnifiedCurrencies();
 
     _widgetOptions = [
-      CurrencyListScreen(),
-      HistoryPage(),
+        CurrencyListScreen(currenciesFuture: currencyService.getUnifiedCurrencies()),
+
+            HistoryPage(currenciesFuture: _currenciesFuture),
+
       SettingsPage(onThemeChanged: _toggleTheme),
     ];
   }
@@ -66,6 +74,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+  
     return MaterialApp(
       title: 'Currency App',
       theme: ThemeManager.lightTheme,

@@ -15,7 +15,7 @@ class FinanceUtils {
 
     if (isDZDtoCurrency) {
       conversionRate =
-          Decimal.parse(((Decimal.one / dRate).toDouble()).toString());
+          Decimal.parse(((Decimal.one / dRate).toDouble() ).toString());
     } else {
       conversionRate = dRate;
     }

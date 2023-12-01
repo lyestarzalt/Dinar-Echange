@@ -6,7 +6,8 @@ class Currency {
   final bool isCore;
   final String? currencyName;
   final String? currencySymbol;
-  final String? flag; // Added flag field
+  final String? flag;
+  List<Currency>? history;
 
   Currency({
     required this.currencyCode,
@@ -17,13 +18,17 @@ class Currency {
     this.currencyName,
     this.currencySymbol,
     this.flag,
+    this.history,
   });
 
   factory Currency.fromJson(Map<String, dynamic> json) {
+    
+    num? buy = json['buy'] as num?;
+    num? sell = json['sell'] as num?;
     return Currency(
-      currencyCode: json['currencyCode'] as String? ?? '',
-      buy: (json['buy'] as num).toDouble(),
-      sell: (json['sell'] as num).toDouble(),
+   currencyCode: json['currencyCode'] as String? ?? '',
+      buy: buy?.toDouble() ?? 0.0, // Safe conversion with default value
+      sell: sell?.toDouble() ?? 0.0, // Safe conversion with default value
       date: DateTime.parse(json['date'] as String),
       isCore: json['isCore'] as bool? ?? false,
       currencyName: json['name'] as String?,

@@ -8,7 +8,10 @@ import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/theme_manager.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+  final Future<List<Currency>> currenciesFuture;
+
+  const HistoryPage({Key? key, required this.currenciesFuture})
+      : super(key: key);
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
@@ -33,10 +36,27 @@ class _HistoryPageState extends State<HistoryPage> {
     _loadCurrencyHistory(_selectedCurrency);
   }
 
-  Future<void> _loadCurrencyHistory(String currency) async {
-    print('Loading currency history for $currency');
-    _currencyHistory = await FirestoreService().fetchCurrencyHistory(currency);
-    _processDataAndSetState();
+  Future<void> _loadCurrencyHistory(String currencyCode) async {
+    final List<Currency> currencies = await widget.currenciesFuture;
+    Currency? selectedCurrency;
+
+    // Manually searching for the first matching currency
+    for (var currency in currencies) {
+      if (currency.currencyCode == currencyCode && currency.isCore) {
+        selectedCurrency = currency;
+        break; // Break the loop once the currency is found
+      }
+    }
+
+    if (selectedCurrency != null && selectedCurrency.history != null) {
+      _currencyHistory = CurrencyHistory(
+        name: selectedCurrency.currencyCode,
+        history: selectedCurrency.history!,
+      );
+      _processDataAndSetState();
+    } else {
+      // Handle currency not found or no history available
+    }
   }
 
   void _processDataAndSetState() {
@@ -174,7 +194,7 @@ class _HistoryPageState extends State<HistoryPage> {
           spots: _filteredHistory
               .asMap()
               .entries
-              .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
+              .map((e) => FlSpot(e.key.toDouble() ?? 0.0, e.value.buy))
               .toList(),
           isCurved: false,
           barWidth: 5,
