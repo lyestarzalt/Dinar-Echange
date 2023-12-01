@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class CacheManager {
+  
   Future<Map<String, dynamic>?> getCache(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? cachedData = prefs.getString(key);

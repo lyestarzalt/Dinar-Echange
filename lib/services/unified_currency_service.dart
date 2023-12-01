@@ -12,7 +12,7 @@ class UnifiedCurrencyService {
 
   UnifiedCurrencyService()
       : _mainCurrenciesRepository =
-            MainCurrenciesRepository(CurrencyFirestoreService()),
+            MainCurrenciesRepository(FirestoreService()),
         _secondaryCurrenciesRepository =
             SecondaryCurrenciesRepository(ExtraCurrency(), {}) {
     // Empty secondary repository coreCurrencies map is initialized here

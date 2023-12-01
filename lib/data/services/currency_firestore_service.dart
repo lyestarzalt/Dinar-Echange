@@ -4,7 +4,7 @@ import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/services/cache_service.dart';
 import 'package:intl/intl.dart';
 
-class CurrencyFirestoreService {
+class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CacheManager _cacheManager = CacheManager();
 
@@ -78,10 +78,10 @@ class CurrencyFirestoreService {
       data.forEach((date, buyRate) {
         history.add(Currency(
             name: currencyName.toUpperCase(),
-            sell: 0, // Assuming 'sell' field is not used
-            buy: buyRate.toDouble(), // Convert to double
+            sell: 0,
+            buy: buyRate.toDouble(), // Assuming buyRate is already a num
             date: DateTime.parse(date),
-            isCore: true));
+            isCore: true)); // 'sell' field can be removed if not used
       });
     }
 
