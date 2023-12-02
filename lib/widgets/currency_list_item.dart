@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme_manager.dart';
 import '../models/currency.dart';
 import 'package:dinar_watch/pages/conversion_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 class CurrencyListItem extends StatelessWidget {
   final Currency currency;
 
@@ -32,13 +34,14 @@ class CurrencyListItem extends StatelessWidget {
         width: 40,
         height: 30,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            currency.currencyCode.substring(0, 2),
-            style: ThemeManager.currencyCodeStyle(context),
-          ),
+          borderRadius: BorderRadius.circular(1),
+          image: currency.flag != null
+              ? DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      currency.flag!), // Use CachedNetworkImageProvider
+                  fit: BoxFit.cover,
+                )
+              : null,
         ),
       ),
       title: Hero(

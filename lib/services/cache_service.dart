@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
 class CacheManager {
   
   Future<Map<String, dynamic>?> getCache(String key) async {

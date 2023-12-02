@@ -22,18 +22,24 @@ class Currency {
   });
 
   factory Currency.fromJson(Map<String, dynamic> json) {
-    
     num? buy = json['buy'] as num?;
     num? sell = json['sell'] as num?;
+
+    var historyJson = json['history'] as List<dynamic>?;
+    List<Currency>? history = historyJson
+        ?.map((e) => Currency.fromJson(e as Map<String, dynamic>))
+        .toList();
+
     return Currency(
-   currencyCode: json['currencyCode'] as String? ?? '',
-      buy: buy?.toDouble() ?? 0.0, // Safe conversion with default value
-      sell: sell?.toDouble() ?? 0.0, // Safe conversion with default value
+      currencyCode: json['currencyCode'] as String? ?? '',
+      buy: buy?.toDouble() ?? 0.0,
+      sell: sell?.toDouble() ?? 0.0,
       date: DateTime.parse(json['date'] as String),
       isCore: json['isCore'] as bool? ?? false,
       currencyName: json['name'] as String?,
       currencySymbol: json['symbol'] as String?,
       flag: json['flag'] as String?,
+      history: history,
     );
   }
 
@@ -47,6 +53,7 @@ class Currency {
       'name': currencyName,
       'symbol': currencySymbol,
       'flag': flag,
+      'history': history?.map((e) => e.toJson()).toList(),
     };
   }
 }

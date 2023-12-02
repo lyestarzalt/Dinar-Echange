@@ -6,8 +6,9 @@ import 'pages/history_page.dart';
 import 'pages/settings_page.dart';
 import 'theme_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:dinar_watch/data/repositories/unified_currency_service.dart';
 import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/data/repositories/main_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,14 +39,35 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   ThemeMode _themeMode = ThemeMode.light;
-  final UnifiedCurrencyService currencyService = UnifiedCurrencyService();
+  late MainRepository currencyService = MainRepository();
+  //final UnifiedCurrencyService currencyService = UnifiedCurrencyService();
   late Future<List<Currency>> _currenciesFuture;
 
-  List<Currency> _currencies = [];
+  Future<void> saveThemePreference(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs.getBool('isDarkMode'));
 
-  void _toggleTheme(bool isDark) {
+    await prefs.setBool('isDarkMode', isDarkMode);
+  }
+
+  Future<bool> loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Default to light theme if no preference is set
+    print(prefs.getBool('isDarkMode'));
+    return prefs.getBool('isDarkMode') ?? false;
+  }
+
+  void _toggleTheme(bool isDark) async {
+    await saveThemePreference(isDark);
     setState(() {
       _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
+  Future<void> _initTheme() async {
+    bool isDarkMode = await loadThemePreference();
+    setState(() {
+      _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
@@ -55,13 +77,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-        _currenciesFuture = currencyService.getUnifiedCurrencies();
+    _initTheme();
+
+    _currenciesFuture = currencyService.getDailyCurrencies();
 
     _widgetOptions = [
-        CurrencyListScreen(currenciesFuture: currencyService.getUnifiedCurrencies()),
-
-            HistoryPage(currenciesFuture: _currenciesFuture),
-
+      CurrencyListScreen(currenciesFuture: _currenciesFuture),
+      HistoryPage(currenciesFuture: _currenciesFuture),
       SettingsPage(onThemeChanged: _toggleTheme),
     ];
   }
@@ -74,7 +96,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-  
     return MaterialApp(
       title: 'Currency App',
       theme: ThemeManager.lightTheme,

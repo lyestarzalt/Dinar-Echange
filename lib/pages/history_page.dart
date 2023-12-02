@@ -39,7 +39,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
     Currency? selectedCurrency;
-
+    
     // Manually searching for the first matching currency
     for (var currency in currencies) {
       if (currency.currencyCode == currencyCode && currency.isCore) {

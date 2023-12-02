@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -19,7 +20,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
   @override
   void initState() {
     super.initState();
-    filteredCurrencies = widget.existingCurrencies; // Start with all currencies
+    filteredCurrencies = widget.existingCurrencies;
     _loadSelectedCurrencies();
     searchController.addListener(_filterCurrencies);
   }
@@ -34,7 +35,10 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     String searchTerm = searchController.text.toLowerCase();
     setState(() {
       filteredCurrencies = widget.existingCurrencies
-          .where((currency) => currency.currencyCode.toLowerCase().contains(searchTerm))
+          .where((currency) =>
+              currency.currencyCode.toLowerCase().contains(searchTerm) ||
+              (currency.currencyName?.toLowerCase().contains(searchTerm) ??
+                  false))
           .toList();
     });
   }
@@ -44,16 +48,17 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     List<String> savedCurrencyNames =
         prefs.getStringList('selectedCurrencies') ?? [];
     setState(() {
-      // Initialize with all existing currencies marked as selected if they are in saved preferences
       selectedCurrencies = widget.existingCurrencies
-          .where((currency) => savedCurrencyNames.contains(currency.currencyCode))
+          .where(
+              (currency) => savedCurrencyNames.contains(currency.currencyCode))
           .toList();
     });
   }
 
   void _saveSelectedCurrencies() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> currencyNames = selectedCurrencies.map((c) => c.currencyCode).toList();
+    List<String> currencyNames =
+        selectedCurrencies.map((c) => c.currencyCode).toList();
     await prefs.setStringList('selectedCurrencies', currencyNames);
   }
 
@@ -67,17 +72,15 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Extra Currencies'),
-        // Other AppBar configurations...
       ),
       floatingActionButton: Padding(
-        padding:
-            EdgeInsets.only(top: 0), // Adjust this value to move FAB upwards
+        padding: const EdgeInsets.only(top: 0),
         child: Transform.scale(
-          scale: 0.8, // Adjust the size of the FAB
+          scale: 0.8,
           child: FloatingActionButton(
             onPressed: _addSelectedCurrencies,
-            child: const Icon(Icons.check),
             tooltip: 'Add Selected Currencies',
+            child: const Icon(Icons.check),
           ),
         ),
       ),
@@ -88,7 +91,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
             padding: const EdgeInsets.fromLTRB(5, 30, 5, 0),
             child: TextField(
               controller: searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
@@ -102,7 +105,24 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
                 Currency currency = filteredCurrencies[index];
                 bool isSelected = selectedCurrencies.contains(currency);
                 return ListTile(
-                  title: Text(currency.currencyCode),
+                  leading: currency.flag != null
+                      ? CachedNetworkImage(
+                          imageUrl: currency.flag!,
+                          width: 30,
+                          height: 20,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        )
+                      : SizedBox(width: 30),
+                  title: Row(
+                    children: [
+                      Text(currency.currencyCode),
+                      SizedBox(width: 10),
+                      Expanded(child: Text(currency.currencyName ?? '')),
+                    ],
+                  ),
                   trailing: Checkbox(
                     value: isSelected,
                     onChanged: (bool? value) {
