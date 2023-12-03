@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'pages/currency_list_screen.dart';
+import 'pages/currency_list_page.dart';
 import 'pages/history_page.dart';
 import 'pages/settings_page.dart';
 import 'theme_manager.dart';
@@ -45,7 +45,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> saveThemePreference(bool isDarkMode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(prefs.getBool('isDarkMode'));
 
     await prefs.setBool('isDarkMode', isDarkMode);
   }
@@ -57,11 +56,27 @@ class _MainScreenState extends State<MainScreen> {
     return prefs.getBool('isDarkMode') ?? false;
   }
 
-  void _toggleTheme(bool isDark) async {
-    await saveThemePreference(isDark);
-    setState(() {
-      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
-    });
+  void _toggleTheme(ThemeOption option) async {
+    switch (option) {
+      case ThemeOption.dark:
+        await saveThemePreference(true);
+        setState(() {
+          _themeMode = ThemeMode.dark;
+        });
+        break;
+      case ThemeOption.light:
+        await saveThemePreference(false);
+        setState(() {
+          _themeMode = ThemeMode.light;
+        });
+        break;
+      case ThemeOption.auto:
+      default:
+        setState(() {
+          _themeMode = ThemeMode.system;
+        });
+        break;
+    }
   }
 
   Future<void> _initTheme() async {

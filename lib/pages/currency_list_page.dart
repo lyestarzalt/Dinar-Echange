@@ -84,19 +84,27 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
           return Center(child: Text('Error fetching currencies'));
         } else if (snapshot.hasData) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Currency List')),
-            body: RefreshIndicator(
-              onRefresh: () async {
-                _initializeSelectedCurrencies(snapshot.data!);
-              },
-              child: ListView.separated(
-                itemCount: _selectedCurrencies.length,
-                separatorBuilder: (context, index) => const Divider(),
-                itemBuilder: (context, index) {
-                  final Currency currency = _selectedCurrencies[index];
-                  return CurrencyListItem(currency: currency);
-                },
-              ),
+            body: CustomScrollView(
+              slivers: <Widget>[
+                const SliverAppBar(
+                  expandedHeight: 100.0,
+                  floating: false,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Currency List'),
+                    // Add any additional AppBar customization here
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final Currency currency = snapshot.data![index];
+                      return CurrencyListItem(currency: currency);
+                    },
+                    childCount: snapshot.data!.length,
+                  ),
+                ),
+              ],
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),

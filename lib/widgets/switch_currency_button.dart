@@ -19,8 +19,8 @@ class SwitchCurrencyButton extends StatelessWidget {
       right: 8,
       child: FloatingActionButton(
         onPressed: onPressed,
-        child: const Icon(Icons.swap_vert),
         elevation: 2,
+        child: const Icon(Icons.swap_vert),
       ),
     );
   }

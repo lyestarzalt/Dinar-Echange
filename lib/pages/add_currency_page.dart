@@ -73,29 +73,30 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
       appBar: AppBar(
         title: const Text('Add Extra Currencies'),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 0),
-        child: Transform.scale(
-          scale: 0.8,
-          child: FloatingActionButton(
-            onPressed: _addSelectedCurrencies,
-            tooltip: 'Add Selected Currencies',
-            child: const Icon(Icons.check),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(5, 30, 5, 0),
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                FloatingActionButton(
+                  mini: true,
+                  onPressed: _addSelectedCurrencies,
+                  tooltip: 'Add Selected Currencies',
+                  child: const Icon(Icons.check),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -104,54 +105,56 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
               itemBuilder: (context, index) {
                 Currency currency = filteredCurrencies[index];
                 bool isSelected = selectedCurrencies.contains(currency);
-                return ListTile(
-                  leading: currency.flag != null
-                      ? CachedNetworkImage(
-                          imageUrl: currency.flag!,
-                          width: 30,
-                          height: 20,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        )
-                      : SizedBox(width: 30),
-                  title: Row(
-                    children: [
-                      Text(currency.currencyCode),
-                      SizedBox(width: 10),
-                      Expanded(child: Text(currency.currencyName ?? '')),
-                    ],
-                  ),
-                  trailing: Checkbox(
-                    value: isSelected,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        if (value != null) {
-                          if (value) {
-                            selectedCurrencies.add(currency);
-                          } else {
-                            selectedCurrencies.remove(currency);
-                          }
-                        }
-                      });
-                    },
-                  ),
-                  onTap: () {
-                    setState(() {
-                      if (isSelected) {
-                        selectedCurrencies.remove(currency);
-                      } else {
-                        selectedCurrencies.add(currency);
-                      }
-                    });
-                  },
-                );
+                return _buildCurrencyListItem(currency, isSelected);
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCurrencyListItem(Currency currency, bool isSelected) {
+    return ListTile(
+      leading: currency.flag != null
+          ? CachedNetworkImage(
+              imageUrl: currency.flag!,
+              width: 30,
+              height: 20,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            )
+          : SizedBox(width: 30),
+      title: Row(
+        children: [
+          Text(currency.currencyCode),
+          SizedBox(width: 10),
+          Expanded(child: Text(currency.currencyName ?? '')),
+        ],
+      ),
+      trailing: Checkbox(
+        value: isSelected,
+        onChanged: (bool? value) {
+          setState(() {
+            if (value != null) {
+              if (value) {
+                selectedCurrencies.add(currency);
+              } else {
+                selectedCurrencies.remove(currency);
+              }
+            }
+          });
+        },
+      ),
+      onTap: () {
+        setState(() {
+          if (isSelected) {
+            selectedCurrencies.remove(currency);
+          } else {
+            selectedCurrencies.add(currency);
+          }
+        });
+      },
     );
   }
 }

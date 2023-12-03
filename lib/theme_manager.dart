@@ -85,6 +85,28 @@ class ThemeManager {
   static ThemeData _baseTheme(
       ColorScheme colorScheme, Color bodyTextColor, Color displayTextColor) {
     return ThemeData(
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          side: MaterialStateProperty.all(
+            BorderSide(color: colorScheme.onSurface, width: 1.0),
+          ),
+          backgroundColor: MaterialStateProperty.all(colorScheme.background),
+          foregroundColor: MaterialStateProperty.all(colorScheme.onBackground),
+          textStyle: MaterialStateProperty.all(
+            TextStyle(color: colorScheme.onBackground),
+          ),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(
+                horizontal: 20.0, vertical: 10.0), // Adjust for size
+          ),
+        ),
+      ),
+
       navigationBarTheme: navigationBarTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
       useMaterial3: true,
@@ -112,10 +134,9 @@ class ThemeManager {
         fillColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             if (states.contains(MaterialState.selected)) {
-              return Color.fromARGB(
-                  255, 43, 255, 0); // Greenish color for selected Checkbox
+              return const Color.fromARGB(255, 43, 255, 0);
             }
-            return colorScheme.onSurface.withOpacity(0.6); // Default color
+            return colorScheme.onSurface.withOpacity(0.6);
           },
         ),
       ),
@@ -131,39 +152,35 @@ class ThemeManager {
     ColorScheme.fromSeed(
       seedColor: Colors.grey,
       brightness: Brightness.dark,
-      primary: Colors.black, // Explicitly set the primary color for dark theme
-      primaryContainer: Colors.black, // Consider setting this if needed
+      primary: Colors.black,
+      primaryContainer: Colors.black,
       secondary: Colors.white,
-      secondaryContainer: Colors.white, // Adjust if needed
+      secondaryContainer: Colors.white,
       onSecondary: Colors.black,
       surfaceTint: Colors.grey[850],
-      surface: Colors
-          .grey[850], // Or another appropriate color for dark theme surfaces
-      background:
-          Colors.grey[900], // Or another appropriate dark color for backgrounds
-      error: Colors.red, // Adjust error color as needed
-      // ... define other colors as needed ...
+      surface: Colors.grey[850],
+      background: Colors.black,
+      error: Colors.red,
     ),
-    Colors.white, // White text for dark theme
-    Colors.white, // White display text for dark theme
+    Colors.white,
+    Colors.white,
   );
 
   static final lightTheme = _baseTheme(
     ColorScheme.fromSeed(
       seedColor: Colors.white,
       brightness: Brightness.light,
-      primary: Colors.white, // Explicitly set the primary color for light theme
-      primaryContainer: Colors.white, // Consider setting this if needed
+      primary: Colors.white,
+      primaryContainer: Colors.white,
       secondary: Colors.black,
-      secondaryContainer: Colors.black, // Adjust if needed
+      secondaryContainer: Colors.black,
       surfaceTint: Colors.white,
       onSecondary: Colors.white,
-      surface:
-          Colors.grey[200], // Or another appropriate light color for surfaces
-      background: Colors.white, // Background color for the light theme
-      error: Colors.red, // Adjust error color as needed
+      surface: Colors.grey[200],
+      background: Colors.white,
+      error: Colors.red,
     ),
-    Colors.black, // Black text for light theme
-    Colors.black, // Black display text for light theme
+    Colors.black,
+    Colors.black,
   );
 }

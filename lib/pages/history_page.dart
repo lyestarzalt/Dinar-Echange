@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
-import 'package:dinar_watch/data/services/currency_firestore_service.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/theme_manager.dart';
@@ -25,7 +24,7 @@ class _HistoryPageState extends State<HistoryPage> {
   double _maxX = 0;
   bool _isLoading = true;
   int _timeSpan = 30; // default to 1 month
-  String _selectedCurrency = 'EUR'; // default currency
+  final String _selectedCurrency = 'EUR'; // default currency
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
@@ -39,7 +38,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
     Currency? selectedCurrency;
-    
+
     // Manually searching for the first matching currency
     for (var currency in currencies) {
       if (currency.currencyCode == currencyCode && currency.isCore) {
@@ -66,12 +65,9 @@ class _HistoryPageState extends State<HistoryPage> {
         .where((data) => data.date.isAfter(cutOffDate))
         .toList();
 
-    print(
-        'Number of data points for $_timeSpan days: ${filteredHistory.length}');
-
     final List<double> allBuyValues =
         filteredHistory.map((data) => data.buy).toList();
-    final bufferPercentX = 0.05; // 5% buffer
+    const bufferPercentX = 0.05; // 5% buffer
     final bufferValueX = filteredHistory.length * bufferPercentX;
 
 // Set a buffer value that will be used to extend the max and min values by a certain percentage.
@@ -90,7 +86,6 @@ class _HistoryPageState extends State<HistoryPage> {
       _midYValue = (_maxYValue + _minYValue) / 2;
       _maxX = filteredHistory.length - 1; // Apply buffer to maxX
     });
-    print('maxX: $_maxX, maxY: $_maxYValue, minY: $_minYValue');
   }
 
   void _onTimeSpanButtonClicked(int days) {
@@ -194,7 +189,7 @@ class _HistoryPageState extends State<HistoryPage> {
           spots: _filteredHistory
               .asMap()
               .entries
-              .map((e) => FlSpot(e.key.toDouble() ?? 0.0, e.value.buy))
+              .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
               .toList(),
           isCurved: false,
           barWidth: 5,
