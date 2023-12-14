@@ -226,36 +226,19 @@ class _HistoryPageState extends State<HistoryPage> {
                 _loadCurrencyHistory(_selectedCurrency);
               });
             },
-            context: context,
+            parentContext: context,
           ).showMenu();
         },
         child: const Icon(Icons.menu),
       ),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
+        const  SliverAppBar(
             expandedHeight: 80.0,
             floating: false,
             pinned: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  CurrencyMenu(
-                    coreCurrencies: CoreCurrencies,
-                    onCurrencySelected: (selectedCurrency) {
-                      setState(() {
-                        _selectedCurrency = selectedCurrency;
-                        // Trigger a new data load for the selected currency
-                        _loadCurrencyHistory(_selectedCurrency);
-                      });
-                    },
-                    context: context,
-                  ).showMenu();
-                },
-              ),
-            ],
-            flexibleSpace: const FlexibleSpaceBar(
+            actions: [],
+            flexibleSpace:  FlexibleSpaceBar(
               title: Text('Currency Trends'),
             ),
           ),
