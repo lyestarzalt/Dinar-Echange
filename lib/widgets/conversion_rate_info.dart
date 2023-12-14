@@ -9,14 +9,14 @@ class ConversionRateInfo extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const ConversionRateInfo({
-    Key? key,
+    super.key,
     required this.conversionRateText,
     required this.textStyle,
     this.backgroundColor = Colors.grey, // Default color
     this.minHeight = 50.0, // Default minimum height
     this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

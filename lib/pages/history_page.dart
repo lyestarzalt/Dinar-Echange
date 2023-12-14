@@ -5,12 +5,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/theme_manager.dart';
+import 'package:dinar_watch/widgets/history/currency_menu.dart';
+import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
 
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
 
-  const HistoryPage({Key? key, required this.currenciesFuture})
-      : super(key: key);
+  const HistoryPage({super.key, required this.currenciesFuture});
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
@@ -19,15 +20,17 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   late CurrencyHistory _currencyHistory;
   late List<Currency> _filteredHistory;
-
+  late List<Currency> CoreCurrencies;
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
   bool _isLoading = true;
-  int _timeSpan = 30; // default to 1 month
-  final String _selectedCurrency = 'EUR'; // default currency
+  int _timeSpan = 60; // default to 1 month
+  String _selectedCurrency = 'EUR'; // default currency
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
+
+//
 
   @override
   void initState() {
@@ -38,6 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
     Currency? selectedCurrency;
+    CoreCurrencies = currencies.where((currency) => currency.isCore).toList();
 
     // Manually searching for the first matching currency
     for (var currency in currencies) {
@@ -85,6 +89,7 @@ class _HistoryPageState extends State<HistoryPage> {
           minDataValue - bufferValue; // Subtract buffer from the min value
       _midYValue = (_maxYValue + _minYValue) / 2;
       _maxX = filteredHistory.length - 1; // Apply buffer to maxX
+      print(_midYValue);
     });
   }
 
@@ -106,14 +111,17 @@ class _HistoryPageState extends State<HistoryPage> {
             reservedSize: 50,
             interval: 1,
             getTitlesWidget: (value, meta) => value == _minYValue ||
-                    value == _midYValue ||
+                    value == _midYValue.round() ||
                     value == _maxYValue
-                ? Text('${value.toStringAsFixed(2)}',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
-                    textAlign: TextAlign.right)
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(value.toInt().toString(),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                        textAlign: TextAlign.left),
+                  )
                 : Container(),
           ),
         ),
@@ -123,7 +131,9 @@ class _HistoryPageState extends State<HistoryPage> {
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       extraLinesData: ExtraLinesData(
-        horizontalLines: [_minYValue, _midYValue, _maxYValue]
+        // The mid value is rounded to ensure it aligns with a horizontal line and is displayed.
+        // getTitlesWidget only displays whole numbers, so non-integer mid values need to be rounded.
+        horizontalLines: [_minYValue, _midYValue.round().toDouble(), _maxYValue]
             .map((yValue) => HorizontalLine(
                 y: yValue,
                 color:
@@ -203,72 +213,83 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Currency History'),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                // Refresh action
-              },
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Align to start
-            children: [
-              if (!_isLoading) ...[
-                Text(
-                  '1 $_selectedCurrency = $_selectedValue',
-                  style: ThemeManager.moneyNumberStyle(context),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _selectedDate,
-                  style: ThemeManager.currencyCodeStyle(context),
-                ),
-                const SizedBox(height: 16),
-                AspectRatio(
-                  aspectRatio: 1.2,
-                  child: LineChart(_mainData()),
-                ),
-                const SizedBox(height: 16),
-                _buildTimeSpanButtons(),
-              ] else
-                const Expanded(
-                    child: Center(child: CircularProgressIndicator())),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        heroTag: null,
+        onPressed: () {
+          CurrencyMenu(
+            coreCurrencies: CoreCurrencies,
+            onCurrencySelected: (selectedCurrency) {
+              setState(() {
+                _selectedCurrency = selectedCurrency;
+                _loadCurrencyHistory(_selectedCurrency);
+              });
+            },
+            context: context,
+          ).showMenu();
+        },
+        child: const Icon(Icons.menu),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 80.0,
+            floating: false,
+            pinned: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  CurrencyMenu(
+                    coreCurrencies: CoreCurrencies,
+                    onCurrencySelected: (selectedCurrency) {
+                      setState(() {
+                        _selectedCurrency = selectedCurrency;
+                        // Trigger a new data load for the selected currency
+                        _loadCurrencyHistory(_selectedCurrency);
+                      });
+                    },
+                    context: context,
+                  ).showMenu();
+                },
+              ),
             ],
+            flexibleSpace: const FlexibleSpaceBar(
+              title: Text('Currency Trends'),
+            ),
           ),
-        ),
-      );
-  Widget _buildTimeSpanButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildTimeSpanButton('1M', 30),
-        _buildTimeSpanButton('6M', 180),
-        _buildTimeSpanButton('1Y', 365),
-        _buildTimeSpanButton('2Y', 730),
-      ],
-    );
-  }
-
-  Widget _buildTimeSpanButton(String label, int days) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _timeSpan = days;
-        });
-        _onTimeSpanButtonClicked(days);
-      },
-      child: Text(
-        label,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  if (!_isLoading) ...[
+                    Text(
+                      '1 $_selectedCurrency = $_selectedValue',
+                      style: ThemeManager.moneyNumberStyle(context),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _selectedDate,
+                      style: ThemeManager.currencyCodeStyle(context),
+                    ),
+                    const SizedBox(height: 16),
+                    AspectRatio(
+                      aspectRatio: 1.2,
+                      child: LineChart(_mainData()),
+                    ),
+                    const SizedBox(height: 16),
+                    TimeSpanButtons(
+                        onTimeSpanSelected: _onTimeSpanButtonClicked),
+                  ] else
+                    const Expanded(
+                        child: Center(child: CircularProgressIndicator())),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -7,14 +7,13 @@ import 'package:dinar_watch/widgets/currency_list_item.dart';
 class CurrencyListScreen extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
 
-  const CurrencyListScreen({Key? key, required this.currenciesFuture})
-      : super(key: key);
+  const CurrencyListScreen({super.key, required this.currenciesFuture});
 
   @override
-  _CurrencyListScreenState createState() => _CurrencyListScreenState();
+  CurrencyListScreenState createState() => CurrencyListScreenState();
 }
 
-class _CurrencyListScreenState extends State<CurrencyListScreen> {
+class CurrencyListScreenState extends State<CurrencyListScreen> {
   final PreferencesService _preferencesService = PreferencesService();
   List<Currency> _selectedCurrencies = [];
 
@@ -79,15 +78,15 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
       future: widget.currenciesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error fetching currencies'));
+          return const Center(child: Text('Error fetching currencies'));
         } else if (snapshot.hasData) {
           return Scaffold(
             body: CustomScrollView(
-              slivers: <Widget>[
+              slivers: [
                 const SliverAppBar(
-                  expandedHeight: 100.0,
+                  expandedHeight: 80.0,
                   floating: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
@@ -98,10 +97,10 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final Currency currency = snapshot.data![index];
+                      final Currency currency = _selectedCurrencies[index];
                       return CurrencyListItem(currency: currency);
                     },
-                    childCount: snapshot.data!.length,
+                    childCount: _selectedCurrencies.length,
                   ),
                 ),
               ],
@@ -113,7 +112,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
             ),
           );
         } else {
-          return Center(child: Text('No currencies available'));
+          return const Center(child: Text('No currencies available'));
         }
       },
     );

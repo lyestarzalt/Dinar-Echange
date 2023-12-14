@@ -10,9 +10,9 @@ class CurrencyListItem extends StatelessWidget {
   final Currency currency;
 
   const CurrencyListItem({
-    Key? key,
+    super.key,
     required this.currency,
-  }) : super(key: key);
+  });
 
   String _formatCurrencyValue(double value) {
     return value % 1 == 0 ? value.toInt().toString() : value.toStringAsFixed(2);

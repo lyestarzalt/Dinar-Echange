@@ -5,14 +5,13 @@ enum ThemeOption { auto, dark, light }
 class SettingsPage extends StatefulWidget {
   final Function(ThemeOption) onThemeChanged;
 
-  const SettingsPage({Key? key, required this.onThemeChanged})
-      : super(key: key);
+  const SettingsPage({super.key, required this.onThemeChanged});
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  SettingsPageState createState() => SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPageState extends State<SettingsPage> {
   ThemeOption themeOption = ThemeOption.auto; // Default value
 
   @override

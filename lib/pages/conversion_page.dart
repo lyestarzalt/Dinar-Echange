@@ -8,14 +8,13 @@ import 'package:dinar_watch/widgets/conversion_rate_info.dart';
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
 
-  const CurrencyConverterPage({Key? key, required this.currency})
-      : super(key: key);
+  const CurrencyConverterPage({super.key, required this.currency});
 
   @override
-  _CurrencyConverterPageState createState() => _CurrencyConverterPageState();
+  CurrencyConverterPageState createState() => CurrencyConverterPageState();
 }
 
-class _CurrencyConverterPageState extends State<CurrencyConverterPage>
+class CurrencyConverterPageState extends State<CurrencyConverterPage>
     with SingleTickerProviderStateMixin {
   // Controllers for the two text fields
   TextEditingController amountController = TextEditingController();
@@ -188,8 +187,8 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage>
                     right: 8,
                     child: FloatingActionButton(
                       onPressed: _swapCurrencies,
-                      child: const Icon(Icons.swap_vert),
                       elevation: 2,
+                      child: const Icon(Icons.swap_vert),
                     ),
                   ),
                 ],

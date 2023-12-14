@@ -93,8 +93,9 @@ class FirestoreService {
         .get();
     // logger.i('getting history from firebase $docSnapshot');
 
-    if (!docSnapshot.exists)
+    if (!docSnapshot.exists) {
       throw Exception('No history available for $currencyName.');
+    }
 
     List<Currency> history = [];
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;

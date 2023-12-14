@@ -89,7 +89,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 FloatingActionButton(
                   mini: true,
                   onPressed: _addSelectedCurrencies,
@@ -121,14 +121,14 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
               imageUrl: currency.flag!,
               width: 30,
               height: 20,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             )
-          : SizedBox(width: 30),
+          : const SizedBox(width: 30),
       title: Row(
         children: [
           Text(currency.currencyCode),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(child: Text(currency.currencyName ?? '')),
         ],
       ),
