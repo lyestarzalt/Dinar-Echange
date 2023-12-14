@@ -7,7 +7,7 @@ class CurrencyMenu extends StatelessWidget {
   final Function(String) onCurrencySelected;
   final BuildContext parentContext;
 
-  CurrencyMenu({
+ const CurrencyMenu({
     Key? key,
     required this.coreCurrencies,
     required this.onCurrencySelected,
@@ -44,7 +44,7 @@ class CurrencyMenu extends StatelessWidget {
               children: [
                 Text(
                   currency.currencyName ?? '',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),

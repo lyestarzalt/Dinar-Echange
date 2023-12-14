@@ -9,10 +9,10 @@ class AddCurrencyPage extends StatefulWidget {
   const AddCurrencyPage({super.key, required this.existingCurrencies});
 
   @override
-  _AddCurrencyPageState createState() => _AddCurrencyPageState();
+  AddCurrencyPageState createState() => AddCurrencyPageState();
 }
 
-class _AddCurrencyPageState extends State<AddCurrencyPage> {
+class AddCurrencyPageState extends State<AddCurrencyPage> {
   List<Currency> selectedCurrencies = [];
   List<Currency> filteredCurrencies = [];
   TextEditingController searchController = TextEditingController();
@@ -69,6 +69,10 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Currency> sortedCurrencies = List<Currency>.from(selectedCurrencies);
+    sortedCurrencies.addAll(filteredCurrencies
+        .where((currency) => !selectedCurrencies.contains(currency)));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Extra Currencies'),
@@ -103,7 +107,7 @@ class _AddCurrencyPageState extends State<AddCurrencyPage> {
             child: ListView.builder(
               itemCount: filteredCurrencies.length,
               itemBuilder: (context, index) {
-                Currency currency = filteredCurrencies[index];
+                Currency currency = sortedCurrencies[index];
                 bool isSelected = selectedCurrencies.contains(currency);
                 return _buildCurrencyListItem(currency, isSelected);
               },

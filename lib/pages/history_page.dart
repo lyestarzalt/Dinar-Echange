@@ -14,17 +14,17 @@ class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key, required this.currenciesFuture});
 
   @override
-  _HistoryPageState createState() => _HistoryPageState();
+  HistoryPageState createState() => HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class HistoryPageState extends State<HistoryPage> {
   late CurrencyHistory _currencyHistory;
   late List<Currency> _filteredHistory;
-  late List<Currency> CoreCurrencies;
+  late List<Currency> coreCurrencies;
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
   bool _isLoading = true;
-  int _timeSpan = 60; // default to 1 month
+  int _timeSpan = 30; // default to 1 month
   String _selectedCurrency = 'EUR'; // default currency
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
@@ -41,7 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
     Currency? selectedCurrency;
-    CoreCurrencies = currencies.where((currency) => currency.isCore).toList();
+    coreCurrencies = currencies.where((currency) => currency.isCore).toList();
 
     // Manually searching for the first matching currency
     for (var currency in currencies) {
@@ -62,19 +62,28 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
-  void _processDataAndSetState() {
-    final cutOffDate = DateTime.now().subtract(Duration(days: _timeSpan));
+  /// Filters the last [timeSpan] days of currency history.
+  ///
+  /// Returns the entire history if it's shorter than [timeSpan],
+  /// otherwise returns the last [timeSpan] days.
 
-    final filteredHistory = _currencyHistory.history
-        .where((data) => data.date.isAfter(cutOffDate))
-        .toList();
+  List<Currency> _filterCurrencyHistory(int timeSpan) {
+    final int historyLength = _currencyHistory.history.length;
+    final int startIndex = historyLength - timeSpan;
+    return historyLength <= timeSpan
+        ? _currencyHistory.history
+        : _currencyHistory.history.sublist(startIndex);
+  }
+
+  void _processDataAndSetState() {
+    final filteredHistory = _filterCurrencyHistory(_timeSpan);
 
     final List<double> allBuyValues =
         filteredHistory.map((data) => data.buy).toList();
-    const bufferPercentX = 0.05; // 5% buffer
-    final bufferValueX = filteredHistory.length * bufferPercentX;
+    // const bufferPercentX = 0.05; // 5% buffer
+    // final bufferValueX = filteredHistory.length * bufferPercentX;
 
-// Set a buffer value that will be used to extend the max and min values by a certain percentage.
+    // Set a buffer value that will be used to extend the max and min values by a certain percentage.
     const bufferPercent = 0.02; // 2% buffer
     final maxDataValue = allBuyValues.reduce(math.max);
     final minDataValue = allBuyValues.reduce(math.min);
@@ -84,12 +93,10 @@ class _HistoryPageState extends State<HistoryPage> {
       _selectedValue = filteredHistory.last.buy.toString();
       _filteredHistory = filteredHistory;
       _isLoading = false;
-      _maxYValue = maxDataValue + bufferValue; // Add buffer to the max value
-      _minYValue =
-          minDataValue - bufferValue; // Subtract buffer from the min value
+      _maxYValue = maxDataValue + bufferValue;
+      _minYValue = minDataValue - bufferValue;
       _midYValue = (_maxYValue + _minYValue) / 2;
-      _maxX = filteredHistory.length - 1; // Apply buffer to maxX
-      print(_midYValue);
+      _maxX = filteredHistory.length - 1;
     });
   }
 
@@ -101,38 +108,110 @@ class _HistoryPageState extends State<HistoryPage> {
     _processDataAndSetState();
   }
 
-  LineChartData _mainData() {
+  FlTitlesData _buildTitlesData(BuildContext context, double minYValue,
+      double midYValue, double maxYValue) {
+    return FlTitlesData(
+      rightTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 50,
+          interval: 1,
+          getTitlesWidget: (value, meta) => value == minYValue ||
+                  value == midYValue.round() ||
+                  value == maxYValue
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    value.toInt().toString(),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
+                    textAlign: TextAlign.left,
+                  ),
+                )
+              : Container(),
+        ),
+      ),
+      bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+
+  List<LineChartBarData> _buildLineBarsData(
+      BuildContext context, List<Currency> filteredHistory) {
+    return [
+      LineChartBarData(
+        spots: filteredHistory
+            .asMap()
+            .entries
+            .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
+            .toList(),
+        isCurved: false,
+        barWidth: 5,
+        color: Theme.of(context).colorScheme.secondary,
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+      ),
+    ];
+  }
+
+  void onIndexChange(int newIndex) {
+    setState(() {
+      _touchedIndex = newIndex;
+      _selectedValue =
+          '${_filteredHistory[newIndex].buy.toStringAsFixed(2)} DZD';
+      _selectedDate =
+          DateFormat('dd/MM/yyyy').format(_filteredHistory[newIndex].date);
+    });
+  }
+
+  LineTouchData _buildLineTouchData(BuildContext context, int touchedIndex,
+      List<Currency> filteredHistory, Function(int) onIndexChange) {
+    return LineTouchData(
+      touchCallback: (event, touchResponse) {
+        if (event.isInterestedForInteractions &&
+            touchResponse?.lineBarSpots != null) {
+          final spot = touchResponse!.lineBarSpots!.first;
+          final newIndex = spot.x.toInt();
+          if (newIndex != touchedIndex) {
+            onIndexChange(newIndex);
+          }
+        }
+      },
+      handleBuiltInTouches: true,
+      touchTooltipData: LineTouchTooltipData(
+        tooltipBgColor: Colors.transparent,
+        tooltipRoundedRadius: 0,
+        getTooltipItems: (List<LineBarSpot> touchedSpots) {
+          return touchedSpots
+              .map((spot) => const LineTooltipItem(
+                    '', // Empty string for tooltip content
+                    TextStyle(
+                        color: Colors.transparent), // Transparent text style
+                  ))
+              .toList();
+        },
+      ),
+      getTouchedSpotIndicator:
+          (LineChartBarData barData, List<int> spotIndexes) {
+        return spotIndexes.map((index) {
+          return TouchedSpotIndicatorData(
+            const FlLine(color: Colors.transparent),
+            FlDotData(show: index == touchedIndex), // Show the dot
+          );
+        }).toList();
+      },
+    );
+  }
+
+  LineChartData _mainData(BuildContext context) {
     return LineChartData(
       gridData: const FlGridData(show: false),
-      titlesData: FlTitlesData(
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 50,
-            interval: 1,
-            getTitlesWidget: (value, meta) => value == _minYValue ||
-                    value == _midYValue.round() ||
-                    value == _maxYValue
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(value.toInt().toString(),
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                        textAlign: TextAlign.left),
-                  )
-                : Container(),
-          ),
-        ),
-        bottomTitles:
-            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      ),
+      titlesData: _buildTitlesData(context, _minYValue, _midYValue, _maxYValue),
       extraLinesData: ExtraLinesData(
-        // The mid value is rounded to ensure it aligns with a horizontal line and is displayed.
-        // getTitlesWidget only displays whole numbers, so non-integer mid values need to be rounded.
         horizontalLines: [_minYValue, _midYValue.round().toDouble(), _maxYValue]
             .map((yValue) => HorizontalLine(
                 y: yValue,
@@ -142,73 +221,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 dashArray: [5]))
             .toList(),
       ),
-      lineTouchData: LineTouchData(
-        touchCallback: (event, touchResponse) {
-          if (event.isInterestedForInteractions &&
-              touchResponse?.lineBarSpots != null) {
-            final spot = touchResponse!.lineBarSpots!.first;
-            final newIndex = spot.x.toInt();
-            if (newIndex != _touchedIndex) {
-              setState(() {
-                _selectedValue = '${spot.y.toStringAsFixed(2)} DZD';
-                _selectedDate = DateFormat('dd/MM/yyyy')
-                    .format(_currencyHistory.history[newIndex].date);
-                _touchedIndex = newIndex;
-              });
-            }
-          }
-        },
-        handleBuiltInTouches: true,
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
-          tooltipRoundedRadius: 0,
-          getTooltipItems: (List<LineBarSpot> touchedSpots) {
-            return touchedSpots
-                .map((spot) => const LineTooltipItem(
-                      '', // Empty string for tooltip content
-                      TextStyle(
-                          color: Colors.transparent), // Transparent text style
-                    ))
-                .toList();
-          },
-        ),
-        getTouchedSpotIndicator:
-            (LineChartBarData barData, List<int> spotIndexes) {
-          return spotIndexes.map((index) {
-            if (index == _touchedIndex) {
-              // Check if the index matches the touched index
-              return const TouchedSpotIndicatorData(
-                FlLine(color: Colors.transparent),
-                FlDotData(show: true), // Show the dot
-              );
-            } else {
-              return const TouchedSpotIndicatorData(
-                FlLine(color: Colors.transparent),
-                FlDotData(show: false), // Hide the dot for other indexes
-              );
-            }
-          }).toList();
-        },
-      ),
+      lineTouchData: _buildLineTouchData(
+          context, _touchedIndex, _filteredHistory, onIndexChange),
       borderData: FlBorderData(show: false),
       maxX: _maxX,
       maxY: _maxYValue,
       minY: _minYValue,
-      lineBarsData: [
-        LineChartBarData(
-          spots: _filteredHistory
-              .asMap()
-              .entries
-              .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
-              .toList(),
-          isCurved: false,
-          barWidth: 5,
-          color: Theme.of(context).colorScheme.secondary,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(show: false),
-          belowBarData: BarAreaData(show: false),
-        ),
-      ],
+      lineBarsData: _buildLineBarsData(context, _filteredHistory),
     );
   }
 
@@ -219,7 +238,7 @@ class _HistoryPageState extends State<HistoryPage> {
         heroTag: null,
         onPressed: () {
           CurrencyMenu(
-            coreCurrencies: CoreCurrencies,
+            coreCurrencies: coreCurrencies,
             onCurrencySelected: (selectedCurrency) {
               setState(() {
                 _selectedCurrency = selectedCurrency;
@@ -233,12 +252,12 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
       body: CustomScrollView(
         slivers: [
-        const  SliverAppBar(
+          const SliverAppBar(
             expandedHeight: 80.0,
             floating: false,
             pinned: true,
             actions: [],
-            flexibleSpace:  FlexibleSpaceBar(
+            flexibleSpace: FlexibleSpaceBar(
               title: Text('Currency Trends'),
             ),
           ),
@@ -260,14 +279,13 @@ class _HistoryPageState extends State<HistoryPage> {
                     const SizedBox(height: 16),
                     AspectRatio(
                       aspectRatio: 1.2,
-                      child: LineChart(_mainData()),
+                      child: LineChart(_mainData(context)),
                     ),
                     const SizedBox(height: 16),
                     TimeSpanButtons(
                         onTimeSpanSelected: _onTimeSpanButtonClicked),
                   ] else
-                    const Expanded(
-                        child: Center(child: CircularProgressIndicator())),
+                    Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

@@ -52,7 +52,6 @@ class MainScreenState extends State<MainScreen> {
   Future<bool> loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // Default to light theme if no preference is set
-    print(prefs.getBool('isDarkMode'));
     return prefs.getBool('isDarkMode') ?? false;
   }
 
