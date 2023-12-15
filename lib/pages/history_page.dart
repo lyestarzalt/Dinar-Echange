@@ -32,34 +32,12 @@ class HistoryPageState extends State<HistoryPage>
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
 
-//
-  late AnimationController _controller;
   @override
   void initState() {
     super.initState();
     _loadCurrencyHistory(_selectedCurrency);
   }
 
-  void _showCurrencyMenu() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return CurrencyMenu(
-          coreCurrencies: coreCurrencies,
-          onCurrencySelected: (selectedCurrency) {
-            setState(() {
-              _selectedCurrency = selectedCurrency;
-              _loadCurrencyHistory(_selectedCurrency);
-            });
-          },
-          parentContext: context,
-        );
-      },
-      backgroundColor: Colors.transparent, // Make the background transparent
-      isScrollControlled:
-          true, // Allow the sheet to take only half of the screen
-    );
-  }
 
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
@@ -328,7 +306,7 @@ class HistoryPageState extends State<HistoryPage>
                     TimeSpanButtons(
                         onTimeSpanSelected: _onTimeSpanButtonClicked),
                   ] else
-                    Center(child: CircularProgressIndicator()),
+                   const  Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

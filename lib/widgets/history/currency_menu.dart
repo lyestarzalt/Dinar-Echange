@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:animations/animations.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
@@ -27,12 +26,12 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Select Currency'), // Or any other title you prefer
+        title:const Text('Select Currency'), // Or any other title you prefer
       ),
       body: ListView.separated(
         itemCount: widget.coreCurrencies.length,
         separatorBuilder: (context, index) =>
-            Divider(), // Adds a divider between list items
+            const Divider(), // divider between list items
         itemBuilder: (BuildContext context, int index) {
           final currency = widget.coreCurrencies[index];
           return Padding(
