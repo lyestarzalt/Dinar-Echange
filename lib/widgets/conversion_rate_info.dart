@@ -12,10 +12,10 @@ class ConversionRateInfo extends StatelessWidget {
     super.key,
     required this.conversionRateText,
     required this.textStyle,
-    this.backgroundColor = Colors.grey, // Default color
-    this.minHeight = 50.0, // Default minimum height
-    this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.backgroundColor = Colors.grey,
+    this.minHeight = 50.0,
+    this.padding = const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    this.borderRadius = const BorderRadius.all(Radius.circular(6)),
   });
 
   @override
@@ -24,7 +24,7 @@ class ConversionRateInfo extends StatelessWidget {
       padding: padding,
       constraints: BoxConstraints(
         minHeight: minHeight,
-        maxWidth: MediaQuery.of(context).size.width - (padding.horizontal * 2),
+        maxWidth: MediaQuery.of(context).size.width - (padding.horizontal),
       ),
       decoration: BoxDecoration(
         color: backgroundColor,

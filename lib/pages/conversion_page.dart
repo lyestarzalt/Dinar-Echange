@@ -4,6 +4,7 @@ import 'package:dinar_watch/theme_manager.dart';
 import 'package:dinar_watch/utils/finance_utils.dart';
 import 'package:decimal/decimal.dart';
 import 'package:dinar_watch/widgets/conversion_rate_info.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
@@ -118,7 +119,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   Widget build(BuildContext context) {
     // Calculate the middle point of the screen
     final screenHeight = MediaQuery.of(context).size.height;
-    final middlePoint = screenHeight * 0.5;
+    final middlePoint = screenHeight * 0.2;
 
     // Calculate the height for each card
     const cardHeight = 100.0;
@@ -134,13 +135,15 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(title: const Text('Convert') ,) ,
+      appBar: AppBar(
+        title: const Text('Convert'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: screenHeight * 0.7,
+              height: screenHeight * 0.4,
               child: Stack(
                 children: [
                   // Top Card - DZD input field
@@ -156,7 +159,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                     child: _buildCurrencyInput(
                       isDZDtoCurrency ? amountController : resultController,
                       'DZD',
-                      flagPlaceholder,
+                      widget.currency.flag,
                       isDZDtoCurrency
                           ? amountFocusNode
                           : resultFocusNode, // Pass the FocusNode
@@ -175,7 +178,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                     child: _buildCurrencyInput(
                       isDZDtoCurrency ? resultController : amountController,
                       widget.currency.currencyCode,
-                      flagPlaceholder,
+                      widget.currency.flag,
                       isDZDtoCurrency
                           ? resultFocusNode
                           : amountFocusNode, // Pass the FocusNode
@@ -206,7 +209,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   }
 
   Widget _buildCurrencyInput(TextEditingController controller,
-      String currencyCode, Widget flag, FocusNode focusNode) {
+      String currencyCode, String? flag, FocusNode focusNode) {
     bool isInputEnabled = controller == amountController;
     var cardTheme = ThemeManager.currencyInputCardTheme(context);
 
@@ -217,9 +220,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     borderColor = focusNode.hasFocus
         ? borderColor
         : borderColor.withOpacity(0.3); // Adjust opacity for unfocused state
- return Card(
-   
-    
+    return Card(
       elevation: cardTheme.elevation,
       shape: RoundedRectangleBorder(
         borderRadius: (cardTheme.shape as RoundedRectangleBorder).borderRadius,
@@ -236,12 +237,30 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
           children: [
-            flag,
+            // Use a local asset for the Algerian flag, and a network image for others
+            if (currencyCode ==
+                'DZD') // Assuming 'DZD' is the currency code for Algeria
+              Image.asset('assets/dz.png', width: 32, height: 32)
+            else if (flag!.isNotEmpty)
+              Image(
+                image: CachedNetworkImageProvider(flag),
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 32,
+                    height: 32,
+                    color: const Color.fromARGB(
+                        255, 255, 0, 0), // Red box as a fallback
+                  );
+                },
+              ),
             const SizedBox(
-              width: 8.0,),
+              width: 8.0,
+            ),
             Expanded(
               child: TextField(
-                
                 focusNode: focusNode,
                 controller: controller,
                 decoration:
