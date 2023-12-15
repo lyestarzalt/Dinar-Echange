@@ -38,7 +38,6 @@ class HistoryPageState extends State<HistoryPage>
     _loadCurrencyHistory(_selectedCurrency);
   }
 
-
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     final List<Currency> currencies = await widget.currenciesFuture;
     Currency? selectedCurrency;
@@ -200,8 +199,19 @@ class HistoryPageState extends State<HistoryPage>
           (LineChartBarData barData, List<int> spotIndexes) {
         return spotIndexes.map((index) {
           return TouchedSpotIndicatorData(
-            const FlLine(color: Colors.transparent),
-            FlDotData(show: index == touchedIndex), // Show the dot
+            FlLine(color: Colors.transparent),
+            FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 6, // Adjust the size of the dot
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary, // Color of the dot
+                  strokeColor: Colors.transparent, // Border color of the dot
+                );
+              },
+            ),
           );
         }).toList();
       },
@@ -306,7 +316,7 @@ class HistoryPageState extends State<HistoryPage>
                     TimeSpanButtons(
                         onTimeSpanSelected: _onTimeSpanButtonClicked),
                   ] else
-                   const  Center(child: CircularProgressIndicator()),
+                    const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),
