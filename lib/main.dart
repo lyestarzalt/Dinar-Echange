@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:animations/animations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,9 +117,20 @@ class MainScreenState extends State<MainScreen> {
       darkTheme: ThemeManager.darkTheme,
       themeMode: _themeMode,
       home: Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _widgetOptions,
+        body: PageTransitionSwitcher(
+          duration: const Duration(milliseconds: 400),
+          transitionBuilder: (
+            Widget child,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
+            return FadeThroughTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            );
+          },
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
         bottomNavigationBar: NavigationBar(
           height: 50,

@@ -7,6 +7,7 @@ import 'package:dinar_watch/models/currency_history.dart';
 import 'package:dinar_watch/theme_manager.dart';
 import 'package:dinar_watch/widgets/history/currency_menu.dart';
 import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
+import 'package:animations/animations.dart';
 
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -17,7 +18,8 @@ class HistoryPage extends StatefulWidget {
   HistoryPageState createState() => HistoryPageState();
 }
 
-class HistoryPageState extends State<HistoryPage> {
+class HistoryPageState extends State<HistoryPage>
+    with SingleTickerProviderStateMixin {
   late CurrencyHistory _currencyHistory;
   late List<Currency> _filteredHistory;
   late List<Currency> coreCurrencies;
@@ -31,11 +33,32 @@ class HistoryPageState extends State<HistoryPage> {
   String _selectedDate = ''; // Holds the selected spot's date
 
 //
-
+  late AnimationController _controller;
   @override
   void initState() {
     super.initState();
     _loadCurrencyHistory(_selectedCurrency);
+  }
+
+  void _showCurrencyMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return CurrencyMenu(
+          coreCurrencies: coreCurrencies,
+          onCurrencySelected: (selectedCurrency) {
+            setState(() {
+              _selectedCurrency = selectedCurrency;
+              _loadCurrencyHistory(_selectedCurrency);
+            });
+          },
+          parentContext: context,
+        );
+      },
+      backgroundColor: Colors.transparent, // Make the background transparent
+      isScrollControlled:
+          true, // Allow the sheet to take only half of the screen
+    );
   }
 
   Future<void> _loadCurrencyHistory(String currencyCode) async {
@@ -234,10 +257,10 @@ class HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        onPressed: () {
-          CurrencyMenu(
+      floatingActionButton: OpenContainer(
+        transitionType: ContainerTransitionType.fade, // Transition type
+        openBuilder: (BuildContext context, VoidCallback _) {
+          return CurrencyMenu(
             coreCurrencies: coreCurrencies,
             onCurrencySelected: (selectedCurrency) {
               setState(() {
@@ -246,18 +269,38 @@ class HistoryPageState extends State<HistoryPage> {
               });
             },
             parentContext: context,
-          ).showMenu();
+          );
         },
-        child: const Icon(Icons.menu),
+        closedElevation: 6.0,
+        closedShape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(16), // Adjust for desired roundness
+        ),
+        closedColor: Theme.of(context).colorScheme.secondary,
+        closedBuilder: (BuildContext context, VoidCallback openContainer) {
+          return SizedBox(
+            height: 56.0, // Standard FAB size
+            width: 56.0,
+            child: Center(
+              child: Icon(
+                Icons.menu,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ),
+          );
+        },
       ),
       body: CustomScrollView(
         slivers: [
           const SliverAppBar(
+            centerTitle: false,
+            stretch: true,
             expandedHeight: 80.0,
             floating: false,
             pinned: true,
             actions: [],
             flexibleSpace: FlexibleSpaceBar(
+              centerTitle: false,
               title: Text('Currency Trends'),
             ),
           ),

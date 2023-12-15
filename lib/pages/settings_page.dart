@@ -37,43 +37,46 @@ class SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 10),
                   const Text('Theme', style: TextStyle(fontSize: 15)),
                   const Divider(thickness: 2),
-                  Center(
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        outlinedButtonTheme: OutlinedButtonThemeData(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          outlinedButtonTheme: OutlinedButtonThemeData(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      child: SegmentedButton<ThemeOption>(
-                        segments: const <ButtonSegment<ThemeOption>>[
-                          ButtonSegment<ThemeOption>(
-                              value: ThemeOption.auto,
-                              label: Text('Auto'),
-                              icon: Icon(Icons.brightness_auto)),
-                          ButtonSegment<ThemeOption>(
-                              value: ThemeOption.dark,
-                              label: Text('Dark'),
-                              icon: Icon(Icons.nights_stay)),
-                          ButtonSegment<ThemeOption>(
-                              value: ThemeOption.light,
-                              label: Text('Light'),
-                              icon: Icon(Icons.wb_sunny)),
-                        ],
-                        selected: <ThemeOption>{themeOption},
-                        onSelectionChanged: (Set<ThemeOption> newSelection) {
-                          setState(() {
-                            themeOption = newSelection.first;
-                            widget.onThemeChanged(themeOption);
-                          });
-                        },
+                        child: SegmentedButton<ThemeOption>(
+                          segments: const <ButtonSegment<ThemeOption>>[
+                            ButtonSegment<ThemeOption>(
+                                value: ThemeOption.auto,
+                                label: Text('Auto'),
+                                icon: Icon(Icons.brightness_auto)),
+                            ButtonSegment<ThemeOption>(
+                                value: ThemeOption.dark,
+                                label: Text('Dark'),
+                                icon: Icon(Icons.nights_stay)),
+                            ButtonSegment<ThemeOption>(
+                                value: ThemeOption.light,
+                                label: Text('Light'),
+                                icon: Icon(Icons.wb_sunny)),
+                          ],
+                          selected: <ThemeOption>{themeOption},
+                          onSelectionChanged: (Set<ThemeOption> newSelection) {
+                            setState(() {
+                              themeOption = newSelection.first;
+                              widget.onThemeChanged(themeOption);
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 10),
                   const Text('General', style: TextStyle(fontSize: 15)),
                   const Divider(thickness: 2),
                   _buildRateUsRow(),
