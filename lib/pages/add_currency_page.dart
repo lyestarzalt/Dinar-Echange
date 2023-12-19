@@ -107,7 +107,7 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
             child: ListView.builder(
               itemCount: filteredCurrencies.length,
               itemBuilder: (context, index) {
-                Currency currency = sortedCurrencies[index];
+                Currency currency = filteredCurrencies[index];
                 bool isSelected = selectedCurrencies.contains(currency);
                 return _buildCurrencyListItem(currency, isSelected);
               },
