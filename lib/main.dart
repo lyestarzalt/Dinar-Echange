@@ -46,7 +46,6 @@ class MainScreenState extends State<MainScreen> {
 
   Future<void> saveThemePreference(bool isDarkMode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     await prefs.setBool('isDarkMode', isDarkMode);
   }
 
