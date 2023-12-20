@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme_manager.dart';
 import '../models/currency.dart';
-import 'package:dinar_watch/pages/conversion_page.dart';
+import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CurrencyListItem extends StatelessWidget {

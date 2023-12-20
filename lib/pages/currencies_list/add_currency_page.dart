@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/currency.dart';
+import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

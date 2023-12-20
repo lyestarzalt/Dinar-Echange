@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/currency.dart'; // Replace with your actual import path
+import '../../models/currency.dart'; // Replace with your actual import path
 import 'package:dinar_watch/theme_manager.dart';
 import 'package:dinar_watch/utils/finance_utils.dart';
 import 'package:decimal/decimal.dart';

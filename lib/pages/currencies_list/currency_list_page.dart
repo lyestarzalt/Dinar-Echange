@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/currency.dart';
-import 'add_currency_page.dart';
-import '../services/preferences_service.dart';
+import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
 import 'package:dinar_watch/widgets/currency_list_item.dart';
 
 class CurrencyListScreen extends StatefulWidget {

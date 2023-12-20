@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'pages/currency_list_page.dart';
-import 'pages/history_page.dart';
-import 'pages/settings_page.dart';
+import 'pages/currencies_list/currency_list_page.dart';
+import 'pages/trends/history_page.dart';
+import 'pages/settings/settings_page.dart';
 import 'theme_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dinar_watch/models/currency.dart';
