@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-enum ThemeOption { auto, dark, light }
-
+import 'package:dinar_watch/shared/enums.dart';
 class SettingsPage extends StatefulWidget {
-  final Function(ThemeOption) onThemeChanged;
+  final void Function(ThemeOption) onThemeChanged;
 
   const SettingsPage({Key? key, required this.onThemeChanged});
 
