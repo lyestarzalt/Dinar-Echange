@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class TimeSpanButtons extends StatelessWidget {
   final Function(int) onTimeSpanSelected;
 
-  const TimeSpanButtons({Key? key, required this.onTimeSpanSelected})
-      : super(key: key);
+  const TimeSpanButtons({super.key, required this.onTimeSpanSelected});
 
   @override
   Widget build(BuildContext context) {

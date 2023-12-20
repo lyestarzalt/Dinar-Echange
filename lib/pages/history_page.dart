@@ -199,7 +199,7 @@ class HistoryPageState extends State<HistoryPage>
           (LineChartBarData barData, List<int> spotIndexes) {
         return spotIndexes.map((index) {
           return TouchedSpotIndicatorData(
-            FlLine(color: Colors.transparent),
+            const FlLine(color: Colors.transparent),
             FlDotData(
               show: true,
               getDotPainter: (spot, percent, barData, index) {

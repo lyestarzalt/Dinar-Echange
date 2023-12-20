@@ -8,11 +8,11 @@ class CurrencyMenu extends StatefulWidget {
   final BuildContext parentContext;
 
   const CurrencyMenu({
-    Key? key,
+    super.key,
     required this.coreCurrencies,
     required this.onCurrencySelected,
     required this.parentContext,
-  }) : super(key: key);
+  });
 
   @override
   State<CurrencyMenu> createState() => _CurrencyMenuState();
