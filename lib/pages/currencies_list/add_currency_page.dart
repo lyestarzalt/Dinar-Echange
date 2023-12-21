@@ -16,6 +16,7 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
   List<Currency> selectedCurrencies = [];
   List<Currency> filteredCurrencies = [];
   TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -86,10 +87,34 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
                 Expanded(
                   child: TextField(
                     controller: searchController,
-                    decoration: const InputDecoration(
+                    focusNode: searchFocusNode,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
                       labelText: 'Search',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.3)
+                              : Colors.black.withOpacity(0.3),
+                          width: 1.0,
+                        ),
+                      ),
                       prefixIcon: Icon(Icons.search),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
