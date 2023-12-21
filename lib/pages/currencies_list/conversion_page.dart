@@ -26,7 +26,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   Widget flagPlaceholder = Container(
       width: 32, height: 32, color: const Color.fromARGB(255, 255, 0, 0));
 
-  bool isDZDtoCurrency = true; // Conversion direction flag
+  bool isDZDtoCurrency = false; // Conversion direction flag
 
   late AnimationController _animationController;
   void _updateFocus() {
@@ -240,21 +240,18 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             // Use a local asset for the Algerian flag, and a network image for others
             if (currencyCode ==
                 'DZD') // Assuming 'DZD' is the currency code for Algeria
-              Image.asset('assets/dz.png', width: 32, height: 32)
+              Image.asset('assets/dz.png', width: 50, height: 40)
             else if (flag!.isNotEmpty)
-              Image(
-                image: CachedNetworkImageProvider(flag),
-                width: 32,
-                height: 32,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 32,
-                    height: 32,
-                    color: const Color.fromARGB(
-                        255, 255, 0, 0), // Red box as a fallback
-                  );
-                },
+              Container(
+                width: 50,
+                height: 40,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(1),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                          flag), // Use CachedNetworkImageProvider
+                      fit: BoxFit.fill,
+                    )),
               ),
             const SizedBox(
               width: 8.0,
