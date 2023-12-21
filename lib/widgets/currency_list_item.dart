@@ -31,15 +31,15 @@ class CurrencyListItem extends StatelessWidget {
         );
       },
       leading: Container(
-        width: 40,
-        height: 30,
+        width: 50,
+        height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(1),
           image: currency.flag != null
               ? DecorationImage(
                   image: CachedNetworkImageProvider(
                       currency.flag!), // Use CachedNetworkImageProvider
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 )
               : null,
         ),
@@ -58,7 +58,7 @@ class CurrencyListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 70, // Width of the container for the currency values
+            width: 80, // Width of the container for the currency values
             child: Text(
               _formatCurrencyValue(currency.buy), // Buy value
               style: ThemeManager.moneyNumberStyle(context),
