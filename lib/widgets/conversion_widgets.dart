@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme_manager.dart';
-
 Widget buildCurrencyInput(TextEditingController controller, String currencyCode,
     BuildContext context) {
   var cardTheme = ThemeManager.currencyInputCardTheme(context);

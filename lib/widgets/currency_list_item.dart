@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme_manager.dart';
 import '../models/currency.dart';
 import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 
 class CurrencyListItem extends StatelessWidget {
   final Currency currency;
@@ -30,19 +30,11 @@ class CurrencyListItem extends StatelessWidget {
           ),
         );
       },
-      leading: Container(
+      leading:  FlagContainer(
+        imageUrl: currency.flag,
         width: 50,
         height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1),
-          image: currency.flag != null
-              ? DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      currency.flag!), // Use CachedNetworkImageProvider
-                  fit: BoxFit.contain,
-                )
-              : null,
-        ),
+        borderRadius: BorderRadius.circular(1),
       ),
       title: Hero(
         tag: 'hero_currency_${currency.currencyCode}',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -145,15 +146,12 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
 
   Widget _buildCurrencyListItem(Currency currency, bool isSelected) {
     return ListTile(
-      leading: currency.flag != null
-          ? CachedNetworkImage(
-              imageUrl: currency.flag!,
-              width: 30,
-              height: 20,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-            )
-          : const SizedBox(width: 30),
+      leading: FlagContainer(
+        imageUrl: currency.flag,
+        width: 50,
+        height: 40,
+        borderRadius: BorderRadius.circular(1),
+      ),
       title: Row(
         children: [
           Text(currency.currencyCode),

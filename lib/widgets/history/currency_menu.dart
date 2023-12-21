@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
@@ -42,18 +43,11 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
                 widget.onCurrencySelected(currency.currencyCode);
                 Navigator.pop(context); // Close the modal
               },
-              leading: Container(
-                width: 40,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(1),
-                  image: currency.flag != null
-                      ? DecorationImage(
-                          image: NetworkImage(currency.flag!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
+            leading: FlagContainer(
+                imageUrl: currency.flag,
+                width: 50,
+                height: 40,
+                borderRadius: BorderRadius.circular(1),
               ),
               title: Text(
                 currency.currencyName ?? '',

@@ -4,7 +4,7 @@ import 'package:dinar_watch/theme_manager.dart';
 import 'package:dinar_watch/utils/finance_utils.dart';
 import 'package:decimal/decimal.dart';
 import 'package:dinar_watch/widgets/conversion_rate_info.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
@@ -242,17 +242,13 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                 'DZD') // Assuming 'DZD' is the currency code for Algeria
               Image.asset('assets/dz.png', width: 50, height: 40)
             else if (flag!.isNotEmpty)
-              Container(
-                width: 50,
-                height: 40,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(1),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                          flag), // Use CachedNetworkImageProvider
-                      fit: BoxFit.fill,
-                    )),
-              ),
+             FlagContainer(
+  imageUrl: flag,
+  width: 50,
+  height: 40,
+  borderRadius: BorderRadius.circular(1),
+),
+
             const SizedBox(
               width: 8.0,
             ),
