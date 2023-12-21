@@ -8,6 +8,7 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dinar_watch/theme_manager.dart';
+
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -40,12 +41,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Currency App',
-      theme: ThemeManager.lightTheme,
-      darkTheme: ThemeManager.darkTheme,
-      themeMode: themeMode,
-      home: MainScreen(initialThemeMode: themeMode, currencies: currencies),
-    );
+    return MainScreen(initialThemeMode: themeMode, currencies: currencies);
   }
 }
