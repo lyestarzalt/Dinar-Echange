@@ -7,7 +7,7 @@ import 'package:dinar_watch/pages/home_screen.dart'; // Update the path if neces
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dinar_watch/theme_manager.dart';
+import 'package:flutter/scheduler.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +21,23 @@ Future<void> initializeApp() async {
   );
   await FirebaseAuth.instance.signInAnonymously();
 
-  // Load theme preference and Firestore data
+  // Load theme preference
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
-  ThemeMode themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+  bool? isDarkMode = prefs.getBool('isDarkMode');
+  ThemeMode themeMode;
+
+  if (isDarkMode != null) {
+    // Use saved preference
+    themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+  } else {
+    // Use system preference if no saved preference
+    Brightness brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    themeMode =
+        brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+  }
+
+  // Fetch data from Firestore
   List<Currency> currencies = await MainRepository().getDailyCurrencies();
 
   // Remove the native splash screen
