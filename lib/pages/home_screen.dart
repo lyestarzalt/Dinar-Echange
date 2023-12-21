@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
-import '../theme_manager.dart';
 import 'package:dinar_watch/pages/settings/settings_page.dart';
 import 'package:dinar_watch/pages/currencies_list/currency_list_page.dart';
 import 'package:dinar_watch/pages/trends/history_page.dart';
@@ -55,47 +54,41 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Currency App',
-      theme: ThemeManager.lightTheme,
-      darkTheme: ThemeManager.darkTheme,
-      themeMode: _themeMode,
-      home: Scaffold(
-        body: PageTransitionSwitcher(
-          duration: const Duration(milliseconds: 400),
-          transitionBuilder: (
-            Widget child,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return FadeThroughTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              child: child,
-            );
-          },
-          child: _getPageWidget(_selectedIndex),
-        ),
-        bottomNavigationBar: NavigationBar(
-          height: 50,
-          indicatorColor: Colors.transparent,
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onItemTapped,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.list),
-              label: 'Currencies',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.history),
-              label: 'History',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-        ),
+    return Scaffold(
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 400),
+        transitionBuilder: (
+          Widget child,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: _getPageWidget(_selectedIndex),
+      ),
+      bottomNavigationBar: NavigationBar(
+        height: 50,
+        indicatorColor: Colors.transparent,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.list),
+            label: 'Currencies',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }
@@ -106,7 +99,7 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-Widget _getPageWidget(int index) {
+  Widget _getPageWidget(int index) {
     Future<List<Currency>> completedFuture = Future.value(widget.currencies);
     switch (index) {
       case 0:
@@ -120,5 +113,4 @@ Widget _getPageWidget(int index) {
         return CurrencyListScreen(currenciesFuture: completedFuture);
     }
   }
-
 }
