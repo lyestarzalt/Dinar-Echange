@@ -78,7 +78,7 @@ class MainScreenState extends State<MainScreen> {
             child: _getPageWidget(_selectedIndex),
           ),
           bottomNavigationBar: NavigationBar(
-            height: 40,
+            height: 55,
             indicatorColor: Colors.transparent,
             selectedIndex: _selectedIndex,
             onDestinationSelected: _onItemTapped,
