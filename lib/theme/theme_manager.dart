@@ -10,7 +10,6 @@ class ThemeManager {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       color: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.background,
     );
   }
 
@@ -62,8 +61,6 @@ class ThemeManager {
       ),
       iconTheme: MaterialStateProperty.all(
         IconThemeData(
-          color: colorScheme.onBackground
-              .withOpacity(0.6), // Slightly transparent icons
           size: 24, // Icon size
         ),
       ),

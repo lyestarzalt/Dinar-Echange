@@ -77,58 +77,35 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Extra Currencies'),
+        toolbarHeight: 100,
+        title: TextField(
+          controller: searchController,
+          focusNode: searchFocusNode,
+          decoration: InputDecoration(
+            hintText: 'Search',
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.search,
+                color: Theme.of(context).colorScheme.onPrimary),
+          ),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: FloatingActionButton(
+              mini: true,
+              onPressed: _addSelectedCurrencies,
+              tooltip: 'Add Selected Currencies',
+              child: const Icon(Icons.check),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    focusNode: searchFocusNode,
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 16,
-                      ),
-                      hintStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 16,
-                      ),
-                      labelText: 'Search',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.3)
-                              : Colors.black.withOpacity(0.3),
-                          width: 1.0,
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.search),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                FloatingActionButton(
-                  mini: true,
-                  onPressed: _addSelectedCurrencies,
-                  tooltip: 'Add Selected Currencies',
-                  child: const Icon(Icons.check),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: ListView.builder(
               itemCount: filteredCurrencies.length,
