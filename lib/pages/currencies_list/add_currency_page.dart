@@ -3,6 +3,7 @@ import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:dinar_watch/theme/theme_manager.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -78,20 +79,32 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        title: TextField(
-          controller: searchController,
-          focusNode: searchFocusNode,
-          decoration: InputDecoration(
-            hintText: 'Search',
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search,
-                color: Theme.of(context).colorScheme.onPrimary),
-          ),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
+        titleSpacing: 0,
+        // Empty SizedBox to remove default leading space
+        title: Row(
+          // Minimizes the row's size to fit its children
+          children: [
+            Expanded(
+                // Expanded TextField to fill the remaining space
+                child: TextField(
+              controller: searchController,
+              focusNode: searchFocusNode,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer),
+                prefixIconConstraints:
+                    const BoxConstraints(minWidth: 30, minHeight: 30),
+                contentPadding: const EdgeInsets.fromLTRB(
+                    0, 16, 0, 16), // Adjust padding for vertical alignment
+              ),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
+            )),
+          ],
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20.0),

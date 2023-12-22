@@ -220,6 +220,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     borderColor = focusNode.hasFocus
         ? borderColor
         : borderColor.withOpacity(0.3); // Adjust opacity for unfocused state
+
     return Card(
       elevation: cardTheme.elevation,
       shape: RoundedRectangleBorder(
@@ -236,29 +237,33 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // Center align the Row's children
           children: [
-            // Use a local asset for the Algerian flag, and a network image for others
+            // Image and FlagContainer alignment
             if (currencyCode ==
                 'DZD') // Assuming 'DZD' is the currency code for Algeria
               Image.asset('assets/dz.png', width: 50, height: 40)
             else if (flag!.isNotEmpty)
-             FlagContainer(
-  imageUrl: flag,
-  width: 50,
-  height: 40,
-  borderRadius: BorderRadius.circular(1),
-),
-
-            const SizedBox(
-              width: 8.0,
-            ),
+              FlagContainer(
+                imageUrl: flag,
+                width: 50,
+                height: 40,
+                borderRadius: BorderRadius.circular(1),
+              ),
+            const SizedBox(width: 8.0),
             Expanded(
               child: TextField(
                 focusNode: focusNode,
                 controller: controller,
-                decoration:
-                    ThemeManager.currencyInputDecoration(context, currencyCode),
-                style: ThemeManager.currencyCodeStyle(context),
+                decoration: ThemeManager.currencyInputDecoration(
+                    context, currencyCode), // Adjusted padding
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    height: 0.0),
+
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.right,
                 enabled: isInputEnabled,

@@ -244,9 +244,18 @@ class HistoryPageState extends State<HistoryPage>
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    bool shadowColor = false;
+    double? scrolledUnderElevation;
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Currency Trends'),
+        scrolledUnderElevation: scrolledUnderElevation,
+        shadowColor: shadowColor ? colorScheme.shadow : null,
+      ),
       floatingActionButton: OpenContainer(
-        transitionType: ContainerTransitionType.fade, // Transition type
+        transitionType: ContainerTransitionType.fade,
         openBuilder: (BuildContext context, VoidCallback _) {
           return CurrencyMenu(
             coreCurrencies: coreCurrencies,
@@ -261,13 +270,12 @@ class HistoryPageState extends State<HistoryPage>
         },
         closedElevation: 6.0,
         closedShape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(16), // Adjust for desired roundness
+          borderRadius: BorderRadius.circular(16),
         ),
         closedColor: Theme.of(context).colorScheme.secondary,
         closedBuilder: (BuildContext context, VoidCallback openContainer) {
           return SizedBox(
-            height: 56.0, // Standard FAB size
+            height: 56.0,
             width: 56.0,
             child: Center(
               child: Icon(
@@ -278,50 +286,33 @@ class HistoryPageState extends State<HistoryPage>
           );
         },
       ),
-      body: CustomScrollView(
-        slivers: [
-          const SliverAppBar(
-            centerTitle: false,
-            stretch: true,
-            expandedHeight: 80.0,
-            floating: false,
-            pinned: true,
-            actions: [],
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: false,
-              title: Text('Currency Trends'),
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              if (!_isLoading) ...[
+                Text(
+                  '1 $_selectedCurrency = $_selectedValue',
+                  style: ThemeManager.moneyNumberStyle(context),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _selectedDate,
+                  style: ThemeManager.currencyCodeStyle(context),
+                ),
+                const SizedBox(height: 16),
+                AspectRatio(
+                  aspectRatio: 1.2,
+                  child: LineChart(_mainData(context)),
+                ),
+                const SizedBox(height: 16),
+                TimeSpanButtons(onTimeSpanSelected: _onTimeSpanButtonClicked),
+              ] else
+                const Center(child: CircularProgressIndicator()),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  if (!_isLoading) ...[
-                    Text(
-                      '1 $_selectedCurrency = $_selectedValue',
-                      style: ThemeManager.moneyNumberStyle(context),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _selectedDate,
-                      style: ThemeManager.currencyCodeStyle(context),
-                    ),
-                    const SizedBox(height: 16),
-                    AspectRatio(
-                      aspectRatio: 1.2,
-                      child: LineChart(_mainData(context)),
-                    ),
-                    const SizedBox(height: 16),
-                    TimeSpanButtons(
-                        onTimeSpanSelected: _onTimeSpanButtonClicked),
-                  ] else
-                    const Center(child: CircularProgressIndicator()),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

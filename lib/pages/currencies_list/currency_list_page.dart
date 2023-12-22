@@ -72,8 +72,12 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
+    bool shadowColor = false; // You can customize this as per your requirement
+    double? scrolledUnderElevation; // You can customize this as per your requirement
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return FutureBuilder<List<Currency>>(
       future: widget.currenciesFuture,
       builder: (context, snapshot) {
@@ -83,27 +87,17 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
           return const Center(child: Text('Error fetching currencies'));
         } else if (snapshot.hasData) {
           return Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                const SliverAppBar(
-                  expandedHeight: 80.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text('Currency List'),
-                    // Add any additional AppBar customization here
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final Currency currency = _selectedCurrencies[index];
-                      return CurrencyListItem(currency: currency);
-                    },
-                    childCount: _selectedCurrencies.length,
-                  ),
-                ),
-              ],
+            appBar: AppBar(
+              title: const Text('Currency List'),
+              scrolledUnderElevation: scrolledUnderElevation,
+              shadowColor: shadowColor ? colorScheme.shadow : null,
+            ),
+            body: ListView.builder(
+              itemCount: _selectedCurrencies.length,
+              itemBuilder: (context, index) {
+                final Currency currency = _selectedCurrencies[index];
+                return CurrencyListItem(currency: currency);
+              },
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),

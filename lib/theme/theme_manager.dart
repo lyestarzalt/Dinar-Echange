@@ -27,7 +27,7 @@ class ThemeManager {
         fontSize: 16,
       ),
       border: InputBorder.none,
-      // Additional styling as required
+      contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
     );
   }
 
@@ -42,10 +42,10 @@ class ThemeManager {
 
   static TextStyle currencyCodeStyle(BuildContext context) {
     return TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: Theme.of(context).colorScheme.onSurface,
-    );
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.onSurface,
+        height: 0.0);
   }
 
   static NavigationBarThemeData navigationBarTheme(ColorScheme colorScheme) {
@@ -74,6 +74,13 @@ class ThemeManager {
     );
   }
 
+  static TextStyle appBarTextFieldStyle(ColorScheme colorScheme) {
+    return TextStyle(
+      color: colorScheme.onSecondaryContainer,
+      fontSize: 16,
+    );
+  }
+
   static ThemeData baseTheme(ColorScheme colorScheme) {
     return ThemeData(
       useMaterial3: true,
@@ -96,18 +103,13 @@ class ThemeManager {
         ),
       ),
       navigationBarTheme: navigationBarTheme(colorScheme),
-      scaffoldBackgroundColor: colorScheme.surface,
+      scaffoldBackgroundColor: colorScheme.background,
       brightness: colorScheme.brightness,
       colorScheme: colorScheme,
       primaryColor: colorScheme.primary,
-      appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        elevation: 0,
-      ),
       textTheme: GoogleFonts.latoTextTheme().apply(
-        bodyColor: colorScheme.onBackground,
-        displayColor: colorScheme.onBackground,
+        bodyColor: colorScheme.onSurface,
+        displayColor: colorScheme.onSurface,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: colorScheme.secondary,
