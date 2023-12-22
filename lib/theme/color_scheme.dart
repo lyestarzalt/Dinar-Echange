@@ -6,36 +6,36 @@ class ColorSchemeManager {
     ColorScheme.fromSeed(
       seedColor: Colors.grey,
       brightness: Brightness.dark,
-      primary: Color(0xFF000000), // Black
-      onPrimary: Color(0xFFFFFFFF), // White
-      primaryContainer: Color(0xFF424242), // Dark Grey
-      onPrimaryContainer: Color(0xFFF5F5F5), // Light Grey
-      secondary: Color(0xFFF5F5F5), // Light Grey
-      onSecondary: Color(0xFF000000), // Black
-      secondaryContainer: Color(0xFF424242), // Dark Grey
-      onSecondaryContainer: Color(0xFFFFFFFF), // White
-      tertiary: Color(0xFF424242), // Dark Grey
-      onTertiary: Color(0xFFFFFFFF), // White
-      tertiaryContainer: Color(0xFFF5F5F5), // Light Grey
-      onTertiaryContainer: Color(0xFF000000), // Black
-      error: Color(0xFFF2B8B5), // Light Red
-      onError: Color(0xFF601410), // Dark Red
-      errorContainer: Color(0xFF8C1D18), // Dark Red
-      onErrorContainer: Color(0xFFF9DEDC), // Light Red
-      background: Color(0xFF000000), // Black
-      onBackground: Color(0xFFF5F5F5), // Light Grey
-      surface: Color(0xFF000000), // Black
-      onSurface: Color(0xFFF5F5F5), // Light Grey
-      surfaceVariant: Color(0xFF424242), // Dark Grey
-      onSurfaceVariant: Color(0xFFF5F5F5), // Light Grey
-      inverseSurface: Color(0xFFF5F5F5), // Light Grey
-      onInverseSurface: Color(0xFF000000), // Black
-      inversePrimary: Color(0xFFF5F5F5), // Light Grey
-      shadow: Color(0xFF000000), // Black
-      surfaceTint: Color(0xFF000000), // Black
-      outline: Color(0xFFF5F5F5), // Light Grey
-      outlineVariant: Color(0xFF424242), // Dark Grey
-      scrim: Color(0xFF000000), // Black
+      primary: Color(0xFF000000),
+      onPrimary: Color(0xFFFFFFFF),
+      primaryContainer: Color(0xFF424242),
+      onPrimaryContainer: Color(0xFFF5F5F5),
+      secondary: Color(0xFFF5F5F5),
+      onSecondary: Color(0xFF000000),
+      secondaryContainer: Color(0xFF424242),
+      onSecondaryContainer: Color(0xFFFFFFFF),
+      tertiary: Color(0xFF424242),
+      onTertiary: Color(0xFFFFFFFF),
+      tertiaryContainer: Color(0xFFF5F5F5),
+      onTertiaryContainer: Color(0xFF000000),
+      error: Color(0xFFF2B8B5),
+      onError: Color(0xFF601410),
+      errorContainer: Color(0xFF8C1D18),
+      onErrorContainer: Color(0xFFF9DEDC),
+      background: Color(0xFF000000),
+      onBackground: Color(0xFFF5F5F5),
+      surface: Color(0xFF000000),
+      onSurface: Color(0xFFF5F5F5),
+      surfaceVariant: Color(0xFF424242),
+      onSurfaceVariant: Color(0xFFF5F5F5),
+      inverseSurface: Color(0xFFF5F5F5),
+      onInverseSurface: Color(0xFF000000),
+      inversePrimary: Color(0xFFF5F5F5),
+      shadow: Color(0xFF000000),
+      surfaceTint: Color(0xFF000000),
+      outline: Color(0xFFF5F5F5),
+      outlineVariant: Color(0xFF424242),
+      scrim: Color(0xFF000000),
     ),
   );
 
@@ -43,36 +43,36 @@ class ColorSchemeManager {
     ColorScheme.fromSeed(
       seedColor: Colors.white,
       brightness: Brightness.light,
-      primary: Color(0xFFFFFFFF), // White
-      onPrimary: Color(0xFF000000), // Black
-      primaryContainer: Color(0xFFE0E0E0), // Light Grey
-      onPrimaryContainer: Color(0xFF000000), // Black
-      secondary: Color(0xFF000000), // Black
-      onSecondary: Color(0xFFFFFFFF), // White
-      secondaryContainer: Color(0xFFE0E0E0), // Light Grey
-      onSecondaryContainer: Color(0xFF000000), // Black
-      tertiary: Color(0xFFE0E0E0), // Light Grey
-      onTertiary: Color(0xFF000000), // Black
-      tertiaryContainer: Color(0xFF000000), // Black
-      onTertiaryContainer: Color(0xFFFFFFFF), // White
-      error: Color(0xFFB3261E), // Red
-      onError: Color(0xFFFFFFFF), // White
-      errorContainer: Color(0xFFF9DEDC), // Light Red
-      onErrorContainer: Color(0xFF410E0B), // Dark Red
-      background: Color(0xFFFFFFFF), // White
-      onBackground: Color(0xFF000000), // Black
-      surface: Color(0xFFFFFFFF), // White
-      onSurface: Color(0xFF000000), // Black
-      surfaceVariant: Color(0xFFE0E0E0), // Light Grey
-      onSurfaceVariant: Color(0xFF000000), // Black
-      inverseSurface: Color(0xFF000000), // Black
-      onInverseSurface: Color(0xFFFFFFFF), // White
-      inversePrimary: Color(0xFF000000), // Black
-      shadow: Color(0xFF000000), // Black
-      surfaceTint: Color(0xFFFFFFFF), // White
-      outline: Color(0xFF000000), // Black
-      outlineVariant: Color(0xFF000000), // Black
-      scrim: Color(0xFF000000), // Black
+      primary: Color(0xFFFFFFFF),
+      onPrimary: Color(0xFF000000),
+      primaryContainer: Color(0xFFE0E0E0),
+      onPrimaryContainer: Color(0xFF000000),
+      secondary: Color(0xFF000000),
+      onSecondary: Color(0xFFFFFFFF),
+      secondaryContainer: Color(0xFFE0E0E0),
+      onSecondaryContainer: Color(0xFF000000),
+      tertiary: Color(0xFFE0E0E0),
+      onTertiary: Color(0xFF000000),
+      tertiaryContainer: Color(0xFF000000),
+      onTertiaryContainer: Color(0xFFFFFFFF),
+      error: Color(0xFFB3261E),
+      onError: Color(0xFFFFFFFF),
+      errorContainer: Color(0xFFF9DEDC),
+      onErrorContainer: Color(0xFF410E0B),
+      background: Color(0xFFFFFFFF),
+      onBackground: Color(0xFF000000),
+      surface: Color(0xFFFFFFFF),
+      onSurface: Color(0xFF000000),
+      surfaceVariant: Color(0xFFE0E0E0),
+      onSurfaceVariant: Color(0xFF000000),
+      inverseSurface: Color(0xFF000000),
+      onInverseSurface: Color(0xFFFFFFFF),
+      inversePrimary: Color(0xFF000000),
+      shadow: Color(0xFF000000),
+      surfaceTint: Color(0xFFFFFFFF),
+      outline: Color(0xFF000000),
+      outlineVariant: Color(0xFF000000),
+      scrim: Color(0xFF000000),
     ),
   );
 }
