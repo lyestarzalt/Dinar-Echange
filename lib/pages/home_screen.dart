@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
-import '../theme_manager.dart';
+import '../theme/theme_manager.dart';
 import 'package:dinar_watch/pages/settings/settings_page.dart';
 import 'package:dinar_watch/pages/currencies_list/currency_list_page.dart';
 import 'package:dinar_watch/pages/trends/history_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_watch/shared/enums.dart';
+import 'package:dinar_watch/theme/color_scheme.dart';
 
 class MainScreen extends StatefulWidget {
   final ThemeMode initialThemeMode;
@@ -57,8 +58,8 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Currency App',
-      theme: ThemeManager.lightTheme,
-      darkTheme: ThemeManager.darkTheme,
+      theme: ColorSchemeManager.lightTheme,
+      darkTheme: ColorSchemeManager.darkTheme,
       themeMode: _themeMode,
       home: Material(
         child: Scaffold(

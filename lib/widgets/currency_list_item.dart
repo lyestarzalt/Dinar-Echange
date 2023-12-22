@@ -1,7 +1,7 @@
 // widgets/currency_list_item.dart
 
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/theme_manager.dart';
+import 'package:dinar_watch/theme/theme_manager.dart';
 import '../models/currency.dart';
 import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';

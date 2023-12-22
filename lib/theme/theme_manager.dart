@@ -7,11 +7,6 @@ class ThemeManager {
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5), // Rounded corners
-        // Default border settings
-        side: BorderSide(
-          color: Colors.grey.withOpacity(0.3), // Neutral border color
-          width: 1.0,
-        ),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       color: Theme.of(context).colorScheme.background,
@@ -82,7 +77,7 @@ class ThemeManager {
     );
   }
 
-  static ThemeData _baseTheme(
+  static ThemeData baseTheme(
       ColorScheme colorScheme, Color bodyTextColor, Color displayTextColor) {
     return ThemeData(
       segmentedButtonTheme: SegmentedButtonThemeData(
@@ -144,43 +139,8 @@ class ThemeManager {
         buttonColor: colorScheme.primary,
         textTheme: ButtonTextTheme.primary,
       ),
-      // ... other widget themes ...
     );
   }
 
-  static final darkTheme = _baseTheme(
-    ColorScheme.fromSeed(
-      seedColor: Colors.grey,
-      brightness: Brightness.dark,
-      primary: Colors.black,
-      primaryContainer: Colors.black,
-      secondary: Colors.white,
-      secondaryContainer: Colors.white,
-      onSecondary: Colors.black,
-      surfaceTint: Colors.grey[850],
-      surface: Colors.grey[850],
-      background: Colors.black,
-      error: Colors.red,
-    ),
-    Colors.white,
-    Colors.white,
-  );
 
-  static final lightTheme = _baseTheme(
-    ColorScheme.fromSeed(
-      seedColor: Colors.white,
-      brightness: Brightness.light,
-      primary: Colors.white,
-      primaryContainer: Colors.white,
-      secondary: Colors.black,
-      secondaryContainer: Colors.black,
-      surfaceTint: Colors.white,
-      onSecondary: Colors.white,
-      surface: Colors.grey[200],
-      background: Colors.white,
-      error: Colors.red,
-    ),
-    Colors.black,
-    Colors.black,
-  );
 }

@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/models/currency_history.dart';
-import 'package:dinar_watch/theme_manager.dart';
+import 'package:dinar_watch/theme/theme_manager.dart';
 import 'package:dinar_watch/widgets/history/currency_menu.dart';
 import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
 import 'package:animations/animations.dart';
