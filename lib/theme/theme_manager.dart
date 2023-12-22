@@ -45,7 +45,7 @@ class ThemeManager {
     return TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
-      color: Theme.of(context).colorScheme.onSurface, // Adapt to theme
+      color: Theme.of(context).colorScheme.onSurface,
     );
   }
 
@@ -77,15 +77,13 @@ class ThemeManager {
     );
   }
 
-  static ThemeData baseTheme(
-      ColorScheme colorScheme, Color bodyTextColor, Color displayTextColor) {
+  static ThemeData baseTheme(ColorScheme colorScheme) {
     return ThemeData(
+      useMaterial3: true,
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           side: MaterialStateProperty.all(
             BorderSide(color: colorScheme.onSurface, width: 1.0),
@@ -96,40 +94,34 @@ class ThemeManager {
             TextStyle(color: colorScheme.onBackground),
           ),
           padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(
-                horizontal: 20.0, vertical: 10.0), // Adjust for size
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           ),
         ),
       ),
-
       navigationBarTheme: navigationBarTheme(colorScheme),
-      scaffoldBackgroundColor: colorScheme.background,
-      useMaterial3: true,
+      scaffoldBackgroundColor: colorScheme.surface,
       brightness: colorScheme.brightness,
       colorScheme: colorScheme,
       primaryColor: colorScheme.primary,
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primary, // Background color of AppBar
-        foregroundColor: colorScheme.brightness == Brightness.light
-            ? Colors.black // Dark text for light theme AppBar
-            : Colors.white, // Light text for dark theme AppBar
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         elevation: 0,
       ),
       textTheme: GoogleFonts.latoTextTheme().apply(
-        bodyColor: bodyTextColor,
-        displayColor: displayTextColor,
+        bodyColor: colorScheme.onBackground,
+        displayColor: colorScheme.onBackground,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: colorScheme.secondary,
         foregroundColor: colorScheme.onSecondary,
       ),
-
       checkboxTheme: CheckboxThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         fillColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
             if (states.contains(MaterialState.selected)) {
-              return const Color.fromARGB(255, 43, 255, 0);
+              return colorScheme.secondary;
             }
             return colorScheme.onSurface.withOpacity(0.6);
           },
@@ -141,6 +133,4 @@ class ThemeManager {
       ),
     );
   }
-
-
 }
