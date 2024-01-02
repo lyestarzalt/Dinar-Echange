@@ -25,9 +25,9 @@ class HistoryPageState extends State<HistoryPage> {
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
   bool _isLoading = true;
-  int _timeSpan = 180; // Default to 1 month
+  final int _timeSpan = 180; // Default to 1 month
   final String _selectedCurrencyCode = 'EUR'; // Default currency
-  late Currency _selectedCurrency;
+  Currency? _selectedCurrency;
   late List<CurrencyHistoryEntry> filteredHistoryEntries;
   var logger = Logger(printer: PrettyPrinter());
   int _touchedIndex = -1;
@@ -35,33 +35,33 @@ class HistoryPageState extends State<HistoryPage> {
   String _selectedDate = ''; // Holds the selected spot's date
   final MainRepository _mainRepository =
       MainRepository(); // Assuming this repository exists
+  late Future<void> _initializationFuture;
 
   @override
   void initState() {
     super.initState();
-    _initializeCurrencyHistory(widget.currenciesFuture);
+    _initializationFuture = _initializeCurrencyHistory(widget.currenciesFuture);
   }
 
   Future<void> _initializeCurrencyHistory(
       Future<List<Currency>> currenciesFuture) async {
+    _isLoading = true;
     final List<Currency> currencies = await currenciesFuture;
-
     coreCurrencies = currencies.where((currency) => currency.isCore).toList();
     _selectedCurrency = coreCurrencies.firstWhere(
       (currency) => currency.currencyCode == _selectedCurrencyCode,
       orElse: () => coreCurrencies.first,
     );
-
-    _loadCurrencyHistory(_selectedCurrency.currencyCode);
+    _loadCurrencyHistory();
   }
 
-  Future<void> _loadCurrencyHistory(String currencyCode) async {
+  Future<void> _loadCurrencyHistory() async {
     setState(() => _isLoading = true);
 
     _selectedCurrency =
-        await _mainRepository.getCurrencyHistory(_selectedCurrency);
-    if (_selectedCurrency.history != null) {
-      filteredHistoryEntries = _selectedCurrency.history!;
+        await _mainRepository.getCurrencyHistory(_selectedCurrency!);
+    if (_selectedCurrency!.history != null) {
+      filteredHistoryEntries = _selectedCurrency!.history!;
       _processDataAndSetState(days: _timeSpan);
     } else {
       setState(() => _isLoading = false);
@@ -69,9 +69,11 @@ class HistoryPageState extends State<HistoryPage> {
   }
 
   void _processDataAndSetState({int days = 30}) {
-    _isLoading = true;
+    setState(() {
+      _isLoading = true;
+    });
 
-    filteredHistoryEntries = _selectedCurrency.getFilteredHistory(days);
+    filteredHistoryEntries = _selectedCurrency!.getFilteredHistory(days);
     final List<double> allBuyValues =
         filteredHistoryEntries.map((e) => e.buy).toList();
     const bufferPercent = 0.02; // 2% buffer
@@ -232,12 +234,9 @@ class HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    double? scrolledUnderElevation;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Currency Trends'),
-        scrolledUnderElevation: scrolledUnderElevation,
         shadowColor: colorScheme.shadow,
       ),
       floatingActionButton: OpenContainer(
@@ -248,7 +247,7 @@ class HistoryPageState extends State<HistoryPage> {
             onCurrencySelected: (Currency selectedCurrency) {
               setState(() {
                 _selectedCurrency = selectedCurrency;
-                _loadCurrencyHistory(_selectedCurrency.currencyCode);
+                _loadCurrencyHistory();
               });
             },
             parentContext: context,
@@ -272,35 +271,56 @@ class HistoryPageState extends State<HistoryPage> {
           );
         },
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              if (!_isLoading) ...[
-                Text(
-                  '1 ${_selectedCurrency.currencyCode} = $_selectedValue',
-                  style: ThemeManager.moneyNumberStyle(context),
+      body: FutureBuilder(
+        future: _initializationFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading state
+            return Center(
+              child: LinearProgressIndicator(
+                backgroundColor: colorScheme.onSurface.withOpacity(0.3),
+                valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            // Error state
+            return Center(child: Text('Error loading data'));
+          } else {
+            // Loaded state
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    if (_isLoading)
+                      LinearProgressIndicator(
+                        backgroundColor: colorScheme.onSurface.withOpacity(0.3),
+                        valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+                      ),
+                    Text(
+                      '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
+                      style: ThemeManager.moneyNumberStyle(context),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _selectedDate,
+                      style: ThemeManager.currencyCodeStyle(context),
+                    ),
+                    const SizedBox(height: 16),
+                    AspectRatio(
+                      aspectRatio: 1.2,
+                      child: LineChart(_mainData(context)),
+                    ),
+                    const SizedBox(height: 16),
+                    TimeSpanButtons(
+                        onTimeSpanSelected: (days) =>
+                            _processDataAndSetState(days: days)),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  _selectedDate,
-                  style: ThemeManager.currencyCodeStyle(context),
-                ),
-                const SizedBox(height: 16),
-                AspectRatio(
-                  aspectRatio: 1.2,
-                  child: LineChart(_mainData(context)),
-                ),
-                const SizedBox(height: 16),
-                TimeSpanButtons(
-                    onTimeSpanSelected: (dayz) =>
-                        _processDataAndSetState(days: dayz)),
-              ] else
-                const Center(child: CircularProgressIndicator()),
-            ],
-          ),
-        ),
+              ),
+            );
+          }
+        },
       ),
     );
   }
