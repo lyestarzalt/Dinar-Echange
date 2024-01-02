@@ -5,7 +5,7 @@ class ErrorMessage extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
 
-  ErrorMessage({
+ const ErrorMessage({
     Key? key,
     this.title = 'Oops! Something went wrong.',
     this.message =
@@ -31,20 +31,20 @@ class ErrorMessage extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onError,
+                color: Theme.of(context).colorScheme.onErrorContainer,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-           const  SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onError,
+                color: Theme.of(context).colorScheme.onErrorContainer,
               ),
             ),
-           const  SizedBox(height: 16),
+            const SizedBox(height: 16),
             if (onRetry != null)
               ElevatedButton(
                 onPressed: onRetry,

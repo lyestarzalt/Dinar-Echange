@@ -85,7 +85,6 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
           // Minimizes the row's size to fit its children
           children: [
             Expanded(
-                // Expanded TextField to fill the remaining space
                 child: TextField(
               controller: searchController,
               focusNode: searchFocusNode,
@@ -117,19 +116,22 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredCurrencies.length,
-              itemBuilder: (context, index) {
-                Currency currency = filteredCurrencies[index];
-                bool isSelected = selectedCurrencies.contains(currency);
-                return _buildCurrencyListItem(currency, isSelected);
-              },
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredCurrencies.length,
+                itemBuilder: (context, index) {
+                  Currency currency = filteredCurrencies[index];
+                  bool isSelected = selectedCurrencies.contains(currency);
+                  return _buildCurrencyListItem(currency, isSelected);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -138,71 +138,74 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       appBar: AppBar(
         title: const Text('Convert'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: screenHeight * 0.4,
-              child: Stack(
-                children: [
-                  // Top Card - DZD input field
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    top: isDZDtoCurrency
-                        ? topCardTopPosition
-                        : bottomCardTopPosition,
-                    left: 16,
-                    right: 16,
-                    height: cardHeight,
-                    child: _buildCurrencyInput(
-                      isDZDtoCurrency ? amountController : resultController,
-                      'DZD',
-                      widget.currency.flag,
-                      isDZDtoCurrency
-                          ? amountFocusNode
-                          : resultFocusNode, // Pass the FocusNode
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: screenHeight * 0.4,
+                child: Stack(
+                  children: [
+                    // Top Card - DZD input field
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      top: isDZDtoCurrency
+                          ? topCardTopPosition
+                          : bottomCardTopPosition,
+                      left: 16,
+                      right: 16,
+                      height: cardHeight,
+                      child: _buildCurrencyInput(
+                        isDZDtoCurrency ? amountController : resultController,
+                        'DZD',
+                        widget.currency.flag,
+                        isDZDtoCurrency
+                            ? amountFocusNode
+                            : resultFocusNode, // Pass the FocusNode
+                      ),
                     ),
-                  ),
-                  // Bottom Card - Foreign currency input field
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    top: isDZDtoCurrency
-                        ? bottomCardTopPosition
-                        : topCardTopPosition,
-                    left: 16,
-                    right: 16,
-                    height: cardHeight,
-                    child: _buildCurrencyInput(
-                      isDZDtoCurrency ? resultController : amountController,
-                      widget.currency.currencyCode,
-                      widget.currency.flag,
-                      isDZDtoCurrency
-                          ? resultFocusNode
-                          : amountFocusNode, // Pass the FocusNode
+                    // Bottom Card - Foreign currency input field
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      top: isDZDtoCurrency
+                          ? bottomCardTopPosition
+                          : topCardTopPosition,
+                      left: 16,
+                      right: 16,
+                      height: cardHeight,
+                      child: _buildCurrencyInput(
+                        isDZDtoCurrency ? resultController : amountController,
+                        widget.currency.currencyCode,
+                        widget.currency.flag,
+                        isDZDtoCurrency
+                            ? resultFocusNode
+                            : amountFocusNode, // Pass the FocusNode
+                      ),
                     ),
-                  ),
-                  // FAB positioned in the middle of the cards, aligned to the right
-                  Positioned(
-                    top: fabTopPosition,
-                    right: 8,
-                    child: FloatingActionButton(
-                      onPressed: _swapCurrencies,
-                      elevation: 2,
-                      child: const Icon(Icons.swap_vert),
+                    // FAB positioned in the middle of the cards, aligned to the right
+                    Positioned(
+                      top: fabTopPosition,
+                      right: 8,
+                      child: FloatingActionButton(
+                        onPressed: _swapCurrencies,
+                        elevation: 2,
+                        child: const Icon(Icons.swap_vert),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            ConversionRateInfo(
-              conversionRateText: _getConversionRateText(),
-              textStyle: ThemeManager.moneyNumberStyle(context),
-              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-            ),
-          ],
+              ConversionRateInfo(
+                conversionRateText: _getConversionRateText(),
+                textStyle: ThemeManager.moneyNumberStyle(context),
+                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );

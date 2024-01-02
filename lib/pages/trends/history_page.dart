@@ -11,6 +11,7 @@ import 'package:animations/animations.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:dinar_watch/widgets/error_message.dart';
+
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
 
@@ -287,35 +288,39 @@ class HistoryPageState extends State<HistoryPage> {
             return Center(child: ErrorMessage());
           } else {
             // Loaded state
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    if (_isLoading)
-                      LinearProgressIndicator(
-                        backgroundColor: colorScheme.onSurface.withOpacity(0.3),
-                        valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+            return Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      if (_isLoading)
+                        LinearProgressIndicator(
+                          backgroundColor:
+                              colorScheme.onSurface.withOpacity(0.3),
+                          valueColor:
+                              AlwaysStoppedAnimation(colorScheme.primary),
+                        ),
+                      Text(
+                        '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
+                        style: ThemeManager.moneyNumberStyle(context),
                       ),
-                    Text(
-                      '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
-                      style: ThemeManager.moneyNumberStyle(context),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _selectedDate,
-                      style: ThemeManager.currencyCodeStyle(context),
-                    ),
-                    const SizedBox(height: 16),
-                    AspectRatio(
-                      aspectRatio: 1.2,
-                      child: LineChart(_mainData(context)),
-                    ),
-                    const SizedBox(height: 16),
-                    TimeSpanButtons(
-                        onTimeSpanSelected: (days) =>
-                            _processDataAndSetState(days: days)),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        _selectedDate,
+                        style: ThemeManager.currencyCodeStyle(context),
+                      ),
+                      const SizedBox(height: 16),
+                      AspectRatio(
+                        aspectRatio: 1.0,
+                        child: LineChart(_mainData(context)),
+                      ),
+                      const SizedBox(height: 20),
+                      TimeSpanButtons(
+                          onTimeSpanSelected: (days) =>
+                              _processDataAndSetState(days: days)),
+                    ],
+                  ),
                 ),
               ),
             );

@@ -72,8 +72,9 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
-    bool shadowColor = false; // You can customize this as per your requirement
-    double? scrolledUnderElevation; // You can customize this as per your requirement
+  bool shadowColor = false; // You can customize this as per your requirement
+  double?
+      scrolledUnderElevation; // You can customize this as per your requirement
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -92,12 +93,19 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
               scrolledUnderElevation: scrolledUnderElevation,
               shadowColor: shadowColor ? colorScheme.shadow : null,
             ),
-            body: ListView.builder(
-              itemCount: _selectedCurrencies.length,
-              itemBuilder: (context, index) {
-                final Currency currency = _selectedCurrencies[index];
-                return CurrencyListItem(currency: currency);
-              },
+            body: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: ListView.separated(
+                itemCount: _selectedCurrencies.length,
+                itemBuilder: (context, index) {
+                  final Currency currency = _selectedCurrencies[index];
+                  return CurrencyListItem(currency: currency);
+                },
+                separatorBuilder: (context, index) => const Divider(
+                  height: 10,
+                  thickness: 1,
+                ),
+              ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
