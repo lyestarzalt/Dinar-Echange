@@ -8,6 +8,8 @@ import 'package:dinar_watch/theme/theme_manager.dart';
 import 'package:dinar_watch/widgets/history/currency_menu.dart';
 import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
 import 'package:animations/animations.dart';
+import 'package:dinar_watch/data/repositories/main_repository.dart';
+import 'package:logger/logger.dart';
 
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -18,85 +20,93 @@ class HistoryPage extends StatefulWidget {
   HistoryPageState createState() => HistoryPageState();
 }
 
-class HistoryPageState extends State<HistoryPage>
-    with SingleTickerProviderStateMixin {
-  late CurrencyHistory _currencyHistory;
+class HistoryPageState extends State<HistoryPage> {
+  late List<CurrencyHistoryEntry> _currencyHistoryEntries;
   late List<Currency> _filteredHistory;
   late List<Currency> coreCurrencies;
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
   bool _isLoading = true;
-  int _timeSpan = 30; // default to 1 month
-  String _selectedCurrency = 'EUR'; // default currency
+  int _timeSpan = 30; // Default to 1 month
+  final String _selectedCurrencyCode = 'EUR'; // Default currency
+  Currency? _selectedCurrency;
+  List<CurrencyHistoryEntry> _filteredHistoryEntries =
+      []; // For storing filtered history entries
+  var logger = Logger(printer: PrettyPrinter());
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
+  final MainRepository _mainRepository =
+      MainRepository(); // Assuming this repository exists
 
   @override
   void initState() {
     super.initState();
-    _loadCurrencyHistory(_selectedCurrency);
+    _initializeCurrencyHistory();
+  }
+
+  Future<void> _initializeCurrencyHistory() async {
+    final List<Currency> currencies = await widget.currenciesFuture;
+    coreCurrencies = currencies.where((currency) => currency.isCore).toList();
+    _selectedCurrency = coreCurrencies.firstWhere(
+      (currency) => currency.currencyCode == _selectedCurrencyCode,
+      orElse: () => coreCurrencies.first,
+    );
+
+    if (_selectedCurrency != null) {
+      _loadCurrencyHistory(_selectedCurrency!.currencyCode);
+    }
   }
 
   Future<void> _loadCurrencyHistory(String currencyCode) async {
-    final List<Currency> currencies = await widget.currenciesFuture;
-    Currency? selectedCurrency;
-    coreCurrencies = currencies.where((currency) => currency.isCore).toList();
+    setState(() => _isLoading = true);
 
-    // Manually searching for the first matching currency
-    for (var currency in currencies) {
-      if (currency.currencyCode == currencyCode && currency.isCore) {
-        selectedCurrency = currency;
-        break; // Break the loop once the currency is found
-      }
-    }
-
-    if (selectedCurrency != null && selectedCurrency.history != null) {
-      _currencyHistory = CurrencyHistory(
-        name: selectedCurrency.currencyCode,
-        history: selectedCurrency.history!,
-      );
+    Currency? currencyWithHistory =
+        await _mainRepository.getCurrencyHistory(_selectedCurrency!);
+/*     currencyWithHistory.history!.forEach((element) {
+      logger.d('${element.date}: ${element.buy}');
+    }); */
+    if (currencyWithHistory.history != null) {
+      _selectedCurrency = currencyWithHistory;
+      _currencyHistoryEntries = currencyWithHistory.history!;
       _processDataAndSetState();
     } else {
-      // Handle currency not found or no history available
+      setState(() => _isLoading = false);
     }
   }
 
-  /// Filters the last [timeSpan] days of currency history.
-  ///
-  /// Returns the entire history if it's shorter than [timeSpan],
-  /// otherwise returns the last [timeSpan] days.
+  List<CurrencyHistoryEntry> _filterCurrencyHistory(int timeSpan) {
+    if (_selectedCurrency?.history == null) return [];
 
-  List<Currency> _filterCurrencyHistory(int timeSpan) {
-    final int historyLength = _currencyHistory.history.length;
-    final int startIndex = historyLength - timeSpan;
+    final int historyLength = _selectedCurrency!.history!.length;
+    final int startIndex = math.max(0, historyLength - timeSpan);
     return historyLength <= timeSpan
-        ? _currencyHistory.history
-        : _currencyHistory.history.sublist(startIndex);
+        ? _selectedCurrency!.history!
+        : _selectedCurrency!.history!.sublist(startIndex);
   }
 
   void _processDataAndSetState() {
-    final filteredHistory = _filterCurrencyHistory(_timeSpan);
-
+    _filteredHistoryEntries = _filterCurrencyHistory(_timeSpan);
     final List<double> allBuyValues =
-        filteredHistory.map((data) => data.buy).toList();
-    // const bufferPercentX = 0.05; // 5% buffer
-    // final bufferValueX = filteredHistory.length * bufferPercentX;
+        _filteredHistoryEntries.map((e) => e.buy).toList();
 
-    // Set a buffer value that will be used to extend the max and min values by a certain percentage.
     const bufferPercent = 0.02; // 2% buffer
     final maxDataValue = allBuyValues.reduce(math.max);
     final minDataValue = allBuyValues.reduce(math.min);
     final bufferValue = (maxDataValue - minDataValue) * bufferPercent;
 
     setState(() {
-      _selectedValue = filteredHistory.last.buy.toString();
-      _filteredHistory = filteredHistory;
-      _isLoading = false;
+      _selectedValue = _filteredHistoryEntries.isNotEmpty
+          ? _filteredHistoryEntries.last.buy.toStringAsFixed(2)
+          : '';
+      _selectedDate = _filteredHistoryEntries.isNotEmpty
+          ? DateFormat('dd/MM/yyyy').format(_filteredHistoryEntries.last.date)
+          : '';
       _maxYValue = maxDataValue + bufferValue;
       _minYValue = minDataValue - bufferValue;
       _midYValue = (_maxYValue + _minYValue) / 2;
-      _maxX = filteredHistory.length - 1;
+      _maxX = _filteredHistoryEntries.length.toDouble() - 1;
+      _isLoading = false;
     });
   }
 
@@ -140,10 +150,10 @@ class HistoryPageState extends State<HistoryPage>
   }
 
   List<LineChartBarData> _buildLineBarsData(
-      BuildContext context, List<Currency> filteredHistory) {
+      BuildContext context, List<CurrencyHistoryEntry> filteredHistoryEntries) {
     return [
       LineChartBarData(
-        spots: filteredHistory
+        spots: filteredHistoryEntries
             .asMap()
             .entries
             .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
@@ -159,17 +169,19 @@ class HistoryPageState extends State<HistoryPage>
   }
 
   void onIndexChange(int newIndex) {
-    setState(() {
-      _touchedIndex = newIndex;
-      _selectedValue =
-          '${_filteredHistory[newIndex].buy.toStringAsFixed(2)} DZD';
-      _selectedDate =
-          DateFormat('dd/MM/yyyy').format(_filteredHistory[newIndex].date);
-    });
+    if (newIndex >= 0 && newIndex < _currencyHistoryEntries.length) {
+      setState(() {
+        _touchedIndex = newIndex;
+        _selectedValue =
+            _currencyHistoryEntries[newIndex].buy.toStringAsFixed(2) + ' DZD';
+        _selectedDate = DateFormat('dd/MM/yyyy')
+            .format(_currencyHistoryEntries[newIndex].date);
+      });
+    }
   }
 
-  LineTouchData _buildLineTouchData(BuildContext context, int touchedIndex,
-      List<Currency> filteredHistory, Function(int) onIndexChange) {
+  LineTouchData _buildLineTouchData(
+      BuildContext context, int touchedIndex, Function(int) onIndexChange) {
     return LineTouchData(
       touchCallback: (event, touchResponse) {
         if (event.isInterestedForInteractions &&
@@ -232,37 +244,36 @@ class HistoryPageState extends State<HistoryPage>
                 dashArray: [5]))
             .toList(),
       ),
-      lineTouchData: _buildLineTouchData(
-          context, _touchedIndex, _filteredHistory, onIndexChange),
+      lineTouchData: _buildLineTouchData(context, _touchedIndex, onIndexChange),
       borderData: FlBorderData(show: false),
       maxX: _maxX,
       maxY: _maxYValue,
       minY: _minYValue,
-      lineBarsData: _buildLineBarsData(context, _filteredHistory),
+      lineBarsData: _buildLineBarsData(context, _filteredHistoryEntries),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    bool shadowColor = false;
+
     double? scrolledUnderElevation;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Currency Trends'),
         scrolledUnderElevation: scrolledUnderElevation,
-        shadowColor: shadowColor ? colorScheme.shadow : null,
+        shadowColor: colorScheme.shadow,
       ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fade,
         openBuilder: (BuildContext context, VoidCallback _) {
           return CurrencyMenu(
             coreCurrencies: coreCurrencies,
-            onCurrencySelected: (selectedCurrency) {
+            onCurrencySelected: (Currency selectedCurrency) {
               setState(() {
                 _selectedCurrency = selectedCurrency;
-                _loadCurrencyHistory(_selectedCurrency);
+                _loadCurrencyHistory(_selectedCurrency!.currencyCode);
               });
             },
             parentContext: context,
@@ -293,7 +304,7 @@ class HistoryPageState extends State<HistoryPage>
             children: [
               if (!_isLoading) ...[
                 Text(
-                  '1 $_selectedCurrency = $_selectedValue',
+                  '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
                   style: ThemeManager.moneyNumberStyle(context),
                 ),
                 const SizedBox(height: 8),

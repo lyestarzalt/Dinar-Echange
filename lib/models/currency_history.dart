@@ -1,15 +1,19 @@
-import 'currency.dart';
 
-class CurrencyHistory {
-  final String name;
-  List<Currency> history;
-
-  CurrencyHistory({required this.name, required List<Currency> history})
-      : history = _sortHistory(history);
-
-  static List<Currency> _sortHistory(List<Currency> history) {
-    // Sort the history list by date in ascending order
-    history.sort((a, b) => a.date.compareTo(b.date));
-    return history;
+class CurrencyHistoryEntry {
+  final DateTime date;
+  final double buy;
+  CurrencyHistoryEntry({required this.date, required this.buy});
+  factory CurrencyHistoryEntry.fromJson(Map<String, dynamic> json) {
+    return CurrencyHistoryEntry(
+      date: DateTime.parse(json['date'] as String),
+      buy: (json['buy'] as num).toDouble(),
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toIso8601String(),
+      'buy': buy,
+    };
   }
 }
+

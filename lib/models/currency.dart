@@ -1,3 +1,4 @@
+import 'package:dinar_watch/models/currency_history.dart';
 class Currency {
   final String currencyCode;
   final double buy;
@@ -7,7 +8,7 @@ class Currency {
   final String? currencyName;
   final String? currencySymbol;
   final String? flag;
-  List<Currency>? history;
+List<CurrencyHistoryEntry>? history;
 
   Currency({
     required this.currencyCode,
@@ -26,8 +27,8 @@ class Currency {
     num? sell = json['sell'] as num?;
 
     var historyJson = json['history'] as List<dynamic>?;
-    List<Currency>? history = historyJson
-        ?.map((e) => Currency.fromJson(e as Map<String, dynamic>))
+    List<CurrencyHistoryEntry>? history = historyJson
+        ?.map((e) => CurrencyHistoryEntry.fromJson(e as Map<String, dynamic>))
         .toList();
 
     return Currency(

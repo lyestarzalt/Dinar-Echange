@@ -5,7 +5,7 @@ import 'package:dinar_watch/widgets/flag_container.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
-  final Function(String) onCurrencySelected;
+  final Function(Currency) onCurrencySelected; // Change to accept Currency
   final BuildContext parentContext;
 
   const CurrencyMenu({
@@ -14,7 +14,6 @@ class CurrencyMenu extends StatefulWidget {
     required this.onCurrencySelected,
     required this.parentContext,
   });
-
   @override
   State<CurrencyMenu> createState() => _CurrencyMenuState();
 }
@@ -27,7 +26,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title:const Text('Select Currency'), // Or any other title you prefer
+        title: const Text('Select Currency'), // Or any other title you prefer
       ),
       body: ListView.separated(
         itemCount: widget.coreCurrencies.length,
@@ -40,10 +39,11 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: ListTile(
               onTap: () {
-                widget.onCurrencySelected(currency.currencyCode);
+                widget.onCurrencySelected(currency);
+
                 Navigator.pop(context); // Close the modal
               },
-            leading: FlagContainer(
+              leading: FlagContainer(
                 imageUrl: currency.flag,
                 width: 50,
                 height: 40,

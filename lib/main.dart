@@ -37,7 +37,7 @@ Future<void> initializeApp() async {
         brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
   }
 
-  // Fetch data from Firestore
+  // Benchmark Firestore data fetching
   List<Currency> currencies = await MainRepository().getDailyCurrencies();
 
   // Remove the native splash screen

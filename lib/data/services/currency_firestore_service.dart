@@ -9,12 +9,13 @@ class FirestoreService {
 
   Future<List<Currency>> getTodayCurrencies() async {
     try {
+      var startTime = DateTime.now(); // Start timing
       var snapshot = await _firestore
           .collection('exchange-daily')
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
-
+    
       if (snapshot.docs.isEmpty) throw Exception('No data available.');
 
       DocumentSnapshot lastSnapshot = snapshot.docs.first;
@@ -39,42 +40,44 @@ class FirestoreService {
     }
   }
 
-  Future<List<Currency>> getCurrencies() async {
+  Future<Currency> fetchCurrencyHistory(Currency currency) async {
     try {
-      List<Currency> currencies = await getTodayCurrencies();
-      for (var currency in currencies.where((c) => c.isCore)) {
-        CurrencyHistory currencyHistory =
-            await fetchCurrencyHistory(currency.currencyCode);
-        currency.history = currencyHistory.history;
+      DocumentSnapshot docSnapshot = await _firestore
+          .collection('exchange-rate-trends')
+          .doc(currency.currencyCode)
+          .get();
+
+      if (!docSnapshot.exists) {
+        throw Exception('No history available for ${currency.currencyCode}.');
       }
-      return currencies;
+
+      List<CurrencyHistoryEntry> history = [];
+
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      data.forEach((date, buyRate) {
+        double parsedBuyRate;
+        if (buyRate is num) {
+          // This will be true for both int and double
+          parsedBuyRate = buyRate.toDouble();
+        } else {
+          parsedBuyRate = 0.0; // Default or error value
+        }
+
+        history.add(CurrencyHistoryEntry(
+          date: DateTime.tryParse(date) ?? DateTime.now(),
+          buy: parsedBuyRate,
+        ));
+      });
+
+      history.sort((a, b) => a.date.compareTo(b.date));
+
+      currency.history = history;
+      return currency;
     } catch (e) {
-      logger.e('Error in getCurrencies: $e');
-      return []; // Return an empty list in case of an error
+      logger
+          .e('Error in fetchCurrencyHistory for ${currency.currencyCode}: $e');
+      currency.history = [];
+      return currency;
     }
-  }
-
-  Future<CurrencyHistory> fetchCurrencyHistory(String currencyName) async {
-    DocumentSnapshot docSnapshot = await _firestore
-        .collection('exchange-rate-trends')
-        .doc(currencyName)
-        .get();
-
-    if (!docSnapshot.exists) {
-      throw Exception('No history available for $currencyName.');
-    }
-
-    List<Currency> history = [];
-    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
-    data.forEach((date, buyRate) {
-      history.add(Currency(
-          currencyCode: currencyName.toUpperCase(),
-          sell: 0,
-          buy: buyRate.toDouble() ?? 0.0,
-          date: DateTime.parse(date),
-          isCore: true));
-    });
-
-    return CurrencyHistory(name: currencyName, history: history);
   }
 }
