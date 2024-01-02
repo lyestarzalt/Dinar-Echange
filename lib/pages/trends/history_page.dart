@@ -10,7 +10,7 @@ import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:logger/logger.dart';
-
+import 'package:dinar_watch/widgets/error_message.dart';
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
 
@@ -284,7 +284,7 @@ class HistoryPageState extends State<HistoryPage> {
             );
           } else if (snapshot.hasError) {
             // Error state
-            return Center(child: Text('Error loading data'));
+            return Center(child: ErrorMessage());
           } else {
             // Loaded state
             return SingleChildScrollView(
