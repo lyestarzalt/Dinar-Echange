@@ -1,4 +1,6 @@
 import 'package:dinar_watch/models/currency_history.dart';
+import 'dart:math' as math;
+
 class Currency {
   final String currencyCode;
   final double buy;
@@ -8,7 +10,7 @@ class Currency {
   final String? currencyName;
   final String? currencySymbol;
   final String? flag;
-List<CurrencyHistoryEntry>? history;
+  List<CurrencyHistoryEntry>? history;
 
   Currency({
     required this.currencyCode,
@@ -21,6 +23,18 @@ List<CurrencyHistoryEntry>? history;
     this.flag,
     this.history,
   });
+    List<CurrencyHistoryEntry> getFilteredHistory(int timeSpan) {
+    if (history == null || history!.isEmpty) {
+      return [];
+    }
+
+    final int historyLength = history!.length;
+    final int startIndex = math.max(0, historyLength - timeSpan);
+    return historyLength <= timeSpan
+        ? List<CurrencyHistoryEntry>.from(history!)
+        : List<CurrencyHistoryEntry>.from(history!.sublist(startIndex));
+  }
+  
 
   factory Currency.fromJson(Map<String, dynamic> json) {
     num? buy = json['buy'] as num?;

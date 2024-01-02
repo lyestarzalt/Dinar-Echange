@@ -21,17 +21,14 @@ class HistoryPage extends StatefulWidget {
 }
 
 class HistoryPageState extends State<HistoryPage> {
-  late List<CurrencyHistoryEntry> _currencyHistoryEntries;
-  late List<Currency> _filteredHistory;
   late List<Currency> coreCurrencies;
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
   bool _isLoading = true;
-  int _timeSpan = 30; // Default to 1 month
+  int _timeSpan = 180; // Default to 1 month
   final String _selectedCurrencyCode = 'EUR'; // Default currency
-  Currency? _selectedCurrency;
-  List<CurrencyHistoryEntry> _filteredHistoryEntries =
-      []; // For storing filtered history entries
+  late Currency _selectedCurrency;
+  late List<CurrencyHistoryEntry> filteredHistoryEntries;
   var logger = Logger(printer: PrettyPrinter());
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
@@ -42,80 +39,58 @@ class HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    _initializeCurrencyHistory();
+    _initializeCurrencyHistory(widget.currenciesFuture);
   }
 
-  Future<void> _initializeCurrencyHistory() async {
-    final List<Currency> currencies = await widget.currenciesFuture;
+  Future<void> _initializeCurrencyHistory(
+      Future<List<Currency>> currenciesFuture) async {
+    final List<Currency> currencies = await currenciesFuture;
+
     coreCurrencies = currencies.where((currency) => currency.isCore).toList();
     _selectedCurrency = coreCurrencies.firstWhere(
       (currency) => currency.currencyCode == _selectedCurrencyCode,
       orElse: () => coreCurrencies.first,
     );
 
-    if (_selectedCurrency != null) {
-      _loadCurrencyHistory(_selectedCurrency!.currencyCode);
-    }
+    _loadCurrencyHistory(_selectedCurrency.currencyCode);
   }
 
   Future<void> _loadCurrencyHistory(String currencyCode) async {
     setState(() => _isLoading = true);
 
-    Currency? currencyWithHistory =
-        await _mainRepository.getCurrencyHistory(_selectedCurrency!);
-/*     currencyWithHistory.history!.forEach((element) {
-      logger.d('${element.date}: ${element.buy}');
-    }); */
-    if (currencyWithHistory.history != null) {
-      _selectedCurrency = currencyWithHistory;
-      _currencyHistoryEntries = currencyWithHistory.history!;
-      _processDataAndSetState();
+    _selectedCurrency =
+        await _mainRepository.getCurrencyHistory(_selectedCurrency);
+    if (_selectedCurrency.history != null) {
+      filteredHistoryEntries = _selectedCurrency.history!;
+      _processDataAndSetState(days: _timeSpan);
     } else {
       setState(() => _isLoading = false);
     }
   }
 
-  List<CurrencyHistoryEntry> _filterCurrencyHistory(int timeSpan) {
-    if (_selectedCurrency?.history == null) return [];
+  void _processDataAndSetState({int days = 30}) {
+    _isLoading = true;
 
-    final int historyLength = _selectedCurrency!.history!.length;
-    final int startIndex = math.max(0, historyLength - timeSpan);
-    return historyLength <= timeSpan
-        ? _selectedCurrency!.history!
-        : _selectedCurrency!.history!.sublist(startIndex);
-  }
-
-  void _processDataAndSetState() {
-    _filteredHistoryEntries = _filterCurrencyHistory(_timeSpan);
+    filteredHistoryEntries = _selectedCurrency.getFilteredHistory(days);
     final List<double> allBuyValues =
-        _filteredHistoryEntries.map((e) => e.buy).toList();
-
+        filteredHistoryEntries.map((e) => e.buy).toList();
     const bufferPercent = 0.02; // 2% buffer
     final maxDataValue = allBuyValues.reduce(math.max);
     final minDataValue = allBuyValues.reduce(math.min);
     final bufferValue = (maxDataValue - minDataValue) * bufferPercent;
-
     setState(() {
-      _selectedValue = _filteredHistoryEntries.isNotEmpty
-          ? _filteredHistoryEntries.last.buy.toStringAsFixed(2)
+      _selectedValue = filteredHistoryEntries.isNotEmpty
+          ? filteredHistoryEntries.last.buy.toStringAsFixed(2)
           : '';
-      _selectedDate = _filteredHistoryEntries.isNotEmpty
-          ? DateFormat('dd/MM/yyyy').format(_filteredHistoryEntries.last.date)
+      _selectedDate = filteredHistoryEntries.isNotEmpty
+          ? DateFormat('dd/MM/yyyy').format(filteredHistoryEntries.last.date)
           : '';
       _maxYValue = maxDataValue + bufferValue;
       _minYValue = minDataValue - bufferValue;
       _midYValue = (_maxYValue + _minYValue) / 2;
-      _maxX = _filteredHistoryEntries.length.toDouble() - 1;
+      _maxX = filteredHistoryEntries.length.toDouble() - 1;
       _isLoading = false;
     });
-  }
-
-  void _onTimeSpanButtonClicked(int days) {
-    setState(() {
-      _timeSpan = days;
-      _isLoading = true;
-    });
-    _processDataAndSetState();
   }
 
   FlTitlesData _buildTitlesData(BuildContext context, double minYValue,
@@ -169,13 +144,13 @@ class HistoryPageState extends State<HistoryPage> {
   }
 
   void onIndexChange(int newIndex) {
-    if (newIndex >= 0 && newIndex < _currencyHistoryEntries.length) {
+    if (newIndex >= 0 && newIndex < filteredHistoryEntries.length) {
       setState(() {
         _touchedIndex = newIndex;
         _selectedValue =
-            _currencyHistoryEntries[newIndex].buy.toStringAsFixed(2) + ' DZD';
+            filteredHistoryEntries[newIndex].buy.toStringAsFixed(2) + ' DZD';
         _selectedDate = DateFormat('dd/MM/yyyy')
-            .format(_currencyHistoryEntries[newIndex].date);
+            .format(filteredHistoryEntries[newIndex].date);
       });
     }
   }
@@ -249,7 +224,7 @@ class HistoryPageState extends State<HistoryPage> {
       maxX: _maxX,
       maxY: _maxYValue,
       minY: _minYValue,
-      lineBarsData: _buildLineBarsData(context, _filteredHistoryEntries),
+      lineBarsData: _buildLineBarsData(context, filteredHistoryEntries),
     );
   }
 
@@ -273,7 +248,7 @@ class HistoryPageState extends State<HistoryPage> {
             onCurrencySelected: (Currency selectedCurrency) {
               setState(() {
                 _selectedCurrency = selectedCurrency;
-                _loadCurrencyHistory(_selectedCurrency!.currencyCode);
+                _loadCurrencyHistory(_selectedCurrency.currencyCode);
               });
             },
             parentContext: context,
@@ -304,7 +279,7 @@ class HistoryPageState extends State<HistoryPage> {
             children: [
               if (!_isLoading) ...[
                 Text(
-                  '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
+                  '1 ${_selectedCurrency.currencyCode} = $_selectedValue',
                   style: ThemeManager.moneyNumberStyle(context),
                 ),
                 const SizedBox(height: 8),
@@ -318,7 +293,9 @@ class HistoryPageState extends State<HistoryPage> {
                   child: LineChart(_mainData(context)),
                 ),
                 const SizedBox(height: 16),
-                TimeSpanButtons(onTimeSpanSelected: _onTimeSpanButtonClicked),
+                TimeSpanButtons(
+                    onTimeSpanSelected: (dayz) =>
+                        _processDataAndSetState(days: dayz)),
               ] else
                 const Center(child: CircularProgressIndicator()),
             ],
