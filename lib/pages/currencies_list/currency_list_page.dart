@@ -77,9 +77,13 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     await _preferencesService.setSelectedCurrencies(currencyOrder);
   }
 
-  bool shadowColor = false; // You can customize this as per your requirement
-  double?
-      scrolledUnderElevation; // You can customize this as per your requirement
+  Future<void> _handleRefresh() async {
+    // fake it.. for now
+    await Future.delayed(const Duration(seconds: 2)); // 2-second delay
+  }
+
+  bool shadowColor = false;
+  double? scrolledUnderElevation;
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -100,28 +104,31 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
             ),
             body: Padding(
                 padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
-                child: ReorderableListView.builder(
-                  itemCount: _selectedCurrencies
-                      .length, // Length of your currency list
-                  itemBuilder: (context, index) {
-                    final Currency currency = _selectedCurrencies[index];
-                    return CurrencyListItem(
-                      key: ValueKey(
-                          currency.currencyCode), // Unique key for the item
-                      currency: currency,
-                    );
-                  },
-                  onReorder: (int oldIndex, int newIndex) {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
-                    }
-                    setState(() {
-                      final Currency item =
-                          _selectedCurrencies.removeAt(oldIndex);
-                      _selectedCurrencies.insert(newIndex, item);
-                    });
-                    _saveCurrencyOrder();
-                  },
+                child: RefreshIndicator(
+                  onRefresh: () => _handleRefresh(),
+                  child: ReorderableListView.builder(
+                    itemCount: _selectedCurrencies
+                        .length, // Length of your currency list
+                    itemBuilder: (context, index) {
+                      final Currency currency = _selectedCurrencies[index];
+                      return CurrencyListItem(
+                        key: ValueKey(
+                            currency.currencyCode), // Unique key for the item
+                        currency: currency,
+                      );
+                    },
+                    onReorder: (int oldIndex, int newIndex) {
+                      if (newIndex > oldIndex) {
+                        newIndex -= 1;
+                      }
+                      setState(() {
+                        final Currency item =
+                            _selectedCurrencies.removeAt(oldIndex);
+                        _selectedCurrencies.insert(newIndex, item);
+                      });
+                      _saveCurrencyOrder();
+                    },
+                  ),
                 )),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
