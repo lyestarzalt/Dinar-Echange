@@ -72,6 +72,12 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     }
   }
 
+  Future<void> _saveCurrencyOrder() async {
+    final List<String> currencyOrder =
+        _selectedCurrencies.map((currency) => currency.currencyCode).toList();
+    await _preferencesService.setSelectedCurrencies(currencyOrder);
+  }
+
   bool shadowColor = false; // You can customize this as per your requirement
   double?
       scrolledUnderElevation; // You can customize this as per your requirement
@@ -94,19 +100,34 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
               shadowColor: shadowColor ? colorScheme.shadow : null,
             ),
             body: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: ListView.separated(
-                itemCount: _selectedCurrencies.length,
-                itemBuilder: (context, index) {
-                  final Currency currency = _selectedCurrencies[index];
-                  return CurrencyListItem(currency: currency);
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  height: 10,
-                  thickness: 1,
-                ),
-              ),
-            ),
+                padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+                child: ReorderableListView.builder(
+                  itemCount: _selectedCurrencies
+                      .length, // Length of your currency list
+                  itemBuilder: (context, index) {
+                    final Currency currency = _selectedCurrencies[index];
+                    return CurrencyListItem(
+                      key: ValueKey(
+                          currency.currencyCode), // Unique key for the item
+                      currency: currency,
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    // Adjust the index if necessary
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    setState(() {
+                      // Update the order of currencies
+                      final Currency item =
+                          _selectedCurrencies.removeAt(oldIndex);
+                      _selectedCurrencies.insert(newIndex, item);
+
+                      // Save the new order (assuming you have implemented this)
+                      _saveCurrencyOrder();
+                    });
+                  },
+                )),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
               tooltip: 'Add Currency',

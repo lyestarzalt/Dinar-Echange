@@ -17,12 +17,10 @@ class CurrencyConverterPage extends StatefulWidget {
 
 class CurrencyConverterPageState extends State<CurrencyConverterPage>
     with SingleTickerProviderStateMixin {
-  // Controllers for the two text fields
   TextEditingController amountController = TextEditingController();
   TextEditingController resultController = TextEditingController();
   FocusNode amountFocusNode = FocusNode();
   FocusNode resultFocusNode = FocusNode();
-  // Placeholder for flags, replace with actual Image.asset or similar
   Widget flagPlaceholder = Container(
       width: 32, height: 32, color: const Color.fromARGB(255, 255, 0, 0));
 
