@@ -42,9 +42,9 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
       });
     } else {
       setState(() {
-        _selectedCurrencies = allCurrencies
-            .where((currency) =>
-                savedCurrencyNames.contains(currency.currencyCode))
+        _selectedCurrencies = savedCurrencyNames
+            .map((code) => allCurrencies
+                .firstWhere((currency) => currency.currencyCode == code))
             .toList();
       });
     }
@@ -65,15 +65,25 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
         newCurrencies.map((c) => c.currencyCode).toList(),
       );
 
-      // Update the local list of currencies to display
       setState(() {
         _selectedCurrencies = newCurrencies;
       });
     }
   }
 
+  Future<void> _saveCurrencyOrder() async {
+    final List<String> currencyOrder =
+        _selectedCurrencies.map((currency) => currency.currencyCode).toList();
+    await _preferencesService.setSelectedCurrencies(currencyOrder);
+  }
+
+  bool shadowColor = false; // You can customize this as per your requirement
+  double?
+      scrolledUnderElevation; // You can customize this as per your requirement
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return FutureBuilder<List<Currency>>(
       future: widget.currenciesFuture,
       builder: (context, snapshot) {
@@ -83,28 +93,36 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
           return const Center(child: Text('Error fetching currencies'));
         } else if (snapshot.hasData) {
           return Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                const SliverAppBar(
-                  expandedHeight: 80.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text('Currency List'),
-                    // Add any additional AppBar customization here
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final Currency currency = _selectedCurrencies[index];
-                      return CurrencyListItem(currency: currency);
-                    },
-                    childCount: _selectedCurrencies.length,
-                  ),
-                ),
-              ],
+            appBar: AppBar(
+              title: const Text('Currency List'),
+              scrolledUnderElevation: scrolledUnderElevation,
+              shadowColor: shadowColor ? colorScheme.shadow : null,
             ),
+            body: Padding(
+                padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+                child: ReorderableListView.builder(
+                  itemCount: _selectedCurrencies
+                      .length, // Length of your currency list
+                  itemBuilder: (context, index) {
+                    final Currency currency = _selectedCurrencies[index];
+                    return CurrencyListItem(
+                      key: ValueKey(
+                          currency.currencyCode), // Unique key for the item
+                      currency: currency,
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    setState(() {
+                      final Currency item =
+                          _selectedCurrencies.removeAt(oldIndex);
+                      _selectedCurrencies.insert(newIndex, item);
+                    });
+                    _saveCurrencyOrder();
+                  },
+                )),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
               tooltip: 'Add Currency',
