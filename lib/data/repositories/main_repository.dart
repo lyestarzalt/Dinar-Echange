@@ -62,7 +62,7 @@ class MainRepository implements CurrencyRepository {
     }
   }
 
-  Future<Currency> getCurrencyHistory(Currency currency) async {
+Future<Currency> getCurrencyHistory(Currency currency) async {
     String cacheKey =
         'currencyWithHistory_${currency.currencyCode}_${DateFormat('yyyy-MM-dd').format(DateTime.now())}';
     try {
@@ -70,23 +70,30 @@ class MainRepository implements CurrencyRepository {
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
         logger.i(
-            'Fetching currency with history from cache for key: $cacheKey ,$cachedData');
+            'Fetching currency with history from cache for key: $cacheKey, $cachedData');
         return Currency.fromJson(cachedData);
       } else {
         logger.i(
             'Cache is invalid or not found. Fetching history from Firestore.');
-        currency = await _firestoreService
-            .fetchCurrencyHistory(currency); // Fetch history
 
-        // Cache the updated currency object
-        Map<String, dynamic> dataToCache = currency.toJson();
-        await _cacheManager.setCache(cacheKey, dataToCache);
-
-        return currency;
+        // Try fetching history from Firestore
+        try {
+          Currency fetchedCurrency =
+              await _firestoreService.fetchCurrencyHistory(currency);
+          // Cache the updated currency object only if fetch is successful
+          Map<String, dynamic> dataToCache = fetchedCurrency.toJson();
+          await _cacheManager.setCache(cacheKey, dataToCache);
+          return fetchedCurrency;
+        } catch (fetchError) {
+          logger.e('Error fetching from Firestore: $fetchError');
+          // Do not update cache if there's a fetch error
+        }
       }
     } catch (e) {
       logger.e('Error in getCurrencyHistory: $e');
-      return currency;
     }
+    // Return the original currency object if fetch fails
+    return currency;
   }
+
 }
