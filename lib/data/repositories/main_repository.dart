@@ -69,8 +69,8 @@ class MainRepository implements CurrencyRepository {
       // Check cache first
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        logger
-            .i('Fetching currency with history from cache for key: $cacheKey');
+        logger.i(
+            'Fetching currency with history from cache for key: $cacheKey ,$cachedData');
         return Currency.fromJson(cachedData);
       } else {
         logger.i(

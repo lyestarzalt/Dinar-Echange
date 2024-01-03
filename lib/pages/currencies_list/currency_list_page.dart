@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
-import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
 import 'package:dinar_watch/widgets/currency_list_item.dart';
+import 'package:dinar_watch/services/currency_serivice.dart';
 
 class CurrencyListScreen extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -14,68 +14,33 @@ class CurrencyListScreen extends StatefulWidget {
 }
 
 class CurrencyListScreenState extends State<CurrencyListScreen> {
-  final PreferencesService _preferencesService = PreferencesService();
+  late CurrencyService _currencyService;
   List<Currency> _selectedCurrencies = [];
-
   @override
   void initState() {
     super.initState();
-    widget.currenciesFuture.then((allCurrencies) {
-      _initializeSelectedCurrencies(allCurrencies);
-    });
+    _currencyService = CurrencyService(widget.currenciesFuture);
+    _initializeSelectedCurrencies();
   }
 
-  Future<void> _initializeSelectedCurrencies(
-      List<Currency> allCurrencies) async {
-    final List<String> savedCurrencyNames =
-        await _preferencesService.getSelectedCurrencies();
-
-    if (savedCurrencyNames.isEmpty) {
-      final List<String> coreCurrencyNames = allCurrencies
-          .where((currency) => currency.isCore)
-          .map((currency) => currency.currencyCode)
-          .toList();
-      await _preferencesService.setSelectedCurrencies(coreCurrencyNames);
-      setState(() {
-        _selectedCurrencies =
-            allCurrencies.where((currency) => currency.isCore).toList();
-      });
-    } else {
-      setState(() {
-        _selectedCurrencies = allCurrencies
-            .where((currency) =>
-                savedCurrencyNames.contains(currency.currencyCode))
-            .toList();
-      });
-    }
+  Future<void> _initializeSelectedCurrencies() async {
+    _selectedCurrencies = await _currencyService.loadSelectedCurrencies();
+    setState(() {});
   }
 
-  Future<void> _navigateToAddCurrencyPage(List<Currency> allCurrencies) async {
+  Future<void> _navigateToAddCurrencyPage() async {
     final List<Currency>? newCurrencies = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            AddCurrencyPage(existingCurrencies: allCurrencies),
+            AddCurrencyPage(existingCurrencies: _selectedCurrencies),
       ),
     );
 
     if (newCurrencies != null && newCurrencies.isNotEmpty) {
-      // Update the list of selected currencies in SharedPreferences
-      await _preferencesService.setSelectedCurrencies(
-        newCurrencies.map((c) => c.currencyCode).toList(),
-      );
-
-      // Update the local list of currencies to display
-      setState(() {
-        _selectedCurrencies = newCurrencies;
-      });
+      _selectedCurrencies = await _currencyService.addCurrency(newCurrencies);
+      setState(() {});
     }
-  }
-
-  Future<void> _saveCurrencyOrder() async {
-    final List<String> currencyOrder =
-        _selectedCurrencies.map((currency) => currency.currencyCode).toList();
-    await _preferencesService.setSelectedCurrencies(currencyOrder);
   }
 
   bool shadowColor = false; // You can customize this as per your requirement
@@ -107,29 +72,19 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
                   itemBuilder: (context, index) {
                     final Currency currency = _selectedCurrencies[index];
                     return CurrencyListItem(
-                      key: ValueKey(
-                          currency.currencyCode), // Unique key for the item
+                      key: ValueKey(currency.currencyCode),
                       currency: currency,
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
-                    // Adjust the index if necessary
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
-                    }
-                    setState(() {
-                      // Update the order of currencies
-                      final Currency item =
-                          _selectedCurrencies.removeAt(oldIndex);
-                      _selectedCurrencies.insert(newIndex, item);
-
-                      // Save the new order (assuming you have implemented this)
-                      _saveCurrencyOrder();
-                    });
+                    _currencyService.reorderCurrencies(oldIndex, newIndex);
+                    setState(() {});
+                    _currencyService.saveCurrencyOrder();
+                    print("Order saved"); // Debug print
                   },
                 )),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
+              onPressed: () => _navigateToAddCurrencyPage(),
               tooltip: 'Add Currency',
               child: const Icon(Icons.add),
             ),

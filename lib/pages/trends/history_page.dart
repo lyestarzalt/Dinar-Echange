@@ -29,7 +29,7 @@ class HistoryPageState extends State<HistoryPage> {
   final int _timeSpan = 180; // Default to 1 month
   final String _selectedCurrencyCode = 'EUR'; // Default currency
   Currency? _selectedCurrency;
-  late List<CurrencyHistoryEntry> filteredHistoryEntries;
+   List<CurrencyHistoryEntry> filteredHistoryEntries = [];
   var logger = Logger(printer: PrettyPrinter());
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
@@ -61,7 +61,7 @@ class HistoryPageState extends State<HistoryPage> {
 
     _selectedCurrency =
         await _mainRepository.getCurrencyHistory(_selectedCurrency!);
-    if (_selectedCurrency!.history != null) {
+    if (_selectedCurrency!.history!.isNotEmpty) {
       filteredHistoryEntries = _selectedCurrency!.history!;
       _processDataAndSetState(days: _timeSpan);
     } else {
@@ -277,17 +277,16 @@ class HistoryPageState extends State<HistoryPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading state
-            return Center(
-              child: LinearProgressIndicator(
-                backgroundColor: colorScheme.onSurface.withOpacity(0.3),
-                valueColor: AlwaysStoppedAnimation(colorScheme.primary),
-              ),
-            );
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             // Error state
             return Center(child: ErrorMessage());
           } else {
-            // Loaded state
+            // Check if the history is empty
+            if (filteredHistoryEntries.isEmpty) {
+              return Center(
+                  child: ErrorMessage(message: 'No history data available'));
+            }
             return Expanded(
               child: SingleChildScrollView(
                 child: Padding(
