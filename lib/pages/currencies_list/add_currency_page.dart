@@ -3,7 +3,6 @@ import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/theme/theme_manager.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -79,31 +78,20 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        titleSpacing: 0,
-        // Empty SizedBox to remove default leading space
-        title: Row(
-          // Minimizes the row's size to fit its children
-          children: [
-            Expanded(
-                child: TextField(
-              controller: searchController,
-              focusNode: searchFocusNode,
-              decoration: InputDecoration(
-                hintText: 'Search',
-                border: InputBorder.none,
-                prefixIcon: Icon(Icons.search,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer),
-                prefixIconConstraints:
-                    const BoxConstraints(minWidth: 30, minHeight: 30),
-                contentPadding: const EdgeInsets.fromLTRB(
-                    0, 16, 0, 16), // Adjust padding for vertical alignment
-              ),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-            )),
-          ],
+        title: TextField(
+          controller: searchController,
+          focusNode: searchFocusNode,
+          decoration: InputDecoration(
+            hintText: 'Search',
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.search,
+                color: Theme.of(context).colorScheme.onPrimary),
+          ),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
@@ -116,22 +104,19 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredCurrencies.length,
-                itemBuilder: (context, index) {
-                  Currency currency = filteredCurrencies[index];
-                  bool isSelected = selectedCurrencies.contains(currency);
-                  return _buildCurrencyListItem(currency, isSelected);
-                },
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredCurrencies.length,
+              itemBuilder: (context, index) {
+                Currency currency = filteredCurrencies[index];
+                bool isSelected = selectedCurrencies.contains(currency);
+                return _buildCurrencyListItem(currency, isSelected);
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
