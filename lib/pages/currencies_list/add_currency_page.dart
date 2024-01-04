@@ -81,17 +81,14 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
         title: TextField(
           controller: searchController,
           focusNode: searchFocusNode,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search',
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.search,
-                color: Theme.of(context).colorScheme.onPrimary),
-          ),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
+            prefixIcon: Icon(
+              Icons.search,
+            ),
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
