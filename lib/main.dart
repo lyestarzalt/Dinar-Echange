@@ -3,11 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:dinar_watch/pages/home_screen.dart'; // Update the path if necessary
+import 'package:dinar_watch/pages/home_screen.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:dinar_watch/pages/Error/Error_page.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -16,34 +17,39 @@ void main() {
 }
 
 Future<void> initializeApp() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FirebaseAuth.instance.signInAnonymously();
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isDarkMode = prefs.getBool('isDarkMode');
+    ThemeMode themeMode = ThemeMode.light; // Default to light mode
 
-  // Load theme preference
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool? isDarkMode = prefs.getBool('isDarkMode');
-  ThemeMode themeMode;
+    if (isDarkMode != null) {
+      themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    } else {
+      Brightness brightness =
+          SchedulerBinding.instance.platformDispatcher.platformBrightness;
+      themeMode =
+          brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+    }
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseAuth.instance.signInAnonymously();
 
-  if (isDarkMode != null) {
-    // Use saved preference
-    themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
-  } else {
-    // Use system preference if no saved preference
-    Brightness brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    themeMode =
-        brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+    List<Currency> currencies = await MainRepository().getDailyCurrencies();
+
+    FlutterNativeSplash.remove();
+    runApp(MyApp(themeMode: themeMode, currencies: currencies));
+  } on FirebaseAuthException catch (e) {
+    String errorMessage =
+        'An unexpected error occurred. Please try again later.';
+    if (e.code == 'network-request-failed') {
+      errorMessage =
+          'No internet connection. Please check your connection and try again.';
+    }
+    FlutterNativeSplash.remove();
+    runApp(ErrorApp(errorMessage: errorMessage, onRetry: initializeApp));
+    
   }
-
-  // Benchmark Firestore data fetching
-  List<Currency> currencies = await MainRepository().getDailyCurrencies();
-
-  // Remove the native splash screen
-  FlutterNativeSplash.remove();
-
-  runApp(MyApp(themeMode: themeMode, currencies: currencies));
 }
 
 class MyApp extends StatelessWidget {
