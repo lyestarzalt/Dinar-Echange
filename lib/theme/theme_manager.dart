@@ -50,6 +50,16 @@ class ThemeManager {
 
   static NavigationBarThemeData navigationBarTheme(ColorScheme colorScheme) {
     return NavigationBarThemeData(
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.pressed) ||
+              states.contains(MaterialState.focused) ||
+              states.contains(MaterialState.hovered)) {
+            return Colors.transparent; 
+          }
+          return null; 
+        },
+      ),
       backgroundColor:
           colorScheme.background, // Background color from the color scheme
       indicatorColor: colorScheme.primary, // Primary color for the indicator
