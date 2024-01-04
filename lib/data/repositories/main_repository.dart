@@ -14,14 +14,8 @@ class MainRepository implements CurrencyRepository {
   Future<List<Currency>> getDailyCurrencies() async {
     String cacheKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
     try {
-      // Start timing cache retrieval
-      var startTimeCache = DateTime.now();
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
-      var endTimeCache = DateTime.now();
-      var cacheDuration = endTimeCache.difference(startTimeCache);
-      logger.i(
-          "Shared Preferences cache retrieval duration: ${cacheDuration.inMilliseconds} ms");
-
+ 
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
         logger.i('Fetching data from cache for key: $cacheKey');
         List<dynamic> dataList = cachedData['data'] as List<dynamic>;
@@ -32,28 +26,15 @@ class MainRepository implements CurrencyRepository {
         logger
             .i('Cache is invalid or not found. Fetching data from Firestore.');
 
-        // Start timing Firestore fetching
-        var startTimeFirestore = DateTime.now();
         List<Currency> currencies =
             await _firestoreService.getTodayCurrencies();
-        var endTimeFirestore = DateTime.now();
-        var firestoreDuration = endTimeFirestore.difference(startTimeFirestore);
-        logger.i(
-            "Firestore fetch duration: ${firestoreDuration.inMilliseconds} ms");
-
-        // Start timing cache update
-        var startTimeCacheUpdate = DateTime.now();
+       
         Map<String, dynamic> dataToCache = {
           'dateSaved': cacheKey,
           'data': currencies.map((e) => e.toJson()).toList()
         };
         await _cacheManager.setCache(cacheKey, dataToCache);
-        var endTimeCacheUpdate = DateTime.now();
-        var cacheUpdateDuration =
-            endTimeCacheUpdate.difference(startTimeCacheUpdate);
-        logger.i(
-            "Shared Preferences cache update duration: ${cacheUpdateDuration.inMilliseconds} ms");
-
+    
         return currencies;
       }
     } catch (e) {
@@ -94,7 +75,6 @@ Future<Currency> getCurrencyHistory(Currency currency) async {
       return fetchedCurrency;
     } catch (e) {
       logger.e('Error in getCurrencyHistory for ${currency.currencyCode}: $e');
-      // Return the original currency object with an empty history
       currency.history = [];
       return currency;
     }
