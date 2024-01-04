@@ -74,7 +74,6 @@ class SettingsPageState extends State<SettingsPage> {
               const Divider(thickness: 2),
               _buildRateUsRow(),
               _buildAboutUsRow(context),
-              const ErrorMessage() // Testing...
             ],
           ),
         ),
