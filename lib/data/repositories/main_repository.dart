@@ -58,7 +58,7 @@ class MainRepository implements CurrencyRepository {
       }
     } catch (e) {
       logger.e('Error in getDailyCurrencies: $e');
-      return []; // Return an empty list in case of an error
+      return []; 
     }
   }
 
@@ -69,31 +69,35 @@ Future<Currency> getCurrencyHistory(Currency currency) async {
       // Check cache first
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        logger.i(
-            'Fetching currency with history from cache for key: $cacheKey, $cachedData');
-        return Currency.fromJson(cachedData);
-      } else {
-        logger.i(
-            'Cache is invalid or not found. Fetching history from Firestore.');
+        Currency cachedCurrency = Currency.fromJson(cachedData);
+        logger
+            .i('Fetching currency with history from cache for key: $cacheKey');
 
-        // Try fetching history from Firestore
-        try {
-          Currency fetchedCurrency =
-              await _firestoreService.fetchCurrencyHistory(currency);
-          // Cache the updated currency object only if fetch is successful
-          Map<String, dynamic> dataToCache = fetchedCurrency.toJson();
-          await _cacheManager.setCache(cacheKey, dataToCache);
-          return fetchedCurrency;
-        } catch (fetchError) {
-          logger.e('Error fetching from Firestore: $fetchError');
-          // Do not update cache if there's a fetch error
+      
+        if (cachedCurrency.history != null &&
+            cachedCurrency.history!.isNotEmpty) {
+          return cachedCurrency;
         }
       }
+
+      // If cache is invalid, not found, or history is empty, fetch from Firestore
+      logger.i(
+          'Cache is invalid or not found, or history is empty. Fetching history from Firestore.');
+      Currency fetchedCurrency =
+          await _firestoreService.fetchCurrencyHistory(currency);
+      // Cache the updated currency object only if fetch is successful and history is not empty
+      if (fetchedCurrency.history != null &&
+          fetchedCurrency.history!.isNotEmpty) {
+        Map<String, dynamic> dataToCache = fetchedCurrency.toJson();
+        await _cacheManager.setCache(cacheKey, dataToCache);
+      }
+      return fetchedCurrency;
     } catch (e) {
-      logger.e('Error in getCurrencyHistory: $e');
+      logger.e('Error in getCurrencyHistory for ${currency.currencyCode}: $e');
+      // Return the original currency object with an empty history
+      currency.history = [];
+      return currency;
     }
-    // Return the original currency object if fetch fails
-    return currency;
   }
 
 }

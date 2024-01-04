@@ -36,7 +36,8 @@ class HistoryPageState extends State<HistoryPage> {
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
   final MainRepository _mainRepository = MainRepository();
-
+  bool _hasError = false;
+  String _errorMessage = '';
   @override
   void initState() {
     super.initState();
@@ -66,18 +67,29 @@ class HistoryPageState extends State<HistoryPage> {
   }
 
   Future<void> _loadCurrencyHistory() async {
+    setState(() => _isLoading = true);
     try {
       Currency updatedCurrency =
           await _mainRepository.getCurrencyHistory(_selectedCurrency!);
       setState(() {
+        _hasError = false;
         _selectedCurrency = updatedCurrency;
         if (_selectedCurrency!.history!.isNotEmpty) {
           filteredHistoryEntries = _selectedCurrency!.history!;
           _processDataAndSetState(days: _timeSpan);
+        } else {
+          _hasError = true;
+          _errorMessage = 'No history data available';
         }
       });
-    } catch (error) {
+    } on Exception catch (error) {
+      setState(() {
+        _hasError = true;
+        _errorMessage = error.toString();
+      });
       logger.e('Error loading currency history: $error');
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -156,11 +168,15 @@ class HistoryPageState extends State<HistoryPage> {
                     Theme.of(context).colorScheme.primary),
               ),
             )
-          : _selectedCurrency != null
-              ? _buildCurrencyContent(context)
-              : const Center(
-                  child:
-                      ErrorMessage(message: "Currency data is not available")),
+          : _hasError
+              ? ErrorMessage(
+                  message: _errorMessage,
+                  onRetry: _loadCurrencyHistory,
+                )
+              : _selectedCurrency != null
+                  ? _buildCurrencyContent(context)
+                  : const ErrorMessage(
+                      message: "Currency data is not available"),
     );
   }
 
