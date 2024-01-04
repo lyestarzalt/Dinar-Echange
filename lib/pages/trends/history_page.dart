@@ -11,6 +11,7 @@ import 'package:animations/animations.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:dinar_watch/widgets/error_message.dart';
+import 'package:dinar_watch/widgets/history/line_graph.dart';
 
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -22,50 +23,61 @@ class HistoryPage extends StatefulWidget {
 }
 
 class HistoryPageState extends State<HistoryPage> {
+  var logger = Logger(printer: PrettyPrinter());
+  bool _isLoading = true;
   late List<Currency> coreCurrencies;
   late double _maxYValue, _minYValue, _midYValue;
   double _maxX = 0;
-  bool _isLoading = true;
-  final int _timeSpan = 180; // Default to 1 month
+  final int _timeSpan = 30; // Default to 1 month
   final String _selectedCurrencyCode = 'EUR'; // Default currency
   Currency? _selectedCurrency;
-   List<CurrencyHistoryEntry> filteredHistoryEntries = [];
-  var logger = Logger(printer: PrettyPrinter());
+  List<CurrencyHistoryEntry> filteredHistoryEntries = [];
   int _touchedIndex = -1;
   String _selectedValue = ''; // Holds the selected spot's value
   String _selectedDate = ''; // Holds the selected spot's date
-  final MainRepository _mainRepository =
-      MainRepository(); // Assuming this repository exists
-  late Future<void> _initializationFuture;
+  final MainRepository _mainRepository = MainRepository();
 
   @override
   void initState() {
     super.initState();
-    _initializationFuture = _initializeCurrencyHistory(widget.currenciesFuture);
+    _initializeCurrencyHistory(widget.currenciesFuture);
   }
 
   Future<void> _initializeCurrencyHistory(
       Future<List<Currency>> currenciesFuture) async {
-    _isLoading = true;
-    final List<Currency> currencies = await currenciesFuture;
-    coreCurrencies = currencies.where((currency) => currency.isCore).toList();
-    _selectedCurrency = coreCurrencies.firstWhere(
-      (currency) => currency.currencyCode == _selectedCurrencyCode,
-      orElse: () => coreCurrencies.first,
-    );
-    _loadCurrencyHistory();
+    try {
+      setState(() => _isLoading = true);
+      final List<Currency> currencies = await currenciesFuture;
+      coreCurrencies = currencies.where((currency) => currency.isCore).toList();
+
+      // Select the default currency or the first one as a fallback
+      _selectedCurrency = coreCurrencies.firstWhere(
+        (currency) => currency.currencyCode == _selectedCurrencyCode,
+        orElse: () => coreCurrencies.first,
+      );
+
+      // Load the history for the selected currency
+      await _loadCurrencyHistory();
+    } catch (error) {
+      logger.e('Error initializing currency history: $error');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _loadCurrencyHistory() async {
-    setState(() => _isLoading = true);
-
-    _selectedCurrency =
-        await _mainRepository.getCurrencyHistory(_selectedCurrency!);
-    if (_selectedCurrency!.history!.isNotEmpty) {
-      filteredHistoryEntries = _selectedCurrency!.history!;
-      _processDataAndSetState(days: _timeSpan);
-    } else {
-      setState(() => _isLoading = false);
+    try {
+      Currency updatedCurrency =
+          await _mainRepository.getCurrencyHistory(_selectedCurrency!);
+      setState(() {
+        _selectedCurrency = updatedCurrency;
+        if (_selectedCurrency!.history!.isNotEmpty) {
+          filteredHistoryEntries = _selectedCurrency!.history!;
+          _processDataAndSetState(days: _timeSpan);
+        }
+      });
+    } catch (error) {
+      logger.e('Error loading currency history: $error');
     }
   }
 
@@ -96,149 +108,12 @@ class HistoryPageState extends State<HistoryPage> {
     });
   }
 
-  FlTitlesData _buildTitlesData(BuildContext context, double minYValue,
-      double midYValue, double maxYValue) {
-    return FlTitlesData(
-      rightTitles: AxisTitles(
-        sideTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 50,
-          interval: 1,
-          getTitlesWidget: (value, meta) => value == minYValue ||
-                  value == midYValue.round() ||
-                  value == maxYValue
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    value.toInt().toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
-                    textAlign: TextAlign.left,
-                  ),
-                )
-              : Container(),
-        ),
-      ),
-      bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-    );
-  }
-
-  List<LineChartBarData> _buildLineBarsData(
-      BuildContext context, List<CurrencyHistoryEntry> filteredHistoryEntries) {
-    return [
-      LineChartBarData(
-        spots: filteredHistoryEntries
-            .asMap()
-            .entries
-            .map((e) => FlSpot(e.key.toDouble(), e.value.buy))
-            .toList(),
-        isCurved: false,
-        barWidth: 5,
-        color: Theme.of(context).colorScheme.secondary,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-      ),
-    ];
-  }
-
-  void onIndexChange(int newIndex) {
-    if (newIndex >= 0 && newIndex < filteredHistoryEntries.length) {
-      setState(() {
-        _touchedIndex = newIndex;
-        _selectedValue =
-            filteredHistoryEntries[newIndex].buy.toStringAsFixed(2) + ' DZD';
-        _selectedDate = DateFormat('dd/MM/yyyy')
-            .format(filteredHistoryEntries[newIndex].date);
-      });
-    }
-  }
-
-  LineTouchData _buildLineTouchData(
-      BuildContext context, int touchedIndex, Function(int) onIndexChange) {
-    return LineTouchData(
-      touchCallback: (event, touchResponse) {
-        if (event.isInterestedForInteractions &&
-            touchResponse?.lineBarSpots != null) {
-          final spot = touchResponse!.lineBarSpots!.first;
-          final newIndex = spot.x.toInt();
-          if (newIndex != touchedIndex) {
-            onIndexChange(newIndex);
-          }
-        }
-      },
-      handleBuiltInTouches: true,
-      touchTooltipData: LineTouchTooltipData(
-        tooltipBgColor: Colors.transparent,
-        tooltipRoundedRadius: 0,
-        getTooltipItems: (List<LineBarSpot> touchedSpots) {
-          return touchedSpots
-              .map((spot) => const LineTooltipItem(
-                    '', // Empty string for tooltip content
-                    TextStyle(
-                        color: Colors.transparent), // Transparent text style
-                  ))
-              .toList();
-        },
-      ),
-      getTouchedSpotIndicator:
-          (LineChartBarData barData, List<int> spotIndexes) {
-        return spotIndexes.map((index) {
-          return TouchedSpotIndicatorData(
-            const FlLine(color: Colors.transparent),
-            FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 6, // Adjust the size of the dot
-                  color: Theme.of(context)
-                      .colorScheme
-                      .secondary, // Color of the dot
-                  strokeColor: Colors.transparent, // Border color of the dot
-                );
-              },
-            ),
-          );
-        }).toList();
-      },
-    );
-  }
-
-  LineChartData _mainData(BuildContext context) {
-    return LineChartData(
-      gridData: const FlGridData(show: false),
-      titlesData: _buildTitlesData(context, _minYValue, _midYValue, _maxYValue),
-      extraLinesData: ExtraLinesData(
-        horizontalLines: [_minYValue, _midYValue.round().toDouble(), _maxYValue]
-            .map((yValue) => HorizontalLine(
-                y: yValue,
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-                strokeWidth: 1,
-                dashArray: [5]))
-            .toList(),
-      ),
-      lineTouchData: _buildLineTouchData(context, _touchedIndex, onIndexChange),
-      borderData: FlBorderData(show: false),
-      maxX: _maxX,
-      maxY: _maxYValue,
-      minY: _minYValue,
-      lineBarsData: _buildLineBarsData(context, filteredHistoryEntries),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Currency Trends'),
-        shadowColor: colorScheme.shadow,
+        shadowColor: Theme.of(context).colorScheme.shadow,
       ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fade,
@@ -272,59 +147,81 @@ class HistoryPageState extends State<HistoryPage> {
           );
         },
       ),
-      body: FutureBuilder(
-        future: _initializationFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Loading state
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // Error state
-            return Center(child: ErrorMessage());
-          } else {
-            // Check if the history is empty
-            if (filteredHistoryEntries.isEmpty) {
-              return Center(
-                  child: ErrorMessage(message: 'No history data available'));
-            }
-            return Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      if (_isLoading)
-                        LinearProgressIndicator(
-                          backgroundColor:
-                              colorScheme.onSurface.withOpacity(0.3),
-                          valueColor:
-                              AlwaysStoppedAnimation(colorScheme.primary),
-                        ),
-                      Text(
-                        '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
-                        style: ThemeManager.moneyNumberStyle(context),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _selectedDate,
-                        style: ThemeManager.currencyCodeStyle(context),
-                      ),
-                      const SizedBox(height: 16),
-                      AspectRatio(
-                        aspectRatio: 1.0,
-                        child: LineChart(_mainData(context)),
-                      ),
-                      const SizedBox(height: 20),
-                      TimeSpanButtons(
-                          onTimeSpanSelected: (days) =>
-                              _processDataAndSetState(days: days)),
-                    ],
-                  ),
-                ),
+      body: _isLoading
+          ? Center(
+              child: LinearProgressIndicator(
+                backgroundColor:
+                    Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary),
               ),
-            );
-          }
-        },
+            )
+          : _selectedCurrency != null
+              ? _buildCurrencyContent(context)
+              : const Center(
+                  child:
+                      ErrorMessage(message: "Currency data is not available")),
+    );
+  }
+
+  Widget _buildCurrencyContent(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            if (_isLoading)
+              LinearProgressIndicator(
+                backgroundColor:
+                    Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary),
+              ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '1 ${_selectedCurrency!.currencyCode} = $_selectedValue',
+                style: ThemeManager.moneyNumberStyle(context),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _selectedDate,
+                style: ThemeManager.currencyCodeStyle(context),
+              ),
+            ),
+            const SizedBox(height: 16),
+            AspectRatio(
+                aspectRatio: 1.0,
+                child: LineChart(
+                  buildMainData(
+                    context: context,
+                    minYValue: _minYValue,
+                    midYValue: _midYValue,
+                    maxYValue: _maxYValue,
+                    touchedIndex: _touchedIndex,
+                    maxX: _maxX,
+                    historyEntries: filteredHistoryEntries,
+                    onIndexChangeCallback:
+                        (int index, List<CurrencyHistoryEntry> entries) {
+                      setState(() {
+                        _touchedIndex = index;
+                        _selectedValue =
+                            '${entries[index].buy.toStringAsFixed(2)} DZD';
+                        _selectedDate = DateFormat('dd/MM/yyyy')
+                            .format(entries[index].date);
+                      });
+                    },
+                  ),
+                )),
+            const SizedBox(height: 20),
+            TimeSpanButtons(
+                onTimeSpanSelected: (days) =>
+                    _processDataAndSetState(days: days)),
+          ],
+        ),
       ),
     );
   }
