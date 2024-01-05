@@ -20,9 +20,8 @@ Future<void> initializeApp() async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isDarkMode = prefs.getBool('isDarkMode');
-    ThemeMode themeMode = ThemeMode.light; // Default to light mode
+    ThemeMode themeMode = ThemeMode.light; 
 
-    // Retrieve the selected language from SharedPreferences
     String? selectedLanguage = prefs.getString('selectedLanguage');
     Locale? selectedLocale;
     if (selectedLanguage != null) {
@@ -48,7 +47,7 @@ Future<void> initializeApp() async {
     runApp(MyApp(
       themeMode: themeMode,
       currencies: currencies,
-      selectedLocale: selectedLocale, // Pass the selectedLocale to MyApp
+      selectedLocale: selectedLocale,
     ));
   } on FirebaseAuthException catch (e) {
     String errorMessage =
@@ -70,7 +69,7 @@ final Locale? selectedLocale;
     Key? key,
     required this.themeMode,
     required this.currencies,
-    required this.selectedLocale, // Add this line
+    required this.selectedLocale, 
   }) : super(key: key);
 
 @override
@@ -78,7 +77,7 @@ final Locale? selectedLocale;
     return MainScreen(
       initialThemeMode: themeMode,
       currencies: currencies,
-      selectedLocale: selectedLocale, // Pass the selectedLocale to MainScreen
+      selectedLocale: selectedLocale,
     );
   }
 }

@@ -19,12 +19,12 @@ class MainScreen extends StatefulWidget {
     Key? key,
     required this.initialThemeMode,
     required this.currencies,
-    required this.selectedLocale, // Add this line
+    required this.selectedLocale, 
   }) : super(key: key);
 
   @override
   MainScreenState createState() =>
-      MainScreenState(selectedLocale); // Pass selectedLocale to MainScreenState
+      MainScreenState(selectedLocale); 
 }
 
 class MainScreenState extends State<MainScreen> {
@@ -32,7 +32,6 @@ class MainScreenState extends State<MainScreen> {
   ThemeMode _themeMode = ThemeMode.light;
   Locale? _currentLocale;
 
-  // Add this constructor
   MainScreenState(Locale? selectedLocale) {
     _currentLocale = selectedLocale;
   }
