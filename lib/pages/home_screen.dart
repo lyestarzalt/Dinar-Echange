@@ -8,6 +8,7 @@ import 'package:animations/animations.dart';
 import 'package:dinar_watch/shared/enums.dart';
 import 'package:dinar_watch/theme/color_scheme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:ui' as ui;
 
 class MainScreen extends StatefulWidget {
   final ThemeMode initialThemeMode;
@@ -72,25 +73,28 @@ class MainScreenState extends State<MainScreen> {
       darkTheme: ColorSchemeManager.darkTheme,
       themeMode: _themeMode,
       home: Material(
-        child: Scaffold(
-          body: PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 400),
-            transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
-            child: _getPageWidget(_selectedIndex),
-          ),
-          bottomNavigationBar: MainNavigation(
-            selectedIndex: _selectedIndex,
-            onItemSelected: _onItemTapped,
+        child: Directionality(
+          textDirection: ui.TextDirection.ltr,
+          child: Scaffold(
+            body: PageTransitionSwitcher(
+              duration: const Duration(milliseconds: 400),
+              transitionBuilder: (
+                Widget child,
+                Animation<double> animation,
+                Animation<double> secondaryAnimation,
+              ) {
+                return FadeThroughTransition(
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                );
+              },
+              child: _getPageWidget(_selectedIndex),
+            ),
+            bottomNavigationBar: MainNavigation(
+              selectedIndex: _selectedIndex,
+              onItemSelected: _onItemTapped,
+            ),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:ui' as ui;
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -75,45 +76,48 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
     sortedCurrencies.addAll(filteredCurrencies
         .where((currency) => !selectedCurrencies.contains(currency)));
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: TextField(
-          controller: searchController,
-          focusNode: searchFocusNode,
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.search,
-            border: InputBorder.none,
-            prefixIcon: const  Icon(
-              Icons.search,
+    return Directionality(
+      textDirection: ui.TextDirection.ltr,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 100,
+          title: TextField(
+            controller: searchController,
+            focusNode: searchFocusNode,
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.search,
+              border: InputBorder.none,
+              prefixIcon: const Icon(
+                Icons.search,
+              ),
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: FloatingActionButton(
+                mini: true,
+                onPressed: _addSelectedCurrencies,
+                tooltip: AppLocalizations.of(context)!.add_selected_currencies,
+                child: const Icon(Icons.check),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: FloatingActionButton(
-              mini: true,
-              onPressed: _addSelectedCurrencies,
-              tooltip: AppLocalizations.of(context)!.add_selected_currencies,
-              child: const Icon(Icons.check),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredCurrencies.length,
+                itemBuilder: (context, index) {
+                  Currency currency = filteredCurrencies[index];
+                  bool isSelected = selectedCurrencies.contains(currency);
+                  return _buildCurrencyListItem(currency, isSelected);
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredCurrencies.length,
-              itemBuilder: (context, index) {
-                Currency currency = filteredCurrencies[index];
-                bool isSelected = selectedCurrencies.contains(currency);
-                return _buildCurrencyListItem(currency, isSelected);
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

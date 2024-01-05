@@ -79,7 +79,7 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
 
   Future<void> _handleRefresh() async {
     // fake it.. for now
-    await Future.delayed(const Duration(seconds: 2)); 
+    await Future.delayed(const Duration(seconds: 2));
   }
 
   bool shadowColor = false;
@@ -109,13 +109,11 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
                 child: RefreshIndicator(
                   onRefresh: () => _handleRefresh(),
                   child: ReorderableListView.builder(
-                    itemCount: _selectedCurrencies
-                        .length,
+                    itemCount: _selectedCurrencies.length,
                     itemBuilder: (context, index) {
                       final Currency currency = _selectedCurrencies[index];
                       return CurrencyListItem(
-                        key: ValueKey(
-                            currency.currencyCode), 
+                        key: ValueKey(currency.currencyCode),
                         currency: currency,
                       );
                     },
