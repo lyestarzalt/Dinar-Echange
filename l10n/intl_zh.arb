@@ -1,0 +1,103 @@
+{
+  "@@locale": "zh",
+  "select_currency": "选择货币",
+  "@select_currency": {
+    "description": "Option for users to choose their preferred currency."
+  },
+  "retry": "重试",
+  "@retry": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
+  },
+  "currency_trends": "货币趋势",
+  "@currency_trends": {
+    "description": "Section displaying the latest trends and movements in different currencies."
+  },
+  "close": "关闭",
+  "@close": {
+    "description": "Button or option to close the app or a specific section within the app."
+  },
+  "auto": "自动",
+  "@auto": {
+    "description": "Option for automatic settings or operations within the app."
+  },
+  "dark": "暗色主题",
+  "@dark": {
+    "description": "Option to enable a dark color scheme for the app's interface."
+  },
+  "light": "亮色主题",
+  "@light": {
+    "description": "Option to enable a light color scheme for the app's interface."
+  },
+  "settings": "设置",
+  "@settings": {
+    "description": "Section to customize app preferences and configurations."
+  },
+  "currency_list": "货币列表",
+  "@currency_list": {
+    "description": "A comprehensive list of all available currencies in the app."
+  },
+  "error_fetching_currencies": "获取货币时出错",
+  "@error_fetching_currencies": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "convert": "转换",
+  "@convert": {
+    "description": "Option to convert values between dzd and currencies."
+  },
+  "currencies": "货币",
+  "@currencies": {
+    "description": "Currencies"
+  },
+  "history": "历史记录",
+  "@history": {
+    "description": "Section showing historical data or past records of currency values."
+  },
+  "one_months": "1 个月",
+  "@one_months": {
+    "description": "Time filter for viewing currency data over the past month."
+  },
+  "six_months": "6 个月",
+  "@six_months": {
+    "description": "Time filter for viewing currency data over the past six months."
+  },
+  "one_years": "1 年",
+  "@one_years": {
+    "description": "Time filter for viewing currency data over the past year."
+  },
+  "two_years": "2 年",
+  "@two_years": {
+    "description": "Time filter for viewing currency data over the past two years."
+  },
+  "general": "通用",
+  "@general": {
+    "description": "Overall settings or information for the app."
+  },
+  "no_currencies": "没有货币",
+  "@no_currencies": {
+    "description": "Message for no currency data."
+  },
+  "theme": "主题",
+  "@theme": {
+    "description": "Option for visual theme customization."
+  },
+  "rate_us": "评价我们",
+  "@rate_us": {
+    "description": "Invitation to rate the app."
+  },
+  "errormessage_title": "糟糕！出问题了。",
+  "@errormessage_title": {
+    "description": "Title for an error message dialog."
+  },
+  "errormessage_message": "无法加载数据。请检查您的连接然后重试",
+  "@errormessage_message": {
+    "description": "Detailed text explaining the error."
+  },
+  "about_app": "关于应用程序",
+  "@about_app": {
+    "description": "About the App"
+  },
+  "about_body": "Dinar Watch 是您跟踪和分析阿尔及利亚第纳尔的必备工具，提供实时更新和用户友好的功能。 设计用于易于访问性，支持多种语言，以满足全球用户的需求。 如需进一步信息，您可以联系我们。",
+  "@about_body": {
+    "description": "Detailed Description"
+  }
+}

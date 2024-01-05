@@ -1,0 +1,103 @@
+{
+  "@@locale": "en",
+  "select_currency": "Select Currency",
+  "@select_currency": {
+    "description": "Option for users to choose their preferred currency."
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
+  },
+  "currency_trends": "Currency Trends",
+  "@currency_trends": {
+    "description": "Section displaying the latest trends and movements in different currencies."
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Button or option to close the app or a specific section within the app."
+  },
+  "auto": "Auto",
+  "@auto": {
+    "description": "Option for automatic settings or operations within the app."
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "Option to enable a dark color scheme for the app's interface."
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Option to enable a light color scheme for the app's interface."
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Section to customize app preferences and configurations."
+  },
+  "currency_list": "Currency List",
+  "@currency_list": {
+    "description": "A comprehensive list of all available currencies in the app."
+  },
+  "error_fetching_currencies": "Error fetching currencies",
+  "@error_fetching_currencies": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "convert": "Convert",
+  "@convert": {
+    "description": "Option to convert values between dzd and currencies."
+  },
+  "currencies": "Currencies",
+  "@currencies": {
+    "description": "Currencies"
+  },
+  "history": "History",
+  "@history": {
+    "description": "Section showing historical data or past records of currency values."
+  },
+  "one_months": "1 Month",
+  "@one_months": {
+    "description": "Time filter for viewing currency data over the past month."
+  },
+  "six_months": "6 Months",
+  "@six_months": {
+    "description": "Time filter for viewing currency data over the past six months."
+  },
+  "one_years": "1 Year",
+  "@one_years": {
+    "description": "Time filter for viewing currency data over the past year."
+  },
+  "two_years": "2 Years",
+  "@two_years": {
+    "description": "Time filter for viewing currency data over the past two years."
+  },
+  "general": "General",
+  "@general": {
+    "description": "Overall settings or information for the app."
+  },
+  "no_currencies": "No currencies",
+  "@no_currencies": {
+    "description": "Message for no currency data."
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Option for visual theme customization."
+  },
+  "rate_us": "Rate Us",
+  "@rate_us": {
+    "description": "Invitation to rate the app."
+  },
+  "errormessage_title": "Oops! Something went wrong.",
+  "@errormessage_title": {
+    "description": "Title for an error message dialog."
+  },
+  "errormessage_message": "Unable to load the data. Please check your connection and try again.",
+  "@errormessage_message": {
+    "description": "Detailed text explaining the error."
+  },
+  "about_app": "About the App",
+  "@about_app": {
+    "description": "About the App"
+  },
+  "about_body": "Dinar Watch is your essential tool for tracking and analyzing the Algerian Dinar with real-time updates and user-friendly features. Designed for accessibility, it caters to a global audience with multi-language support. For further information, you can reach us at.",
+  "@about_body": {
+    "description": "Detailed Description"
+  }
+}

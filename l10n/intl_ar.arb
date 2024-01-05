@@ -1,0 +1,103 @@
+{
+  "@@locale": "ar",
+  "select_currency": "اختر العملة",
+  "@select_currency": {
+    "description": "Option for users to choose their preferred currency."
+  },
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
+  },
+  "currency_trends": "اتجاهات العملات",
+  "@currency_trends": {
+    "description": "Section displaying the latest trends and movements in different currencies."
+  },
+  "close": "إغلاق",
+  "@close": {
+    "description": "Button or option to close the app or a specific section within the app."
+  },
+  "auto": "تلقائي",
+  "@auto": {
+    "description": "Option for automatic settings or operations within the app."
+  },
+  "dark": "داكن",
+  "@dark": {
+    "description": "Option to enable a dark color scheme for the app's interface."
+  },
+  "light": "فاتح",
+  "@light": {
+    "description": "Option to enable a light color scheme for the app's interface."
+  },
+  "settings": "إعدادات",
+  "@settings": {
+    "description": "Section to customize app preferences and configurations."
+  },
+  "currency_list": "قائمة العملات",
+  "@currency_list": {
+    "description": "A comprehensive list of all available currencies in the app."
+  },
+  "error_fetching_currencies": "خطأ في استرداد العملات",
+  "@error_fetching_currencies": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "convert": "تحويل",
+  "@convert": {
+    "description": "Option to convert values between dzd and currencies."
+  },
+  "currencies": "العملات",
+  "@currencies": {
+    "description": "Currencies"
+  },
+  "history": "التاريخ",
+  "@history": {
+    "description": "Section showing historical data or past records of currency values."
+  },
+  "one_months": "1 شهر",
+  "@one_months": {
+    "description": "Time filter for viewing currency data over the past month."
+  },
+  "six_months": "6 أشهر",
+  "@six_months": {
+    "description": "Time filter for viewing currency data over the past six months."
+  },
+  "one_years": "1 سنة",
+  "@one_years": {
+    "description": "Time filter for viewing currency data over the past year."
+  },
+  "two_years": "2 سنة",
+  "@two_years": {
+    "description": "Time filter for viewing currency data over the past two years."
+  },
+  "general": "عام",
+  "@general": {
+    "description": "Overall settings or information for the app."
+  },
+  "no_currencies": "لا توجد عملات",
+  "@no_currencies": {
+    "description": "Message for no currency data."
+  },
+  "theme": "موضوع",
+  "@theme": {
+    "description": "Option for visual theme customization."
+  },
+  "rate_us": "قيمنا",
+  "@rate_us": {
+    "description": "Invitation to rate the app."
+  },
+  "errormessage_title": "عفوًا! هناك خطأ ما.",
+  "@errormessage_title": {
+    "description": "Title for an error message dialog."
+  },
+  "errormessage_message": "تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.",
+  "@errormessage_message": {
+    "description": "Detailed text explaining the error."
+  },
+  "about_app": "حول التطبيق",
+  "@about_app": {
+    "description": "About the App"
+  },
+  "about_body": "دينار واتش هو أداتك الأساسية لتتبع وتحليل الدينار الجزائري مع تحديثات في الوقت الفعلي وميزات سهلة الاستخدام. مصمم للوصول السهل، ويدعم عدة لغات لخدمة جمهور عالمي. لمزيد من المعلومات، يمكنك الوصول إلينا.",
+  "@about_body": {
+    "description": "Detailed Description"
+  }
+}
