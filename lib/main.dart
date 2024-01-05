@@ -22,6 +22,13 @@ Future<void> initializeApp() async {
     bool? isDarkMode = prefs.getBool('isDarkMode');
     ThemeMode themeMode = ThemeMode.light; // Default to light mode
 
+    // Retrieve the selected language from SharedPreferences
+    String? selectedLanguage = prefs.getString('selectedLanguage');
+    Locale? selectedLocale;
+    if (selectedLanguage != null) {
+      selectedLocale = Locale(selectedLanguage);
+    }
+
     if (isDarkMode != null) {
       themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
     } else {
@@ -38,7 +45,11 @@ Future<void> initializeApp() async {
     List<Currency> currencies = await MainRepository().getDailyCurrencies();
 
     FlutterNativeSplash.remove();
-    runApp(MyApp(themeMode: themeMode, currencies: currencies));
+    runApp(MyApp(
+      themeMode: themeMode,
+      currencies: currencies,
+      selectedLocale: selectedLocale, // Pass the selectedLocale to MyApp
+    ));
   } on FirebaseAuthException catch (e) {
     String errorMessage =
         'An unexpected error occurred. Please try again later.';
@@ -48,18 +59,26 @@ Future<void> initializeApp() async {
     }
     FlutterNativeSplash.remove();
     runApp(ErrorApp(errorMessage: errorMessage, onRetry: initializeApp));
-    
   }
 }
 
 class MyApp extends StatelessWidget {
   final ThemeMode themeMode;
   final List<Currency> currencies;
+final Locale? selectedLocale;
+  const MyApp({
+    Key? key,
+    required this.themeMode,
+    required this.currencies,
+    required this.selectedLocale, // Add this line
+  }) : super(key: key);
 
-  const MyApp({super.key, required this.themeMode, required this.currencies});
-
-  @override
+@override
   Widget build(BuildContext context) {
-    return MainScreen(initialThemeMode: themeMode, currencies: currencies);
+    return MainScreen(
+      initialThemeMode: themeMode,
+      currencies: currencies,
+      selectedLocale: selectedLocale, // Pass the selectedLocale to MainScreen
+    );
   }
 }

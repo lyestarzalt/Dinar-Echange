@@ -13,19 +13,29 @@ import 'dart:ui' as ui;
 class MainScreen extends StatefulWidget {
   final ThemeMode initialThemeMode;
   final List<Currency> currencies;
+  final Locale? selectedLocale; // Add this line
 
-  const MainScreen(
-      {Key? key, required this.initialThemeMode, required this.currencies})
-      : super(key: key);
+  const MainScreen({
+    Key? key,
+    required this.initialThemeMode,
+    required this.currencies,
+    required this.selectedLocale, // Add this line
+  }) : super(key: key);
 
   @override
-  MainScreenState createState() => MainScreenState();
+  MainScreenState createState() =>
+      MainScreenState(selectedLocale); // Pass selectedLocale to MainScreenState
 }
 
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   ThemeMode _themeMode = ThemeMode.light;
   Locale? _currentLocale;
+
+  // Add this constructor
+  MainScreenState(Locale? selectedLocale) {
+    _currentLocale = selectedLocale;
+  }
 
   void setLocale(Locale newLocale) {
     setState(() {
