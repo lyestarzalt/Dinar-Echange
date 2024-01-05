@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
@@ -26,12 +27,11 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Select Currency'), // Or any other title you prefer
+        title: Text(AppLocalizations.of(context)!.select_currency),
       ),
       body: ListView.separated(
         itemCount: widget.coreCurrencies.length,
-        separatorBuilder: (context, index) =>
-            const Divider(), // divider between list items
+        separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (BuildContext context, int index) {
           final currency = widget.coreCurrencies[index];
           return Padding(

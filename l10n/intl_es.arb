@@ -96,8 +96,28 @@
   "@about_app": {
     "description": "About the App"
   },
-  "about_body": "Dinar Watch es tu herramienta esencial para rastrear y analizar el Dinar argelino con actualizaciones en tiempo real y funciones fáciles de usar. Diseñado para la accesibilidad, admite varios idiomas para atender a una audiencia global. Para obtener más información, puedes contactarnos.",
+  "about_body": "Dinar Watch es su herramienta esencial para rastrear y analizar el Dinar argelino con actualizaciones en tiempo real y características amigables para el usuario. Tenga en cuenta que debido a la naturaleza del mercado de divisas, las tarifas proporcionadas pueden no ser oficiales y están destinadas solo para fines informativos. Para más información, puede contactarnos.",
   "@about_body": {
     "description": "Detailed Description"
+  },
+  "chose_language": "Elija idioma",
+  "@chose_language": {
+    "description": "Option to select a language"
+  },
+  "languages": "Idiomas",
+  "@languages": {
+    "description": "List of available languages"
+  },
+  "add_selected_currencies": "Añadir Monedas Seleccionadas",
+  "@add_selected_currencies": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "search": "Buscar",
+  "@search": {
+    "description": "Option to search"
+  },
+  "add_currencies": "Agregar monedas",
+  "@add_currencies": {
+    "description": "Option to add currencies"
   }
 }

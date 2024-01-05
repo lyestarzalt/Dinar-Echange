@@ -5,6 +5,7 @@ import 'package:dinar_watch/utils/finance_utils.dart';
 import 'package:decimal/decimal.dart';
 import 'package:dinar_watch/widgets/conversion_rate_info.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final Currency currency; // The currency selected from the list
@@ -134,7 +135,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Convert'),
+        title:  Text(AppLocalizations.of(context)!.convert),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -230,7 +231,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
           color: borderColor,
           width: focusNode.hasFocus
               ? 2.0
-              : 1.0, // Adjust border width based on focus
+              : 1.0, 
         ),
       ),
       margin: cardTheme.margin,
@@ -239,11 +240,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
           crossAxisAlignment:
-              CrossAxisAlignment.center, // Center align the Row's children
+              CrossAxisAlignment.center,
           children: [
-            // Image and FlagContainer alignment
+            
             if (currencyCode ==
-                'DZD') // Assuming 'DZD' is the currency code for Algeria
+                'DZD') 
               Image.asset('assets/dz.png', width: 50, height: 40)
             else if (flag!.isNotEmpty)
               FlagContainer(
@@ -258,7 +259,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                 focusNode: focusNode,
                 controller: controller,
                 decoration: ThemeManager.currencyInputDecoration(
-                    context, currencyCode), // Adjusted padding
+                    context, currencyCode),
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

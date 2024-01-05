@@ -12,6 +12,7 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:dinar_watch/widgets/error_message.dart';
 import 'package:dinar_watch/widgets/history/line_graph.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryPage extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -124,7 +125,7 @@ class HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Currency Trends'),
+        title: Text(AppLocalizations.of(context)!.currency_trends),
         shadowColor: Theme.of(context).colorScheme.shadow,
       ),
       floatingActionButton: OpenContainer(

@@ -61,7 +61,6 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     );
 
     if (newCurrencies != null && newCurrencies.isNotEmpty) {
-      // Update the list of selected currencies in SharedPreferences
       await _preferencesService.setSelectedCurrencies(
         newCurrencies.map((c) => c.currencyCode).toList(),
       );
@@ -80,7 +79,7 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
 
   Future<void> _handleRefresh() async {
     // fake it.. for now
-    await Future.delayed(const Duration(seconds: 2)); // 2-second delay
+    await Future.delayed(const Duration(seconds: 2)); 
   }
 
   bool shadowColor = false;
@@ -95,7 +94,9 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('Error fetching currencies'));
+          return Center(
+              child: Text(
+                  AppLocalizations.of(context)!.error_fetching_currencies));
         } else if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
@@ -109,12 +110,12 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
                   onRefresh: () => _handleRefresh(),
                   child: ReorderableListView.builder(
                     itemCount: _selectedCurrencies
-                        .length, // Length of your currency list
+                        .length,
                     itemBuilder: (context, index) {
                       final Currency currency = _selectedCurrencies[index];
                       return CurrencyListItem(
                         key: ValueKey(
-                            currency.currencyCode), // Unique key for the item
+                            currency.currencyCode), 
                         currency: currency,
                       );
                     },
@@ -133,12 +134,13 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
                 )),
             floatingActionButton: FloatingActionButton(
               onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
-              tooltip: 'Add Currency',
+              tooltip: AppLocalizations.of(context)!.add_currencies,
               child: const Icon(Icons.add),
             ),
           );
         } else {
-          return const Center(child: Text('No currencies available'));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.no_currencies));
         }
       },
     );

@@ -96,8 +96,28 @@
   "@about_app": {
     "description": "About the App"
   },
-  "about_body": "دينار واتش هو أداتك الأساسية لتتبع وتحليل الدينار الجزائري مع تحديثات في الوقت الفعلي وميزات سهلة الاستخدام. مصمم للوصول السهل، ويدعم عدة لغات لخدمة جمهور عالمي. لمزيد من المعلومات، يمكنك الوصول إلينا.",
+  "about_body": "دينار واتش هو أداتك المثالية لتتبع وتحليل الدينار الجزائري مع تحديثات فورية ومميزات سهلة الاستخدام. يرجى العلم أنه بسبب طبيعة سوق العملات، قد لا تكون الأسعار المقدمة رسمية وهي مخصصة لأغراض المعلومات فقط. للمزيد من المعلومات، يمكنك التواصل معنا.",
   "@about_body": {
     "description": "Detailed Description"
+  },
+  "chose_language": "اختر اللغة",
+  "@chose_language": {
+    "description": "Option to select a language"
+  },
+  "languages": "اللغات",
+  "@languages": {
+    "description": "List of available languages"
+  },
+  "add_selected_currencies": "أضف العملات المختارة",
+  "@add_selected_currencies": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "search": "بحث",
+  "@search": {
+    "description": "Option to search"
+  },
+  "add_currencies": "إضافة العملات",
+  "@add_currencies": {
+    "description": "Option to add currencies"
   }
 }

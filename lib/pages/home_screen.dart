@@ -67,7 +67,7 @@ class MainScreenState extends State<MainScreen> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _currentLocale,
-      title: 'Currency App',
+      title: 'Dinar Watch',
       theme: ColorSchemeManager.lightTheme,
       darkTheme: ColorSchemeManager.darkTheme,
       themeMode: _themeMode,
@@ -88,25 +88,9 @@ class MainScreenState extends State<MainScreen> {
             },
             child: _getPageWidget(_selectedIndex),
           ),
-          bottomNavigationBar: NavigationBar(
-            height: 55,
-            indicatorColor: Colors.transparent,
+          bottomNavigationBar: MainNavigation(
             selectedIndex: _selectedIndex,
-            onDestinationSelected: _onItemTapped,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.list),
-                label: 'Currencies',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.history),
-                label: 'History',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-              ),
-            ],
+            onItemSelected: _onItemTapped,
           ),
         ),
       ),
@@ -132,5 +116,38 @@ class MainScreenState extends State<MainScreen> {
       default:
         return CurrencyListScreen(currenciesFuture: completedFuture);
     }
+  }
+}
+
+class MainNavigation extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemSelected;
+
+  MainNavigation(
+      {Key? key, required this.selectedIndex, required this.onItemSelected})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationBar(
+      height: 55,
+      indicatorColor: Colors.transparent,
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onItemSelected,
+      destinations: [
+        NavigationDestination(
+          icon: const Icon(Icons.list),
+          label: AppLocalizations.of(context)!.currencies,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.history),
+          label: AppLocalizations.of(context)!.history,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.settings),
+          label: AppLocalizations.of(context)!.settings,
+        ),
+      ],
+    );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -81,8 +81,8 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
         title: TextField(
           controller: searchController,
           focusNode: searchFocusNode,
-          decoration: const InputDecoration(
-            hintText: 'Search',
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.search,
             border: InputBorder.none,
             prefixIcon: Icon(
               Icons.search,
@@ -95,7 +95,7 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
             child: FloatingActionButton(
               mini: true,
               onPressed: _addSelectedCurrencies,
-              tooltip: 'Add Selected Currencies',
+              tooltip: AppLocalizations.of(context)!.add_selected_currencies,
               child: const Icon(Icons.check),
             ),
           ),

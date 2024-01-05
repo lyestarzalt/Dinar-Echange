@@ -96,8 +96,28 @@
   "@about_app": {
     "description": "About the App"
   },
-  "about_body": "Dinar Watch ist Ihr wesentliches Instrument zur Verfolgung und Analyse des Algerischen Dinars mit Echtzeitaktualisierungen und benutzerfreundlichen Funktionen. Entwickelt für die Zugänglichkeit, bedient es ein weltweites Publikum mit Mehrsprachigkeit. Für weitere Informationen können Sie uns erreichen.",
+  "about_body": "Dinar Watch ist Ihr unverzichtbares Tool für das Verfolgen und Analysieren des Algerischen Dinars mit Echtzeit-Updates und benutzerfreundlichen Funktionen. Bitte beachten Sie, dass aufgrund der Beschaffenheit des Devisenmarktes die bereitgestellten Kurse nicht offiziell sein können und nur zu Informationszwecken dienen. Für weitere Informationen können Sie uns erreichen.",
   "@about_body": {
     "description": "Detailed Description"
+  },
+  "chose_language": "Sprache wählen",
+  "@chose_language": {
+    "description": "Option to select a language"
+  },
+  "languages": "Sprachen",
+  "@languages": {
+    "description": "List of available languages"
+  },
+  "add_selected_currencies": "Ausgewählte Währungen hinzufügen",
+  "@add_selected_currencies": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "search": "Suchen",
+  "@search": {
+    "description": "Option to search"
+  },
+  "add_currencies": "Währungen hinzufügen",
+  "@add_currencies": {
+    "description": "Option to add currencies"
   }
 }

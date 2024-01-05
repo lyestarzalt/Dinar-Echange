@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/widgets/error_message.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ErrorApp extends StatelessWidget {
   final String errorMessage;
@@ -14,7 +15,7 @@ class ErrorApp extends StatelessWidget {
       home: Material(
         child: Scaffold(
           body: ErrorMessage(
-            title: 'Error',
+            title: AppLocalizations.of(context)!.errormessage_title,
             message: errorMessage,
             onRetry: onRetry,
           ),

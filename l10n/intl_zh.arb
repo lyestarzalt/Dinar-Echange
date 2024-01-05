@@ -96,8 +96,28 @@
   "@about_app": {
     "description": "About the App"
   },
-  "about_body": "Dinar Watch 是您跟踪和分析阿尔及利亚第纳尔的必备工具，提供实时更新和用户友好的功能。 设计用于易于访问性，支持多种语言，以满足全球用户的需求。 如需进一步信息，您可以联系我们。",
+  "about_body": "第纳尔观察是您跟踪和分析阿尔及利亚第纳尔的实时更新和用户友好功能的必备工具。请注意，由于外汇市场的性质，提供的汇率可能不是官方的，仅供参考。如需更多信息，您可以联系我们。",
   "@about_body": {
     "description": "Detailed Description"
+  },
+  "chose_language": "选择语言",
+  "@chose_language": {
+    "description": "Option to select a language"
+  },
+  "languages": "语言",
+  "@languages": {
+    "description": "List of available languages"
+  },
+  "add_selected_currencies": "添加所选货币",
+  "@add_selected_currencies": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "search": "搜索",
+  "@search": {
+    "description": "Option to search"
+  },
+  "add_currencies": "添加货币",
+  "@add_currencies": {
+    "description": "Option to add currencies"
   }
 }
