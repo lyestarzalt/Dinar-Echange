@@ -99,7 +99,6 @@ class SettingsPageState extends State<SettingsPage> {
               _buildRateUsRow(),
               _buildAboutUsRow(context),
               _buildLanguageRow(),
-              Text(AppLocalizations.of(context)!.currencies)
             ],
           ),
         ),
