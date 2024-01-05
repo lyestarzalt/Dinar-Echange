@@ -84,7 +84,7 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.search,
             border: InputBorder.none,
-            prefixIcon: Icon(
+            prefixIcon: const  Icon(
               Icons.search,
             ),
           ),

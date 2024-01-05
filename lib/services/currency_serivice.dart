@@ -29,7 +29,6 @@ class CurrencyService {
   Future<void> saveCurrencyOrder() async {
     final List<String> currencyOrder =
         _selectedCurrencies.map((currency) => currency.currencyCode).toList();
-    print("Saving order: $currencyOrder"); // Debug print
 
     await _preferencesService.setSelectedCurrencies(currencyOrder);
   }

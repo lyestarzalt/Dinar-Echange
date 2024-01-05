@@ -70,15 +70,15 @@ class ThemeManager {
         ),
       ),
       iconTheme: MaterialStateProperty.all(
-        IconThemeData(
+        const IconThemeData(
           size: 24, // Icon size
         ),
       ),
       indicatorShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
-            2), // Subtle rounded corners for the indicator
+            2),
       ),
-      height: 56, // Height of the navigation bar
+      height: 56,
       labelBehavior: NavigationDestinationLabelBehavior
           .onlyShowSelected, // Show labels only for selected item
     );

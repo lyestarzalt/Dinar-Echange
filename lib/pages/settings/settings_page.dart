@@ -31,8 +31,6 @@ class SettingsPageState extends State<SettingsPage> {
     'Deutsch': 'de',
     'Français': 'fr',
     '中文': 'zh',
-
-   
   };
 
   String selectedLanguage = 'English'; // default
@@ -185,12 +183,11 @@ class SettingsPageState extends State<SettingsPage> {
     return InkWell(
       onTap: () => _showAboutDialog(context),
       child: Padding(
-        padding: const EdgeInsets.all(8.0), 
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.info_outline,
-                size: 24.0), 
+            const Icon(Icons.info_outline, size: 24.0),
             const SizedBox(width: 10),
             Text(AppLocalizations.of(context)!.about_app,
                 style: const TextStyle(fontSize: 15)),

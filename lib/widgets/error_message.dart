@@ -6,12 +6,12 @@ class ErrorMessage extends StatelessWidget {
   final VoidCallback? onRetry;
 
  const ErrorMessage({
-    Key? key,
+    super.key,
     this.title = 'Oops! Something went wrong.',
     this.message =
         'Unable to load the data. Please check your connection and try again.',
     this.onRetry,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +48,10 @@ class ErrorMessage extends StatelessWidget {
             if (onRetry != null)
               ElevatedButton(
                 onPressed: onRetry,
-                child: Text('Retry'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
+                child: const Text('Retry'),
               ),
           ],
         ),

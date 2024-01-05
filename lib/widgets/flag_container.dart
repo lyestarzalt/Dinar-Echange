@@ -8,12 +8,12 @@ class FlagContainer extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const FlagContainer({
-    Key? key,
+    super.key,
     this.imageUrl,
     this.width = 50.0,
     this.height = 40.0,
     this.borderRadius = const BorderRadius.all(Radius.circular(1)),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

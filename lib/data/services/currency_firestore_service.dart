@@ -9,7 +9,6 @@ class FirestoreService {
 
   Future<List<Currency>> getTodayCurrencies() async {
     try {
-      var startTime = DateTime.now(); // Start timing
       var snapshot = await _firestore
           .collection('exchange-daily')
           .orderBy(FieldPath.documentId, descending: true)
