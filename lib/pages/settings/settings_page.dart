@@ -137,24 +137,28 @@ class SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.chose_language),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: languages
-                .map((String language) => RadioListTile<String>(
-                      title: Text(language),
-                      value: language,
-                      groupValue: selectedLanguage,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedLanguage = value!;
-                          Navigator.of(context).pop();
-                          _changeLanguage(selectedLanguage);
-                        });
-                      },
-                    ))
-                .toList(),
+        return Dialog(
+          child: Material(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: languages
+                  .map((String language) => RadioListTile(
+                        title: Text(language),
+                        value: language,
+                        groupValue: selectedLanguage,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedLanguage = value!;
+                            Navigator.of(context).pop();
+                            _changeLanguage(selectedLanguage);
+                          });
+                        },
+                      ))
+                  .toList(),
+            ),
           ),
         );
       },
