@@ -3,6 +3,7 @@ import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
 import 'package:dinar_watch/widgets/currency_list_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CurrencyListScreen extends StatefulWidget {
   final Future<List<Currency>> currenciesFuture;
@@ -98,7 +99,7 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
         } else if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Currency List'),
+              title: Text(AppLocalizations.of(context)!.currency_list),
               scrolledUnderElevation: scrolledUnderElevation,
               shadowColor: shadowColor ? colorScheme.shadow : null,
             ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:dinar_watch/shared/enums.dart';
-import 'package:dinar_watch/widgets/error_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dinar_watch/pages/home_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   final void Function(ThemeOption) onThemeChanged;
@@ -13,7 +14,16 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  ThemeOption themeOption = ThemeOption.auto; // Default value
+  ThemeOption themeOption = ThemeOption.auto;
+  List<String> languages = [
+    'English',
+    'Arabic',
+    'Deutsch',
+    'Español',
+    'Français',
+    '中文'
+  ];
+  String selectedLanguage = 'English'; // default value
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +84,82 @@ class SettingsPageState extends State<SettingsPage> {
               const Divider(thickness: 2),
               _buildRateUsRow(),
               _buildAboutUsRow(context),
+              _buildLanguageRow()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLanguageRow() {
+    return InkWell(
+      onTap: _showLanguageDialog,
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.language, size: 24.0),
+            SizedBox(width: 10),
+            Text('Language', style: TextStyle(fontSize: 15)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _changeLanguage(String languageCode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguage', languageCode);
+
+    final mainScreenState = context.findAncestorStateOfType<MainScreenState>();
+    mainScreenState?.setLocale(Locale(languageCode));
+  }
+
+  Widget _buildLanguageDropdown() {
+    return DropdownButton<String>(
+      value: selectedLanguage,
+      onChanged: (String? newValue) {
+        setState(() {
+          selectedLanguage = newValue!;
+          _changeLanguage(selectedLanguage);
+        });
+      },
+      items: languages.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Choose Language'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: languages
+                .map((String language) => RadioListTile<String>(
+                      title: Text(language),
+                      value: language,
+                      groupValue: selectedLanguage,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedLanguage = value!;
+                          Navigator.of(context).pop();
+                          _changeLanguage(selectedLanguage);
+                        });
+                      },
+                    ))
+                .toList(),
+          ),
+        );
+      },
     );
   }
 

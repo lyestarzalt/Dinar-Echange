@@ -37,6 +37,7 @@ flutter:
   assets:
     - assets/dz.png
     - assets/logo.png
+  generate: true
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
-import '../theme/theme_manager.dart';
 import 'package:dinar_watch/pages/settings/settings_page.dart';
 import 'package:dinar_watch/pages/currencies_list/currency_list_page.dart';
 import 'package:dinar_watch/pages/trends/history_page.dart';
@@ -8,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_watch/shared/enums.dart';
 import 'package:dinar_watch/theme/color_scheme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainScreen extends StatefulWidget {
   final ThemeMode initialThemeMode;
@@ -24,6 +24,13 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   ThemeMode _themeMode = ThemeMode.light;
+  Locale? _currentLocale;
+
+  void setLocale(Locale newLocale) {
+    setState(() {
+      _currentLocale = newLocale;
+    });
+  }
 
   @override
   void initState() {
@@ -57,6 +64,9 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _currentLocale,
       title: 'Currency App',
       theme: ColorSchemeManager.lightTheme,
       darkTheme: ColorSchemeManager.darkTheme,
