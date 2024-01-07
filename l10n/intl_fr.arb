@@ -52,21 +52,21 @@
   "@history": {
     "description": "Section showing historical data or past records of currency values."
   },
-  "one_months": "1 mois",
-  "@one_months": {
-    "description": "Time filter for viewing currency data over the past month."
+  "one_month": "1M",
+  "@one_month": {
+    "description": "Short time filter for viewing currency data over the past month."
   },
-  "six_months": "6 mois",
+  "six_months": "6M",
   "@six_months": {
-    "description": "Time filter for viewing currency data over the past six months."
+    "description": "Short time filter for viewing currency data over the past six months."
   },
-  "one_years": "1 an",
-  "@one_years": {
-    "description": "Time filter for viewing currency data over the past year."
+  "one_year": "1Y",
+  "@one_year": {
+    "description": "Short time filter for viewing currency data over the past year."
   },
-  "two_years": "2 ans",
+  "two_years": "2Y",
   "@two_years": {
-    "description": "Time filter for viewing currency data over the past two years."
+    "description": "Short time filter for viewing currency data over the past two years."
   },
   "general": "Général",
   "@general": {
@@ -92,11 +92,11 @@
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
-  "about_app": "À propos de l'application'",
+  "about_app": "À propos de l'application",
   "@about_app": {
     "description": "About the App"
   },
-  "about_body": "Dinar Watch est votre outil indispensable pour suivre et analyser le Dinar algérien avec des mises à jour en temps réel et une expérience utilisateur conviviale. Veuillez noter qu'en raison de la nature du marché des devises, les taux fournis peuvent ne pas être officiels et sont uniquement destinés à des fins d'information. Pour plus d'informations, vous pouvez nous contacter.'",
+  "about_body": "Dinar Watch est votre outil indispensable pour suivre et analyser le Dinar algérien avec des mises à jour en temps réel et une expérience utilisateur conviviale. Veuillez noter qu'en raison de la nature du marché des devises, les taux fournis peuvent ne pas être officiels et sont uniquement destinés à des fins d'information. Pour plus d'informations, vous pouvez nous contacter.",
   "@about_body": {
     "description": "Detailed Description"
   },

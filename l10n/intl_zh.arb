@@ -52,21 +52,21 @@
   "@history": {
     "description": "Section showing historical data or past records of currency values."
   },
-  "one_months": "1 个月",
-  "@one_months": {
-    "description": "Time filter for viewing currency data over the past month."
+  "one_month": "1个",
+  "@one_month": {
+    "description": "Short time filter for viewing currency data over the past month."
   },
-  "six_months": "6 个月",
+  "six_months": "6个",
   "@six_months": {
-    "description": "Time filter for viewing currency data over the past six months."
+    "description": "Short time filter for viewing currency data over the past six months."
   },
-  "one_years": "1 年",
-  "@one_years": {
-    "description": "Time filter for viewing currency data over the past year."
+  "one_year": "1年",
+  "@one_year": {
+    "description": "Short time filter for viewing currency data over the past year."
   },
-  "two_years": "2 年",
+  "two_years": "2年",
   "@two_years": {
-    "description": "Time filter for viewing currency data over the past two years."
+    "description": "Short time filter for viewing currency data over the past two years."
   },
   "general": "通用",
   "@general": {

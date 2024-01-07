@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimeSpanButtons extends StatelessWidget {
   final Function(int) onTimeSpanSelected;
@@ -10,10 +11,10 @@ class TimeSpanButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildTimeSpanButton('1M', 30),
-        _buildTimeSpanButton('6M', 180),
-        _buildTimeSpanButton('1Y', 365),
-        _buildTimeSpanButton('2Y', 730),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.one_month, 30),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.six_months, 180),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.one_year, 365),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.two_years, 730),
       ],
     );
   }

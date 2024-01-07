@@ -52,21 +52,21 @@
   "@history": {
     "description": "Section showing historical data or past records of currency values."
   },
-  "one_months": "1 Month",
-  "@one_months": {
-    "description": "Time filter for viewing currency data over the past month."
+  "one_month": "1M",
+  "@one_month": {
+    "description": "Short time filter for viewing currency data over the past month."
   },
-  "six_months": "6 Months",
+  "six_months": "6M",
   "@six_months": {
-    "description": "Time filter for viewing currency data over the past six months."
+    "description": "Short time filter for viewing currency data over the past six months."
   },
-  "one_years": "1 Year",
-  "@one_years": {
-    "description": "Time filter for viewing currency data over the past year."
+  "one_year": "1Y",
+  "@one_year": {
+    "description": "Short time filter for viewing currency data over the past year."
   },
-  "two_years": "2 Years",
+  "two_years": "2Y",
   "@two_years": {
-    "description": "Time filter for viewing currency data over the past two years."
+    "description": "Short time filter for viewing currency data over the past two years."
   },
   "general": "General",
   "@general": {
