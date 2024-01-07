@@ -21,24 +21,12 @@ Future<void> initializeApp() async {
   try {
     await PreferencesService().init();
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isDarkMode = prefs.getBool('isDarkMode');
-    ThemeMode themeMode = ThemeMode.light; 
+    ThemeMode themeMode = await PreferencesService().getThemeMode();
 
-    String? selectedLanguage = prefs.getString('selectedLanguage');
-    Locale? selectedLocale;
-    if (selectedLanguage != null) {
-      selectedLocale = Locale(selectedLanguage);
-    }
+    String? selectedLanguage = await PreferencesService().getSelectedLanguage();
+    Locale? selectedLocale =
+        selectedLanguage != null ? Locale(selectedLanguage) : null;
 
-    if (isDarkMode != null) {
-      themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
-    } else {
-      Brightness brightness =
-          SchedulerBinding.instance.platformDispatcher.platformBrightness;
-      themeMode =
-          brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-    }
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -63,6 +51,7 @@ Future<void> initializeApp() async {
     runApp(ErrorApp(errorMessage: errorMessage, onRetry: initializeApp));
   }
 }
+
 
 class MyApp extends StatelessWidget {
   final ThemeMode themeMode;
