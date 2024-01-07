@@ -15,14 +15,6 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   ThemeOption themeOption = ThemeOption.auto;
-  List<String> languages = [
-    'English',
-    'العربية',
-    'Deutsch',
-    'Español',
-    'Français',
-    '中文'
-  ];
 
   Map<String, String> languageCodes = {
     'English': 'en',
@@ -162,19 +154,20 @@ class SettingsPageState extends State<SettingsPage> {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: languages
-                  .map((String language) => RadioListTile(
-                        title: Text(language),
-                        value: language,
-                        groupValue: selectedLanguage,
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedLanguage = value!;
-                            Navigator.of(context).pop();
-                            _changeLanguage(selectedLanguage);
-                          });
-                        },
-                      ))
+              children: languageCodes.entries
+                  .map(
+                      (MapEntry<String, String> entry) => RadioListTile<String>(
+                            title: Text(entry.key), // Language name
+                            value: entry.key, // Language name as value
+                            groupValue: selectedLanguage,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedLanguage = value!;
+                                Navigator.of(context).pop();
+                                _changeLanguage(selectedLanguage);
+                              });
+                            },
+                          ))
                   .toList(),
             ),
           ),
