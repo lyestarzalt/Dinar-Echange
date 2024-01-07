@@ -121,8 +121,9 @@ class SettingsPageState extends State<SettingsPage> {
             ],
             selected: {themeOption},
             onSelectionChanged: (Set newSelection) async {
-              await PreferencesService().setThemeMode(themeOption);
+              themeOption = newSelection.first;
 
+              await PreferencesService().setThemeMode(themeOption);
               setState(() {
                 themeOption = newSelection.first;
                 widget.onThemeChanged(themeOption);
