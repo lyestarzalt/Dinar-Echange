@@ -22,8 +22,4 @@ class PreferencesService {
     await _prefs.setStringList('selectedCurrencies', currencies);
   }
 
-  // Add other preferences methods here
 }
-
-// Usage
-// Call `await PreferencesService().init();` during app initialization.
