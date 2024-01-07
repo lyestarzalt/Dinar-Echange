@@ -3,6 +3,7 @@ import 'package:dinar_watch/shared/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dinar_watch/pages/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_watch/services/preferences_service.dart';
 
 class SettingsPage extends StatefulWidget {
   final void Function(ThemeOption) onThemeChanged;
@@ -25,9 +26,23 @@ class SettingsPageState extends State<SettingsPage> {
     '中文': 'zh',
   };
 
-  void _loadSelectedLanguage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String languageCode = prefs.getString('selectedLanguage') ?? 'en';
+void _loadSelectedLanguage() async {
+    String languageCode =
+        await PreferencesService().getSelectedLanguage() ?? 'en';
+    ThemeMode savedThemeMode = await PreferencesService().getThemeMode();
+
+    ThemeOption savedThemeOption;
+    switch (savedThemeMode) {
+      case ThemeMode.dark:
+        savedThemeOption = ThemeOption.dark;
+        break;
+      case ThemeMode.light:
+        savedThemeOption = ThemeOption.light;
+        break;
+      default:
+        savedThemeOption = ThemeOption.auto;
+    }
+
     setState(() {
       selectedLanguage = languageCodes.entries
           .firstWhere(
@@ -35,8 +50,10 @@ class SettingsPageState extends State<SettingsPage> {
             orElse: () => const MapEntry('English', 'en'),
           )
           .key;
+      themeOption = savedThemeOption;
     });
   }
+
 
   String selectedLanguage = 'English'; // default
   @override
@@ -61,45 +78,7 @@ class SettingsPageState extends State<SettingsPage> {
               Text(AppLocalizations.of(context)!.theme,
                   style: const TextStyle(fontSize: 15)),
               const Divider(thickness: 2),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      outlinedButtonTheme: OutlinedButtonThemeData(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                    child: SegmentedButton(
-                      segments: <ButtonSegment>[
-                        ButtonSegment(
-                            value: ThemeOption.auto,
-                            label: Text(AppLocalizations.of(context)!.auto),
-                            icon: const Icon(Icons.brightness_auto)),
-                        ButtonSegment(
-                            value: ThemeOption.dark,
-                            label: Text(AppLocalizations.of(context)!.dark),
-                            icon: const Icon(Icons.nights_stay)),
-                        ButtonSegment(
-                            value: ThemeOption.light,
-                            label: Text(AppLocalizations.of(context)!.light),
-                            icon: const Icon(Icons.wb_sunny)),
-                      ],
-                      selected: {themeOption},
-                      onSelectionChanged: (Set newSelection) {
-                        setState(() {
-                          themeOption = newSelection.first;
-                          widget.onThemeChanged(themeOption);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
+              _buildThemeSelection(),
               const SizedBox(height: 10),
               Text(AppLocalizations.of(context)!.general,
                   style: const TextStyle(fontSize: 15)),
@@ -108,6 +87,48 @@ class SettingsPageState extends State<SettingsPage> {
               _buildAboutUsRow(context),
               _buildLanguageRow(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeSelection() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Center(
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+          child: SegmentedButton(
+            segments: <ButtonSegment>[
+              ButtonSegment(
+                  value: ThemeOption.auto,
+                  label: Text(AppLocalizations.of(context)!.auto),
+                  icon: const Icon(Icons.brightness_auto)),
+              ButtonSegment(
+                  value: ThemeOption.dark,
+                  label: Text(AppLocalizations.of(context)!.dark),
+                  icon: const Icon(Icons.nights_stay)),
+              ButtonSegment(
+                  value: ThemeOption.light,
+                  label: Text(AppLocalizations.of(context)!.light),
+                  icon: const Icon(Icons.wb_sunny)),
+            ],
+            selected: {themeOption},
+            onSelectionChanged: (Set newSelection) {
+              setState(() {
+                themeOption = newSelection.first;
+                widget.onThemeChanged(themeOption);
+              });
+            },
           ),
         ),
       ),
@@ -133,11 +154,8 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void _changeLanguage(String languageName) async {
-    String languageCode =
-        languageCodes[languageName] ?? 'en'; // Default to 'en' if not found
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selectedLanguage', languageCode);
+    String languageCode = languageCodes[languageName] ?? 'en';
+    await PreferencesService().setSelectedLanguage(languageCode);
 
     final mainScreenState = context.findAncestorStateOfType<MainScreenState>();
     mainScreenState?.setLocale(Locale(languageCode));
