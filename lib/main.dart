@@ -6,8 +6,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_watch/pages/home_screen.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/models/currency.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:dinar_watch/pages/Error/Error_page.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 
@@ -35,7 +33,7 @@ Future<void> initializeApp() async {
     List<Currency> currencies = await MainRepository().getDailyCurrencies();
 
     FlutterNativeSplash.remove();
-    runApp(MyApp(
+    runApp(DinarWatch(
       themeMode: themeMode,
       currencies: currencies,
       selectedLocale: selectedLocale,
@@ -52,19 +50,18 @@ Future<void> initializeApp() async {
   }
 }
 
-
-class MyApp extends StatelessWidget {
+class DinarWatch extends StatelessWidget {
   final ThemeMode themeMode;
   final List<Currency> currencies;
-final Locale? selectedLocale;
-  const MyApp({
-    Key? key,
+  final Locale? selectedLocale;
+  const DinarWatch({
+    super.key,
     required this.themeMode,
     required this.currencies,
-    required this.selectedLocale, 
-  }) : super(key: key);
+    required this.selectedLocale,
+  });
 
-@override
+  @override
   Widget build(BuildContext context) {
     return MainScreen(
       initialThemeMode: themeMode,
