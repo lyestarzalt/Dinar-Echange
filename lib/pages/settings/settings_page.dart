@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/shared/enums.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dinar_watch/pages/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
@@ -16,7 +15,7 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   ThemeOption themeOption = ThemeOption.auto;
-
+  String selectedLanguage = 'English'; // default
   Map<String, String> languageCodes = {
     'English': 'en',
     'العربية': 'ar',
@@ -26,7 +25,7 @@ class SettingsPageState extends State<SettingsPage> {
     '中文': 'zh',
   };
 
-void _loadSelectedLanguage() async {
+  void _loadSelectedLanguage() async {
     String languageCode =
         await PreferencesService().getSelectedLanguage() ?? 'en';
     ThemeMode savedThemeMode = await PreferencesService().getThemeMode();
@@ -54,8 +53,6 @@ void _loadSelectedLanguage() async {
     });
   }
 
-
-  String selectedLanguage = 'English'; // default
   @override
   void initState() {
     super.initState();
@@ -123,7 +120,9 @@ void _loadSelectedLanguage() async {
                   icon: const Icon(Icons.wb_sunny)),
             ],
             selected: {themeOption},
-            onSelectionChanged: (Set newSelection) {
+            onSelectionChanged: (Set newSelection) async {
+              await PreferencesService().setThemeMode(themeOption);
+
               setState(() {
                 themeOption = newSelection.first;
                 widget.onThemeChanged(themeOption);
