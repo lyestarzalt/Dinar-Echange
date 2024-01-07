@@ -55,6 +55,10 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
           .where(
               (currency) => savedCurrencyNames.contains(currency.currencyCode))
           .toList();
+      // Ensure the order matches the saved order
+      selectedCurrencies.sort((a, b) =>
+          savedCurrencyNames.indexOf(a.currencyCode) -
+          savedCurrencyNames.indexOf(b.currencyCode));
     });
   }
 
