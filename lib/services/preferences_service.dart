@@ -44,10 +44,11 @@ Future<ThemeMode> getThemeMode() async {
     }
   }
 
-  Future<void> setThemeMode(ThemeMode mode) async {
-    bool isDarkMode = mode == ThemeMode.dark;
-    await _prefs.setBool('isDarkMode', isDarkMode);
+Future<void> setThemeMode(ThemeOption themeOption) async {
+    String themeOptionString = themeOption.toString().split('.').last;
+    await _prefs.setString('themeOption', themeOptionString);
   }
+
 
   Future<String?> getSelectedLanguage() async {
     return _prefs.getString('selectedLanguage');
