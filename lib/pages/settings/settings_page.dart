@@ -33,7 +33,25 @@ class SettingsPageState extends State<SettingsPage> {
     '中文': 'zh',
   };
 
+  void _loadSelectedLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String languageCode = prefs.getString('selectedLanguage') ?? 'en';
+    setState(() {
+      selectedLanguage = languageCodes.entries
+          .firstWhere(
+            (entry) => entry.value == languageCode,
+            orElse: () => const MapEntry('English', 'en'),
+          )
+          .key;
+    });
+  }
+
   String selectedLanguage = 'English'; // default
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedLanguage();
+  }
 
   @override
   Widget build(BuildContext context) {
