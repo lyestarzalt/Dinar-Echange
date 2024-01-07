@@ -9,6 +9,7 @@ import 'package:dinar_watch/models/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:dinar_watch/pages/Error/Error_page.dart';
+import 'package:dinar_watch/services/preferences_service.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,8 @@ void main() {
 
 Future<void> initializeApp() async {
   try {
+    await PreferencesService().init();
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isDarkMode = prefs.getBool('isDarkMode');
     ThemeMode themeMode = ThemeMode.light; 
