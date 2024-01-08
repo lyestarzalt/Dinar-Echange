@@ -6,19 +6,44 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 class CurrencySelectionProvider with ChangeNotifier {
   List<Currency> _allCurrencies = [];
   List<Currency> _selectedCurrencies = [];
+  List<Currency> _filteredCurrencies = [];
+  TextEditingController searchController = TextEditingController();
+
   List<Currency> get selectedCurrencies => _selectedCurrencies;
+  List<Currency> get filteredCurrencies => _filteredCurrencies;
 
   CurrencySelectionProvider() {
     _initializeCurrencies();
+
+    searchController.addListener(_filterCurrencies);
   }
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _initializeCurrencies() async {
     try {
       _allCurrencies = await MainRepository().getDailyCurrencies();
+      _filteredCurrencies = List.from(
+          _allCurrencies); // init the list for the add currecnies page
       await _loadSelectedCurrencies();
     } catch (e) {
     } finally {
       notifyListeners();
     }
+  }
+
+  void _filterCurrencies() {
+    String searchTerm = searchController.text.toLowerCase();
+    _filteredCurrencies = _allCurrencies
+        .where((currency) =>
+            currency.currencyCode.toLowerCase().contains(searchTerm) ||
+            (currency.currencyName?.toLowerCase().contains(searchTerm) ??
+                false))
+        .toList();
+    notifyListeners();
   }
 
   Future<void> _loadSelectedCurrencies() async {
@@ -75,5 +100,16 @@ class CurrencySelectionProvider with ChangeNotifier {
     final List<String> currencyOrder =
         _selectedCurrencies.map((currency) => currency.currencyCode).toList();
     await PreferencesService().setSelectedCurrencies(currencyOrder);
+  }
+
+  void filterCurrencies(String searchTerm) {
+    searchTerm = searchTerm.toLowerCase();
+    _filteredCurrencies = _allCurrencies
+        .where((currency) =>
+            currency.currencyCode.toLowerCase().contains(searchTerm) ||
+            (currency.currencyName?.toLowerCase().contains(searchTerm) ??
+                false))
+        .toList();
+    notifyListeners();
   }
 }

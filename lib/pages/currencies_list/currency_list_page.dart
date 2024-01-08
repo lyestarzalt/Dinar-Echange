@@ -5,29 +5,14 @@ import 'package:dinar_watch/widgets/currency_list_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
+
 class CurrencyListScreen extends StatelessWidget {
   const CurrencyListScreen({Key? key}) : super(key: key);
 
+ 
 
-  
-Future<void> _navigateToAddCurrencyPage(
-      BuildContext context, CurrencySelectionProvider provider) async {
-    final List<Currency>? newCurrencies = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            AddCurrencyPage(existingCurrencies: provider.selectedCurrencies),
-      ),
-    );
-
-    if (newCurrencies != null && newCurrencies.isNotEmpty) {
-      provider.updateSelectedCurrencies(newCurrencies);
-    }
-  }
-
-@override
+  @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider<CurrencySelectionProvider>(
       create: (_) => CurrencySelectionProvider(),
       child: Consumer<CurrencySelectionProvider>(
@@ -59,8 +44,15 @@ Future<void> _navigateToAddCurrencyPage(
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () =>
-                  _navigateToAddCurrencyPage(context, selectionProvider),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: selectionProvider,
+                    child: const AddCurrencyPage(),
+                  ),
+                ),
+              ),
               tooltip: AppLocalizations.of(context)!.add_currencies,
               child: const Icon(Icons.add),
             ),
@@ -69,5 +61,4 @@ Future<void> _navigateToAddCurrencyPage(
       ),
     );
   }
-
 }
