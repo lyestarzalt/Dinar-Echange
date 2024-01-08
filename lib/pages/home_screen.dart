@@ -55,13 +55,13 @@ class _MainScreenState extends State<MainScreen> {
     Future<List<Currency>> completedFuture = Future.value(widget.currencies);
     switch (index) {
       case 0:
-        return CurrencyListScreen(currenciesFuture: completedFuture);
+        return CurrencyListScreen();
       case 1:
         return HistoryPage(currenciesFuture: completedFuture);
       case 2:
         return const SettingsPage();
       default:
-        return CurrencyListScreen(currenciesFuture: completedFuture);
+        return CurrencyListScreen();
     }
   }
 }

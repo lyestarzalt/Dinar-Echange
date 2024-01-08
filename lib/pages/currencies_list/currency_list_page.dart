@@ -1,147 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/models/currency.dart';
-import 'package:dinar_watch/services/preferences_service.dart';
-import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
+import 'package:dinar_watch/providers/currency_selection_provider.dart';
 import 'package:dinar_watch/widgets/currency_list_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
+class CurrencyListScreen extends StatelessWidget {
+  const CurrencyListScreen({Key? key}) : super(key: key);
 
-class CurrencyListScreen extends StatefulWidget {
-  final Future<List<Currency>> currenciesFuture;
 
-  const CurrencyListScreen({super.key, required this.currenciesFuture});
-
-  @override
-  CurrencyListScreenState createState() => CurrencyListScreenState();
-}
-
-class CurrencyListScreenState extends State<CurrencyListScreen> {
-  List<Currency> _selectedCurrencies = [];
-
-  @override
-  void initState() {
-    super.initState();
-    widget.currenciesFuture.then((allCurrencies) {
-      _initializeSelectedCurrencies(allCurrencies);
-    });
-  }
-
-  Future<void> _initializeSelectedCurrencies(
-      List<Currency> allCurrencies) async {
-    final List<String> savedCurrencyNames =
-        await PreferencesService()
-      .getSelectedCurrencies();
-
-    if (savedCurrencyNames.isEmpty) {
-      final List<String> coreCurrencyNames = allCurrencies
-          .where((currency) => currency.isCore)
-          .map((currency) => currency.currencyCode)
-          .toList();
-      await PreferencesService().setSelectedCurrencies(coreCurrencyNames);
-      setState(() {
-        _selectedCurrencies =
-            allCurrencies.where((currency) => currency.isCore).toList();
-      });
-    } else {
-      setState(() {
-        _selectedCurrencies = savedCurrencyNames
-            .map((code) => allCurrencies
-                .firstWhere((currency) => currency.currencyCode == code))
-            .toList();
-      });
-    }
-  }
-
-  Future<void> _navigateToAddCurrencyPage(List<Currency> allCurrencies) async {
+  
+Future<void> _navigateToAddCurrencyPage(
+      BuildContext context, CurrencySelectionProvider provider) async {
     final List<Currency>? newCurrencies = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            AddCurrencyPage(existingCurrencies: allCurrencies),
+            AddCurrencyPage(existingCurrencies: provider.selectedCurrencies),
       ),
     );
 
     if (newCurrencies != null && newCurrencies.isNotEmpty) {
-      await PreferencesService().setSelectedCurrencies(
-        newCurrencies.map((c) => c.currencyCode).toList(),
-      );
-
-      setState(() {
-        _selectedCurrencies = newCurrencies;
-      });
+      provider.updateSelectedCurrencies(newCurrencies);
     }
   }
 
-  Future<void> _saveCurrencyOrder() async {
-    final List<String> currencyOrder =
-        _selectedCurrencies.map((currency) => currency.currencyCode).toList();
-    await PreferencesService()
-      .setSelectedCurrencies(currencyOrder);
-  }
-
-  Future<void> _handleRefresh() async {
-    // fake it.. for now
-    await Future.delayed(const Duration(seconds: 2));
-  }
-
-  bool shadowColor = false;
-  double? scrolledUnderElevation;
-  @override
+@override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return FutureBuilder<List<Currency>>(
-      future: widget.currenciesFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(
-              child: Text(
-                  AppLocalizations.of(context)!.error_fetching_currencies));
-        } else if (snapshot.hasData) {
+    return ChangeNotifierProvider<CurrencySelectionProvider>(
+      create: (_) => CurrencySelectionProvider(),
+      child: Consumer<CurrencySelectionProvider>(
+        builder: (context, selectionProvider, _) {
           return Scaffold(
             appBar: AppBar(
               title: Text(AppLocalizations.of(context)!.currency_list),
-              scrolledUnderElevation: scrolledUnderElevation,
-              shadowColor: shadowColor ? colorScheme.shadow : null,
             ),
             body: Padding(
-                padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
-                child: RefreshIndicator(
-                  onRefresh: () => _handleRefresh(),
-                  child: ReorderableListView.builder(
-                    itemCount: _selectedCurrencies.length,
-                    itemBuilder: (context, index) {
-                      final Currency currency = _selectedCurrencies[index];
-                      return CurrencyListItem(
-                        key: ValueKey(currency.currencyCode),
-                        currency: currency,
-                      );
-                    },
-                    onReorder: (int oldIndex, int newIndex) {
-                      if (newIndex > oldIndex) {
-                        newIndex -= 1;
-                      }
-                      setState(() {
-                        final Currency item =
-                            _selectedCurrencies.removeAt(oldIndex);
-                        _selectedCurrencies.insert(newIndex, item);
-                      });
-                      _saveCurrencyOrder();
-                    },
-                  ),
-                )),
+              padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  // TODO Implement the refresh logic
+                },
+                child: ReorderableListView.builder(
+                  itemCount: selectionProvider.selectedCurrencies.length,
+                  itemBuilder: (context, index) {
+                    final Currency currency =
+                        selectionProvider.selectedCurrencies[index];
+                    return CurrencyListItem(
+                      key: ValueKey(currency.currencyCode),
+                      currency: currency,
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    selectionProvider.reorderCurrencies(oldIndex, newIndex);
+                  },
+                ),
+              ),
+            ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => _navigateToAddCurrencyPage(snapshot.data!),
+              onPressed: () =>
+                  _navigateToAddCurrencyPage(context, selectionProvider),
               tooltip: AppLocalizations.of(context)!.add_currencies,
               child: const Icon(Icons.add),
             ),
           );
-        } else {
-          return Center(
-              child: Text(AppLocalizations.of(context)!.no_currencies));
-        }
-      },
+        },
+      ),
     );
   }
+
 }
