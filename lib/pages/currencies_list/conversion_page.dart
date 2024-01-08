@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../models/currency.dart'; // Replace with your actual import path
 import 'package:dinar_watch/theme/theme_manager.dart';
+import 'package:dinar_watch/utils/finance_utils.dart';
+import 'package:decimal/decimal.dart';
 import 'package:dinar_watch/widgets/conversion_rate_info.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
-import 'package:dinar_watch/providers/currency_converter_provide.dart';
-import 'package:provider/provider.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
-  const CurrencyConverterPage({super.key});
+  final Currency currency; // The currency selected from the list
+
+  const CurrencyConverterPage({super.key, required this.currency});
 
   @override
   CurrencyConverterPageState createState() => CurrencyConverterPageState();
@@ -16,6 +19,8 @@ class CurrencyConverterPage extends StatefulWidget {
 
 class CurrencyConverterPageState extends State<CurrencyConverterPage>
     with SingleTickerProviderStateMixin {
+  TextEditingController amountController = TextEditingController();
+  TextEditingController resultController = TextEditingController();
   FocusNode amountFocusNode = FocusNode();
   FocusNode resultFocusNode = FocusNode();
   Widget flagPlaceholder = Container(
@@ -24,6 +29,9 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   bool isDZDtoCurrency = false; // Conversion direction flag
 
   late AnimationController _animationController;
+  void _updateFocus() {
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -32,25 +40,96 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
+
+    // Whenever the amount changes, update the result.
+    amountController.addListener(_convertCurrency);
+    amountFocusNode.addListener(_updateFocus);
+    resultFocusNode.addListener(_updateFocus);
   }
 
   @override
-  @override
   void dispose() {
+    _animationController.dispose();
+    amountController.dispose();
+    resultController.dispose();
+    amountController.removeListener(_onAmountChanged);
     amountFocusNode.dispose();
     resultFocusNode.dispose();
     super.dispose();
   }
 
+  void _onAmountChanged() {
+    if (amountController.text.isEmpty) {
+      resultController.text = '';
+      return;
+    }
+
+    double rate =
+        isDZDtoCurrency ? 1 / widget.currency.sell : widget.currency.buy;
+    double amount = double.tryParse(amountController.text) ?? 0.0;
+    double result = amount * rate;
+
+    resultController.text = result.toStringAsFixed(2);
+  }
+
+  void _convertCurrency() {
+    if (amountController.text.isEmpty) {
+      resultController.clear();
+      return;
+    }
+
+    double amount = double.tryParse(amountController.text) ?? 0.0;
+    String convertedAmount = FinanceUtils.convertAmount(
+        amount,
+        isDZDtoCurrency ? widget.currency.buy : widget.currency.sell,
+        isDZDtoCurrency);
+
+    resultController.text = convertedAmount;
+  }
+
+  void _swapCurrencies() {
+    setState(() {
+      isDZDtoCurrency = !isDZDtoCurrency;
+
+      // Store the values of both fields
+      String amountValue = amountController.text;
+      String resultValue = resultController.text;
+
+      // Swap the contents of the controllers
+      amountController.text = resultValue;
+      resultController.text = amountValue;
+    });
+  }
+
+  String _getConversionRateText() {
+    if (isDZDtoCurrency) {
+      // Displaying conversion from DZD to the selected currency
+      Decimal conversionRate =
+          Decimal.parse((100 / widget.currency.buy).toString());
+      return '100 DZD = ${conversionRate.toStringAsFixed(2)} ${widget.currency.currencyCode.toUpperCase()}';
+    } else {
+      // Displaying conversion from the selected currency to DZD
+      Decimal conversionRate =
+          Decimal.parse((widget.currency.sell * 1).toString());
+      return '1 ${widget.currency.currencyCode.toUpperCase()} = ${conversionRate.toStringAsFixed(2)} DZD';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CurrencyConverterProvider>(context);
+    // Calculate the middle point of the screen
     final screenHeight = MediaQuery.of(context).size.height;
     final middlePoint = screenHeight * 0.2;
+
+    // Calculate the height for each card
     const cardHeight = 100.0;
+
+    // Calculate the top positions for the animated positioned cards
     const cardsgap = 5;
     final topCardTopPosition = middlePoint - cardHeight;
     final bottomCardTopPosition = middlePoint + cardsgap;
+
+    // Calculate the FAB position
     const fabSize = 56.0;
     final fabTopPosition = middlePoint - (fabSize / 2);
 
@@ -75,34 +154,38 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
-                        top: provider.isDZDtoCurrency
+                        top: isDZDtoCurrency
                             ? topCardTopPosition
                             : bottomCardTopPosition,
                         left: 16,
                         right: 16,
                         height: cardHeight,
                         child: _buildCurrencyInput(
+                          isDZDtoCurrency ? amountController : resultController,
                           'DZD',
-                          null,
-                          provider,
-                          provider.isDZDtoCurrency,
+                          widget.currency.flag,
+                          isDZDtoCurrency
+                              ? amountFocusNode
+                              : resultFocusNode, // Pass the FocusNode
                         ),
                       ),
                       // Bottom Card - Foreign currency input field
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
-                        top: provider.isDZDtoCurrency
+                        top: isDZDtoCurrency
                             ? bottomCardTopPosition
                             : topCardTopPosition,
                         left: 16,
                         right: 16,
                         height: cardHeight,
                         child: _buildCurrencyInput(
-                          provider.currency.currencyCode,
-                          provider.currency.flag,
-                          provider,
-                          !provider.isDZDtoCurrency,
+                          isDZDtoCurrency ? resultController : amountController,
+                          widget.currency.currencyCode,
+                          widget.currency.flag,
+                          isDZDtoCurrency
+                              ? resultFocusNode
+                              : amountFocusNode, // Pass the FocusNode
                         ),
                       ),
                       // FAB positioned in the middle of the cards, aligned to the right
@@ -110,7 +193,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         top: fabTopPosition,
                         right: 8,
                         child: FloatingActionButton(
-                          onPressed: provider.toggleConversionDirection,
+                          onPressed: _swapCurrencies,
                           elevation: 2,
                           child: const Icon(Icons.swap_vert),
                         ),
@@ -119,7 +202,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                   ),
                 ),
                 ConversionRateInfo(
-                  conversionRateText: provider.getConversionRateText(),
+                  conversionRateText: _getConversionRateText(),
                   textStyle: ThemeManager.moneyNumberStyle(context),
                   backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
                 ),
@@ -131,18 +214,12 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     );
   }
 
-  Widget _buildCurrencyInput(String currencyCode, String? flag,
-      CurrencyConverterProvider provider, bool isAmountField) {
-    TextEditingController controller =
-        isAmountField ? provider.amountController : provider.resultController;
-    FocusNode focusNode =
-        isAmountField ? provider.amountFocusNode : provider.resultFocusNode;
-
-    bool isInputEnabled =
-        isAmountField ? provider.isDZDtoCurrency : !provider.isDZDtoCurrency;
-
+  Widget _buildCurrencyInput(TextEditingController controller,
+      String currencyCode, String? flag, FocusNode focusNode) {
+    bool isInputEnabled = controller == amountController;
     var cardTheme = ThemeManager.currencyInputCardTheme(context);
 
+    // Determine border color based on theme brightness
     var themeBrightness = Theme.of(context).brightness;
     Color borderColor =
         themeBrightness == Brightness.dark ? Colors.white : Colors.black;

@@ -42,7 +42,9 @@ class CurrencyListScreen extends StatelessWidget {
                             builder: (context) => ChangeNotifierProvider(
                               create: (_) =>
                                   CurrencyConverterProvider(currency),
-                              child: CurrencyConverterPage(),
+                              child: CurrencyConverterPage(
+                                currency: currency,
+                              ),
                             ),
                           ),
                         );
