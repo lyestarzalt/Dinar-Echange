@@ -6,17 +6,20 @@ class ErrorApp extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onRetry;
 
-  const ErrorApp({super.key, required this.errorMessage, required this.onRetry});
+  const ErrorApp(
+      {super.key, required this.errorMessage, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Material(
         child: Scaffold(
-          body: ErrorMessage(
-            title: AppLocalizations.of(context)!.errormessage_title,
-            message: errorMessage,
-            onRetry: onRetry,
+          body: Expanded(
+            child: ErrorMessage(
+              title: AppLocalizations.of(context)!.errormessage_title,
+              message: errorMessage,
+              onRetry: onRetry,
+            ),
           ),
         ),
       ),
