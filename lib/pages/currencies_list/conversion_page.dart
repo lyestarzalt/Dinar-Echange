@@ -19,12 +19,10 @@ class CurrencyConverterPage extends StatefulWidget {
 
 class CurrencyConverterPageState extends State<CurrencyConverterPage>
     with SingleTickerProviderStateMixin {
-  TextEditingController amountController = TextEditingController();
+  TextEditingController inputController = TextEditingController();
   TextEditingController resultController = TextEditingController();
-  FocusNode amountFocusNode = FocusNode();
+  FocusNode inputFocusNode = FocusNode();
   FocusNode resultFocusNode = FocusNode();
-  Widget flagPlaceholder = Container(
-      width: 32, height: 32, color: const Color.fromARGB(255, 255, 0, 0));
 
   bool isDZDtoCurrency = false; // Conversion direction flag
 
@@ -42,43 +40,43 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     );
 
     // Whenever the amount changes, update the result.
-    amountController.addListener(_convertCurrency);
-    amountFocusNode.addListener(_updateFocus);
+    inputController.addListener(_convertCurrency);
+    inputFocusNode.addListener(_updateFocus);
     resultFocusNode.addListener(_updateFocus);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    amountController.dispose();
+    inputController.dispose();
     resultController.dispose();
-    amountController.removeListener(_onAmountChanged);
-    amountFocusNode.dispose();
+    inputController.removeListener(_onAmountChanged);
+    inputFocusNode.dispose();
     resultFocusNode.dispose();
     super.dispose();
   }
 
   void _onAmountChanged() {
-    if (amountController.text.isEmpty) {
+    if (inputController.text.isEmpty) {
       resultController.text = '';
       return;
     }
 
     double rate =
         isDZDtoCurrency ? 1 / widget.currency.sell : widget.currency.buy;
-    double amount = double.tryParse(amountController.text) ?? 0.0;
+    double amount = double.tryParse(inputController.text) ?? 0.0;
     double result = amount * rate;
 
     resultController.text = result.toStringAsFixed(2);
   }
 
   void _convertCurrency() {
-    if (amountController.text.isEmpty) {
+    if (inputController.text.isEmpty) {
       resultController.clear();
       return;
     }
 
-    double amount = double.tryParse(amountController.text) ?? 0.0;
+    double amount = double.tryParse(inputController.text) ?? 0.0;
     String convertedAmount = FinanceUtils.convertAmount(
         amount,
         isDZDtoCurrency ? widget.currency.buy : widget.currency.sell,
@@ -92,11 +90,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       isDZDtoCurrency = !isDZDtoCurrency;
 
       // Store the values of both fields
-      String amountValue = amountController.text;
+      String amountValue = inputController.text;
       String resultValue = resultController.text;
 
       // Swap the contents of the controllers
-      amountController.text = resultValue;
+      inputController.text = resultValue;
       resultController.text = amountValue;
     });
   }
@@ -161,11 +159,12 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         right: 16,
                         height: cardHeight,
                         child: _buildCurrencyInput(
-                          isDZDtoCurrency ? amountController : resultController,
+                          isDZDtoCurrency ? inputController : resultController,
+                          inputController,
                           'DZD',
                           widget.currency.flag,
                           isDZDtoCurrency
-                              ? amountFocusNode
+                              ? inputFocusNode
                               : resultFocusNode, // Pass the FocusNode
                         ),
                       ),
@@ -180,12 +179,13 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         right: 16,
                         height: cardHeight,
                         child: _buildCurrencyInput(
-                          isDZDtoCurrency ? resultController : amountController,
+                          isDZDtoCurrency ? resultController : inputController,
+                          inputController,
                           widget.currency.currencyCode,
                           widget.currency.flag,
                           isDZDtoCurrency
                               ? resultFocusNode
-                              : amountFocusNode, // Pass the FocusNode
+                              : inputFocusNode, // Pass the FocusNode
                         ),
                       ),
                       // FAB positioned in the middle of the cards, aligned to the right
@@ -214,30 +214,30 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     );
   }
 
-  Widget _buildCurrencyInput(TextEditingController controller,
-      String currencyCode, String? flag, FocusNode focusNode) {
-    bool isInputEnabled = controller == amountController;
-    var cardTheme = ThemeManager.currencyInputCardTheme(context);
-
-    // Determine border color based on theme brightness
-    var themeBrightness = Theme.of(context).brightness;
-    Color borderColor =
-        themeBrightness == Brightness.dark ? Colors.white : Colors.black;
-    borderColor = focusNode.hasFocus
-        ? borderColor
-        : borderColor.withOpacity(0.3); // Adjust opacity for unfocused state
+  Widget _buildCurrencyInput(
+      TextEditingController controller,
+      TextEditingController inputControl,
+      String currencyCode,
+      String? flag,
+      FocusNode focusNode) {
+    bool isInputEnabled = controller == inputControl;
 
     return Card(
-      elevation: cardTheme.elevation,
+      elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: (cardTheme.shape as RoundedRectangleBorder).borderRadius,
+        borderRadius: BorderRadius.circular(5),
         side: BorderSide(
-          color: borderColor,
-          width: focusNode.hasFocus ? 2.0 : 1.0,
+          color: focusNode.hasFocus
+              ? Theme.of(context).colorScheme.onPrimaryContainer
+              : Theme.of(context)
+                  .colorScheme
+                  .onPrimaryContainer
+                  .withOpacity(0.3),
+          width: focusNode.hasFocus ? 3.0 : 0.5,
         ),
       ),
-      margin: cardTheme.margin,
-      color: cardTheme.color,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      color: Theme.of(context).colorScheme.background,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
