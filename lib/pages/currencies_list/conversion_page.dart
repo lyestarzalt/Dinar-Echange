@@ -88,14 +88,9 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   void _swapCurrencies() {
     setState(() {
       isDZDtoCurrency = !isDZDtoCurrency;
-
-      // Store the values of both fields
-      String amountValue = inputController.text;
-      String resultValue = resultController.text;
-
       // Swap the contents of the controllers
-      inputController.text = resultValue;
-      resultController.text = amountValue;
+      inputController.text = resultController.text;
+      resultController.text = inputController.text;
     });
   }
 
@@ -113,13 +108,17 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     }
   }
 
+  bool isActive() {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Calculate the middle point of the screen
     final screenHeight = MediaQuery.of(context).size.height;
     final middlePoint = screenHeight * 0.2;
 
-    // Calculate the height for each card
+    //  The height for each card
     const cardHeight = 100.0;
 
     // Calculate the top positions for the animated positioned cards

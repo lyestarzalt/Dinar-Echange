@@ -2,17 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ThemeManager {
-  static CardTheme currencyInputCardTheme(BuildContext context) {
-    return CardTheme(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5), // Rounded corners
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-      color: Theme.of(context).colorScheme.background,
-    );
-  }
-
+ 
   static InputDecoration currencyInputDecoration(
       BuildContext context, String labelText) {
     return InputDecoration(
