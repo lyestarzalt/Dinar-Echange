@@ -25,7 +25,7 @@ class SettingsPageState extends State<SettingsPage> {
     '中文': 'zh',
   };
 
-  void _loadSelectedLanguage() async {
+  void _loadSaved() async {
     String languageCode =
         await PreferencesService().getSelectedLanguage() ?? 'en';
     ThemeMode savedThemeMode = await PreferencesService().getThemeMode();
@@ -53,10 +53,18 @@ class SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  void _changeLanguage(String languageName) async {
+    String languageCode = languageCodes[languageName] ?? 'en';
+    await PreferencesService().setSelectedLanguage(languageCode);
+
+    final mainScreenState = context.findAncestorStateOfType<MainScreenState>();
+    mainScreenState?.setLocale(Locale(languageCode));
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadSelectedLanguage();
+    _loadSaved();
   }
 
   @override
@@ -153,14 +161,6 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void _changeLanguage(String languageName) async {
-    String languageCode = languageCodes[languageName] ?? 'en';
-    await PreferencesService().setSelectedLanguage(languageCode);
-
-    final mainScreenState = context.findAncestorStateOfType<MainScreenState>();
-    mainScreenState?.setLocale(Locale(languageCode));
-  }
-
   void _showLanguageDialog() {
     showDialog(
       context: context,
@@ -191,24 +191,6 @@ class SettingsPageState extends State<SettingsPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildRateUsRow() {
-    return InkWell(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.star, size: 24.0),
-            const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.rate_us,
-                style: const TextStyle(fontSize: 15)),
-          ],
-        ),
-      ),
     );
   }
 
@@ -249,6 +231,24 @@ class SettingsPageState extends State<SettingsPage> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildRateUsRow() {
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.star, size: 24.0),
+            const SizedBox(width: 10),
+            Text(AppLocalizations.of(context)!.rate_us,
+                style: const TextStyle(fontSize: 15)),
+          ],
+        ),
+      ),
     );
   }
 }
