@@ -21,7 +21,7 @@ class CacheManager {
     await prefs.setString(key, jsonData);
   }
 
-  bool isCacheValid(Map<String, dynamic> cachedData) {
+bool isCacheValid(Map<String, dynamic> cachedData) {
     int cachedTimestamp = cachedData['timestamp'] as int;
     DateTime cachedDate =
         DateTime.fromMillisecondsSinceEpoch(cachedTimestamp).toUtc();
@@ -34,10 +34,17 @@ class CacheManager {
     DateTime currentDateInAlgeriaTime =
         nowUtc.add(const Duration(hours: algeriaTimezoneOffset));
 
-    // Check if the cached data is from the same day (considering Algeria's timezone)
+    // Check if 'data' key is not an empty list
+    bool isDataNotEmpty = cachedData.containsKey('data') &&
+        cachedData['data'] is List &&
+        (cachedData['data'] as List).isNotEmpty;
+
+    // Check if the cached data is from the same day (considering Algeria's timezone) and 'data' is not empty
     return currentDateInAlgeriaTime
-            .difference(cachedDateInAlgeriaTime)
-            .inDays ==
-        0;
+                .difference(cachedDateInAlgeriaTime)
+                .inDays ==
+            0 &&
+        isDataNotEmpty;
   }
+
 }
