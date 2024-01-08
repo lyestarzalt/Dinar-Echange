@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../models/currency.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
+import 'package:dinar_watch/services/preferences_service.dart';
 
 class AddCurrencyPage extends StatefulWidget {
   final List<Currency> existingCurrencies;
@@ -47,9 +47,10 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
   }
 
   void _loadSelectedCurrencies() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> savedCurrencyNames =
-        prefs.getStringList('selectedCurrencies') ?? [];
+    List<String> savedCurrencyNames = await
+        PreferencesService().getSelectedCurrencies() ;
+    
+    
     setState(() {
       selectedCurrencies = widget.existingCurrencies
           .where(
@@ -63,10 +64,9 @@ class AddCurrencyPageState extends State<AddCurrencyPage> {
   }
 
   void _saveSelectedCurrencies() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> currencyNames =
         selectedCurrencies.map((c) => c.currencyCode).toList();
-    await prefs.setStringList('selectedCurrencies', currencyNames);
+        await   PreferencesService().setSelectedCurrencies(currencyNames);
   }
 
   void _addSelectedCurrencies() {

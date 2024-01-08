@@ -15,7 +15,6 @@ class CurrencyListScreen extends StatefulWidget {
 }
 
 class CurrencyListScreenState extends State<CurrencyListScreen> {
-  final PreferencesService _preferencesService = PreferencesService();
   List<Currency> _selectedCurrencies = [];
 
   @override
@@ -29,14 +28,15 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
   Future<void> _initializeSelectedCurrencies(
       List<Currency> allCurrencies) async {
     final List<String> savedCurrencyNames =
-        await _preferencesService.getSelectedCurrencies();
+        await PreferencesService()
+      .getSelectedCurrencies();
 
     if (savedCurrencyNames.isEmpty) {
       final List<String> coreCurrencyNames = allCurrencies
           .where((currency) => currency.isCore)
           .map((currency) => currency.currencyCode)
           .toList();
-      await _preferencesService.setSelectedCurrencies(coreCurrencyNames);
+      await PreferencesService().setSelectedCurrencies(coreCurrencyNames);
       setState(() {
         _selectedCurrencies =
             allCurrencies.where((currency) => currency.isCore).toList();
@@ -61,7 +61,7 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
     );
 
     if (newCurrencies != null && newCurrencies.isNotEmpty) {
-      await _preferencesService.setSelectedCurrencies(
+      await PreferencesService().setSelectedCurrencies(
         newCurrencies.map((c) => c.currencyCode).toList(),
       );
 
@@ -74,7 +74,8 @@ class CurrencyListScreenState extends State<CurrencyListScreen> {
   Future<void> _saveCurrencyOrder() async {
     final List<String> currencyOrder =
         _selectedCurrencies.map((currency) => currency.currencyCode).toList();
-    await _preferencesService.setSelectedCurrencies(currencyOrder);
+    await PreferencesService()
+      .setSelectedCurrencies(currencyOrder);
   }
 
   Future<void> _handleRefresh() async {
