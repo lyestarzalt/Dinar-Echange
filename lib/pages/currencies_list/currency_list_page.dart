@@ -5,11 +5,11 @@ import 'package:dinar_watch/widgets/currency_list_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
+import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
+import 'package:dinar_watch/providers/currency_converter_provide.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   const CurrencyListScreen({Key? key}) : super(key: key);
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +32,25 @@ class CurrencyListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final Currency currency =
                         selectionProvider.selectedCurrencies[index];
-                    return CurrencyListItem(
+                    return InkWell(
                       key: ValueKey(currency.currencyCode),
-                      currency: currency,
+                      onTap: () {
+                        // Navigate to CurrencyConverterPage with the selected currency
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (_) =>
+                                  CurrencyConverterProvider(currency),
+                              child: CurrencyConverterPage(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: CurrencyListItem(
+                        key: ValueKey(currency.currencyCode),
+                        currency: currency,
+                      ),
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {

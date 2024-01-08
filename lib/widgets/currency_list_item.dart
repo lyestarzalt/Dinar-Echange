@@ -1,9 +1,6 @@
-// widgets/currency_list_item.dart
-
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme/theme_manager.dart';
-import '../models/currency.dart';
-import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
+import 'package:dinar_watch/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'dart:ui' as ui;
 
@@ -26,16 +23,6 @@ class CurrencyListItem extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            onTap: () {
-              // Navigate to CurrencyConverterPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      CurrencyConverterPage(currency: currency),
-                ),
-              );
-            },
             leading: FlagContainer(
               imageUrl: currency.flag,
               width: 50,
