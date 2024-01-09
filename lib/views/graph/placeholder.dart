@@ -13,9 +13,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
-
 class HistoryPage extends StatelessWidget {
-@override
+  const HistoryPage({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CurrencyHistoryProvider>(
       create: (_) => CurrencyHistoryProvider(),
@@ -27,18 +28,21 @@ class HistoryPage extends StatelessWidget {
             ),
             floatingActionButton: _buildFloatingActionButton(context, provider),
             body: FutureBuilder<void>(
-              future: provider.filteredHistoryEntries, // Use the stored future
+              future: provider.fetchCurrencies(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
                   return ErrorMessage(
-                    message: snapshot.error.toString(),
-                    onRetry: () => provider.fetchCurrencies(),
-                  );
+                      message: snapshot.error.toString(),
+                      onRetry: () => provider.fetchCurrencies());
                 }
-                return _buildCurrencyContent(context, provider);
+                if (snapshot.hasData) {
+                  return _buildCurrencyContent(context, provider);
+                }
+                return const ErrorMessage(
+                    message: "Currency data is not available");
               },
             ),
           );
@@ -47,8 +51,7 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  
-Widget _buildFloatingActionButton(
+  Widget _buildFloatingActionButton(
       BuildContext context, CurrencyHistoryProvider provider) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
@@ -136,9 +139,4 @@ Widget _buildFloatingActionButton(
       ),
     );
   }
-  
-  
-  }
-
-  
-
+}

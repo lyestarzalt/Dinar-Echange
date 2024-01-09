@@ -3,7 +3,7 @@ import 'package:dinar_watch/widgets/convert/conversion_rate_info.dart';
 import 'package:dinar_watch/widgets/convert/currency_input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
-import 'package:dinar_watch/providers/currency_converter_provider.dart';
+import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 
 class CurrencyConverterPage extends StatefulWidget {

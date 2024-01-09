@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/providers/currency_selection_provider.dart';
+import 'package:dinar_watch/providers/add_currency_provider.dart';
 
 class AddCurrencyPage extends StatelessWidget {
   const AddCurrencyPage({super.key});
