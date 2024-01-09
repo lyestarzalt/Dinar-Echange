@@ -9,7 +9,7 @@ class MainRepository implements CurrencyRepository {
   final FirestoreService _firestoreService = FirestoreService();
   final CacheManager _cacheManager = CacheManager();
 
-@override
+  @override
   Future<List<Currency>> getDailyCurrencies() async {
     String cacheKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
     try {
@@ -25,7 +25,7 @@ class MainRepository implements CurrencyRepository {
         AppLogger.logInfo(
             'Cache miss. Fetching daily currencies from Firestore.');
         List<Currency> currencies =
-            await _firestoreService.getTodayCurrencies();
+            await _firestoreService.fetchCurrenciesFromFirestore();
         await _cacheManager.setCache(
             cacheKey, {'data': currencies.map((e) => e.toJson()).toList()});
         return currencies;
@@ -33,10 +33,9 @@ class MainRepository implements CurrencyRepository {
     } catch (e, stackTrace) {
       AppLogger.logError('Failed to fetch daily currencies',
           error: e, stackTrace: stackTrace);
-      rethrow; 
+      rethrow;
     }
   }
-
 
   Future<Currency> getCurrencyHistory(Currency currency) async {
     String cacheKey =
@@ -56,7 +55,7 @@ class MainRepository implements CurrencyRepository {
 
       AppLogger.logInfo('Fetching currency history from Firestore.');
       Currency fetchedCurrency =
-          await _firestoreService.fetchCurrencyHistory(currency);
+          await _firestoreService.fetchCurrencyHistoryFromFirestore(currency);
       if (fetchedCurrency.history != null &&
           fetchedCurrency.history!.isNotEmpty) {
         await _cacheManager.setCache(cacheKey, fetchedCurrency.toJson());

@@ -1,21 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
-import 'package:logger/logger.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var logger = Logger(printer: PrettyPrinter());
 
-  Future<List<Currency>> getTodayCurrencies() async {
+  Future<List<Currency>> fetchCurrenciesFromFirestore() async {
     try {
       var snapshot = await _firestore
           .collection('exchange-daily')
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
-    
-      if (snapshot.docs.isEmpty) throw Exception('No data available.');
+
+      if (snapshot.docs.isEmpty) {
+        AppLogger.logError('No data available for today\'s currencies.');
+        throw Exception('No data available.');
+      }
 
       DocumentSnapshot lastSnapshot = snapshot.docs.first;
       Map<String, dynamic> data = lastSnapshot.data() as Map<String, dynamic>;
@@ -34,12 +36,12 @@ class FirestoreService {
         );
       }).toList();
     } catch (e) {
-      logger.e('Error fetching today\'s currencies: $e');
-      return [];
+      AppLogger.logError('Error fetching today\'s currencies: $e');
+      rethrow;
     }
   }
 
-  Future<Currency> fetchCurrencyHistory(Currency currency) async {
+  Future<Currency> fetchCurrencyHistoryFromFirestore(Currency currency) async {
     try {
       DocumentSnapshot docSnapshot = await _firestore
           .collection('exchange-rate-trends')
@@ -47,6 +49,8 @@ class FirestoreService {
           .get();
 
       if (!docSnapshot.exists) {
+        AppLogger.logError(
+            'No history available for ${currency.currencyCode}.');
         throw Exception('No history available for ${currency.currencyCode}.');
       }
 
@@ -54,18 +58,10 @@ class FirestoreService {
 
       Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
       data.forEach((date, buyRate) {
-        double parsedBuyRate;
-        if (buyRate is num) {
-          // This will be true for both int and double
-          parsedBuyRate = buyRate.toDouble();
-        } else {
-          parsedBuyRate = 0.0; // Default or error value
-        }
-
+        double parsedBuyRate = (buyRate is num) ? buyRate.toDouble() : 0.0;
         history.add(CurrencyHistoryEntry(
-          date: DateTime.tryParse(date) ?? DateTime.now(),
-          buy: parsedBuyRate,
-        ));
+            date: DateTime.tryParse(date) ?? DateTime.now(),
+            buy: parsedBuyRate));
       });
 
       history.sort((a, b) => a.date.compareTo(b.date));
@@ -73,10 +69,9 @@ class FirestoreService {
       currency.history = history;
       return currency;
     } catch (e) {
-      logger
-          .e('Error in fetchCurrencyHistory for ${currency.currencyCode}: $e');
-      currency.history = [];
-      return currency;
+      AppLogger.logError(
+          'Error in fetchCurrencyHistory for ${currency.currencyCode}: $e');
+      rethrow;
     }
   }
 }
