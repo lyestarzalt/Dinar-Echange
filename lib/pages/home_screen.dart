@@ -14,10 +14,10 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.currencies});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +55,13 @@ class _MainScreenState extends State<MainScreen> {
     Future<List<Currency>> completedFuture = Future.value(widget.currencies);
     switch (index) {
       case 0:
-        return CurrencyListScreen();
+        return const CurrencyListScreen();
       case 1:
         return HistoryPage(currenciesFuture: completedFuture);
       case 2:
         return const SettingsPage();
       default:
-        return CurrencyListScreen();
+        return const CurrencyListScreen();
     }
   }
 }
@@ -71,8 +71,7 @@ class MainNavigation extends StatelessWidget {
   final Function(int) onItemSelected;
 
   const MainNavigation(
-      {Key? key, required this.selectedIndex, required this.onItemSelected})
-      : super(key: key);
+      {super.key, required this.selectedIndex, required this.onItemSelected});
 
   @override
   Widget build(BuildContext context) {

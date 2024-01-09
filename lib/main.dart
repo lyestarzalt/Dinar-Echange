@@ -23,10 +23,10 @@ class DinarWatch extends StatefulWidget {
   const DinarWatch({super.key});
 
   @override
-  _DinarWatchState createState() => _DinarWatchState();
+  DinarWatchState createState() => DinarWatchState();
 }
 
-class _DinarWatchState extends State<DinarWatch> {
+class DinarWatchState extends State<DinarWatch> {
   late Future<List<Currency>> _currenciesFuture;
 
   @override

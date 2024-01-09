@@ -157,7 +157,7 @@ IndexChangeResult onIndexChange(
   if (newIndex >= 0 && newIndex < historyEntries.length) {
     return IndexChangeResult(
       touchedIndex: newIndex,
-      selectedValue: historyEntries[newIndex].buy.toStringAsFixed(2) + ' DZD',
+      selectedValue: '${historyEntries[newIndex].buy.toStringAsFixed(2)} DZD',
       selectedDate:
           DateFormat('dd/MM/yyyy').format(historyEntries[newIndex].date),
     );

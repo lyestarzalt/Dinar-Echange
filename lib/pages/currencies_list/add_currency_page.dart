@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:dinar_watch/providers/currency_selection_provider.dart';
 
 class AddCurrencyPage extends StatelessWidget {
-  const AddCurrencyPage({Key? key}) : super(key: key);
+  const AddCurrencyPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Consumer<CurrencySelectionProvider>(

@@ -6,10 +6,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
 import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
-import 'package:dinar_watch/providers/currency_converter_provide.dart';
+import 'package:dinar_watch/providers/currency_converter_provider.dart';
 
 class CurrencyListScreen extends StatelessWidget {
-  const CurrencyListScreen({Key? key}) : super(key: key);
+  const CurrencyListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +42,7 @@ class CurrencyListScreen extends StatelessWidget {
                             builder: (context) => ChangeNotifierProvider(
                               create: (_) =>
                                   CurrencyConverterProvider(currency),
-                              child: CurrencyConverterPage(
-                                currency: currency,
-                              ),
+                              child: const CurrencyConverterPage(),
                             ),
                           ),
                         );
