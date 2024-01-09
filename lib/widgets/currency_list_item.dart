@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/theme/theme_manager.dart';
-import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'dart:ui' as ui;
 

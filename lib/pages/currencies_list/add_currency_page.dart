@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../models/currency.dart';
-import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
-import 'package:provider/provider.dart';
+import 'package:dinar_watch/data/models/currency.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:dinar_watch/providers/currency_selection_provider.dart';
 
 class AddCurrencyPage extends StatelessWidget {

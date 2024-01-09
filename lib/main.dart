@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
-import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:dinar_watch/theme/color_scheme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

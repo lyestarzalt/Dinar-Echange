@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/models/currency_history.dart';
+import 'package:dinar_watch/data/models/currency_history.dart';
 import 'package:intl/intl.dart';
 
 List<LineChartBarData> buildLineBarsData(

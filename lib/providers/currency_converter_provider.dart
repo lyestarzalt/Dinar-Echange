@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/models/currency.dart';
+import 'package:dinar_watch/data/models/currency.dart';
 
 class CurrencyConverterProvider with ChangeNotifier {
   final Currency currency;

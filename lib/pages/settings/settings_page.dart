@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/shared/enums.dart';
+import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:dinar_watch/providers/theme_provider.dart';

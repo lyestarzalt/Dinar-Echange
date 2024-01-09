@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/shared/enums.dart';
+import 'package:dinar_watch/utils/enums.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 
 class ThemeProvider with ChangeNotifier {
