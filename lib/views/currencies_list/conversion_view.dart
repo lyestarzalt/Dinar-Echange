@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/widgets/conversion_rate_info.dart';
+import 'package:dinar_watch/widgets/convert/conversion_rate_info.dart';
 import 'package:dinar_watch/widgets/convert/currency_input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;

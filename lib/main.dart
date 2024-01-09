@@ -11,7 +11,7 @@ import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:dinar_watch/theme/color_scheme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/pages/home_screen.dart';
+import 'package:dinar_watch/views/home_view.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
 
 void main() {

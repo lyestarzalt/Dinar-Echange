@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/providers/currency_selection_provider.dart';
-import 'package:dinar_watch/widgets/currency_list_item.dart';
+import 'package:dinar_watch/widgets/list/currency_list_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/pages/currencies_list/add_currency_page.dart';
-import 'package:dinar_watch/pages/currencies_list/conversion_page.dart';
+import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
+import 'package:dinar_watch/views/currencies_list/conversion_view.dart';
 import 'package:dinar_watch/providers/currency_converter_provider.dart';
 
 class CurrencyListScreen extends StatelessWidget {

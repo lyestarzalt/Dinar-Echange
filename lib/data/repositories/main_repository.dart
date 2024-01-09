@@ -1,4 +1,4 @@
-import 'package:dinar_watch/currency_repository.dart';
+import 'package:dinar_watch/data/currency_repository.dart';
 import 'package:dinar_watch/data/services/currency_firestore_service.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/cache_service.dart';

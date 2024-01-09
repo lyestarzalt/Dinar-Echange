@@ -41,7 +41,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
               onTap: () {
                 widget.onCurrencySelected(currency);
 
-                Navigator.pop(context); // Close the modal
+                Navigator.pop(context); 
               },
               leading: FlagContainer(
                 imageUrl: currency.flag,

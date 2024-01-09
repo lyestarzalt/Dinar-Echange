@@ -23,7 +23,7 @@ class TimeSpanButtons extends StatelessWidget {
     return InkWell(
       onTap: () => onTimeSpanSelected(days),
       child: Padding(
-        padding: const EdgeInsets.all(15.0), // Adjust padding as needed
+        padding: const EdgeInsets.all(15.0), 
         child: Text(
           label,
           style: const TextStyle(
