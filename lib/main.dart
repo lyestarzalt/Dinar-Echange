@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/providers/theme_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:dinar_watch/data/repositories/main_repository.dart';
-import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/views/home_view.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:dinar_watch/theme/theme.dart';
+import 'package:dinar_watch/views/error/error_view.dart';
+import 'package:dinar_watch/utils/app_state.dart';
+import 'package:dinar_watch/providers/currencies_provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const DinarWatch());
+  await PreferencesService().init();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+      ],
+      child: const DinarWatch(),
+    ),
+  );
 }
 
 class DinarWatch extends StatefulWidget {
@@ -27,73 +36,56 @@ class DinarWatch extends StatefulWidget {
 }
 
 class DinarWatchState extends State<DinarWatch> {
-  late Future<List<Currency>> _currenciesFuture;
-
   @override
   void initState() {
     super.initState();
-    _currenciesFuture = initializeApp();
-  }
 
-  Future<List<Currency>> initializeApp() async {
-    FlutterNativeSplash.preserve(
-        widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
-    await PreferencesService().init();
-
-    try {
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
-      await FirebaseAuth.instance.signInAnonymously();
-      List<Currency> todayCurrencies =
-          await MainRepository().getDailyCurrencies();
-      FlutterNativeSplash.remove();
-      return todayCurrencies;
-    } catch (e) {
-      FlutterNativeSplash.remove();
-      return [];
-    }
+    Future.microtask(() =>
+        Provider.of<AppInitializationProvider>(context, listen: false)
+            .initializeApp());
   }
 
   @override
   Widget build(BuildContext context) {
     final MaterialTheme materialTheme =
         MaterialTheme(ThemeData.light().textTheme);
-    return FutureBuilder<List<Currency>>(
-      future: _currenciesFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (_) => ThemeProvider()),
-              ChangeNotifierProvider(create: (_) => LanguageProvider()),
-              ChangeNotifierProvider(create: (_) => NavigationProvider())
-            ],
-            child: Consumer2<ThemeProvider, LanguageProvider>(
-              builder: (context, themeProvider, languageProvider, _) {
-                return MaterialApp(
-                  title: 'Dinar Watch',
-                  theme: materialTheme.light(),
-                  darkTheme: materialTheme.dark(),
-                  themeMode: themeProvider.themeMode,
-                  highContrastTheme: materialTheme.lightHighContrast(),
-                  highContrastDarkTheme: materialTheme.darkHighContrast(),
-                  locale: languageProvider.currentLocale,
-                  localizationsDelegates:
-                      AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  home: MainScreen(currencies: snapshot.data ?? []),
-                );
-              },
-            ),
-          );
-        } else {
-          return const MaterialApp(
-            home: Scaffold(
-              body: Center(child: LinearProgressIndicator()),
-            ),
-          );
-        }
+    final currencies =
+        Provider.of<AppInitializationProvider>(context).currencies;
+
+    return Consumer2<ThemeProvider, LanguageProvider>(
+      builder: (context, themeProvider, languageProvider, _) {
+        return MaterialApp(
+          title: 'Dinar Watch',
+          theme: materialTheme.light(),
+          darkTheme: materialTheme.dark(),
+          themeMode: themeProvider.themeMode,
+          highContrastTheme: materialTheme.lightHighContrast(),
+          highContrastDarkTheme: materialTheme.darkHighContrast(),
+          locale: languageProvider.currentLocale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Consumer<AppInitializationProvider>(
+            builder: (context, currenciesProvider, _) {
+              switch (currenciesProvider.state.state) {
+                case LoadState.loading:
+                  return const Scaffold(
+                    body: Center(child: LinearProgressIndicator()),
+                  );
+                case LoadState.success:
+                  return MainScreen(currencies: currencies!);
+                case LoadState.error:
+                  return ErrorApp(
+                    errorMessage: currenciesProvider.state.errorMessage!,
+                    onRetry: () => currenciesProvider.initializeApp(),
+                  );
+                default:
+                  return const Scaffold(
+                    body: Center(child: LinearProgressIndicator()),
+                  );
+              }
+            },
+          ),
+        );
       },
     );
   }
