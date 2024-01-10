@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/theme/theme_manager.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'dart:ui' as ui;
@@ -35,7 +34,11 @@ class CurrencyListItem extends StatelessWidget {
                 color: Colors.transparent,
                 child: Text(
                   currency.currencyCode,
-                  style: ThemeManager.currencyCodeStyle(context),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      height: 0.0),
                 ),
               ),
             ),
@@ -46,7 +49,12 @@ class CurrencyListItem extends StatelessWidget {
                   width: 80, // Width of the container for the currency values
                   child: Text(
                     _formatCurrencyValue(currency.buy), // Buy value
-                    style: ThemeManager.moneyNumberStyle(context),
+                    style: TextStyle(
+      fontFamily: 'Courier',
+      fontWeight: FontWeight.bold,
+      fontSize: 20,
+      color: Theme.of(context).colorScheme.onSurface,
+    ),
                     textAlign: TextAlign.left, // Align text to the left
                   ),
                 ),

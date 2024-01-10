@@ -9,10 +9,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
-import 'package:dinar_watch/theme/color_scheme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/views/home_view.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
+import 'package:dinar_watch/theme/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +56,8 @@ class DinarWatchState extends State<DinarWatch> {
 
   @override
   Widget build(BuildContext context) {
+    final MaterialTheme materialTheme =
+        MaterialTheme(ThemeData.light().textTheme);
     return FutureBuilder<List<Currency>>(
       future: _currenciesFuture,
       builder: (context, snapshot) {
@@ -71,9 +73,11 @@ class DinarWatchState extends State<DinarWatch> {
               builder: (context, themeProvider, languageProvider, _) {
                 return MaterialApp(
                   title: 'Dinar Watch',
-                  theme: ColorSchemeManager.lightTheme,
-                  darkTheme: ColorSchemeManager.darkTheme,
+                  theme: materialTheme.light(),
+                  darkTheme: materialTheme.dark(),
                   themeMode: themeProvider.themeMode,
+                  highContrastTheme: materialTheme.lightHighContrast(),
+                  highContrastDarkTheme: materialTheme.darkHighContrast(),
                   locale: languageProvider.currentLocale,
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,

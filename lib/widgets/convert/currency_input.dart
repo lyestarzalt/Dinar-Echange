@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/theme/theme_manager.dart';
 
 
 Widget buildCurrencyInput(
@@ -45,7 +44,20 @@ Widget buildCurrencyInput(
               focusNode: focusNode,
               controller: controller,
               decoration:
-                  ThemeManager.currencyInputDecoration(context, currencyCode),
+                InputDecoration(
+                labelText: currencyCode.toUpperCase(),
+                labelStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 16, // Set your desired font size for input text
+                ),
+                // Define the style for the label text
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 16,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+              ),
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

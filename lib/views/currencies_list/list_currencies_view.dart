@@ -65,7 +65,7 @@ class CurrencyListScreen extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider.value(
                     value: selectionProvider,
-                    child: AddCurrencyPage(),
+                    child: const AddCurrencyPage(),
                   ),
                 ),
               ),

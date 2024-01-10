@@ -7,7 +7,6 @@ import 'package:dinar_watch/widgets/history/line_graph.dart';
 import 'package:dinar_watch/providers/history_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
-import 'package:dinar_watch/theme/theme_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
@@ -54,7 +53,7 @@ class HistoryPage extends StatelessWidget {
       closedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      closedColor: Theme.of(context).colorScheme.secondary,
+      closedColor: Theme.of(context).colorScheme.primaryContainer,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return SizedBox(
           height: 56.0,
@@ -62,7 +61,7 @@ class HistoryPage extends StatelessWidget {
           child: Center(
             child: Icon(
               Icons.menu,
-              color: Theme.of(context).colorScheme.onSecondary,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
         );
@@ -84,7 +83,12 @@ class HistoryPage extends StatelessWidget {
                 builder: (context, value, child) {
                   return Text(
                     '1 ${provider.selectedCurrency!.currencyCode} = $value',
-                    style: ThemeManager.moneyNumberStyle(context),
+                    style: TextStyle(
+                      fontFamily: 'Courier',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   );
                 },
               ),
@@ -97,7 +101,11 @@ class HistoryPage extends StatelessWidget {
                 builder: (context, value, child) {
                   return Text(
                     provider.selectedDate.value,
-                    style: ThemeManager.currencyCodeStyle(context),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        height: 0.0),
                   );
                 },
               ),
