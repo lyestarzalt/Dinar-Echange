@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
-
+import 'package:dinar_watch/utils/logging.dart';
 class CurrencySelectionProvider with ChangeNotifier {
   List<Currency> _allCurrencies = [];
   List<Currency> _selectedCurrencies = [];
@@ -29,7 +29,9 @@ class CurrencySelectionProvider with ChangeNotifier {
       _filteredCurrencies = List.from(
           _allCurrencies); // init the list for the add currecnies page
       await _loadSelectedCurrencies();
-    } catch (e) {
+    } catch (e, stackTrace) {
+    AppLogger.logError('Failed to _initializeCurrencies',
+          error: e, stackTrace: stackTrace);
     } finally {
       notifyListeners();
     }

@@ -9,7 +9,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_watch/theme/theme_manager.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
 class HistoryPage extends StatelessWidget {
