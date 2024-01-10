@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/history/currency_menu.dart';
 import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
-import 'package:dinar_watch/widgets/error_message.dart';
 import 'package:dinar_watch/widgets/history/line_graph.dart';
 import 'package:dinar_watch/providers/history_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
 class HistoryPage extends StatelessWidget {
+  const HistoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CurrencyHistoryProvider>(
@@ -21,8 +22,7 @@ class HistoryPage extends StatelessWidget {
       child: Consumer<CurrencyHistoryProvider>(
         builder: (context, provider, _) {
           if (provider.coreCurrencies.isEmpty) {
-            // You can show a loading indicator until the currencies are fetched
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: LinearProgressIndicator());
           }
 
           return Scaffold(
@@ -80,17 +80,27 @@ class HistoryPage extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                '1 ${provider.selectedCurrency!.currencyCode} = ${provider.selectedValue}',
-                style: ThemeManager.moneyNumberStyle(context),
+              child: ValueListenableBuilder<String>(
+                valueListenable: provider.selectedValue,
+                builder: (context, value, child) {
+                  return Text(
+                    '1 ${provider.selectedCurrency!.currencyCode} = $value',
+                    style: ThemeManager.moneyNumberStyle(context),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                provider.selectedDate,
-                style: ThemeManager.currencyCodeStyle(context),
+              child: ValueListenableBuilder<String>(
+                valueListenable: provider.selectedDate,
+                builder: (context, value, child) {
+                  return Text(
+                    provider.selectedDate.value,
+                    style: ThemeManager.currencyCodeStyle(context),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 16),
@@ -98,22 +108,17 @@ class HistoryPage extends StatelessWidget {
               aspectRatio: 1.0,
               child: LineChart(
                 buildMainData(
-                  context: context,
-                  minYValue: provider.minYValue,
-                  midYValue: provider.midYValue,
-                  maxYValue: provider.maxYValue,
-                  touchedIndex: provider.touchedIndex,
-                  maxX: provider.maxX,
-                  historyEntries: provider.filteredHistoryEntries,
-                  onIndexChangeCallback:
-                      (int index, List<CurrencyHistoryEntry> entries) {
-                    provider.touchedIndex = index;
-                    provider.selectedValue =
-                        '${entries[index].buy.toStringAsFixed(2)} DZD';
-                    provider.selectedDate =
-                        DateFormat('dd/MM/yyyy').format(entries[index].date);
-                  },
-                ),
+                    context: context,
+                    minYValue: provider.minYValue,
+                    midYValue: provider.midYValue,
+                    maxYValue: provider.maxYValue,
+                    touchedIndex: provider.touchedIndex.value,
+                    maxX: provider.maxX,
+                    historyEntries: provider.filteredHistoryEntries,
+                    onIndexChangeCallback:
+                        (int index, List<CurrencyHistoryEntry> entries) {
+                      provider.updateSelectedData(index);
+                    }),
               ),
             ),
             const SizedBox(height: 20),

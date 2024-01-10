@@ -56,7 +56,7 @@ class MainScreenState extends State<MainScreen> {
       case 0:
         return const CurrencyListScreen();
       case 1:
-        return HistoryPage();
+        return const HistoryPage();
       case 2:
         return const SettingsPage();
       default:

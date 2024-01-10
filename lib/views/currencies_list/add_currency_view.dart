@@ -7,23 +7,18 @@ import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:dinar_watch/providers/add_currency_provider.dart';
 
 class AddCurrencyPage extends StatelessWidget {
-  const AddCurrencyPage({super.key});
+  AddCurrencyPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Consumer<CurrencySelectionProvider>(
       builder: (context, provider, child) {
-        final TextEditingController searchController = TextEditingController();
-        searchController.addListener(() {
-          provider.filterCurrencies(searchController.text);
-        });
-
         return Directionality(
           textDirection: ui.TextDirection.ltr,
           child: Scaffold(
             appBar: AppBar(
               toolbarHeight: 100,
               title: TextField(
-                controller: searchController,
+                controller: provider.searchController,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.search,
                   border: InputBorder.none,

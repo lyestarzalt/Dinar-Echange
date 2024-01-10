@@ -11,9 +11,9 @@ class CurrencyHistoryProvider with ChangeNotifier {
   List<Currency> coreCurrencies = [];
   Currency? selectedCurrency;
   List<CurrencyHistoryEntry> filteredHistoryEntries = [];
-  int touchedIndex = -1;
-  String selectedValue = '';
-  String selectedDate = '';
+final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
+  final ValueNotifier<String> selectedValue = ValueNotifier<String>('');
+  final ValueNotifier<String> selectedDate = ValueNotifier<String>('');
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
@@ -36,6 +36,14 @@ class CurrencyHistoryProvider with ChangeNotifier {
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
       rethrow;
+    }
+  }
+void updateSelectedData(int index) {
+    if (index >= 0 && index < filteredHistoryEntries.length) {
+      var entry = filteredHistoryEntries[index];
+      touchedIndex.value = index;
+      selectedValue.value = '${entry.buy.toStringAsFixed(2)} DZD';
+      selectedDate.value = DateFormat('dd/MM/yyyy').format(entry.date);
     }
   }
 
@@ -68,10 +76,10 @@ class CurrencyHistoryProvider with ChangeNotifier {
     double maxDataValue = allBuyValues.reduce(math.max);
     double minDataValue = allBuyValues.reduce(math.min);
     double bufferValue = (maxDataValue - minDataValue) * bufferPercent;
-    selectedValue = filteredHistoryEntries.isNotEmpty
+    selectedValue.value = filteredHistoryEntries.isNotEmpty
         ? filteredHistoryEntries.last.buy.toStringAsFixed(2)
         : '';
-    selectedDate = filteredHistoryEntries.isNotEmpty
+    selectedDate.value = filteredHistoryEntries.isNotEmpty
         ? DateFormat('dd/MM/yyyy').format(filteredHistoryEntries.last.date)
         : '';
     maxYValue = maxDataValue + bufferValue;
