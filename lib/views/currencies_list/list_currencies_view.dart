@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/providers/list_currency_provider.dart';
-import 'package:dinar_watch/widgets/list/currency_list_item.dart';
+import 'package:dinar_watch/widgets/list/list_tile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';

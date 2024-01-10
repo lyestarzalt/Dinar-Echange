@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/widgets/history/currency_menu.dart';
-import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
-import 'package:dinar_watch/widgets/history/line_graph.dart';
+import 'package:dinar_watch/widgets/graph/core_currency_menu.dart';
+import 'package:dinar_watch/widgets/graph/time_span_buttons.dart';
+import 'package:dinar_watch/widgets/graph/line_graph.dart';
 import 'package:dinar_watch/providers/graph_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
