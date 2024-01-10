@@ -13,42 +13,31 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
-
 class HistoryPage extends StatelessWidget {
-@override
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CurrencyHistoryProvider>(
       create: (_) => CurrencyHistoryProvider(),
       child: Consumer<CurrencyHistoryProvider>(
         builder: (context, provider, _) {
+          if (provider.coreCurrencies.isEmpty) {
+            // You can show a loading indicator until the currencies are fetched
+            return Center(child: CircularProgressIndicator());
+          }
+
           return Scaffold(
             appBar: AppBar(
               title: Text(AppLocalizations.of(context)!.currency_trends),
             ),
             floatingActionButton: _buildFloatingActionButton(context, provider),
-            body: FutureBuilder<void>(
-              future: provider.filteredHistoryEntries, // Use the stored future
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return ErrorMessage(
-                    message: snapshot.error.toString(),
-                    onRetry: () => provider.fetchCurrencies(),
-                  );
-                }
-                return _buildCurrencyContent(context, provider);
-              },
-            ),
+            body: _buildCurrencyContent(context, provider),
           );
         },
       ),
     );
   }
 
-  
-Widget _buildFloatingActionButton(
+  Widget _buildFloatingActionButton(
       BuildContext context, CurrencyHistoryProvider provider) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
@@ -136,9 +125,4 @@ Widget _buildFloatingActionButton(
       ),
     );
   }
-  
-  
-  }
-
-  
-
+}

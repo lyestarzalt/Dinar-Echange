@@ -36,13 +36,13 @@ class MainRepository implements CurrencyRepository {
       rethrow;
     }
   }
+
   @override
   Future<Currency> getCurrencyHistory(Currency currency) async {
     String cacheKey =
         'currencyWithHistory_${currency.currencyCode}_${DateFormat('yyyy-MM-dd').format(DateTime.now())}';
     try {
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
-
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
         AppLogger.logInfo(
             'Fetching currency history from cache for key: $cacheKey');

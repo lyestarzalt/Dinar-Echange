@@ -4,6 +4,7 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 import 'dart:math' as math;
 import 'package:intl/intl.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class CurrencyHistoryProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
@@ -14,14 +15,14 @@ class CurrencyHistoryProvider with ChangeNotifier {
   String selectedValue = '';
   String selectedDate = '';
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
-  final int timeSpan = 30; // Default to 1 month
+  final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
 
   CurrencyHistoryProvider() {
     fetchCurrencies();
   }
 
-  Future<List<Currency>> fetchCurrencies() async {
+  Future<void> fetchCurrencies() async {
     try {
       var allCurrencies = await _mainRepository.getDailyCurrencies();
       coreCurrencies =
@@ -31,15 +32,16 @@ class CurrencyHistoryProvider with ChangeNotifier {
         orElse: () => coreCurrencies.first,
       );
       await loadCurrencyHistory();
-      return coreCurrencies; // Return the filtered core currencies
+      notifyListeners();
     } catch (e) {
-      // Handle exception, maybe log it or set an error message
-      return []; // Return an empty list in case of an error
+      AppLogger.logError("Failed to fetch currencies", error: e);
+      rethrow;
     }
   }
 
   Future<void> loadCurrencyHistory() async {
     if (selectedCurrency == null) {
+      AppLogger.logError("Failed to load currency history");
       throw Exception('Selected currency is not set.');
     }
 
@@ -52,10 +54,11 @@ class CurrencyHistoryProvider with ChangeNotifier {
     } else {
       throw Exception('No history data available for the selected currency.');
     }
+
     notifyListeners();
   }
 
-  void processData({int days = 30}) {
+  void processData({int days = 180}) {
     if (selectedCurrency == null) return;
 
     filteredHistoryEntries = selectedCurrency!.getFilteredHistory(days);
@@ -75,5 +78,6 @@ class CurrencyHistoryProvider with ChangeNotifier {
     minYValue = minDataValue - bufferValue;
     midYValue = (maxYValue + minYValue) / 2;
     maxX = filteredHistoryEntries.length.toDouble() - 1;
+    notifyListeners();
   }
 }
