@@ -119,5 +119,9 @@
   "add_currencies": "Währungen hinzufügen",
   "@add_currencies": {
     "description": "Option to add currencies"
+  },
+  "noNumberEntered": "Keine Nummer eingetragen",
+  "@noNumberEntered": {
+    "description": "No number entred by the user"
   }
 }

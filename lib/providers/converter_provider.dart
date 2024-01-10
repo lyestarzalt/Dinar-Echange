@@ -14,7 +14,14 @@ class ConvertProvider with ChangeNotifier {
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
   }
+  bool _useCentimes = false; 
+  bool get useCentimes => _useCentimes;
 
+
+  void toggleUseCentimes() {
+    _useCentimes = !_useCentimes;
+    notifyListeners();
+  }
   void toggleConversionDirection() {
     isDZDtoCurrency = !isDZDtoCurrency;
     swapTextControllers();
