@@ -1,5 +1,4 @@
 
-import 'package:dinar_watch/utils/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
@@ -7,8 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:dinar_watch/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
-import 'package:dinar_watch/services/preferences_service.dart';
 
 
 class AppInitializationProvider with ChangeNotifier {
@@ -34,4 +31,22 @@ class AppInitializationProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+}
+enum LoadState { loading, success, error }
+
+class CurrenciesState {
+  LoadState state;
+  List<Currency>? currencies;
+  String? errorMessage;
+
+  CurrenciesState._({required this.state, this.currencies, this.errorMessage});
+
+  factory CurrenciesState.loading() =>
+      CurrenciesState._(state: LoadState.loading);
+
+  factory CurrenciesState.success(List<Currency> currencies) =>
+      CurrenciesState._(state: LoadState.success, currencies: currencies);
+
+  factory CurrenciesState.error(String message) =>
+      CurrenciesState._(state: LoadState.error, errorMessage: message);
 }

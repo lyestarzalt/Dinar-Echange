@@ -8,8 +8,7 @@ import 'package:dinar_watch/views/home_view.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:dinar_watch/theme/theme.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
-import 'package:dinar_watch/utils/app_state.dart';
-import 'package:dinar_watch/providers/currencies_provider.dart';
+import 'package:dinar_watch/providers/appinit_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
