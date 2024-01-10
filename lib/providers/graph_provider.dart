@@ -6,7 +6,7 @@ import 'dart:math' as math;
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/utils/logging.dart';
 
-class CurrencyHistoryProvider with ChangeNotifier {
+class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
   List<Currency> coreCurrencies = [];
   Currency? selectedCurrency;
@@ -17,9 +17,8 @@ final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
-  late List<Currency> allcurrencies; 
-  CurrencyHistoryProvider(List<Currency> currencies) {
-    fetchCurrencies(currencies);
+  GraphProvider(List<Currency> allCurrencies) {
+    fetchCurrencies(allCurrencies);
   }
 
   Future<void> fetchCurrencies(List<Currency> allCurrencies) async {

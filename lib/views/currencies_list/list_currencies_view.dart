@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/providers/add_currency_provider.dart';
+import 'package:dinar_watch/providers/list_currency_provider.dart';
 import 'package:dinar_watch/widgets/list/currency_list_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +15,9 @@ class CurrencyListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CurrencySelectionProvider>(
-      create: (_) => CurrencySelectionProvider(currencies),
-      child: Consumer<CurrencySelectionProvider>(
+    return ChangeNotifierProvider<ListCurrencyProvider>(
+      create: (_) => ListCurrencyProvider(currencies),
+      child: Consumer<ListCurrencyProvider>(
         builder: (context, selectionProvider, _) {
           return Scaffold(
             appBar: AppBar(
@@ -43,7 +43,7 @@ class CurrencyListScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
                               create: (_) =>
-                                  CurrencyConverterProvider(currency),
+                                  ConvertProvider(currency),
                               child: const CurrencyConverterPage(),
                             ),
                           ),

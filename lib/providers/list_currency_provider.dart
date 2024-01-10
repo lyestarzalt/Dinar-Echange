@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 
-class CurrencySelectionProvider with ChangeNotifier {
+class ListCurrencyProvider with ChangeNotifier {
   List<Currency> _allCurrencies = [];
 
   List<Currency> _selectedCurrencies = [];
@@ -12,7 +12,7 @@ class CurrencySelectionProvider with ChangeNotifier {
   List<Currency> get selectedCurrencies => _selectedCurrencies;
   List<Currency> get filteredCurrencies => _filteredCurrencies;
 
-  CurrencySelectionProvider(List<Currency> currencies) {
+  ListCurrencyProvider(List<Currency> currencies) {
     _allCurrencies = currencies;
     _filteredCurrencies = _allCurrencies;
     _loadSelectedCurrencies();

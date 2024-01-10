@@ -4,7 +4,7 @@ import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/history/currency_menu.dart';
 import 'package:dinar_watch/widgets/history/time_span_buttons.dart';
 import 'package:dinar_watch/widgets/history/line_graph.dart';
-import 'package:dinar_watch/providers/history_provider.dart';
+import 'package:dinar_watch/providers/graph_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -17,9 +17,9 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CurrencyHistoryProvider>(
-      create: (_) => CurrencyHistoryProvider(currencies),
-      child: Consumer<CurrencyHistoryProvider>(
+    return ChangeNotifierProvider<GraphProvider>(
+      create: (_) => GraphProvider(currencies),
+      child: Consumer<GraphProvider>(
         builder: (context, provider, _) {
           if (provider.coreCurrencies.isEmpty) {
             return const Center(child: LinearProgressIndicator());
@@ -38,7 +38,7 @@ class HistoryPage extends StatelessWidget {
   }
 
   Widget _buildFloatingActionButton(
-      BuildContext context, CurrencyHistoryProvider provider) {
+      BuildContext context, GraphProvider provider) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       openBuilder: (BuildContext context, VoidCallback _) {
@@ -72,7 +72,7 @@ class HistoryPage extends StatelessWidget {
   }
 
   Widget _buildCurrencyContent(
-      BuildContext context, CurrencyHistoryProvider provider) {
+      BuildContext context, GraphProvider provider) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

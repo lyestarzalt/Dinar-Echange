@@ -34,7 +34,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CurrencyConverterProvider>(context);
+    final provider = Provider.of<ConvertProvider>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final middlePoint = screenHeight * 0.2;
     const cardHeight = 100.0;
