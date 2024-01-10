@@ -11,12 +11,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({super.key});
+  final List<Currency> currencies;
+
+  const HistoryPage({super.key, required this.currencies});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CurrencyHistoryProvider>(
-      create: (_) => CurrencyHistoryProvider(),
+      create: (_) => CurrencyHistoryProvider(currencies),
       child: Consumer<CurrencyHistoryProvider>(
         builder: (context, provider, _) {
           if (provider.coreCurrencies.isEmpty) {

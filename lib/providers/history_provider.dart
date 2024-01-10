@@ -17,14 +17,13 @@ final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
-
-  CurrencyHistoryProvider() {
-    fetchCurrencies();
+  late List<Currency> allcurrencies; 
+  CurrencyHistoryProvider(List<Currency> currencies) {
+    fetchCurrencies(currencies);
   }
 
-  Future<void> fetchCurrencies() async {
+  Future<void> fetchCurrencies(List<Currency> allCurrencies) async {
     try {
-      var allCurrencies = await _mainRepository.getDailyCurrencies();
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
       selectedCurrency = coreCurrencies.firstWhere(

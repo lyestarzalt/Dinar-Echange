@@ -54,13 +54,19 @@ class MainScreenState extends State<MainScreen> {
   Widget _getPageWidget(int index) {
     switch (index) {
       case 0:
-        return const CurrencyListScreen();
+        return CurrencyListScreen(
+          currencies: widget.currencies,
+        );
       case 1:
-        return const HistoryPage();
+        return HistoryPage(
+          currencies: widget.currencies,
+        );
       case 2:
         return const SettingsPage();
       default:
-        return const CurrencyListScreen();
+        return CurrencyListScreen(
+          currencies: widget.currencies,
+        );
     }
   }
 }

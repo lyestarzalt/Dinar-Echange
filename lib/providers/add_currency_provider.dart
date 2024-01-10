@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
-import 'package:dinar_watch/data/repositories/main_repository.dart';
-import 'package:dinar_watch/utils/logging.dart';
+
 class CurrencySelectionProvider with ChangeNotifier {
   List<Currency> _allCurrencies = [];
+
   List<Currency> _selectedCurrencies = [];
   List<Currency> _filteredCurrencies = [];
   TextEditingController searchController = TextEditingController();
@@ -12,8 +12,10 @@ class CurrencySelectionProvider with ChangeNotifier {
   List<Currency> get selectedCurrencies => _selectedCurrencies;
   List<Currency> get filteredCurrencies => _filteredCurrencies;
 
-  CurrencySelectionProvider() {
-    _initializeCurrencies();
+  CurrencySelectionProvider(List<Currency> currencies) {
+    _allCurrencies = currencies;
+    _filteredCurrencies = _allCurrencies;
+    _loadSelectedCurrencies();
 
     searchController.addListener(_filterCurrencies);
   }
@@ -21,20 +23,6 @@ class CurrencySelectionProvider with ChangeNotifier {
   void dispose() {
     searchController.dispose();
     super.dispose();
-  }
-
-  Future<void> _initializeCurrencies() async {
-    try {
-      _allCurrencies = await MainRepository().getDailyCurrencies();
-      _filteredCurrencies = List.from(
-          _allCurrencies); // init the list for the add currecnies page
-      await _loadSelectedCurrencies();
-    } catch (e, stackTrace) {
-    AppLogger.logError('Failed to _initializeCurrencies',
-          error: e, stackTrace: stackTrace);
-    } finally {
-      notifyListeners();
-    }
   }
 
   void _filterCurrencies() {
@@ -66,11 +54,13 @@ class CurrencySelectionProvider with ChangeNotifier {
           .whereType<Currency>()
           .toList();
     }
+    notifyListeners();
   }
 
   void updateSelectedCurrencies(List<Currency> newSelection) {
     _selectedCurrencies = newSelection;
     notifyListeners();
+    
   }
 
   Future<void> saveSelectedCurrencies() async {

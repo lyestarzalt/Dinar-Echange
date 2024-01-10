@@ -9,12 +9,14 @@ import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 
 class CurrencyListScreen extends StatelessWidget {
-  const CurrencyListScreen({super.key});
+  final List<Currency> currencies;
+
+  const CurrencyListScreen({super.key, required this.currencies});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CurrencySelectionProvider>(
-      create: (_) => CurrencySelectionProvider(),
+      create: (_) => CurrencySelectionProvider(currencies),
       child: Consumer<CurrencySelectionProvider>(
         builder: (context, selectionProvider, _) {
           return Scaffold(
