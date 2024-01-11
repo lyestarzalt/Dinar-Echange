@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
+import 'package:dinar_watch/views/error/error_view.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -21,17 +22,24 @@ class HistoryPage extends StatelessWidget {
       create: (_) => GraphProvider(currencies),
       child: Consumer<GraphProvider>(
         builder: (context, provider, _) {
-          if (provider.coreCurrencies.isEmpty) {
+          if (provider.coreCurrencies.isEmpty &&
+              provider.filteredHistoryEntries.isEmpty) {
             return const Center(child: LinearProgressIndicator());
+          } else if (provider.filteredHistoryEntries.isNotEmpty) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.currency_trends),
+              ),
+              floatingActionButton:
+                  _buildFloatingActionButton(context, provider),
+              body: _buildCurrencyContent(context, provider),
+            );
+          } else {
+            return ErrorApp(
+              errorMessage: 'No data available',
+              onRetry: () => provider.fetchCurrencies,
+            );
           }
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.currency_trends),
-            ),
-            floatingActionButton: _buildFloatingActionButton(context, provider),
-            body: _buildCurrencyContent(context, provider),
-          );
         },
       ),
     );
@@ -71,8 +79,7 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCurrencyContent(
-      BuildContext context, GraphProvider provider) {
+  Widget _buildCurrencyContent(BuildContext context, GraphProvider provider) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

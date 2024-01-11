@@ -11,7 +11,7 @@ class GraphProvider with ChangeNotifier {
   List<Currency> coreCurrencies = [];
   Currency? selectedCurrency;
   List<CurrencyHistoryEntry> filteredHistoryEntries = [];
-final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
+  final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
   final ValueNotifier<String> selectedValue = ValueNotifier<String>('');
   final ValueNotifier<String> selectedDate = ValueNotifier<String>('');
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
@@ -36,7 +36,8 @@ final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
       rethrow;
     }
   }
-void updateSelectedData(int index) {
+
+  void updateSelectedData(int index) {
     if (index >= 0 && index < filteredHistoryEntries.length) {
       var entry = filteredHistoryEntries[index];
       touchedIndex.value = index;
@@ -60,8 +61,6 @@ void updateSelectedData(int index) {
     } else {
       throw Exception('No history data available for the selected currency.');
     }
-
-    notifyListeners();
   }
 
   void processData({int days = 180}) {

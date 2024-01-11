@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/utils/spelling_number.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
@@ -76,12 +75,12 @@ class NumberToWordsDisplay extends StatelessWidget {
     bool useCentimes,
   ) {
     if (numberText.isEmpty) {
-      return AppLocalizations.of(context)!.noNumberEntered;
+      return '';
     }
 
     double number = double.tryParse(numberText) ?? 0;
     if (useCentimes) {
-      number *= 100; // Convert to centimes if the flag is true
+      number *= 100; 
     }
 
     String unit = isDZDtoCurrency
@@ -91,7 +90,7 @@ class NumberToWordsDisplay extends StatelessWidget {
     if (languageCode == 'ar') {
       unit = isDZDtoCurrency
           ? (useCentimes ? 'سنتيم' : 'دينار')
-          : 'دينار'; // Replace with correct Arabic words
+          : 'دينار';
       return "$unit ${SpellingNumber(lang: languageCode).convert(number)}";
     }
 

@@ -4,11 +4,18 @@ import 'dart:convert';
 class CacheManager {
   Future<Map<String, dynamic>?> getCache(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? cachedData = prefs.getString(key);
-    if (cachedData != null) {
-      return json.decode(cachedData) as Map<String, dynamic>;
+    try {
+      String? cachedData = prefs.getString(key);
+  
+
+      if (cachedData != null) {
+        return json.decode(cachedData) as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      
+      return null;
     }
-    return null;
   }
 
   Future<void> setCache(String key, Map<String, dynamic> data) async {
