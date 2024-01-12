@@ -47,7 +47,7 @@ class DinarWatchState extends State<DinarWatch> {
   @override
   Widget build(BuildContext context) {
     final MaterialTheme materialTheme =
-        MaterialTheme(ThemeData.light().textTheme);
+        MaterialTheme();
     final currencies =
         Provider.of<AppInitializationProvider>(context).currencies;
 

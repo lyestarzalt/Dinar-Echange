@@ -12,7 +12,7 @@ class CurrencyListItem extends StatelessWidget {
   });
 
   String _formatCurrencyValue(double value) {
-    return value % 1 == 0 ? value.toInt().toString() : value.toStringAsFixed(2);
+    return value.toStringAsFixed(2);
   }
 
   @override
@@ -28,19 +28,13 @@ class CurrencyListItem extends StatelessWidget {
               height: 40,
               borderRadius: BorderRadius.circular(1),
             ),
-            title: Hero(
-              tag: 'hero_currency_${currency.currencyCode}',
-              child: Material(
-                color: Colors.transparent,
-                child: Text(
-                  currency.currencyCode,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      height: 0.0),
-                ),
-              ),
+            title: Text(
+              currency.currencyCode,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  height: 3.0),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -50,21 +44,20 @@ class CurrencyListItem extends StatelessWidget {
                   child: Text(
                     _formatCurrencyValue(currency.buy), // Buy value
                     style: TextStyle(
-      fontFamily: 'Courier',
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-      color: Theme.of(context).colorScheme.onSurface,
-    ),
-                    textAlign: TextAlign.left, // Align text to the left
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    textAlign: TextAlign.center, // Align text to the left
                   ),
                 ),
                 Text(
                   " DZD", // Currency unit
                   style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                      fontWeight: FontWeight.w300,
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      height: 3.0),
                 ),
                 const SizedBox(width: 15), // Space between DZD and arrow icon
                 Icon(

@@ -1,15 +1,16 @@
 import "package:flutter/material.dart";
 import 'package:dinar_watch/theme/material_scheme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MaterialTheme {
   ThemeData theme(ColorScheme colorScheme) => ThemeData(
         useMaterial3: true,
         brightness: colorScheme.brightness,
         colorScheme: colorScheme,
-        textTheme: textTheme.apply(
-          bodyColor: colorScheme.onSurface,
-          displayColor: colorScheme.onSurface,
-        ),
+        textTheme: _createCustomTextTheme(
+            colorScheme.brightness == Brightness.light
+                ? ThemeData.light().textTheme
+                : ThemeData.dark().textTheme),
         scaffoldBackgroundColor: colorScheme.background,
         canvasColor: colorScheme.surface,
         segmentedButtonTheme: SegmentedButtonThemeData(
@@ -75,10 +76,12 @@ class MaterialTheme {
           ),
         ),
       );
+  static TextTheme _createCustomTextTheme(TextTheme base) {
+    return GoogleFonts.robotoMonoTextTheme(base);
+  }
 
-  final TextTheme textTheme;
-
-  const MaterialTheme(this.textTheme);
+ 
+  MaterialTheme();
 
   static MaterialScheme lightScheme() {
     return const MaterialScheme(
