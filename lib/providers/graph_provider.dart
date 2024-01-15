@@ -6,6 +6,8 @@ import 'dart:math' as math;
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/utils/logging.dart';
 
+enum GraphState { loading, loaded, error }
+
 class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
   List<Currency> coreCurrencies = [];
@@ -17,12 +19,21 @@ class GraphProvider with ChangeNotifier {
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
+
+  GraphState _state = GraphState.loading;
+  String _errorMessage = '';
+
+  GraphState get state => _state;
+  String get errorMessage => _errorMessage;
+
   GraphProvider(List<Currency> allCurrencies) {
     fetchCurrencies(allCurrencies);
   }
 
   Future<void> fetchCurrencies(List<Currency> allCurrencies) async {
     try {
+      _state = GraphState.loading;
+      notifyListeners();
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
       selectedCurrency = coreCurrencies.firstWhere(
@@ -30,13 +41,14 @@ class GraphProvider with ChangeNotifier {
         orElse: () => coreCurrencies.first,
       );
       await loadCurrencyHistory();
+      _state = GraphState.loaded;
       notifyListeners();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
-      //TODO Exception has occurred. Clean up the whole thing, the graph provider is a mess
-      /* FlutterError (A GraphProvider was used after being disposed.
-      Once you have called dispose() on a GraphProvider, it can no longer be used.) */
-      rethrow;
+      _errorMessage = e.toString();
+      _state = GraphState.error;
+    } finally {
+      notifyListeners();
     }
   }
 

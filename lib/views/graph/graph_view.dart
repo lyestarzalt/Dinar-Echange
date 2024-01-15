@@ -1,15 +1,15 @@
+import 'package:dinar_watch/providers/graph_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/graph/core_currency_menu.dart';
 import 'package:dinar_watch/widgets/graph/time_span_buttons.dart';
 import 'package:dinar_watch/widgets/graph/line_graph.dart';
-import 'package:dinar_watch/providers/graph_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -20,27 +20,34 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GraphProvider>(
       create: (_) => GraphProvider(currencies),
-      child: Consumer<GraphProvider>(
-        builder: (context, provider, _) {
-          if (provider.coreCurrencies.isEmpty &&
-              provider.filteredHistoryEntries.isEmpty) {
-            return const Center(child: LinearProgressIndicator());
-          } else if (provider.filteredHistoryEntries.isNotEmpty) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(AppLocalizations.of(context)!.currency_trends),
-              ),
-              floatingActionButton:
-                  _buildFloatingActionButton(context, provider),
-              body: _buildCurrencyContent(context, provider),
-            );
-          } else {
-            return ErrorApp(
-              errorMessage: 'No data available',
-              onRetry: () => provider.fetchCurrencies,
-            );
-          }
-        },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.currency_trends),
+        ),
+        floatingActionButton: Consumer<GraphProvider>(
+          builder: (context, provider, _) =>
+              _buildFloatingActionButton(context, provider),
+        ),
+        body: Consumer<GraphProvider>(
+          builder: (context, provider, _) {
+            switch (provider.state) {
+              case GraphState.loading:
+                return const Center(child: LinearProgressIndicator());
+              case GraphState.loaded:
+                return _buildCurrencyContent(context, provider);
+              case GraphState.error:
+                return ErrorApp(
+                  errorMessage: 'Error',
+                  onRetry: () => provider.fetchCurrencies(currencies),
+                );
+              default:
+                return ErrorApp(
+                  errorMessage: '',
+                  onRetry: () => provider.fetchCurrencies(currencies),
+                );
+            }
+          },
+        ),
       ),
     );
   }
