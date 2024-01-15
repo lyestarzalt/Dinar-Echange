@@ -1,12 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:dinar_watch/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
 
 class AppInitializationProvider with ChangeNotifier {
   CurrenciesState _state = CurrenciesState.loading();
@@ -18,13 +14,12 @@ class AppInitializationProvider with ChangeNotifier {
     FlutterNativeSplash.preserve(
         widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
     try {
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
       await FirebaseAuth.instance.signInAnonymously();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
       _state = CurrenciesState.success(fetchedCurrencies);
     } catch (e) {
+      print(e);
       _state = CurrenciesState.error(e.toString());
     } finally {
       FlutterNativeSplash.remove();
@@ -32,6 +27,7 @@ class AppInitializationProvider with ChangeNotifier {
     }
   }
 }
+
 enum LoadState { loading, success, error }
 
 class CurrenciesState {

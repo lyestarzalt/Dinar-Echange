@@ -9,10 +9,16 @@ import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:dinar_watch/theme/theme.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
 import 'package:dinar_watch/providers/appinit_provider.dart';
+import 'package:dinar_watch/services/remote_config.dart';
+import 'package:dinar_watch/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await PreferencesService().init();
+  await RemoteConfigService().init();
 
   runApp(
     MultiProvider(
@@ -46,8 +52,7 @@ class DinarWatchState extends State<DinarWatch> {
 
   @override
   Widget build(BuildContext context) {
-    final MaterialTheme materialTheme =
-        MaterialTheme();
+    final MaterialTheme materialTheme = MaterialTheme();
     final currencies =
         Provider.of<AppInitializationProvider>(context).currencies;
 
