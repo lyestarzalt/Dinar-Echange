@@ -33,6 +33,9 @@ class GraphProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
+      //TODO Exception has occurred. Clean up the whole thing, the graph provider is a mess
+      /* FlutterError (A GraphProvider was used after being disposed.
+      Once you have called dispose() on a GraphProvider, it can no longer be used.) */
       rethrow;
     }
   }

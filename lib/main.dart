@@ -12,6 +12,7 @@ import 'package:dinar_watch/providers/appinit_provider.dart';
 import 'package:dinar_watch/services/remote_config.dart';
 import 'package:dinar_watch/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ void main() async {
 
   await PreferencesService().init();
   await RemoteConfigService().init();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   runApp(
     MultiProvider(
