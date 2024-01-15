@@ -7,81 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:971801769486:android:6497171c9cf99c64b62e5f",
-        "android_client_info": {
-          "package_name": "com.example.dinar_ex"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "971801769486-5phsvjo2f0sk216kl1uiq8fv5oho5emk.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAHd53rpCta6lG9Ei_M6Unrymlluf5ajeY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "971801769486-5phsvjo2f0sk216kl1uiq8fv5oho5emk.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "971801769486-92ckv84ikhdvamhqmt6afoljm08dt4nk.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fluttersafari"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:971801769486:android:8dc0db9e8b7c0719b62e5f",
         "android_client_info": {
           "package_name": "com.example.dinar_watch"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "971801769486-5phsvjo2f0sk216kl1uiq8fv5oho5emk.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAHd53rpCta6lG9Ei_M6Unrymlluf5ajeY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "971801769486-5phsvjo2f0sk216kl1uiq8fv5oho5emk.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "971801769486-92ckv84ikhdvamhqmt6afoljm08dt4nk.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.fluttersafari"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:971801769486:android:6f49eb71ccfc7bcdb62e5f",
-        "android_client_info": {
-          "package_name": "com.example.fluttersafari"
         }
       },
       "oauth_client": [
