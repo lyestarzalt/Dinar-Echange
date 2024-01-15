@@ -2,7 +2,6 @@ import 'package:dinar_watch/data/currency_repository.dart';
 import 'package:dinar_watch/data/services/currency_firestore_service.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/cache_service.dart';
-import 'package:intl/intl.dart';
 import 'package:dinar_watch/utils/logging.dart';
 
 class MainRepository implements CurrencyRepository {
@@ -11,59 +10,49 @@ class MainRepository implements CurrencyRepository {
 
   @override
   Future<List<Currency>> getDailyCurrencies() async {
-    String cacheKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    try {
-      Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
-
-      if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        AppLogger.logInfo('Cache hit for daily currencies with key: $cacheKey');
-        List<dynamic> dataList = cachedData['data'] as List<dynamic>;
-        return dataList
-            .map((model) => Currency.fromJson(model as Map<String, dynamic>))
-            .toList();
-      } else {
-        AppLogger.logInfo(
-            'Cache miss. Fetching daily currencies from Firestore.');
-        List<Currency> currencies =
-            await _firestoreService.fetchCurrenciesFromFirestore();
-        await _cacheManager.setCache(
-            cacheKey, {'data': currencies.map((e) => e.toJson()).toList()});
-        return currencies;
-      }
-    } catch (e, stackTrace) {
-      AppLogger.logError('Failed to fetch daily currencies',
-          error: e, stackTrace: stackTrace);
-      rethrow;
-    }
+    return _getCachedData<List<Currency>>(
+      baseKey: 'dailyCurrencies',
+      fetchFromFirestore: _firestoreService.fetchCurrenciesFromFirestore,
+      fromJson: (data) => (data as List<dynamic>)
+          .map((model) => Currency.fromJson(model as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   @override
   Future<Currency> getCurrencyHistory(Currency currency) async {
-    String cacheKey =
-        'currencyWithHistory_${currency.currencyCode}_${DateFormat('yyyy-MM-dd').format(DateTime.now())}';
+    return _getCachedData<Currency>(
+      baseKey: 'currencyWithHistory',
+      suffix: currency.currencyCode,
+      fetchFromFirestore: () =>
+          _firestoreService.fetchCurrencyHistoryFromFirestore(currency),
+      fromJson: (data) => Currency.fromJson(data as Map<String, dynamic>),
+    );
+  }
+
+  Future<T> _getCachedData<T>({
+    required String baseKey,
+    String? suffix,
+    required Future<T> Function() fetchFromFirestore,
+    required T Function(dynamic) fromJson,
+  }) async {
+    String cacheKey = _cacheManager.generateCacheKey(baseKey, suffix: suffix);
     try {
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
+
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        AppLogger.logInfo(
-            'Fetching currency history from cache for key: $cacheKey');
-        Currency cachedCurrency = Currency.fromJson(cachedData);
-        if (cachedCurrency.history != null &&
-            cachedCurrency.history!.isNotEmpty) {
-          return cachedCurrency;
-        }
+        AppLogger.logInfo('Cache hit for key: $cacheKey');
+        return fromJson(cachedData['data']);
       }
 
-      AppLogger.logInfo('Fetching currency history from Firestore.');
-      Currency fetchedCurrency =
-          await _firestoreService.fetchCurrencyHistoryFromFirestore(currency);
-      if (fetchedCurrency.history != null &&
-          fetchedCurrency.history!.isNotEmpty) {
-        await _cacheManager.setCache(cacheKey, fetchedCurrency.toJson());
-      }
-      return fetchedCurrency;
-    } catch (e) {
-      AppLogger.logError(
-          'Error fetching history for ${currency.currencyCode}: $e');
+      AppLogger.logInfo(
+          'Cache miss. Fetching from Firestore for key: $cacheKey');
+      T data = await fetchFromFirestore();
+      await _cacheManager.setCache(cacheKey, {'data': data});
+      return data;
+    } catch (e, stackTrace) {
+      AppLogger.logError('Failed to fetch data for key: $cacheKey',
+          error: e, stackTrace: stackTrace);
       rethrow;
     }
   }

@@ -1,37 +1,40 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:intl/intl.dart';
 
 class CacheManager {
-  Future<Map<String, dynamic>?> getCache(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      String? cachedData = prefs.getString(key);
-  
-
-      if (cachedData != null) {
-        return json.decode(cachedData) as Map<String, dynamic>;
-      }
-      return null;
-    } catch (e) {
-      
-      return null;
-    }
-  }
-
   Future<void> setCache(String key, Map<String, dynamic> data) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Add the current timestamp to the data before caching
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     data['timestamp'] = DateTime.now().toUtc().millisecondsSinceEpoch;
-
-    String jsonData = json.encode(data);
+    final String jsonData = json.encode(data);
     await prefs.setString(key, jsonData);
   }
 
+  Future<Map<String, dynamic>?> getCache(String key) async {
+    final String? cachedData = await PreferencesService().getString(key);
+    if (cachedData != null) {
+      final Map<String, dynamic> decodedData =
+          json.decode(cachedData) as Map<String, dynamic>;
+
+      // Check if the cache is still valid
+      if (isCacheValid(decodedData)) {
+        return decodedData;
+      }
+    }
+    return null;
+  }
+
+  String generateCacheKey(String base, {String? suffix}) {
+    String dateKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    return suffix != null ? '${base}_${suffix}_$dateKey' : '${base}_$dateKey';
+  }
+
   bool isCacheValid(Map<String, dynamic> cachedData) {
-    int cachedTimestamp = cachedData['timestamp'] as int;
+    if (!cachedData.containsKey('timestamp')) return false;
+
     DateTime cachedDate =
-        DateTime.fromMillisecondsSinceEpoch(cachedTimestamp).toUtc();
+        DateTime.fromMillisecondsSinceEpoch(cachedData['timestamp']).toUtc();
     DateTime nowUtc = DateTime.now().toUtc();
 
     // Algeria's timezone offset (UTC+1)
@@ -41,20 +44,17 @@ class CacheManager {
     DateTime currentDateInAlgeriaTime =
         nowUtc.add(const Duration(hours: algeriaTimezoneOffset));
 
-    // Check if 'data' key is not an empty list
-    //TODO: Fix this
-    bool isDataNotEmpty = (cachedData.containsKey('data') &&
-            cachedData['data'] is List &&
-            (cachedData['data'] as List).isNotEmpty) ||
-        (cachedData.containsKey('history') &&
-            cachedData['history'] is List &&
-            (cachedData['history'] as List).isNotEmpty);
+    // Check if the cached data is from the same day (Algeria timezone)
+    bool isSameDay =
+        currentDateInAlgeriaTime.day == cachedDateInAlgeriaTime.day;
 
-    // Check if the cached data is from the same day (considering Algeria's timezone) and 'data' is not empty
-    return currentDateInAlgeriaTime
-                .difference(cachedDateInAlgeriaTime)
-                .inDays ==
-            0 &&
-        isDataNotEmpty;
+    // Check if 'data' or 'history' key is not an empty list
+    bool isDataNotEmpty = cachedData.entries.any((entry) =>
+        entry.key == 'data' ||
+        entry.key == 'history' &&
+            entry.value is List &&
+            (entry.value as List).isNotEmpty);
+
+    return isSameDay && isDataNotEmpty;
   }
 }

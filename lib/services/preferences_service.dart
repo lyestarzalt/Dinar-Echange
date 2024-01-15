@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/utils/enums.dart'; 
+import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter/scheduler.dart';
 
 class PreferencesService {
@@ -25,7 +25,7 @@ class PreferencesService {
     await _prefs.setStringList('selectedCurrencies', currencies);
   }
 
-Future<ThemeMode> getThemeMode() async {
+  Future<ThemeMode> getThemeMode() async {
     String? themeOptionString = _prefs.getString('themeOption');
     ThemeOption themeOption = ThemeOption.values.firstWhere(
       (option) => option.toString().split('.').last == themeOptionString,
@@ -44,11 +44,10 @@ Future<ThemeMode> getThemeMode() async {
     }
   }
 
-Future<void> setThemeMode(ThemeOption themeOption) async {
+  Future<void> setThemeMode(ThemeOption themeOption) async {
     String themeOptionString = themeOption.toString().split('.').last;
     await _prefs.setString('themeOption', themeOptionString);
   }
-
 
   Future<String?> getSelectedLanguage() async {
     return _prefs.getString('selectedLanguage');
@@ -57,4 +56,12 @@ Future<void> setThemeMode(ThemeOption themeOption) async {
   Future<void> setSelectedLanguage(String languageCode) async {
     await _prefs.setString('selectedLanguage', languageCode);
   }
+  
+  Future<String?> getString(String key) async {
+    return _prefs.getString(key);
+  }
+  Future<bool> setString(String key, String data) async {
+    return _prefs.setString(key, data);
+  }
 }
+
