@@ -13,7 +13,7 @@ class MainRepository implements CurrencyRepository {
     return _getCachedData<List<Currency>>(
       baseKey: 'dailyCurrencies',
       fetchFromFirestore: _firestoreService.fetchCurrenciesFromFirestore,
-      fromJson: (data) => (data)
+      fromJson: (data) => (data as List<dynamic>)
           .map((model) => Currency.fromJson(model as Map<String, dynamic>))
           .toList(),
     );

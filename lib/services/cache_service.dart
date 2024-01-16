@@ -39,8 +39,6 @@ class CacheManager {
     return suffix != null ? '${base}_${suffix}_$dateKey' : '${base}_$dateKey';
   }
 
- 
-
   bool shouldBypassCache(Map<String, dynamic> cachedData) {
     bool forceRefresh = RemoteConfigService().forceRefresh;
     AppLogger.logInfo('Bypass cache? $forceRefresh');
@@ -53,19 +51,30 @@ class CacheManager {
     DateTime currentDateInAlgeriaTime = getCurrentDateInAlgeriaTime();
 
     bool isBeforeUpdateTime = currentDateInAlgeriaTime.hour < 9;
-    bool isPreviousDayCache =
-        isPreviousDay(cachedDate, currentDateInAlgeriaTime);
+    bool isPreviousDayCache =isPreviousDay(cachedDate, currentDateInAlgeriaTime);
     bool isSameDayCache = isSameDay(cachedDate, currentDateInAlgeriaTime);
 
     return isSameDayCache || (isPreviousDayCache && isBeforeUpdateTime);
   }
 
-  bool isDataNotEmpty(Map<String, dynamic> cachedData) {
-    return cachedData.entries.any((entry) =>
-        (entry.key == 'data' || entry.key == 'history') &&
-        entry.value is List &&
-        (entry.value as List).isNotEmpty);
+
+bool isDataNotEmpty(Map<String, dynamic> cachedData) {
+    if (cachedData.containsKey('data')) {
+      var data = cachedData['data'];
+      if (data is List) {
+        // For a list of currencies, we check that it's not empty.
+        return data.isNotEmpty;
+      } else if (data is Map<String, dynamic>) {
+        // For a single currency with history, we check for non-empty history.
+        return data.containsKey('history') &&
+            data['history'] is List &&
+            data['history'].isNotEmpty;
+      }
+    }
+    // Default to false if none of the above conditions are met.
+    return false;
   }
+
 
   DateTime getCurrentDateInAlgeriaTime() {
     const int algeriaTimezoneOffset = 1;

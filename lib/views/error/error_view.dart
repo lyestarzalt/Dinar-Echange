@@ -13,12 +13,10 @@ class ErrorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-        body: Expanded(
-          child: ErrorMessage(
-            title: AppLocalizations.of(context)!.errormessage_title,
-            message: errorMessage,
-            onRetry: onRetry,
-          ),
+        body: ErrorMessage(
+          title: AppLocalizations.of(context)!.errormessage_title,
+          message: errorMessage,
+          onRetry: onRetry,
         ),
       ),
     );

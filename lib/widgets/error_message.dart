@@ -5,7 +5,7 @@ class ErrorMessage extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
 
- const ErrorMessage({
+  const ErrorMessage({
     super.key,
     this.title = 'Oops! Something went wrong.',
     this.message =
@@ -16,9 +16,7 @@ class ErrorMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        color: Theme.of(context).colorScheme.errorContainer,
+      child: Expanded(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -51,7 +49,12 @@ class ErrorMessage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
-                child: const Text('Retry'),
+                child: Text(
+                  'Retry',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
           ],
         ),
