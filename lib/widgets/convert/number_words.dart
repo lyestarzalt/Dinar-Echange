@@ -4,67 +4,111 @@ import 'package:dinar_watch/utils/spelling_number.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 
-class NumberToWordsDisplay extends StatelessWidget {
+class NumberToWordsDisplay extends StatefulWidget {
   final Currency currency;
   final bool isDZDtoCurrency;
   final TextEditingController numberController;
+  final ConvertProvider provider;
 
-  const NumberToWordsDisplay({
-    super.key,
-    required this.currency,
-    required this.isDZDtoCurrency,
-    required this.numberController,
-  });
+  const NumberToWordsDisplay(
+      {super.key,
+      required this.currency,
+      required this.isDZDtoCurrency,
+      required this.numberController,
+      required this.provider});
+
+  @override
+  State<NumberToWordsDisplay> createState() => _NumberToWordsDisplayState();
+}
+
+class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String currentLanguageCode = Localizations.localeOf(context).languageCode;
-
     return Consumer<ConvertProvider>(
       builder: (context, provider, child) {
-        String numberInWords = _convertNumberToWords(
-          context,
-          currentLanguageCode,
-          numberController.text,
-          provider.useCentimes,
-        );
-
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           constraints: BoxConstraints(
             minHeight: 50,
             maxWidth: MediaQuery.of(context).size.width - 32,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.secondary,
             borderRadius: const BorderRadius.all(Radius.circular(6)),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Expanded(
-                child: Text(
-                  numberInWords,
-                  style: TextStyle(
-                    fontFamily: 'Courier',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+              Flexible(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    provider
+                        .toggleUseCentimes(); // Assuming this toggles between two states only
+                  },
+                  children: [
+                    _buildTextPage(
+                      context,
+                      provider,
+                      useCentimes: false,
+                    ),
+                    _buildTextPage(
+                      context,
+                      provider,
+                      useCentimes: true,
+                    ),
+                  ],
                 ),
               ),
-              if (isDZDtoCurrency) // Only show if conversion is from DZD
-                RotatedBox(
-                  quarterTurns: 1,
-                  child: Switch(
-                    value: provider.useCentimes,
-                    onChanged: (value) => provider.toggleUseCentimes(),
-                  ),
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(2, (index) {
+                  // Assuming only two states for useCentimes
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: 10,
+                    width: 10,
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: provider.useCentimes == (index == 1)
+                          ? Colors.green
+                          : Colors.grey,
+                    ),
+                  );
+                }),
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTextPage(BuildContext context, ConvertProvider provider,
+      {required bool useCentimes}) {
+    // Determine which controller to use based on the conversion direction
+    TextEditingController currentController = provider.amountController;
+
+    String numberInWords = _convertNumberToWords(
+      context,
+      Localizations.localeOf(context).languageCode,
+      currentController.text,
+      useCentimes,
+    );
+
+    return Text(
+      numberInWords,
+      style: TextStyle(
+        fontSize: 20,
+        color: Theme.of(context).colorScheme.onSecondary,
+      ),
     );
   }
 
@@ -75,22 +119,21 @@ class NumberToWordsDisplay extends StatelessWidget {
     bool useCentimes,
   ) {
     if (numberText.isEmpty) {
-      return '';
+      return 'Enter';
     }
 
     double number = double.tryParse(numberText) ?? 0;
     if (useCentimes) {
-      number *= 100; 
+      number *= 100;
     }
 
-    String unit = isDZDtoCurrency
-        ? (useCentimes ? 'Centime' : currency.currencyCode.toUpperCase())
+    String unit = widget.isDZDtoCurrency
+        ? (useCentimes ? 'Centime' : widget.currency.currencyCode.toUpperCase())
         : 'DZD';
 
     if (languageCode == 'ar') {
-      unit = isDZDtoCurrency
-          ? (useCentimes ? 'سنتيم' : 'دينار')
-          : 'دينار';
+      unit =
+          widget.isDZDtoCurrency ? (useCentimes ? 'سنتيم' : 'دينار') : 'دينار';
       return "$unit ${SpellingNumber(lang: languageCode).convert(number)}";
     }
 

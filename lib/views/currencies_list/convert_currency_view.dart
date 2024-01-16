@@ -81,16 +81,16 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         right: 16,
                         height: cardHeight,
                         child: buildCurrencyInput(
-                            provider.isDZDtoCurrency
+                            controller: provider.isDZDtoCurrency
                                 ? provider.amountController
                                 : provider.resultController,
-                            provider.amountController,
-                            'DZD',
-                            provider.currency.flag,
-                            provider.isDZDtoCurrency
+                            inputController: provider.amountController,
+                            currencyCode: 'DZD',
+                            flag: provider.currency.flag,
+                            focusNode: provider.isDZDtoCurrency
                                 ? provider.amountFocusNode
                                 : provider.resultFocusNode,
-                            context),
+                            context: context),
                       ),
                       // Bottom Card - Algerian currency field
                       AnimatedPositioned(
@@ -103,16 +103,16 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         right: 16,
                         height: cardHeight,
                         child: buildCurrencyInput(
-                            provider.isDZDtoCurrency
+                            controller: provider.isDZDtoCurrency
                                 ? provider.resultController
                                 : provider.amountController,
-                            provider.amountController,
-                            provider.currency.currencyCode,
-                            provider.currency.flag,
-                            provider.isDZDtoCurrency
+                            inputController: provider.amountController,
+                            currencyCode: provider.currency.currencyCode,
+                            flag: provider.currency.flag,
+                            focusNode: provider.isDZDtoCurrency
                                 ? provider.resultFocusNode
                                 : provider.amountFocusNode,
-                            context),
+                            context: context),
                       ),
                       // FAB positioned in the middle of the cards
                       Positioned(
@@ -128,12 +128,16 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                   ),
                 ),
                 const SizedBox(height: 10),
-                NumberToWordsDisplay(
-                  currency: provider.currency,
-                  isDZDtoCurrency: !provider.isDZDtoCurrency,
-                  numberController: provider.isDZDtoCurrency
-                      ? provider.amountController
-                      : provider.resultController,
+                SizedBox(
+                  height: 200,
+                  child: NumberToWordsDisplay(
+                    currency: provider.currency,
+                    isDZDtoCurrency: !provider.isDZDtoCurrency,
+                    numberController: provider.isDZDtoCurrency
+                        ? provider.amountController
+                        : provider.resultController,
+                        provider: provider,
+                  ),
                 )
               ],
             ),

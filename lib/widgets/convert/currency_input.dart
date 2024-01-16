@@ -3,13 +3,19 @@ import 'package:dinar_watch/widgets/flag_container.dart';
 
 
 Widget buildCurrencyInput(
-    TextEditingController controller,
-    TextEditingController inputControl,
-    String currencyCode,
-    String? flag,
-    FocusNode focusNode,
-    BuildContext context) {
-  bool isInputEnabled = controller == inputControl;
+  {
+  required TextEditingController controller,
+  required TextEditingController inputController,
+  required String currencyCode,
+  String? flag,
+  required FocusNode focusNode,
+  required BuildContext context,
+}) 
+    
+    
+    
+    {
+  bool isInputEnabled = controller == inputController;
 
   return Card(
     elevation: 1,
