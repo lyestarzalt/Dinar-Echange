@@ -3,6 +3,8 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_watch/utils/enums.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   CurrenciesState _state = CurrenciesState.loading();
@@ -19,7 +21,7 @@ class AppInitializationProvider with ChangeNotifier {
           await MainRepository().getDailyCurrencies();
       _state = CurrenciesState.success(fetchedCurrencies);
     } catch (e) {
-      print(e);
+        AppLogger.logFatal('App init', error: e);
       _state = CurrenciesState.error(e.toString());
     } finally {
       FlutterNativeSplash.remove();
@@ -28,7 +30,7 @@ class AppInitializationProvider with ChangeNotifier {
   }
 }
 
-enum LoadState { loading, success, error }
+
 
 class CurrenciesState {
   LoadState state;

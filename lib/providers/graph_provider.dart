@@ -5,8 +5,7 @@ import 'package:dinar_watch/data/models/currency_history.dart';
 import 'dart:math' as math;
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/utils/logging.dart';
-
-enum GraphState { loading, loaded, error }
+import 'package:dinar_watch/utils/enums.dart';
 
 class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
@@ -19,12 +18,9 @@ class GraphProvider with ChangeNotifier {
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
-
-  GraphState _state = GraphState.loading;
-  String _errorMessage = '';
+  GraphState _state = GraphState.loading();
 
   GraphState get state => _state;
-  String get errorMessage => _errorMessage;
 
   GraphProvider(List<Currency> allCurrencies) {
     fetchCurrencies(allCurrencies);
@@ -32,7 +28,7 @@ class GraphProvider with ChangeNotifier {
 
   Future<void> fetchCurrencies(List<Currency> allCurrencies) async {
     try {
-      _state = GraphState.loading;
+      _state = GraphState.loading();
       notifyListeners();
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
@@ -41,13 +37,11 @@ class GraphProvider with ChangeNotifier {
         orElse: () => coreCurrencies.first,
       );
       await loadCurrencyHistory();
-      _state = GraphState.loaded;
+      _state = GraphState.success(filteredHistoryEntries);
       notifyListeners();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
-      _errorMessage = e.toString();
-      _state = GraphState.error;
-    } finally {
+      _state = GraphState.error(e.toString());
       notifyListeners();
     }
   }
@@ -100,4 +94,20 @@ class GraphProvider with ChangeNotifier {
     maxX = filteredHistoryEntries.length.toDouble() - 1;
     notifyListeners();
   }
+}
+
+class GraphState {
+  LoadState state;
+  List<CurrencyHistoryEntry>? historyEntries;
+  String? errorMessage;
+
+  GraphState._({required this.state, this.historyEntries, this.errorMessage});
+
+  factory GraphState.loading() => GraphState._(state: LoadState.loading);
+
+  factory GraphState.success(List<CurrencyHistoryEntry> historyEntries) =>
+      GraphState._(state: LoadState.success, historyEntries: historyEntries);
+
+  factory GraphState.error(String message) =>
+      GraphState._(state: LoadState.error, errorMessage: message);
 }

@@ -10,12 +10,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_watch/utils/enums.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
 
   const HistoryPage({super.key, required this.currencies});
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GraphProvider>(
@@ -30,19 +30,22 @@ class HistoryPage extends StatelessWidget {
         ),
         body: Consumer<GraphProvider>(
           builder: (context, provider, _) {
-            switch (provider.state) {
-              case GraphState.loading:
+            switch (provider.state.state) {
+              case LoadState.loading:
                 return const Center(child: LinearProgressIndicator());
-              case GraphState.loaded:
+              case LoadState.success:
                 return _buildCurrencyContent(context, provider);
-              case GraphState.error:
+              case LoadState.error:
+                // Use the error message from the provider's state
                 return ErrorApp(
-                  errorMessage: 'Error',
+                  errorMessage:
+                      provider.state.errorMessage ?? 'Error loading data',
                   onRetry: () => provider.fetchCurrencies(currencies),
                 );
               default:
                 return ErrorApp(
-                  errorMessage: '',
+                  errorMessage:
+                      provider.state.errorMessage ?? 'Error loading data',
                   onRetry: () => provider.fetchCurrencies(currencies),
                 );
             }
