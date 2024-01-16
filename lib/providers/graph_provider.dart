@@ -3,7 +3,6 @@ import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 import 'dart:math' as math;
-import 'package:intl/intl.dart';
 import 'package:dinar_watch/utils/logging.dart';
 import 'package:dinar_watch/utils/enums.dart';
 
@@ -14,10 +13,13 @@ class GraphProvider with ChangeNotifier {
   List<CurrencyHistoryEntry> filteredHistoryEntries = [];
   final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
   final ValueNotifier<String> selectedValue = ValueNotifier<String>('');
-  final ValueNotifier<String> selectedDate = ValueNotifier<String>('');
+  final ValueNotifier<DateTime> selectedDate =
+      ValueNotifier<DateTime>(DateTime.now());
+
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
+  final String dateformat = 'd MMMM y';
   GraphState _state = GraphState.loading();
 
   GraphState get state => _state;
@@ -51,7 +53,7 @@ class GraphProvider with ChangeNotifier {
       var entry = filteredHistoryEntries[index];
       touchedIndex.value = index;
       selectedValue.value = '${entry.buy.toStringAsFixed(2)} DZD';
-      selectedDate.value = DateFormat('dd/MM/yyyy').format(entry.date);
+      selectedDate.value = entry.date;
     }
   }
 
@@ -85,9 +87,8 @@ class GraphProvider with ChangeNotifier {
     selectedValue.value = filteredHistoryEntries.isNotEmpty
         ? filteredHistoryEntries.last.buy.toStringAsFixed(2)
         : '';
-    selectedDate.value = filteredHistoryEntries.isNotEmpty
-        ? DateFormat('dd/MM/yyyy').format(filteredHistoryEntries.last.date)
-        : '';
+    selectedDate.value = filteredHistoryEntries.last.date;
+
     maxYValue = maxDataValue + bufferValue;
     minYValue = minDataValue - bufferValue;
     midYValue = (maxYValue + minYValue) / 2;

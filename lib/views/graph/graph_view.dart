@@ -11,6 +11,8 @@ import 'package:dinar_watch/data/models/currency_history.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/utils/enums.dart';
+import 'package:dinar_watch/providers/language_provider.dart';
+import 'package:intl/intl.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -96,14 +98,13 @@ class HistoryPage extends StatelessWidget {
         child: Column(
           children: [
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.topRight,
               child: ValueListenableBuilder<String>(
                 valueListenable: provider.selectedValue,
                 builder: (context, value, child) {
                   return Text(
                     '1 ${provider.selectedCurrency!.currencyCode} = $value',
                     style: TextStyle(
-                      fontFamily: 'Courier',
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -114,17 +115,24 @@ class HistoryPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Align(
-              alignment: Alignment.centerLeft,
-              child: ValueListenableBuilder<String>(
-                valueListenable: provider.selectedDate,
-                builder: (context, value, child) {
-                  return Text(
-                    provider.selectedDate.value,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        height: 0.0),
+              alignment: Alignment.topRight,
+              child: Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return ValueListenableBuilder<DateTime>(
+                    valueListenable: provider.selectedDate,
+                    builder: (context, value, child) {
+                      String formattedDate = DateFormat('d MMMM y',
+                              languageProvider.currentLocale.toString())
+                          .format(value);
+                      return Text(
+                        formattedDate,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            height: 0.0),
+                      );
+                    },
                   );
                 },
               ),

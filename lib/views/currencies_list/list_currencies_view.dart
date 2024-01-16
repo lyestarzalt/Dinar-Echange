@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
+import 'package:dinar_watch/providers/language_provider.dart';
+import 'package:intl/intl.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
@@ -19,9 +21,19 @@ class CurrencyListScreen extends StatelessWidget {
       create: (_) => ListCurrencyProvider(currencies),
       child: Consumer<ListCurrencyProvider>(
         builder: (context, selectionProvider, _) {
+          LanguageProvider languageProvider =
+              Provider.of<LanguageProvider>(context);
+          String title = AppLocalizations.of(context)!.currency_list;
+          String formattedDate = DateFormat(
+                  'EEEE, d MMM y', languageProvider.currentLocale.toString())
+              .format(selectionProvider.filteredCurrencies[0].date);
+
           return Scaffold(
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.currency_list),
+              title: Text(
+                title,
+              ),
+              actions: [Text(formattedDate)],
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
@@ -42,8 +54,7 @@ class CurrencyListScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                              create: (_) =>
-                                  ConvertProvider(currency),
+                              create: (_) => ConvertProvider(currency),
                               child: const CurrencyConverterPage(),
                             ),
                           ),
