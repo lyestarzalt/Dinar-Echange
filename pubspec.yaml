@@ -9,27 +9,26 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^4.13.0
   intl: ^0.18.1
   shared_preferences: ^2.2.2
   http: ^1.1.0
-  logger: ^2.0.2+1
   fl_chart: ^0.66.0
+  logger: ^2.0.2+1
   google_fonts: ^6.1.0
-  firebase_app_check: ^0.2.1+4
   firebase_auth: ^4.14.0
-  decimal: ^2.3.3
   cached_network_image: ^3.3.0
   animations: ^2.0.10
+  provider: ^6.1.1
   firebase_core: ^2.24.2
   flutter_native_splash: ^2.3.8
-  flutter_localizations:
-    sdk: flutter
-  provider: ^6.1.1
   firebase_remote_config: ^4.3.8
   firebase_analytics: ^10.8.0
   firebase_crashlytics: ^3.4.9
-
+  firebase_app_check: ^0.2.1+4
+  cloud_firestore: ^4.13.0
+  flutter_localizations:
+    sdk: flutter
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter

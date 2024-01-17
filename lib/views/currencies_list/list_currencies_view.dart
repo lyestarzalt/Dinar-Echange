@@ -49,7 +49,6 @@ class CurrencyListScreen extends StatelessWidget {
                     return InkWell(
                       key: ValueKey(currency.currencyCode),
                       onTap: () {
-                        // Navigate to CurrencyConverterPage with the selected currency
                         Navigator.push(
                           context,
                           MaterialPageRoute(

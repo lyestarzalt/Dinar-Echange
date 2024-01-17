@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart'; 
-import 'package:decimal/decimal.dart';
 
 class ConversionRateInfo extends StatelessWidget {
   final Currency currency;
@@ -40,13 +39,14 @@ class ConversionRateInfo extends StatelessWidget {
     );
   }
 
-  String _buildConversionRateText() {
+String _buildConversionRateText() {
     if (isDZDtoCurrency) {
-      Decimal conversionRate = Decimal.parse((100 / currency.buy).toString());
+      double conversionRate = 100 / currency.buy;
       return '100 DZD = ${conversionRate.toStringAsFixed(2)} ${currency.currencyCode.toUpperCase()}';
     } else {
-      Decimal conversionRate = Decimal.parse((currency.sell * 1).toString());
+      double conversionRate = currency.sell * 1;
       return '1 ${currency.currencyCode.toUpperCase()} = ${conversionRate.toStringAsFixed(2)} DZD';
     }
   }
+
 }
