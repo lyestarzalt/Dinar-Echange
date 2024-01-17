@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/utils/spelling_number.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
+import 'package:dinar_watch/utils/extenstions.dart';
 import 'package:provider/provider.dart';
 
 class NumberToWordsDisplay extends StatefulWidget {
@@ -34,57 +35,64 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
   Widget build(BuildContext context) {
     return Consumer<ConvertProvider>(
       builder: (context, provider, child) {
-        return Container(
-          constraints: BoxConstraints(
-            minHeight: 50,
-            maxWidth: MediaQuery.of(context).size.width - 32,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: const BorderRadius.all(Radius.circular(6)),
-          ),
-          child: Column(
-            children: [
-              Flexible(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    provider
-                        .toggleUseCentimes(); // Assuming this toggles between two states only
-                  },
-                  children: [
-                    _buildTextPage(
-                      context,
-                      provider,
-                      useCentimes: false,
+        return Card(
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: 50,
+              maxWidth: MediaQuery.of(context).size.width - 32,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        provider
+                            .toggleUseCentimes(); // Assuming this toggles between two states only
+                      },
+                      children: [
+                        _buildTextPage(
+                          context,
+                          provider,
+                          useCentimes: false,
+                        ),
+                        _buildTextPage(
+                          context,
+                          provider,
+                          useCentimes: true,
+                        ),
+                      ],
                     ),
-                    _buildTextPage(
-                      context,
-                      provider,
-                      useCentimes: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(2, (index) {
+                        // Assuming only two states for useCentimes
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          height: 10,
+                          width: 10,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: provider.useCentimes == (index == 1)
+                                ? Colors.green
+                                : Colors.grey,
+                          ),
+                        );
+                      }),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(2, (index) {
-                  // Assuming only two states for useCentimes
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: 10,
-                    width: 10,
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: provider.useCentimes == (index == 1)
-                          ? Colors.green
-                          : Colors.grey,
-                    ),
-                  );
-                }),
-              ),
-            ],
+            ),
           ),
         );
       },
@@ -107,7 +115,7 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
       numberInWords,
       style: TextStyle(
         fontSize: 20,
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
@@ -134,9 +142,9 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
     if (languageCode == 'ar') {
       unit =
           widget.isDZDtoCurrency ? (useCentimes ? 'سنتيم' : 'دينار') : 'دينار';
-      return "$unit ${SpellingNumber(lang: languageCode).convert(number)}";
+      return "$unit ${SpellingNumber(lang: languageCode).convert(number).capitalizeEveryWord()}";
     }
 
-    return "${SpellingNumber(lang: languageCode).convert(number)} $unit";
+    return "${SpellingNumber(lang: languageCode).convert(number).capitalizeEveryWord()} $unit";
   }
 }

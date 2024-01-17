@@ -62,10 +62,10 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                 const SizedBox(
                   height: 10,
                 ),
-                ConversionRateInfo(
+/*                 ConversionRateInfo(
                   isDZDtoCurrency: provider.isDZDtoCurrency,
                   currency: provider.currency,
-                ),
+                ), */
                 SizedBox(
                   height: screenHeight * 0.4,
                   child: Stack(
@@ -128,15 +128,18 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                   ),
                 ),
                 const SizedBox(height: 10),
-                SizedBox(
-                  height: 200,
-                  child: NumberToWordsDisplay(
-                    currency: provider.currency,
-                    isDZDtoCurrency: !provider.isDZDtoCurrency,
-                    numberController: provider.isDZDtoCurrency
-                        ? provider.amountController
-                        : provider.resultController,
-                        provider: provider,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 200,
+                    child: NumberToWordsDisplay(
+                      currency: provider.currency,
+                      isDZDtoCurrency: !provider.isDZDtoCurrency,
+                      numberController: provider.isDZDtoCurrency
+                          ? provider.amountController
+                          : provider.resultController,
+                      provider: provider,
+                    ),
                   ),
                 )
               ],

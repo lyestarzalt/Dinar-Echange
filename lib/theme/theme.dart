@@ -32,6 +32,7 @@ class MaterialTheme {
             ),
           ),
         ),
+        appBarTheme: const AppBarTheme(toolbarHeight: 80),
         navigationBarTheme: NavigationBarThemeData(
           overlayColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) {
@@ -80,7 +81,6 @@ class MaterialTheme {
     return GoogleFonts.robotoMonoTextTheme(base);
   }
 
- 
   MaterialTheme();
 
   static MaterialScheme lightScheme() {

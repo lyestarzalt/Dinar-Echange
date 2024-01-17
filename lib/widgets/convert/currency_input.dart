@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 
-
-Widget buildCurrencyInput(
-  {
+Widget buildCurrencyInput({
   required TextEditingController controller,
   required TextEditingController inputController,
   required String currencyCode,
   String? flag,
   required FocusNode focusNode,
   required BuildContext context,
-}) 
-    
-    
-    
-    {
+}) {
   bool isInputEnabled = controller == inputController;
 
   return Card(
@@ -28,10 +22,10 @@ Widget buildCurrencyInput(
         width: focusNode.hasFocus ? 3.0 : 0.5,
       ),
     ),
-    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+    margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 0),
     color: Theme.of(context).colorScheme.background,
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -49,14 +43,12 @@ Widget buildCurrencyInput(
             child: TextField(
               focusNode: focusNode,
               controller: controller,
-              decoration:
-                InputDecoration(
+              decoration: InputDecoration(
                 labelText: currencyCode.toUpperCase(),
                 labelStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
-                  fontSize: 16, // Set your desired font size for input text
+                  fontSize: 16,
                 ),
-                // Define the style for the label text
                 hintStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 16,
