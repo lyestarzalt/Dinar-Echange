@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/widgets/convert/conversion_rate_info.dart';
 import 'package:dinar_watch/widgets/convert/currency_input.dart';
 import 'package:dinar_watch/widgets/convert/number_words.dart';
 
@@ -129,12 +128,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                   ),
                 ),
                 const SizedBox(height: 5),
-                Visibility(
-                  visible: !provider.isDZDtoCurrency,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 200,
+                Flexible(
+                  child: Visibility(
+                    visible: !provider.isDZDtoCurrency,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: NumberToWordsDisplay(
                         currency: provider.currency,
                         isDZDtoCurrency: !provider.isDZDtoCurrency,

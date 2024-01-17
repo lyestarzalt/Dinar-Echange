@@ -28,7 +28,7 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        constraints: const BoxConstraints.expand(),
+        //constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
@@ -43,7 +43,11 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
                     builder: (context) {
                       return AlertDialog(
                         title: Text(
-                            AppLocalizations.of(context)!.why_centime_title),
+                          AppLocalizations.of(context)!.why_centime_title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
                         content: Text(
                             AppLocalizations.of(context)!.centime_explanation),
                       );
@@ -56,8 +60,8 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (widget.isDZDtoCurrency) ...[
                     Text(
@@ -104,7 +108,7 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
     BuildContext context,
   ) {
     if (numberText.isEmpty || !widget.isDZDtoCurrency) {
-      return AppLocalizations.of(context)!.dzd_symbol;
+      return '';
     }
 
     double number = double.tryParse(numberText) ?? 0;
