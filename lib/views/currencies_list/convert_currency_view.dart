@@ -49,6 +49,24 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
+        actions: [
+          IconButton(
+              tooltip:
+                  AppLocalizations.of(context)!.currency_buy_sell_explanation,
+              onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(AppLocalizations.of(context)!
+                              .currency_buy_sell_explanation),
+                        ),
+                      );
+                    },
+                  ),
+              icon: const Icon(Icons.info_outline))
+        ],
       ),
       body: Directionality(
         textDirection: ui.TextDirection.ltr,
