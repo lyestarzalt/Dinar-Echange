@@ -14,6 +14,8 @@ import 'package:dinar_watch/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:dinar_watch/utils/enums.dart';
+import 'package:flutter/services.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -21,18 +23,21 @@ void main() async {
   await PreferencesService().init();
   await RemoteConfigService().init();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => NavigationProvider()),
-        ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
-      ],
-      child: const DinarWatch(),
-    ),
-  );
+  // The app is only usable in portrait mode
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]).then((_) => runApp(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
+            ChangeNotifierProvider(create: (_) => LanguageProvider()),
+            ChangeNotifierProvider(create: (_) => NavigationProvider()),
+            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+          ],
+          child: const DinarWatch(),
+        ),
+      ));
 }
 
 class DinarWatch extends StatefulWidget {

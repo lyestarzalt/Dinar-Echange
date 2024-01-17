@@ -49,7 +49,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.convert),
+        title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
       ),
       body: Directionality(
         textDirection: ui.TextDirection.ltr,
@@ -119,6 +119,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                         top: fabTopPosition,
                         right: 8,
                         child: FloatingActionButton(
+                          tooltip: AppLocalizations.of(context)!.switch_tooltip,
                           onPressed: provider.toggleConversionDirection,
                           elevation: 2,
                           child: const Icon(Icons.swap_vert),
@@ -127,18 +128,21 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 200,
-                    child: NumberToWordsDisplay(
-                      currency: provider.currency,
-                      isDZDtoCurrency: !provider.isDZDtoCurrency,
-                      numberController: provider.isDZDtoCurrency
-                          ? provider.amountController
-                          : provider.resultController,
-                      provider: provider,
+                const SizedBox(height: 5),
+                Visibility(
+                  visible: !provider.isDZDtoCurrency,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 200,
+                      child: NumberToWordsDisplay(
+                        currency: provider.currency,
+                        isDZDtoCurrency: !provider.isDZDtoCurrency,
+                        numberController: provider.isDZDtoCurrency
+                            ? provider.amountController
+                            : provider.resultController,
+                        provider: provider,
+                      ),
                     ),
                   ),
                 )

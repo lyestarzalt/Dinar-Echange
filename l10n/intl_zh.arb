@@ -1,127 +1,155 @@
 {
   "@@locale": "zh",
-  "select_currency": "选择货币",
-  "@select_currency": {
-    "description": "Option for users to choose their preferred currency."
+  "currencies_app_bar_title": "货币",
+  "@currencies_app_bar_title": {
+    "description": "A list of all available currencies in the app."
   },
-  "retry": "重试",
-  "@retry": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
-  "currency_trends": "货币趋势",
-  "@currency_trends": {
-    "description": "Section displaying the latest trends and movements in different currencies."
-  },
-  "close": "关闭",
-  "@close": {
-    "description": "Button or option to close the app or a specific section within the app."
-  },
-  "auto": "自动",
-  "@auto": {
-    "description": "Option for automatic settings or operations within the app."
-  },
-  "dark": "暗色主题",
-  "@dark": {
-    "description": "Option to enable a dark color scheme for the app's interface."
-  },
-  "light": "亮色主题",
-  "@light": {
-    "description": "Option to enable a light color scheme for the app's interface."
-  },
-  "settings": "设置",
-  "@settings": {
+  "settings_app_bar_title": "设置",
+  "@settings_app_bar_title": {
     "description": "Section to customize app preferences and configurations."
   },
-  "currency_list": "货币列表",
-  "@currency_list": {
-    "description": "A comprehensive list of all available currencies in the app."
-  },
-  "error_fetching_currencies": "获取货币时出错",
-  "@error_fetching_currencies": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
-  "convert": "转换",
-  "@convert": {
+  "convert_app_bar_title": "转换",
+  "@convert_app_bar_title": {
     "description": "Option to convert values between dzd and currencies."
   },
-  "currencies": "货币",
-  "@currencies": {
-    "description": "Currencies"
+  "select_currency_app_bar_title": "选择货币",
+  "@select_currency_app_bar_title": {
+    "description": "Option for users to choose their preferred currency."
   },
-  "history": "历史记录",
-  "@history": {
-    "description": "Section showing historical data or past records of currency values."
+  "trends_app_bar_title": "趋势",
+  "@trends_app_bar_title": {
+    "description": "Page displaying the latest trends and movements in different currencies."
   },
-  "one_month": "1个",
-  "@one_month": {
-    "description": "Short time filter for viewing currency data over the past month."
+  "close_button": "关闭",
+  "@close_button": {
+    "description": "Button or option to close the app or a specific section within the app."
   },
-  "six_months": "6个",
-  "@six_months": {
-    "description": "Short time filter for viewing currency data over the past six months."
+  "auto_button": "自动",
+  "@auto_button": {
+    "description": "Option for automatic settings or operations within the app."
   },
-  "one_year": "1年",
-  "@one_year": {
-    "description": "Short time filter for viewing currency data over the past year."
+  "dark_button": "黑暗",
+  "@dark_button": {
+    "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "two_years": "2年",
-  "@two_years": {
-    "description": "Short time filter for viewing currency data over the past two years."
+  "light_button": "黑暗",
+  "@light_button": {
+    "description": "Option to enable a light color scheme for the app's interface."
   },
-  "general": "通用",
-  "@general": {
-    "description": "Overall settings or information for the app."
+  "languages_button": "语言",
+  "@languages_button": {
+    "description": "List of available languages"
   },
-  "no_currencies": "没有货币",
-  "@no_currencies": {
-    "description": "Message for no currency data."
+  "chose_language_title": "选择语言",
+  "@chose_language_title": {
+    "description": "Option to select a language"
   },
-  "theme": "主题",
-  "@theme": {
+  "theme_title": "主题",
+  "@theme_title": {
     "description": "Option for visual theme customization."
   },
-  "rate_us": "评价我们",
-  "@rate_us": {
+  "general_title": "通用",
+  "@general_title": {
+    "description": "Overall settings or information for the app."
+  },
+  "rate_us_button": "给我们评分",
+  "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "errormessage_title": "糟糕！出问题了。",
-  "@errormessage_title": {
+  "about_body": "Dinar Watch 是您监测阿尔及利亚第纳尔的必备应用程序。它提供实时更新和用户友好功能，努力提供尽可能最准确的数据，尽管可能会出现地区差异。如需了解更多详情，请联系我们。",
+  "@about_body": {
+    "description": "Detailed Description"
+  },
+  "about_app_button": "关于应用程序",
+  "@about_app_button": {
+    "description": "About the App"
+  },
+  "one_month_button": "1个",
+  "@one_month_button": {
+    "description": "Short time filter for viewing currency data over the past month."
+  },
+  "six_months_button": "6个",
+  "@six_months_button": {
+    "description": "Short time filter for viewing currency data over the past six months."
+  },
+  "one_year_button": "1年",
+  "@one_year_button": {
+    "description": "Short time filter for viewing currency data over the past year."
+  },
+  "two_years_button": "2年",
+  "@two_years_button": {
+    "description": "Short time filter for viewing currency data over the past two years."
+  },
+  "add_selected_currencies_tooltip": "添加所选货币",
+  "@add_selected_currencies_tooltip": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "error_message_title": "糟糕！出问题了。",
+  "@error_message_title": {
     "description": "Title for an error message dialog."
+  },
+  "error_fetching_currencies_message": "获取货币时出错",
+  "@error_fetching_currencies_message": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "no_currencies_message": "没有货币",
+  "@no_currencies_message": {
+    "description": "Message for no currency data."
+  },
+  "retry_button": "重试",
+  "@retry_button": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
   },
   "errormessage_message": "无法加载数据。请检查您的连接然后重试",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
-  "about_app": "关于应用程序",
-  "@about_app": {
-    "description": "About the App"
-  },
-  "about_body": "第纳尔观察是您跟踪和分析阿尔及利亚第纳尔的实时更新和用户友好功能的必备工具。请注意，由于外汇市场的性质，提供的汇率可能不是官方的，仅供参考。如需更多信息，您可以联系我们。",
-  "@about_body": {
-    "description": "Detailed Description"
-  },
-  "chose_language": "选择语言",
-  "@chose_language": {
-    "description": "Option to select a language"
-  },
-  "languages": "语言",
-  "@languages": {
-    "description": "List of available languages"
-  },
-  "add_selected_currencies": "添加所选货币",
-  "@add_selected_currencies": {
-    "description": "Option to add selected currencies to the list|"
-  },
-  "search": "搜索",
-  "@search": {
+  "search_hint": "搜索",
+  "@search_hint": {
     "description": "Option to search"
   },
-  "add_currencies": "添加货币",
-  "@add_currencies": {
+  "add_currencies_tooltip": "添加货币",
+  "@add_currencies_tooltip": {
     "description": "Option to add currencies"
   },
-  "noNumberEntered": "没有输入号码",
-  "@noNumberEntered": {
-    "description": "No number entred by the user"
+  "switch_tooltip": "货币兑换",
+  "@switch_tooltip": {
+    "description": "Option to switch from buy to sell"
+  },
+  "use_centime_tooltip": "使用分币计数",
+  "@use_centime_tooltip": {
+    "description": "Option to switch to centime as counting method"
+  },
+  "reorder_tooltip": "重排项目",
+  "@reorder_tooltip": {
+    "description": "Option to reorder the items in the list"
+  },
+  "pull_refresh_tooltip": "获取最新货币信息",
+  "@pull_refresh_tooltip": {
+    "description": "Option to fetch latest currencies information"
+  },
+  "centime_symbol": "分",
+  "@centime_symbol": {
+    "description": "Algerian centime"
+  },
+  "dzd_symbol": "DZD",
+  "@dzd_symbol": {
+    "description": "Algerian dinar"
+  },
+  "centime_explanation": "在阿尔及利亚，'分'（Centime）通常用于非正式场合表示较小的货币金额。例如，当有人说某物价值1百万时，实际上是1万阿尔及利亚第纳尔（DZD）的意思。",
+  "@centime_explanation": {
+    "description": "Explanation of the term 'centime' in Algeria"
+  },
+  "why_centime_title": "分’的使用",
+  "@why_centime_title": {
+    "description": "Title for centime use"
+  },
+  "currency_buy_sell_explanation": "买入率是您购买货币的价格，而卖出率是您可以卖出的价格。例如，如果您想买1欧元，它的成本是235.00您的货币，如果您想卖1欧元，您将收到237.00。",
+  "@currency_buy_sell_explanation": {
+    "description": "Detailed explanation of the difference between buy and sell\t"
+  },
+  "currency_buy_sell_tooltip": "解释货币的买入和卖出汇率",
+  "@currency_buy_sell_tooltip": {
+    "description": "Brief tooltip for currency buy and sell values"
   }
 }

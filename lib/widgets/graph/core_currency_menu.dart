@@ -27,11 +27,15 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(AppLocalizations.of(context)!.select_currency),
+        title:
+            Text(AppLocalizations.of(context)!.select_currency_app_bar_title),
       ),
       body: ListView.separated(
         itemCount: widget.coreCurrencies.length,
-        separatorBuilder: (context, index) => const Divider(),
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.only(right: 16.0, left: 16),
+          child: Divider(),
+        ),
         itemBuilder: (BuildContext context, int index) {
           final currency = widget.coreCurrencies[index];
           return Padding(
@@ -41,7 +45,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
               onTap: () {
                 widget.onCurrencySelected(currency);
 
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
               leading: FlagContainer(
                 imageUrl: currency.flag,

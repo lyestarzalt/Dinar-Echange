@@ -88,15 +88,15 @@ class MainNavigation extends StatelessWidget {
       destinations: [
         NavigationDestination(
           icon: const Icon(Icons.list),
-          label: AppLocalizations.of(context)!.currencies,
+          label: AppLocalizations.of(context)!.currencies_app_bar_title,
         ),
         NavigationDestination(
           icon: const Icon(Icons.history),
-          label: AppLocalizations.of(context)!.history,
+          label: AppLocalizations.of(context)!.trends_app_bar_title,
         ),
         NavigationDestination(
           icon: const Icon(Icons.settings),
-          label: AppLocalizations.of(context)!.settings,
+          label: AppLocalizations.of(context)!.settings_app_bar_title,
         ),
       ],
     );

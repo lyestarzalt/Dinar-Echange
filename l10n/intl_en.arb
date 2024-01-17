@@ -1,127 +1,155 @@
 {
   "@@locale": "en",
-  "select_currency": "Select Currency",
-  "@select_currency": {
-    "description": "Option for users to choose their preferred currency."
+  "currencies_app_bar_title": "Currencies",
+  "@currencies_app_bar_title": {
+    "description": "A list of all available currencies in the app."
   },
-  "retry": "Retry",
-  "@retry": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
-  "currency_trends": "Currency Trends",
-  "@currency_trends": {
-    "description": "Section displaying the latest trends and movements in different currencies."
-  },
-  "close": "Close",
-  "@close": {
-    "description": "Button or option to close the app or a specific section within the app."
-  },
-  "auto": "Auto",
-  "@auto": {
-    "description": "Option for automatic settings or operations within the app."
-  },
-  "dark": "Dark",
-  "@dark": {
-    "description": "Option to enable a dark color scheme for the app's interface."
-  },
-  "light": "Light",
-  "@light": {
-    "description": "Option to enable a light color scheme for the app's interface."
-  },
-  "settings": "Settings",
-  "@settings": {
+  "settings_app_bar_title": "Settings",
+  "@settings_app_bar_title": {
     "description": "Section to customize app preferences and configurations."
   },
-  "currency_list": "Currency List",
-  "@currency_list": {
-    "description": "A comprehensive list of all available currencies in the app."
-  },
-  "error_fetching_currencies": "Error fetching currencies",
-  "@error_fetching_currencies": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
-  "convert": "Convert",
-  "@convert": {
+  "convert_app_bar_title": "Convert",
+  "@convert_app_bar_title": {
     "description": "Option to convert values between dzd and currencies."
   },
-  "currencies": "Currencies",
-  "@currencies": {
-    "description": "Currencies"
+  "select_currency_app_bar_title": "Select Currency",
+  "@select_currency_app_bar_title": {
+    "description": "Option for users to choose their preferred currency."
   },
-  "history": "History",
-  "@history": {
-    "description": "Section showing historical data or past records of currency values."
+  "trends_app_bar_title": "Trends",
+  "@trends_app_bar_title": {
+    "description": "Page displaying the latest trends and movements in different currencies."
   },
-  "one_month": "1M",
-  "@one_month": {
-    "description": "Short time filter for viewing currency data over the past month."
+  "close_button": "Close",
+  "@close_button": {
+    "description": "Button or option to close the app or a specific section within the app."
   },
-  "six_months": "6M",
-  "@six_months": {
-    "description": "Short time filter for viewing currency data over the past six months."
+  "auto_button": "Auto",
+  "@auto_button": {
+    "description": "Option for automatic settings or operations within the app."
   },
-  "one_year": "1Y",
-  "@one_year": {
-    "description": "Short time filter for viewing currency data over the past year."
+  "dark_button": "Dark",
+  "@dark_button": {
+    "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "two_years": "2Y",
-  "@two_years": {
-    "description": "Short time filter for viewing currency data over the past two years."
+  "light_button": "Light",
+  "@light_button": {
+    "description": "Option to enable a light color scheme for the app's interface."
   },
-  "general": "General",
-  "@general": {
-    "description": "Overall settings or information for the app."
+  "languages_button": "Languages",
+  "@languages_button": {
+    "description": "List of available languages"
   },
-  "no_currencies": "No currencies",
-  "@no_currencies": {
-    "description": "Message for no currency data."
+  "chose_language_title": "Choose Language",
+  "@chose_language_title": {
+    "description": "Option to select a language"
   },
-  "theme": "Theme",
-  "@theme": {
+  "theme_title": "Theme",
+  "@theme_title": {
     "description": "Option for visual theme customization."
   },
-  "rate_us": "Rate Us",
-  "@rate_us": {
+  "general_title": "General",
+  "@general_title": {
+    "description": "Overall settings or information for the app."
+  },
+  "rate_us_button": "Give Us Your Rating",
+  "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "errormessage_title": "Oops! Something went wrong.",
-  "@errormessage_title": {
+  "about_body": "Dinar Watch is your essential companion app for monitoring the Algerian Dinar. It offers real-time updates and user-friendly features, striving to provide the most accurate data possible, although regional variations may occur. For further details, please contact us.",
+  "@about_body": {
+    "description": "Detailed Description"
+  },
+  "about_app_button": "About the App",
+  "@about_app_button": {
+    "description": "About the App"
+  },
+  "one_month_button": "1M",
+  "@one_month_button": {
+    "description": "Short time filter for viewing currency data over the past month."
+  },
+  "six_months_button": "6M",
+  "@six_months_button": {
+    "description": "Short time filter for viewing currency data over the past six months."
+  },
+  "one_year_button": "1Y",
+  "@one_year_button": {
+    "description": "Short time filter for viewing currency data over the past year."
+  },
+  "two_years_button": "2Y",
+  "@two_years_button": {
+    "description": "Short time filter for viewing currency data over the past two years."
+  },
+  "add_selected_currencies_tooltip": "Add Selected Currencies",
+  "@add_selected_currencies_tooltip": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "error_message_title": "Oops! Something went wrong.",
+  "@error_message_title": {
     "description": "Title for an error message dialog."
+  },
+  "error_fetching_currencies_message": "Error fetching currencies",
+  "@error_fetching_currencies_message": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "no_currencies_message": "No currencies",
+  "@no_currencies_message": {
+    "description": "Message for no currency data."
+  },
+  "retry_button": "Retry",
+  "@retry_button": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
   },
   "errormessage_message": "Unable to load the data. Please check your connection and try again.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
-  "about_app": "About the App",
-  "@about_app": {
-    "description": "About the App"
-  },
-  "about_body": "Dinar Watch is your essential tool for tracking and analyzing the Algerian Dinar with real-time updates and user-friendly features. For further information, you can reach us at.",
-  "@about_body": {
-    "description": "Detailed Description"
-  },
-  "chose_language": "Choose Language",
-  "@chose_language": {
-    "description": "Option to select a language"
-  },
-  "languages": "Languages",
-  "@languages": {
-    "description": "List of available languages"
-  },
-  "add_selected_currencies": "Add Selected Currencies",
-  "@add_selected_currencies": {
-    "description": "Option to add selected currencies to the list|"
-  },
-  "search": "Search",
-  "@search": {
+  "search_hint": "Search",
+  "@search_hint": {
     "description": "Option to search"
   },
-  "add_currencies": "Add Currencies",
-  "@add_currencies": {
+  "add_currencies_tooltip": "Add Currencies",
+  "@add_currencies_tooltip": {
     "description": "Option to add currencies"
   },
-  "noNumberEntered": "No number entered",
-  "@noNumberEntered": {
-    "description": "No number entred by the user"
+  "switch_tooltip": "Swap currencies",
+  "@switch_tooltip": {
+    "description": "Option to switch from buy to sell"
+  },
+  "use_centime_tooltip": "Use centimes",
+  "@use_centime_tooltip": {
+    "description": "Option to switch to centime as counting method"
+  },
+  "reorder_tooltip": "Reorder items",
+  "@reorder_tooltip": {
+    "description": "Option to reorder the items in the list"
+  },
+  "pull_refresh_tooltip": "Fetch latest currency info",
+  "@pull_refresh_tooltip": {
+    "description": "Option to fetch latest currencies information"
+  },
+  "centime_symbol": "centimes",
+  "@centime_symbol": {
+    "description": "Algerian centime"
+  },
+  "dzd_symbol": "DZD",
+  "@dzd_symbol": {
+    "description": "Algerian dinar"
+  },
+  "centime_explanation": "In Algerian society, 'centime' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it's 10,000 DZD",
+  "@centime_explanation": {
+    "description": "Explanation of the term 'centime' in Algeria"
+  },
+  "why_centime_title": "he Usage of 'Centime",
+  "@why_centime_title": {
+    "description": "Title for centime use"
+  },
+  "currency_buy_sell_explanation": "The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you'll receive 237.00",
+  "@currency_buy_sell_explanation": {
+    "description": "Detailed explanation of the difference between buy and sell\t"
+  },
+  "currency_buy_sell_tooltip": "Explains the buying and selling rates of currencies.",
+  "@currency_buy_sell_tooltip": {
+    "description": "Brief tooltip for currency buy and sell values"
   }
 }

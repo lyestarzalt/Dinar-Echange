@@ -24,7 +24,7 @@ class HistoryPage extends StatelessWidget {
       create: (_) => GraphProvider(currencies),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.currency_trends),
+          title: Text(AppLocalizations.of(context)!.trends_app_bar_title),
         ),
         floatingActionButton: Consumer<GraphProvider>(
           builder: (context, provider, _) =>
@@ -98,43 +98,95 @@ class HistoryPage extends StatelessWidget {
         child: Column(
           children: [
             Align(
-              alignment: Alignment.topRight,
-              child: ValueListenableBuilder<String>(
-                valueListenable: provider.selectedValue,
-                builder: (context, value, child) {
-                  return Text(
-                    '1 ${provider.selectedCurrency!.currencyCode} = $value',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.topRight,
-              child: Consumer<LanguageProvider>(
-                builder: (context, languageProvider, child) {
-                  return ValueListenableBuilder<DateTime>(
-                    valueListenable: provider.selectedDate,
-                    builder: (context, value, child) {
-                      String formattedDate = DateFormat('d MMMM y',
-                              languageProvider.currentLocale.toString())
-                          .format(value);
-                      return Text(
-                        formattedDate,
-                        style: TextStyle(
-                            fontSize: 20,
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                child: Column(
+                  children: [
+                    ValueListenableBuilder<String>(
+                      valueListenable: provider.selectedValue,
+                      builder: (context, value, child) {
+                        return Text(
+                          '1 ${provider.selectedCurrency!.currencyCode} = $value',
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 20,
                             color: Theme.of(context).colorScheme.onSurface,
-                            height: 0.0),
-                      );
-                    },
-                  );
-                },
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Consumer<LanguageProvider>(
+                      builder: (context, languageProvider, child) {
+                        return ValueListenableBuilder<DateTime>(
+                          valueListenable: provider.selectedDate,
+                          builder: (context, value, child) {
+                            // Extract day, month, and year as separate strings
+                            String day = DateFormat('d',
+                                    languageProvider.currentLocale.toString())
+                                .format(value);
+                            String month = DateFormat('MMMM',
+                                    languageProvider.currentLocale.toString())
+                                .format(value);
+                            String year = DateFormat('y',
+                                    languageProvider.currentLocale.toString())
+                                .format(value);
+
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 25, // Fixed width for day
+                                  child: Text(
+                                    day,
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 137, // Fixed width for month
+                                  child: Text(
+                                    month,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    width: 5), // Space between month and year
+                                SizedBox(
+                                  width: 50, // Fixed width for year
+                                  child: Text(
+                                    year,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),

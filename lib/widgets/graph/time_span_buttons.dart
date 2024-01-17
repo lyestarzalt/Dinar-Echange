@@ -11,10 +11,10 @@ class TimeSpanButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildTimeSpanButton(AppLocalizations.of(context)!.one_month, 30),
-        _buildTimeSpanButton(AppLocalizations.of(context)!.six_months, 180),
-        _buildTimeSpanButton(AppLocalizations.of(context)!.one_year, 365),
-        _buildTimeSpanButton(AppLocalizations.of(context)!.two_years, 730),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.one_month_button, 30),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.six_months_button, 180),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.one_year_button, 365),
+        _buildTimeSpanButton(AppLocalizations.of(context)!.two_years_button, 730),
       ],
     );
   }

@@ -20,7 +20,7 @@ class AddCurrencyPage extends StatelessWidget {
               title: TextField(
                 controller: provider.searchController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.search,
+                  hintText: AppLocalizations.of(context)!.search_hint,
                   border: InputBorder.none,
                   prefixIcon: const Icon(Icons.search),
                 ),
@@ -35,7 +35,7 @@ class AddCurrencyPage extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     tooltip:
-                        AppLocalizations.of(context)!.add_selected_currencies,
+                        AppLocalizations.of(context)!.add_selected_currencies_tooltip,
                     child: const Icon(Icons.check),
                   ),
                 ),

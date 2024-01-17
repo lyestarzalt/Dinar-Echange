@@ -7,7 +7,6 @@ import 'package:dinar_watch/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
-
   const SettingsPage({super.key});
 
   @override
@@ -26,15 +25,11 @@ class SettingsPageState extends State<SettingsPage> {
     '中文': 'zh',
   };
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settings),
+        title: Text(AppLocalizations.of(context)!.settings_app_bar_title),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -43,12 +38,12 @@ class SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text(AppLocalizations.of(context)!.theme,
+              Text(AppLocalizations.of(context)!.theme_title,
                   style: const TextStyle(fontSize: 15)),
               const Divider(thickness: 2),
               _buildThemeSelection(context),
               const SizedBox(height: 10),
-              Text(AppLocalizations.of(context)!.general,
+              Text(AppLocalizations.of(context)!.general_title,
                   style: const TextStyle(fontSize: 15)),
               const Divider(thickness: 2),
               _buildRateUsRow(),
@@ -94,15 +89,15 @@ class SettingsPageState extends State<SettingsPage> {
                 segments: <ButtonSegment>[
                   ButtonSegment(
                       value: ThemeOption.auto,
-                      label: Text(AppLocalizations.of(context)!.auto),
+                      label: Text(AppLocalizations.of(context)!.auto_button),
                       icon: const Icon(Icons.brightness_auto)),
                   ButtonSegment(
                       value: ThemeOption.dark,
-                      label: Text(AppLocalizations.of(context)!.dark),
+                      label: Text(AppLocalizations.of(context)!.dark_button),
                       icon: const Icon(Icons.nights_stay)),
                   ButtonSegment(
                       value: ThemeOption.light,
-                      label: Text(AppLocalizations.of(context)!.light),
+                      label: Text(AppLocalizations.of(context)!.light_button),
                       icon: const Icon(Icons.wb_sunny)),
                 ],
                 selected: {currentThemeOption},
@@ -128,7 +123,7 @@ class SettingsPageState extends State<SettingsPage> {
           children: [
             const Icon(Icons.language, size: 24.0),
             const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.languages,
+            Text(AppLocalizations.of(context)!.chose_language_title,
                 style: const TextStyle(fontSize: 15)),
           ],
         ),
@@ -136,7 +131,7 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-void _showLanguageDialog() {
+  void _showLanguageDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -182,7 +177,6 @@ void _showLanguageDialog() {
     );
   }
 
-
   Widget _buildAboutUsRow(BuildContext context) {
     return InkWell(
       onTap: () => _showAboutDialog(context),
@@ -193,7 +187,7 @@ void _showLanguageDialog() {
           children: [
             const Icon(Icons.info_outline, size: 24.0),
             const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.about_app,
+            Text(AppLocalizations.of(context)!.about_app_button,
                 style: const TextStyle(fontSize: 15)),
           ],
         ),
@@ -206,13 +200,13 @@ void _showLanguageDialog() {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.about_app),
+          title: Text(AppLocalizations.of(context)!.about_app_button),
           content: SingleChildScrollView(
             child: Text(AppLocalizations.of(context)!.about_body),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(AppLocalizations.of(context)!.close),
+              child: Text(AppLocalizations.of(context)!.close_button),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -233,7 +227,7 @@ void _showLanguageDialog() {
           children: [
             const Icon(Icons.star, size: 24.0),
             const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.rate_us,
+            Text(AppLocalizations.of(context)!.rate_us_button,
                 style: const TextStyle(fontSize: 15)),
           ],
         ),

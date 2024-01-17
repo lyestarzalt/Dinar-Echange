@@ -14,14 +14,14 @@ class ConvertProvider with ChangeNotifier {
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
   }
-  bool _useCentimes = false; 
+  bool _useCentimes = false;
   bool get useCentimes => _useCentimes;
-
 
   void toggleUseCentimes() {
     _useCentimes = !_useCentimes;
     notifyListeners();
   }
+
   void toggleConversionDirection() {
     isDZDtoCurrency = !isDZDtoCurrency;
     swapTextControllers();
@@ -29,10 +29,11 @@ class ConvertProvider with ChangeNotifier {
   }
 
   static double getRate(bool isDZDtoCurrency, Currency currency) {
+    //TODO: revise this
     if (isDZDtoCurrency) {
-      return currency.buy > 0 ? 1 / currency.buy : 0;
+      return currency.sell > 0 ? 1 / currency.sell : 0;
     } else {
-      return currency.sell;
+      return currency.buy;
     }
   }
 
@@ -48,8 +49,7 @@ class ConvertProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-           notifyListeners();
-
+      notifyListeners();
     }
   }
 

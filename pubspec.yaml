@@ -57,7 +57,7 @@ flutter_native_splash:
 
 arb_generator:
   input_filepath: "dinar_watch.csv"
-  output_directory: "/l10n"
+  output_directory: "lib/l10n"
   filename_prepend: "intl_"
   csv_settings:
     delimiter: ","

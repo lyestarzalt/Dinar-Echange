@@ -8,7 +8,6 @@ import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
-import 'package:intl/intl.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
@@ -23,17 +22,21 @@ class CurrencyListScreen extends StatelessWidget {
         builder: (context, selectionProvider, _) {
           LanguageProvider languageProvider =
               Provider.of<LanguageProvider>(context);
-          String title = AppLocalizations.of(context)!.currency_list;
-          String formattedDate = DateFormat(
-                  'EEEE, d MMM y', languageProvider.currentLocale.toString())
-              .format(selectionProvider.filteredCurrencies[0].date);
+
+          String formattedDate = languageProvider
+              .getDatetime(selectionProvider.filteredCurrencies[0].date);
 
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                title,
+                AppLocalizations.of(context)!.currencies_app_bar_title,
               ),
-              actions: [Text(formattedDate)],
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0, left: 16, top: 5),
+                  child: Text(formattedDate),
+                ),
+              ],
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
@@ -81,7 +84,7 @@ class CurrencyListScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              tooltip: AppLocalizations.of(context)!.add_currencies,
+              tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
               child: const Icon(Icons.add),
             ),
           );

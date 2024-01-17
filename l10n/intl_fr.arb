@@ -1,127 +1,155 @@
 {
   "@@locale": "fr",
-  "select_currency": "Sélectionnez la devise",
-  "@select_currency": {
-    "description": "Option for users to choose their preferred currency."
+  "currencies_app_bar_title": "Devises",
+  "@currencies_app_bar_title": {
+    "description": "A list of all available currencies in the app."
   },
-  "retry": "Réessayer",
-  "@retry": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
-  "currency_trends": "Tendances des devises",
-  "@currency_trends": {
-    "description": "Section displaying the latest trends and movements in different currencies."
-  },
-  "close": "Fermer",
-  "@close": {
-    "description": "Button or option to close the app or a specific section within the app."
-  },
-  "auto": "Auto",
-  "@auto": {
-    "description": "Option for automatic settings or operations within the app."
-  },
-  "dark": "Sombre",
-  "@dark": {
-    "description": "Option to enable a dark color scheme for the app's interface."
-  },
-  "light": "Clair",
-  "@light": {
-    "description": "Option to enable a light color scheme for the app's interface."
-  },
-  "settings": "Paramètres",
-  "@settings": {
+  "settings_app_bar_title": "Paramètres",
+  "@settings_app_bar_title": {
     "description": "Section to customize app preferences and configurations."
   },
-  "currency_list": "Liste des devises",
-  "@currency_list": {
-    "description": "A comprehensive list of all available currencies in the app."
-  },
-  "error_fetching_currencies": "Erreur lors de la récupération des devises",
-  "@error_fetching_currencies": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
-  "convert": "Convertir",
-  "@convert": {
+  "convert_app_bar_title": "Convertir",
+  "@convert_app_bar_title": {
     "description": "Option to convert values between dzd and currencies."
   },
-  "currencies": "Devises",
-  "@currencies": {
-    "description": "Currencies"
+  "select_currency_app_bar_title": "Sélectionnez la devise",
+  "@select_currency_app_bar_title": {
+    "description": "Option for users to choose their preferred currency."
   },
-  "history": "Historique",
-  "@history": {
-    "description": "Section showing historical data or past records of currency values."
+  "trends_app_bar_title": "Tendances",
+  "@trends_app_bar_title": {
+    "description": "Page displaying the latest trends and movements in different currencies."
   },
-  "one_month": "1M",
-  "@one_month": {
-    "description": "Short time filter for viewing currency data over the past month."
+  "close_button": "Fermer",
+  "@close_button": {
+    "description": "Button or option to close the app or a specific section within the app."
   },
-  "six_months": "6M",
-  "@six_months": {
-    "description": "Short time filter for viewing currency data over the past six months."
+  "auto_button": "Auto",
+  "@auto_button": {
+    "description": "Option for automatic settings or operations within the app."
   },
-  "one_year": "1Y",
-  "@one_year": {
-    "description": "Short time filter for viewing currency data over the past year."
+  "dark_button": "Sombre",
+  "@dark_button": {
+    "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "two_years": "2Y",
-  "@two_years": {
-    "description": "Short time filter for viewing currency data over the past two years."
+  "light_button": "Lumière",
+  "@light_button": {
+    "description": "Option to enable a light color scheme for the app's interface."
   },
-  "general": "Général",
-  "@general": {
-    "description": "Overall settings or information for the app."
+  "languages_button": "Langues",
+  "@languages_button": {
+    "description": "List of available languages"
   },
-  "no_currencies": "Pas de devises",
-  "@no_currencies": {
-    "description": "Message for no currency data."
+  "chose_language_title": "Choisissez la langue",
+  "@chose_language_title": {
+    "description": "Option to select a language"
   },
-  "theme": "Thème",
-  "@theme": {
+  "theme_title": "Thème",
+  "@theme_title": {
     "description": "Option for visual theme customization."
   },
-  "rate_us": "Évaluez-nous",
-  "@rate_us": {
+  "general_title": "Général",
+  "@general_title": {
+    "description": "Overall settings or information for the app."
+  },
+  "rate_us_button": "Donnez-nous votre avis",
+  "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "errormessage_title": "Oups! Un problème est survenu.",
-  "@errormessage_title": {
+  "about_body": "Dinar Watch est votre application compagnon indispensable pour surveiller le Dinar algérien. Il propose des mises à jour en temps réel et des fonctionnalités conviviales, s'efforçant de fournir les données les plus précises possibles, bien que des variations régionales puissent survenir. Pour plus de détails, veuillez nous contacter.",
+  "@about_body": {
+    "description": "Detailed Description"
+  },
+  "about_app_button": "À propos de l'application",
+  "@about_app_button": {
+    "description": "About the App"
+  },
+  "one_month_button": "1M",
+  "@one_month_button": {
+    "description": "Short time filter for viewing currency data over the past month."
+  },
+  "six_months_button": "6M",
+  "@six_months_button": {
+    "description": "Short time filter for viewing currency data over the past six months."
+  },
+  "one_year_button": "1Y",
+  "@one_year_button": {
+    "description": "Short time filter for viewing currency data over the past year."
+  },
+  "two_years_button": "2Y",
+  "@two_years_button": {
+    "description": "Short time filter for viewing currency data over the past two years."
+  },
+  "add_selected_currencies_tooltip": "Ajouter les devises sélectionnées",
+  "@add_selected_currencies_tooltip": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "error_message_title": "Oups! Un problème est survenu.",
+  "@error_message_title": {
     "description": "Title for an error message dialog."
+  },
+  "error_fetching_currencies_message": "Erreur lors de la récupération des devises",
+  "@error_fetching_currencies_message": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "no_currencies_message": "Pas de devises",
+  "@no_currencies_message": {
+    "description": "Message for no currency data."
+  },
+  "retry_button": "Réessayer",
+  "@retry_button": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
   },
   "errormessage_message": "Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
-  "about_app": "À propos de l'application",
-  "@about_app": {
-    "description": "About the App"
-  },
-  "about_body": "Dinar Watch est votre outil indispensable pour suivre et analyser le Dinar algérien avec des mises à jour en temps réel et une expérience utilisateur conviviale. Veuillez noter qu'en raison de la nature du marché des devises, les taux fournis peuvent ne pas être officiels et sont uniquement destinés à des fins d'information. Pour plus d'informations, vous pouvez nous contacter.",
-  "@about_body": {
-    "description": "Detailed Description"
-  },
-  "chose_language": "Choisissez la langue",
-  "@chose_language": {
-    "description": "Option to select a language"
-  },
-  "languages": "Langues",
-  "@languages": {
-    "description": "List of available languages"
-  },
-  "add_selected_currencies": "Ajouter les devises sélectionnées",
-  "@add_selected_currencies": {
-    "description": "Option to add selected currencies to the list|"
-  },
-  "search": "Recherche",
-  "@search": {
+  "search_hint": "Recherche",
+  "@search_hint": {
     "description": "Option to search"
   },
-  "add_currencies": "Ajouter des devises",
-  "@add_currencies": {
+  "add_currencies_tooltip": "Ajouter des devises",
+  "@add_currencies_tooltip": {
     "description": "Option to add currencies"
   },
-  "noNumberEntered": "Aucun numéro saisi",
-  "@noNumberEntered": {
-    "description": "No number entred by the user"
+  "switch_tooltip": "Échanger des devises",
+  "@switch_tooltip": {
+    "description": "Option to switch from buy to sell"
+  },
+  "use_centime_tooltip": "Utiliser des centimes",
+  "@use_centime_tooltip": {
+    "description": "Option to switch to centime as counting method"
+  },
+  "reorder_tooltip": "Réorganiser les articles",
+  "@reorder_tooltip": {
+    "description": "Option to reorder the items in the list"
+  },
+  "pull_refresh_tooltip": "Récupérer les dernières infos sur les devises",
+  "@pull_refresh_tooltip": {
+    "description": "Option to fetch latest currencies information"
+  },
+  "centime_symbol": "centimes",
+  "@centime_symbol": {
+    "description": "Algerian centime"
+  },
+  "dzd_symbol": "DZD",
+  "@dzd_symbol": {
+    "description": "Algerian dinar"
+  },
+  "centime_explanation": "En Algérie, le terme 'centime' est utilisé de manière informelle pour représenter de plus petites quantités de monnaie. Par exemple, lorsque l'on dit que quelque chose coûte 1 million, cela signifie en réalité 10 000 DZD",
+  "@centime_explanation": {
+    "description": "Explanation of the term 'centime' in Algeria"
+  },
+  "why_centime_title": "L'utilisation du 'Centime",
+  "@why_centime_title": {
+    "description": "Title for centime use"
+  },
+  "currency_buy_sell_explanation": "Le taux d'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 Euro, cela vous coûtera 235,00 dans votre monnaie, et si vous voulez vendre 1 Euro, vous recevrez 237,00",
+  "@currency_buy_sell_explanation": {
+    "description": "Detailed explanation of the difference between buy and sell\t"
+  },
+  "currency_buy_sell_tooltip": "Explique les taux d'achat et de vente des devises.",
+  "@currency_buy_sell_tooltip": {
+    "description": "Brief tooltip for currency buy and sell values"
   }
 }

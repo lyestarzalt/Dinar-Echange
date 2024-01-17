@@ -48,7 +48,7 @@ class CurrencyListItem extends StatelessWidget {
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    textAlign: TextAlign.center, // Align text to the left
+                    textAlign: TextAlign.right, // Align text to the left
                   ),
                 ),
                 Text(
@@ -69,7 +69,10 @@ class CurrencyListItem extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 1)
+          const Padding(
+            padding: EdgeInsets.only(right: 16.0, left: 16),
+            child: Divider(height: 1),
+          )
         ],
       ),
     );

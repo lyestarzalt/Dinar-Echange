@@ -1,127 +1,155 @@
 {
   "@@locale": "ar",
-  "select_currency": "اختر العملة",
-  "@select_currency": {
-    "description": "Option for users to choose their preferred currency."
+  "currencies_app_bar_title": "العملات",
+  "@currencies_app_bar_title": {
+    "description": "A list of all available currencies in the app."
   },
-  "retry": "إعادة المحاولة",
-  "@retry": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
-  "currency_trends": "اتجاهات العملات",
-  "@currency_trends": {
-    "description": "Section displaying the latest trends and movements in different currencies."
-  },
-  "close": "إغلاق",
-  "@close": {
-    "description": "Button or option to close the app or a specific section within the app."
-  },
-  "auto": "تلقائي",
-  "@auto": {
-    "description": "Option for automatic settings or operations within the app."
-  },
-  "dark": "داكن",
-  "@dark": {
-    "description": "Option to enable a dark color scheme for the app's interface."
-  },
-  "light": "فاتح",
-  "@light": {
-    "description": "Option to enable a light color scheme for the app's interface."
-  },
-  "settings": "إعدادات",
-  "@settings": {
+  "settings_app_bar_title": "إعدادات",
+  "@settings_app_bar_title": {
     "description": "Section to customize app preferences and configurations."
   },
-  "currency_list": "قائمة العملات",
-  "@currency_list": {
-    "description": "A comprehensive list of all available currencies in the app."
-  },
-  "error_fetching_currencies": "خطأ في استرداد العملات",
-  "@error_fetching_currencies": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
-  "convert": "تحويل",
-  "@convert": {
+  "convert_app_bar_title": "تحويل",
+  "@convert_app_bar_title": {
     "description": "Option to convert values between dzd and currencies."
   },
-  "currencies": "العملات",
-  "@currencies": {
-    "description": "Currencies"
+  "select_currency_app_bar_title": "اختر العملة",
+  "@select_currency_app_bar_title": {
+    "description": "Option for users to choose their preferred currency."
   },
-  "history": "التاريخ",
-  "@history": {
-    "description": "Section showing historical data or past records of currency values."
+  "trends_app_bar_title": "اتجاهات",
+  "@trends_app_bar_title": {
+    "description": "Page displaying the latest trends and movements in different currencies."
   },
-  "one_month": "1ش",
-  "@one_month": {
-    "description": "Short time filter for viewing currency data over the past month."
+  "close_button": "إغلاق",
+  "@close_button": {
+    "description": "Button or option to close the app or a specific section within the app."
   },
-  "six_months": "6ش",
-  "@six_months": {
-    "description": "Short time filter for viewing currency data over the past six months."
+  "auto_button": "تلقائي",
+  "@auto_button": {
+    "description": "Option for automatic settings or operations within the app."
   },
-  "one_year": "1س",
-  "@one_year": {
-    "description": "Short time filter for viewing currency data over the past year."
+  "dark_button": "مظلم",
+  "@dark_button": {
+    "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "two_years": "2س",
-  "@two_years": {
-    "description": "Short time filter for viewing currency data over the past two years."
+  "light_button": "ضوء",
+  "@light_button": {
+    "description": "Option to enable a light color scheme for the app's interface."
   },
-  "general": "عام",
-  "@general": {
-    "description": "Overall settings or information for the app."
+  "languages_button": "اللغات",
+  "@languages_button": {
+    "description": "List of available languages"
   },
-  "no_currencies": "لا توجد عملات",
-  "@no_currencies": {
-    "description": "Message for no currency data."
+  "chose_language_title": "اختر اللغة",
+  "@chose_language_title": {
+    "description": "Option to select a language"
   },
-  "theme": "موضوع",
-  "@theme": {
+  "theme_title": "موضوع",
+  "@theme_title": {
     "description": "Option for visual theme customization."
   },
-  "rate_us": "قيمنا",
-  "@rate_us": {
+  "general_title": "عام",
+  "@general_title": {
+    "description": "Overall settings or information for the app."
+  },
+  "rate_us_button": "أعطنا تقييمك",
+  "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "errormessage_title": "عفوًا! هناك خطأ ما.",
-  "@errormessage_title": {
+  "about_body": "Dinar Watch هو تطبيقك المرافق الأساسي لمراقبة الدينار الجزائري. فهو يوفر تحديثات في الوقت الفعلي وميزات سهلة الاستخدام، ويسعى جاهداً لتوفير البيانات الأكثر دقة قدر الإمكان، على الرغم من احتمال حدوث اختلافات إقليمية. لمزيد من التفاصيل يرجى الاتصال بنا.",
+  "@about_body": {
+    "description": "Detailed Description"
+  },
+  "about_app_button": "حول التطبيق",
+  "@about_app_button": {
+    "description": "About the App"
+  },
+  "one_month_button": "1ش",
+  "@one_month_button": {
+    "description": "Short time filter for viewing currency data over the past month."
+  },
+  "six_months_button": "6ش",
+  "@six_months_button": {
+    "description": "Short time filter for viewing currency data over the past six months."
+  },
+  "one_year_button": "1س",
+  "@one_year_button": {
+    "description": "Short time filter for viewing currency data over the past year."
+  },
+  "two_years_button": "2س",
+  "@two_years_button": {
+    "description": "Short time filter for viewing currency data over the past two years."
+  },
+  "add_selected_currencies_tooltip": "أضف العملات المختارة",
+  "@add_selected_currencies_tooltip": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "error_message_title": "عفوًا! هناك خطأ ما.",
+  "@error_message_title": {
     "description": "Title for an error message dialog."
+  },
+  "error_fetching_currencies_message": "خطأ في استرداد العملات",
+  "@error_fetching_currencies_message": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "no_currencies_message": "لا توجد عملات",
+  "@no_currencies_message": {
+    "description": "Message for no currency data."
+  },
+  "retry_button": "إعادة المحاولة",
+  "@retry_button": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
   },
   "errormessage_message": "تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
-  "about_app": "حول التطبيق",
-  "@about_app": {
-    "description": "About the App"
-  },
-  "about_body": "دينار واتش هو أداتك المثالية لتتبع وتحليل الدينار الجزائري مع تحديثات فورية ومميزات سهلة الاستخدام. يرجى العلم أنه بسبب طبيعة سوق العملات، قد لا تكون الأسعار المقدمة رسمية وهي مخصصة لأغراض المعلومات فقط. للمزيد من المعلومات، يمكنك التواصل معنا.",
-  "@about_body": {
-    "description": "Detailed Description"
-  },
-  "chose_language": "اختر اللغة",
-  "@chose_language": {
-    "description": "Option to select a language"
-  },
-  "languages": "اللغات",
-  "@languages": {
-    "description": "List of available languages"
-  },
-  "add_selected_currencies": "أضف العملات المختارة",
-  "@add_selected_currencies": {
-    "description": "Option to add selected currencies to the list|"
-  },
-  "search": "بحث",
-  "@search": {
+  "search_hint": "بحث",
+  "@search_hint": {
     "description": "Option to search"
   },
-  "add_currencies": "إضافة العملات",
-  "@add_currencies": {
+  "add_currencies_tooltip": "إضافة العملات",
+  "@add_currencies_tooltip": {
     "description": "Option to add currencies"
   },
-  "noNumberEntered": "لم يتم إدخال أي رقم",
-  "@noNumberEntered": {
-    "description": "No number entred by the user"
+  "switch_tooltip": "تبديل العملات",
+  "@switch_tooltip": {
+    "description": "Option to switch from buy to sell"
+  },
+  "use_centime_tooltip": "استخدام السنتيم",
+  "@use_centime_tooltip": {
+    "description": "Option to switch to centime as counting method"
+  },
+  "reorder_tooltip": "إعادة ترتيب العناصر",
+  "@reorder_tooltip": {
+    "description": "Option to reorder the items in the list"
+  },
+  "pull_refresh_tooltip": "جلب أحدث معلومات العملة",
+  "@pull_refresh_tooltip": {
+    "description": "Option to fetch latest currencies information"
+  },
+  "centime_symbol": "سنتيم",
+  "@centime_symbol": {
+    "description": "Algerian centime"
+  },
+  "dzd_symbol": "دج",
+  "@dzd_symbol": {
+    "description": "Algerian dinar"
+  },
+  "centime_explanation": "في الجزائر، يُستخدم مصطلح 'سنتيم' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.",
+  "@centime_explanation": {
+    "description": "Explanation of the term 'centime' in Algeria"
+  },
+  "why_centime_title": "استخدام 'السنتيم",
+  "@why_centime_title": {
+    "description": "Title for centime use"
+  },
+  "currency_buy_sell_explanation": "سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.",
+  "@currency_buy_sell_explanation": {
+    "description": "Detailed explanation of the difference between buy and sell\t"
+  },
+  "currency_buy_sell_tooltip": "يوضح أسعار شراء وبيع العملات.",
+  "@currency_buy_sell_tooltip": {
+    "description": "Brief tooltip for currency buy and sell values"
   }
 }
