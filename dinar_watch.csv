@@ -1,0 +1,32 @@
+Keys,Description,en,de,fr,ar,es,zh
+select_currency,Option for users to choose their preferred currency.,Select Currency,Währung auswählen,Sélectionnez la devise,اختر العملة,Seleccionar Moneda,选择货币
+retry,"Button to attempt a previous action again (e.g., refreshing data or reconnecting).",Retry,Erneut versuchen,Réessayer,إعادة المحاولة,Reintentar,重试
+currency_trends,Section displaying the latest trends and movements in different currencies.,Currency Trends,Währungstrends,Tendances des devises,اتجاهات العملات,Tendencias de Divisas,货币趋势
+close,Button or option to close the app or a specific section within the app.,Close,Schließen,Fermer,إغلاق,Cerrar,关闭
+auto,Option for automatic settings or operations within the app.,Auto,Automatisch,Auto,تلقائي,Automático,自动
+dark,Option to enable a dark color scheme for the app's interface.,Dark,Dunkel,Sombre,داكن,Oscuro,暗色主题
+light,Option to enable a light color scheme for the app's interface.,Light,Hell,Clair,فاتح,Claro,亮色主题
+settings,Section to customize app preferences and configurations.,Settings,Einstellungen,Paramètres,إعدادات,Ajustes,设置
+currency_list,A comprehensive list of all available currencies in the app.,Currency List,Währungsliste,Liste des devises,قائمة العملات,Lista de Divisas,货币列表
+error_fetching_currencies,Error message indicating an issue in retrieving currency data.,Error fetching currencies,Fehler beim Abrufen von Währungen,Erreur lors de la récupération des devises,خطأ في استرداد العملات,Error al obtener las divisas,获取货币时出错
+convert,Option to convert values between dzd and currencies.,Convert,Umrechnen,Convertir,تحويل,Convertir,转换
+currencies,Currencies,Currencies,Währungen,Devises,العملات,Divisas,货币
+history,Section showing historical data or past records of currency values.,History,Geschichte,Historique,التاريخ,Historial,历史记录
+one_month,Short time filter for viewing currency data over the past month.,1M,1M,1M,1ش,1M,1个
+six_months,Short time filter for viewing currency data over the past six months.,6M,6M,6M,6ش,6M,6个
+one_year,Short time filter for viewing currency data over the past year.,1Y,1Y,1Y,1س,1Y,1年
+two_years,Short time filter for viewing currency data over the past two years.,2Y,2Y,2Y,2س,2Y,2年
+general,Overall settings or information for the app.,General,Allgemein,Général,عام,General,通用
+no_currencies,Message for no currency data.,No currencies,Keine Währungen,Pas de devises,لا توجد عملات,No hay divisas,没有货币
+theme,Option for visual theme customization.,Theme,Thema,Thème,موضوع,Tema,主题
+rate_us,Invitation to rate the app.,Rate Us,Bewerten Sie uns,Évaluez-nous,قيمنا,Califícanos,评价我们
+errormessage_title,Title for an error message dialog.,Oops! Something went wrong.,Hoppla! Etwas ist schief gelaufen.,Oups! Un problème est survenu.,عفوًا! هناك خطأ ما.,¡Vaya! Algo salió mal.,糟糕！出问题了。
+errormessage_message,Detailed text explaining the error.,Unable to load the data. Please check your connection and try again.,Daten konnten nicht geladen werden. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.,Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.,تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.,"No se pueden cargar los datos. Por favor, comprueba tu conexión e inténtalo de nuevo.",无法加载数据。请检查您的连接然后重试
+about_app,About the App,About the App,Über die App,À propos de l'application,حول التطبيق,Acerca de la aplicación,关于应用程序
+about_body,Detailed Description,"Dinar Watch is your essential tool for tracking and analyzing the Algerian Dinar with real-time updates and user-friendly features. For further information, you can reach us at.","Dinar Watch ist Ihr unverzichtbares Tool für das Verfolgen und Analysieren des Algerischen Dinars mit Echtzeit-Updates und benutzerfreundlichen Funktionen. Bitte beachten Sie, dass aufgrund der Beschaffenheit des Devisenmarktes die bereitgestellten Kurse nicht offiziell sein können und nur zu Informationszwecken dienen. Für weitere Informationen können Sie uns erreichen.","Dinar Watch est votre outil indispensable pour suivre et analyser le Dinar algérien avec des mises à jour en temps réel et une expérience utilisateur conviviale. Veuillez noter qu'en raison de la nature du marché des devises, les taux fournis peuvent ne pas être officiels et sont uniquement destinés à des fins d'information. Pour plus d'informations, vous pouvez nous contacter.",دينار واتش هو أداتك المثالية لتتبع وتحليل الدينار الجزائري مع تحديثات فورية ومميزات سهلة الاستخدام. يرجى العلم أنه بسبب طبيعة سوق العملات، قد لا تكون الأسعار المقدمة رسمية وهي مخصصة لأغراض المعلومات فقط. للمزيد من المعلومات، يمكنك التواصل معنا.,"Dinar Watch es su herramienta esencial para rastrear y analizar el Dinar argelino con actualizaciones en tiempo real y características amigables para el usuario. Tenga en cuenta que debido a la naturaleza del mercado de divisas, las tarifas proporcionadas pueden no ser oficiales y están destinadas solo para fines informativos. Para más información, puede contactarnos.",第纳尔观察是您跟踪和分析阿尔及利亚第纳尔的实时更新和用户友好功能的必备工具。请注意，由于外汇市场的性质，提供的汇率可能不是官方的，仅供参考。如需更多信息，您可以联系我们。
+chose_language,Option to select a language,Choose Language,Sprache wählen,Choisissez la langue,اختر اللغة,Elija idioma,选择语言
+languages,List of available languages,Languages,Sprachen,Langues,اللغات,Idiomas,语言
+add_selected_currencies,Option to add selected currencies to the list|,Add Selected Currencies,Ausgewählte Währungen hinzufügen,Ajouter les devises sélectionnées,أضف العملات المختارة,Añadir Monedas Seleccionadas,添加所选货币
+search,Option to search,Search,Suchen,Recherche,بحث,Buscar,搜索
+add_currencies,Option to add currencies,Add Currencies,Währungen hinzufügen,Ajouter des devises,إضافة العملات,Agregar monedas,添加货币
+noNumberEntered,No number entred by the user,No number entered,Keine Nummer eingetragen,Aucun numéro saisi,لم يتم إدخال أي رقم,No se ha introducido ningún número,没有输入号码

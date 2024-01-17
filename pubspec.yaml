@@ -28,7 +28,7 @@ dependencies:
   cloud_firestore: ^4.13.0
   flutter_localizations:
     sdk: flutter
-    
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,3 +54,12 @@ flutter_native_splash:
   image: assets/logo2.png
   color_dark: "#000000"
   image_dark: assets/logo.png
+
+arb_generator:
+  input_filepath: "dinar_watch.csv"
+  output_directory: "/l10n"
+  filename_prepend: "intl_"
+  csv_settings:
+    delimiter: ","
+    description_index: 1
+    base_index: 2
