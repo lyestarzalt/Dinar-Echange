@@ -13,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/utils/enums.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:dinar_watch/widgets/flag_container.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -104,13 +105,24 @@ class HistoryPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'DZD to ${provider.selectedCurrency!.currencyCode.toUpperCase()}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'DZD to ${provider.selectedCurrency!.currencyCode.toUpperCase()}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 2,
+                        ),
+                        FlagContainer(
+                          imageUrl: provider.selectedCurrency!.flag,
+                          height: 20,
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 5,
