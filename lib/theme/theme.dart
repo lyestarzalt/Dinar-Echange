@@ -78,7 +78,7 @@ class MaterialTheme {
         ),
       );
   static TextTheme _createCustomTextTheme(TextTheme base) {
-    return GoogleFonts.robotoMonoTextTheme(base);
+    return GoogleFonts.robotoSlabTextTheme(base);
   }
 
   MaterialTheme();

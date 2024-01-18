@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 import 'dart:math' as math;
 
 class SpellingNumber {
@@ -2787,10 +2786,8 @@ class SpellingNumber {
   }
 
   // Converts numbers to their written form.
-
   // @param {Number} n The number to convert
   // @return {String} writtenN The written form of `n`
-
   String _spellingNumber(num n, Map<String, dynamic> language,
       List<num> longScale, List<num> shortScale) {
     if (n < 0) {
@@ -3034,10 +3031,7 @@ class SpellingNumber {
     }
   }
 
-  bool _isNumeric(String? str) {
-    if (str == null) {
-      return false;
-    }
+  bool _isNumeric(String str) {
     return double.tryParse(str) != null;
   }
 
@@ -3106,9 +3100,9 @@ class SpellingNumber {
 
     if (language != null) {
       if (!languages.contains(_spellingNumberDefault['lang'])) {
+          language = 'en';
         _spellingNumberDefault['defaults']['lang'] = "en";
       }
-
       language = _spellingNumberDefault['i18n'][_spellingNumberDefault['lang']];
     }
 

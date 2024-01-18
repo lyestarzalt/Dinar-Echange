@@ -120,9 +120,11 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
         ? AppLocalizations.of(context)!.centime_symbol
         : AppLocalizations.of(context)!.dzd_symbol;
 
-    String numberInWords = SpellingNumber(lang: languageCode)
-        .convert(number)
-        .capitalizeEveryWord();
+    // the lib does not support chinese so we have to revert to english
+    String numberInWords =
+        SpellingNumber(lang: languageCode == 'zh' ? 'en' : languageCode)
+            .convert(number)
+            .capitalizeEveryWord();
 
     if (languageCode == 'ar') {
       return "$numberInWords $unit";

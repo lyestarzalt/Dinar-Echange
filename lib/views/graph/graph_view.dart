@@ -101,7 +101,20 @@ class HistoryPage extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: SizedBox(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      'DZD to ${provider.selectedCurrency!.currencyCode.toUpperCase()}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     ValueListenableBuilder<String>(
                       valueListenable: provider.selectedValue,
                       builder: (context, value, child) {
@@ -122,64 +135,17 @@ class HistoryPage extends StatelessWidget {
                           valueListenable: provider.selectedDate,
                           builder: (context, value, child) {
                             // Extract day, month, and year as separate strings
-                            String day = DateFormat('d',
-                                    languageProvider.currentLocale.toString())
-                                .format(value);
-                            String month = DateFormat('MMMM',
-                                    languageProvider.currentLocale.toString())
-                                .format(value);
-                            String year = DateFormat('y',
+
+                            String date = DateFormat('d MMMM y',
                                     languageProvider.currentLocale.toString())
                                 .format(value);
 
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 25, // Fixed width for day
-                                  child: Text(
-                                    day,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 137, // Fixed width for month
-                                  child: Text(
-                                    month,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                    width: 5), // Space between month and year
-                                SizedBox(
-                                  width: 50, // Fixed width for year
-                                  child: Text(
-                                    year,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            return Text(
+                              date,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             );
                           },
                         );
