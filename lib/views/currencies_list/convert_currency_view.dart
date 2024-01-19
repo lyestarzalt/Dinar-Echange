@@ -36,15 +36,6 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ConvertProvider>(context);
-    final screenHeight = MediaQuery.of(context).size.height;
-    final middlePoint = screenHeight * 0.2;
-    const cardHeight = 100.0;
-    const cardsgap = 5;
-    final topCardTopPosition = middlePoint - cardHeight;
-    final bottomCardTopPosition = middlePoint + cardsgap;
-    const fabSize = 56.0;
-    final fabTopPosition = middlePoint - (fabSize / 2);
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -68,104 +59,105 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
               icon: const Icon(Icons.info_outline))
         ],
       ),
-      body: Directionality(
-        textDirection: ui.TextDirection.ltr,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-/*                 ConversionRateInfo(
-                  isDZDtoCurrency: provider.isDZDtoCurrency,
-                  currency: provider.currency,
-                ), */
-                SizedBox(
-                  height: screenHeight * 0.4,
-                  child: Stack(
-                    children: [
-                      // Top Card - Foreign currency input field
-                      AnimatedPositioned(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        top: provider.isDZDtoCurrency
-                            ? topCardTopPosition
-                            : bottomCardTopPosition,
-                        left: 16,
-                        right: 16,
-                        height: cardHeight,
-                        child: buildCurrencyInput(
-                            controller: provider.isDZDtoCurrency
-                                ? provider.amountController
-                                : provider.resultController,
-                            inputController: provider.amountController,
-                            currencyCode: 'DZD',
-                            flag: provider.currency.flag,
-                            focusNode: provider.isDZDtoCurrency
-                                ? provider.amountFocusNode
-                                : provider.resultFocusNode,
-                            context: context),
-                      ),
-                      // Bottom Card - Algerian currency field
-                      AnimatedPositioned(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        top: provider.isDZDtoCurrency
-                            ? bottomCardTopPosition
-                            : topCardTopPosition,
-                        left: 16,
-                        right: 16,
-                        height: cardHeight,
-                        child: buildCurrencyInput(
-                            controller: provider.isDZDtoCurrency
-                                ? provider.resultController
-                                : provider.amountController,
-                            inputController: provider.amountController,
-                            currencyCode: provider.currency.currencyCode,
-                            flag: provider.currency.flag,
-                            focusNode: provider.isDZDtoCurrency
-                                ? provider.resultFocusNode
-                                : provider.amountFocusNode,
-                            context: context),
-                      ),
-                      // FAB positioned in the middle of the cards
-                      Positioned(
-                        top: fabTopPosition,
-                        right: 8,
-                        child: FloatingActionButton(
-                          tooltip: AppLocalizations.of(context)!.switch_tooltip,
-                          onPressed: provider.toggleConversionDirection,
-                          elevation: 2,
-                          child: const Icon(Icons.swap_vert),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Flexible(
-                  child: Visibility(
-                    visible: !provider.isDZDtoCurrency,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: NumberToWordsDisplay(
-                        currency: provider.currency,
-                        isDZDtoCurrency: !provider.isDZDtoCurrency,
-                        numberController: provider.isDZDtoCurrency
-                            ? provider.amountController
-                            : provider.resultController,
-                        provider: provider,
-                      ),
-                    ),
-                  ),
-                )
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _converter(context, provider),
+
+          /*               const SizedBox(height: 5),
+          Visibility(
+            visible: !provider.isDZDtoCurrency,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: NumberToWordsDisplay(
+                currency: provider.currency,
+                isDZDtoCurrency: !provider.isDZDtoCurrency,
+                numberController: provider.isDZDtoCurrency
+                    ? provider.amountController
+                    : provider.resultController,
+                provider: provider,
+              ),
+            ),
+          ) */
+        ],
+      ),
+    );
+  }
+
+  Widget _converter(BuildContext context, provider) {
+    final provider = Provider.of<ConvertProvider>(context);
+    final screenHeight =
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+    final middlePoint = screenHeight * 0.2;
+    final cardHeight = screenHeight / 8;
+    const cardsgap = 5;
+    final topCardTopPosition = middlePoint - cardHeight;
+    final bottomCardTopPosition = middlePoint + cardsgap;
+    const fabSize = 56.0;
+    final fabTopPosition = middlePoint - (fabSize / 2);
+
+    return SizedBox(
+      height: screenHeight / 2,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        fit: StackFit.loose,
+        children: [
+          // Top Card - Foreign currency input field
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            top: provider.isDZDtoCurrency
+                ? topCardTopPosition
+                : bottomCardTopPosition,
+            left: 16,
+            right: 16,
+            height: cardHeight,
+            child: buildCurrencyInput(
+                controller: provider.isDZDtoCurrency
+                    ? provider.amountController
+                    : provider.resultController,
+                inputController: provider.amountController,
+                currencyCode: 'DZD',
+                flag: provider.currency.flag,
+                focusNode: provider.isDZDtoCurrency
+                    ? provider.amountFocusNode
+                    : provider.resultFocusNode,
+                context: context),
+          ),
+          // Bottom Card - Algerian currency field
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            top: provider.isDZDtoCurrency
+                ? bottomCardTopPosition
+                : topCardTopPosition,
+            left: 16,
+            right: 16,
+            height: cardHeight,
+            child: buildCurrencyInput(
+                controller: provider.isDZDtoCurrency
+                    ? provider.resultController
+                    : provider.amountController,
+                inputController: provider.amountController,
+                currencyCode: provider.currency.currencyCode,
+                flag: provider.currency.flag,
+                focusNode: provider.isDZDtoCurrency
+                    ? provider.resultFocusNode
+                    : provider.amountFocusNode,
+                context: context),
+          ),
+          // FAB positioned in the middle of the cards
+          Positioned(
+            top: fabTopPosition,
+            right: 8,
+            child: FloatingActionButton(
+              tooltip: AppLocalizations.of(context)!.switch_tooltip,
+              onPressed: provider.toggleConversionDirection,
+              elevation: 2,
+              child: const Icon(Icons.swap_vert),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
