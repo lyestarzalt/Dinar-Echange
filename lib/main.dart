@@ -4,7 +4,7 @@ import 'package:dinar_watch/providers/theme_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/views/home_view.dart';
+import 'package:dinar_watch/views/app_navigation.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:dinar_watch/theme/theme.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
@@ -83,7 +83,7 @@ class DinarWatchState extends State<DinarWatch> {
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:
-                  return MainScreen(currencies: currencies!);
+                  return AppNavigation(currencies: currencies!);
                 case LoadState.error:
                   return ErrorApp(
                     errorMessage: currenciesProvider.state.errorMessage!,

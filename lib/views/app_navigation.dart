@@ -8,16 +8,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
-class MainScreen extends StatefulWidget {
+class AppNavigation extends StatefulWidget {
   final List<Currency> currencies;
 
-  const MainScreen({super.key, required this.currencies});
+  const AppNavigation({super.key, required this.currencies});
 
   @override
   MainScreenState createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
