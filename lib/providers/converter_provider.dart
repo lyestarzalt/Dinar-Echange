@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
+import 'package:intl/intl.dart';
 
 class ConvertProvider with ChangeNotifier {
   final Currency currency;
@@ -42,12 +43,16 @@ class ConvertProvider with ChangeNotifier {
       if (amountController.text.isEmpty) {
         resultController.clear();
       } else {
-        String amountString =
-            amountController.text.replaceAll(RegExp(r'[^0-9.]'), '');
-        double amount = double.tryParse(amountString) ?? 0.0;
+        double amount = double.tryParse(amountController.text) ?? 0.0;
         double rate = getRate(isDZDtoCurrency, currency);
         double result = amount * rate;
-        resultController.text = result.toStringAsFixed(2);
+
+        // TODO: Follow device local, instead of hardcoded.
+        String formattedResult =
+            NumberFormat.currency(locale: 'en_US', decimalDigits: 2, symbol: '')
+                .format(result);
+
+        resultController.text = formattedResult;
       }
       notifyListeners();
     } catch (e) {

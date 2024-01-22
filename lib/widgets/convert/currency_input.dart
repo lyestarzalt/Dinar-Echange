@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/utils/max_number.dart';
+import 'package:dinar_watch/utils/textfield_format.dart';
 
 Widget buildCurrencyInput({
   required TextEditingController controller,
@@ -42,10 +42,7 @@ Widget buildCurrencyInput({
           const SizedBox(width: 8.0),
           Expanded(
             child: TextField(
-              inputFormatters: [
-                MaxNumberInputFormatter(1000000000000000),
-                InputFormatter(context)
-              ],
+              inputFormatters: [InputFormatter()],
               focusNode: focusNode,
               controller: controller,
               decoration: InputDecoration(

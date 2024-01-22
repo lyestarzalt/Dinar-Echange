@@ -78,7 +78,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             children: [
               _converter(context, provider),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Visibility(
                 visible: !provider.isDZDtoCurrency,

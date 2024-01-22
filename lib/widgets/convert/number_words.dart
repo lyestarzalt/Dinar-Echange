@@ -27,84 +27,80 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        //constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-        ),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        title: Text(
-                          AppLocalizations.of(context)!.why_centime_title,
-                        ),
-                        content: Text(
-                          AppLocalizations.of(context)!.centime_explanation,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text(
-                                AppLocalizations.of(context)!.close_button),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                icon: const Icon(Icons.info_outline),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.isDZDtoCurrency) ...[
-                    Text(
-                      _convertNumberToWords(
-                          Localizations.localeOf(context).languageCode,
-                          widget.numberController.text,
-                          false,
-                          context),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+      // why does the Card comes with pridefined padding??
+      margin: EdgeInsets.zero,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      _convertNumberToWords(
-                          Localizations.localeOf(context).languageCode,
-                          widget.numberController.text,
-                          true,
-                          context),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.6),
+                      title: Text(
+                        AppLocalizations.of(context)!.why_centime_title,
                       ),
-                    ),
-                  ]
-                ],
-              ),
+                      content: Text(
+                        AppLocalizations.of(context)!.centime_explanation,
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child:
+                              Text(AppLocalizations.of(context)!.close_button),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.info_outline),
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.isDZDtoCurrency) ...[
+                  SelectableText(
+                    _convertNumberToWords(
+                        Localizations.localeOf(context).languageCode,
+                        widget.numberController.text,
+                        false,
+                        context),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  SelectableText(
+                    _convertNumberToWords(
+                        Localizations.localeOf(context).languageCode,
+                        widget.numberController.text,
+                        true,
+                        context),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
+                  ),
+                ]
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -119,25 +115,39 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
       return '';
     }
 
-    double number = double.tryParse(numberText) ?? 0;
+    double number = _parseNumber(numberText);
     if (useCentimes) {
       number *= 100;
     }
 
-    String unit = useCentimes
+    String unit = _getUnit(useCentimes, context);
+    String languageForConversion = _getLanguageForConversion(languageCode);
+    String numberInWords = _numberToWords(languageForConversion, number);
+
+    return _formatResult(languageCode, numberInWords, unit);
+  }
+
+  double _parseNumber(String numberText) {
+    String cleanNumberText = numberText.replaceAll(RegExp(r'[^0-9.]'), '');
+    return double.tryParse(cleanNumberText) ?? 0;
+  }
+
+  String _getUnit(bool useCentimes, BuildContext context) {
+    return useCentimes
         ? AppLocalizations.of(context)!.centime_symbol
         : AppLocalizations.of(context)!.dzd_symbol;
+  }
 
-    // the lib does not support chinese so we have to revert to english
-    String numberInWords =
-        SpellingNumber(lang: languageCode == 'zh' ? 'en' : languageCode)
-            .convert(number)
-            .capitalizeEveryWord();
+  String _getLanguageForConversion(String languageCode) {
+    // The lib does not support Chinese, so revert to English
+    return languageCode == 'zh' ? 'en' : languageCode;
+  }
 
-    if (languageCode == 'ar') {
-      return "$numberInWords $unit";
-    }
+  String _numberToWords(String language, double number) {
+    return SpellingNumber(lang: language).convert(number).capitalizeEveryWord();
+  }
 
+  String _formatResult(String languageCode, String numberInWords, String unit) {
     return "$numberInWords $unit";
   }
 }

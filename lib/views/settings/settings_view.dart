@@ -32,7 +32,7 @@ class SettingsPageState extends State<SettingsPage> {
           title: Text(AppLocalizations.of(context)!.settings_app_bar_title),
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,
@@ -44,6 +44,7 @@ class SettingsPageState extends State<SettingsPage> {
                   buildSectionTitle(
                       context, AppLocalizations.of(context)!.theme_title),
                   _buildThemeSelection(context),
+                  const SizedBox(height: 16),
                   buildSectionTitle(
                       context, AppLocalizations.of(context)!.general_title),
                   SettingsItem(
@@ -75,7 +76,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   Widget buildSectionTitle(BuildContext context, String title) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,26 +118,29 @@ class SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
-          child: SegmentedButton(
-            segments: <ButtonSegment>[
-              ButtonSegment(
-                  value: ThemeOption.auto,
-                  label: Text(AppLocalizations.of(context)!.auto_button),
-                  icon: const Icon(Icons.brightness_auto)),
-              ButtonSegment(
-                  value: ThemeOption.dark,
-                  label: Text(AppLocalizations.of(context)!.dark_button),
-                  icon: const Icon(Icons.nights_stay)),
-              ButtonSegment(
-                  value: ThemeOption.light,
-                  label: Text(AppLocalizations.of(context)!.light_button),
-                  icon: const Icon(Icons.wb_sunny)),
-            ],
-            selected: {currentThemeOption},
-            onSelectionChanged: (Set newSelection) {
-              ThemeOption selectedOption = newSelection.first;
-              themeProvider.setThemeMode(selectedOption);
-            },
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+            child: SegmentedButton(
+              segments: <ButtonSegment>[
+                ButtonSegment(
+                    value: ThemeOption.auto,
+                    label: Text(AppLocalizations.of(context)!.auto_button),
+                    icon: const Icon(Icons.brightness_auto)),
+                ButtonSegment(
+                    value: ThemeOption.dark,
+                    label: Text(AppLocalizations.of(context)!.dark_button),
+                    icon: const Icon(Icons.nights_stay)),
+                ButtonSegment(
+                    value: ThemeOption.light,
+                    label: Text(AppLocalizations.of(context)!.light_button),
+                    icon: const Icon(Icons.wb_sunny)),
+              ],
+              selected: {currentThemeOption},
+              onSelectionChanged: (Set newSelection) {
+                ThemeOption selectedOption = newSelection.first;
+                themeProvider.setThemeMode(selectedOption);
+              },
+            ),
           ),
         );
       },
@@ -242,7 +246,7 @@ class SettingsItem extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
-    this.verticalPadding = 16.0,
+    this.verticalPadding = 10.0,
   });
 
   @override
