@@ -46,7 +46,10 @@ Widget buildCurrencyInput({
             const SizedBox(width: 8.0),
             Expanded(
               child: TextField(
-                inputFormatters: [MaxNumberInputFormatter(1000000000000000)],
+                inputFormatters: [
+                  MaxNumberInputFormatter(1000000000000000),
+                  InputFormatter(context)
+                ],
                 focusNode: focusNode,
                 controller: controller,
                 decoration: InputDecoration(

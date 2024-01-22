@@ -42,7 +42,9 @@ class ConvertProvider with ChangeNotifier {
       if (amountController.text.isEmpty) {
         resultController.clear();
       } else {
-        double amount = double.tryParse(amountController.text) ?? 0.0;
+        String amountString =
+            amountController.text.replaceAll(RegExp(r'[^0-9.]'), '');
+        double amount = double.tryParse(amountString) ?? 0.0;
         double rate = getRate(isDZDtoCurrency, currency);
         double result = amount * rate;
         resultController.text = result.toStringAsFixed(2);
