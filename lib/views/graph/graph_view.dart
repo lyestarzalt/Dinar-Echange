@@ -31,28 +31,31 @@ class HistoryPage extends StatelessWidget {
           builder: (context, provider, _) =>
               _buildFloatingActionButton(context, provider),
         ),
-        body: Consumer<GraphProvider>(
-          builder: (context, provider, _) {
-            switch (provider.state.state) {
-              case LoadState.loading:
-                return const Center(child: LinearProgressIndicator());
-              case LoadState.success:
-                return _buildCurrencyContent(context, provider);
-              case LoadState.error:
-                // Use the error message from the provider's state
-                return ErrorApp(
-                  errorMessage:
-                      provider.state.errorMessage ?? 'Error loading data',
-                  onRetry: () => provider.fetchCurrencies(currencies),
-                );
-              default:
-                return ErrorApp(
-                  errorMessage:
-                      provider.state.errorMessage ?? 'Error loading data',
-                  onRetry: () => provider.fetchCurrencies(currencies),
-                );
-            }
-          },
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Consumer<GraphProvider>(
+            builder: (context, provider, _) {
+              switch (provider.state.state) {
+                case LoadState.loading:
+                  return const Center(child: LinearProgressIndicator());
+                case LoadState.success:
+                  return _buildCurrencyContent(context, provider);
+                case LoadState.error:
+                  // Use the error message from the provider's state
+                  return ErrorApp(
+                    errorMessage:
+                        provider.state.errorMessage ?? 'Error loading data',
+                    onRetry: () => provider.fetchCurrencies(currencies),
+                  );
+                default:
+                  return ErrorApp(
+                    errorMessage:
+                        provider.state.errorMessage ?? 'Error loading data',
+                    onRetry: () => provider.fetchCurrencies(currencies),
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -94,103 +97,108 @@ class HistoryPage extends StatelessWidget {
 
   Widget _buildCurrencyContent(BuildContext context, GraphProvider provider) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'DZD to ${provider.selectedCurrency!.currencyCode.toUpperCase()}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      FlagContainer(
+                        imageUrl: provider.selectedCurrency!.flag,
+                        height: 50,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        provider.selectedCurrency!.currencyCode.toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        SizedBox(
-                          width: 2,
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(
+                        Icons.arrow_forward,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 5),
+                      const FlagContainer(
+                        imageUrl: 'DZD',
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ValueListenableBuilder<String>(
+                    valueListenable: provider.selectedValue,
+                    builder: (context, value, child) {
+                      return Text(
+                        '1 ${provider.selectedCurrency!.currencyCode} = $value',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        FlagContainer(
-                          imageUrl: provider.selectedCurrency!.flag,
-                          height: 20,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    ValueListenableBuilder<String>(
-                      valueListenable: provider.selectedValue,
-                      builder: (context, value, child) {
-                        return Text(
-                          '1 ${provider.selectedCurrency!.currencyCode} = $value',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    Consumer<LanguageProvider>(
-                      builder: (context, languageProvider, child) {
-                        return ValueListenableBuilder<DateTime>(
-                          valueListenable: provider.selectedDate,
-                          builder: (context, value, child) {
-                            // Extract day, month, and year as separate strings
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Consumer<LanguageProvider>(
+                    builder: (context, languageProvider, child) {
+                      return ValueListenableBuilder<DateTime>(
+                        valueListenable: provider.selectedDate,
+                        builder: (context, value, child) {
+                          // Extract day, month, and year as separate strings
 
-                            String date = DateFormat('d MMMM y',
-                                    languageProvider.currentLocale.toString())
-                                .format(value);
+                          String date = DateFormat('d MMMM y',
+                                  languageProvider.currentLocale.toString())
+                              .format(value);
 
-                            return Text(
-                              date,
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                          return Text(
+                            date,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            AspectRatio(
-              aspectRatio: 1.0,
-              child: LineChart(
-                buildMainData(
-                    context: context,
-                    minYValue: provider.minYValue,
-                    midYValue: provider.midYValue,
-                    maxYValue: provider.maxYValue,
-                    touchedIndex: provider.touchedIndex.value,
-                    maxX: provider.maxX,
-                    historyEntries: provider.filteredHistoryEntries,
-                    onIndexChangeCallback:
-                        (int index, List<CurrencyHistoryEntry> entries) {
-                      provider.updateSelectedData(index);
-                    }),
-              ),
+          ),
+          const SizedBox(height: 16),
+          AspectRatio(
+            aspectRatio: 1.0,
+            child: LineChart(
+              buildMainData(
+                  context: context,
+                  minYValue: provider.minYValue,
+                  midYValue: provider.midYValue,
+                  maxYValue: provider.maxYValue,
+                  touchedIndex: provider.touchedIndex.value,
+                  maxX: provider.maxX,
+                  historyEntries: provider.filteredHistoryEntries,
+                  onIndexChangeCallback:
+                      (int index, List<CurrencyHistoryEntry> entries) {
+                    provider.updateSelectedData(index);
+                  }),
             ),
-            const SizedBox(height: 20),
-            TimeSpanButtons(
-              onTimeSpanSelected: (days) => provider.processData(days: days),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          TimeSpanButtons(
+            onTimeSpanSelected: (days) => provider.processData(days: days),
+          ),
+        ],
       ),
     );
   }

@@ -39,7 +39,7 @@ class CurrencyListScreen extends StatelessWidget {
               ],
             ),
             body: Padding(
-              padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: RefreshIndicator(
                 onRefresh: () async {
                   // TODO Implement the refresh logic

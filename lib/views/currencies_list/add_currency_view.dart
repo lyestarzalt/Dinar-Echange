@@ -34,52 +34,57 @@ class AddCurrencyPage extends StatelessWidget {
                       provider.saveSelectedCurrencies();
                       Navigator.pop(context);
                     },
-                    tooltip:
-                        AppLocalizations.of(context)!.add_selected_currencies_tooltip,
+                    tooltip: AppLocalizations.of(context)!
+                        .add_selected_currencies_tooltip,
                     child: const Icon(Icons.check),
                   ),
                 ),
               ],
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: provider.filteredCurrencies.length,
-                    itemBuilder: (context, index) {
-                      final Currency currency =
-                          provider.filteredCurrencies[index];
-                      final bool isSelected =
-                          provider.selectedCurrencies.contains(currency);
-                      return ListTile(
-                        leading: FlagContainer(
-                          imageUrl: currency.flag,
-                          width: 50,
-                          height: 40,
-                          borderRadius: BorderRadius.circular(1),
-                        ),
-                        title: Row(
-                          children: [
-                            Text(currency.currencyCode),
-                            const SizedBox(width: 10),
-                            Expanded(child: Text(currency.currencyName ?? '')),
-                          ],
-                        ),
-                        trailing: Checkbox(
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              provider.addOrRemoveCurrency(currency, value);
-                            }
-                          },
-                        ),
-                        onTap: () =>
-                            provider.addOrRemoveCurrency(currency, !isSelected),
-                      );
-                    },
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemCount: provider.filteredCurrencies.length,
+                      itemBuilder: (context, index) {
+                        final Currency currency =
+                            provider.filteredCurrencies[index];
+                        final bool isSelected =
+                            provider.selectedCurrencies.contains(currency);
+                        return ListTile(
+                          leading: FlagContainer(
+                            imageUrl: currency.flag,
+                            width: 50,
+                            height: 40,
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                          title: Row(
+                            children: [
+                              Text(currency.currencyCode),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                  child: Text(currency.currencyName ?? '')),
+                            ],
+                          ),
+                          trailing: Checkbox(
+                            value: isSelected,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                provider.addOrRemoveCurrency(currency, value);
+                              }
+                            },
+                          ),
+                          onTap: () => provider.addOrRemoveCurrency(
+                              currency, !isSelected),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

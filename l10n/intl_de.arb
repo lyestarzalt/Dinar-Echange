@@ -24,7 +24,7 @@
   "@close_button": {
     "description": "Button or option to close the app or a specific section within the app."
   },
-  "auto_button": "Automatisch",
+  "auto_button": "Auto",
   "@auto_button": {
     "description": "Option for automatic settings or operations within the app."
   },

@@ -3,7 +3,6 @@ import 'package:dinar_watch/widgets/convert/currency_input.dart';
 import 'package:dinar_watch/widgets/convert/number_words.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:ui' as ui;
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -42,44 +41,59 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
         title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
         actions: [
           IconButton(
-              tooltip:
-                  AppLocalizations.of(context)!.currency_buy_sell_explanation,
-              onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(AppLocalizations.of(context)!
-                              .currency_buy_sell_explanation),
-                        ),
-                      );
-                    },
+            tooltip:
+                AppLocalizations.of(context)!.currency_buy_sell_explanation,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-              icon: const Icon(Icons.info_outline))
+                  content: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      AppLocalizations.of(context)!
+                          .currency_buy_sell_explanation,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text(AppLocalizations.of(context)!.close_button),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                );
+              },
+            ),
+            icon: const Icon(Icons.info_outline),
+          )
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _converter(context, provider),
-
-          /*               const SizedBox(height: 5),
-          Visibility(
-            visible: !provider.isDZDtoCurrency,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: NumberToWordsDisplay(
-                currency: provider.currency,
-                isDZDtoCurrency: !provider.isDZDtoCurrency,
-                numberController: provider.isDZDtoCurrency
-                    ? provider.amountController
-                    : provider.resultController,
-                provider: provider,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _converter(context, provider),
+              const SizedBox(
+                height: 5,
               ),
-            ),
-          ) */
-        ],
+              Visibility(
+                visible: !provider.isDZDtoCurrency,
+                child: NumberToWordsDisplay(
+                  currency: provider.currency,
+                  isDZDtoCurrency: !provider.isDZDtoCurrency,
+                  numberController: provider.isDZDtoCurrency
+                      ? provider.amountController
+                      : provider.resultController,
+                  provider: provider,
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -88,7 +102,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     final provider = Provider.of<ConvertProvider>(context);
     final screenHeight =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final middlePoint = screenHeight * 0.2;
+    final middlePoint = screenHeight * 0.17;
     final cardHeight = screenHeight / 8;
     const cardsgap = 5;
     final topCardTopPosition = middlePoint - cardHeight;
@@ -97,10 +111,8 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
     final fabTopPosition = middlePoint - (fabSize / 2);
 
     return SizedBox(
-      height: screenHeight / 2,
+      height: screenHeight / 3,
       child: Stack(
-        alignment: AlignmentDirectional.center,
-        fit: StackFit.loose,
         children: [
           // Top Card - Foreign currency input field
           AnimatedPositioned(
@@ -109,8 +121,8 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             top: provider.isDZDtoCurrency
                 ? topCardTopPosition
                 : bottomCardTopPosition,
-            left: 16,
-            right: 16,
+            left: 0,
+            right: 0,
             height: cardHeight,
             child: buildCurrencyInput(
                 controller: provider.isDZDtoCurrency
@@ -131,8 +143,8 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             top: provider.isDZDtoCurrency
                 ? bottomCardTopPosition
                 : topCardTopPosition,
-            left: 16,
-            right: 16,
+            left: 0,
+            right: 0,
             height: cardHeight,
             child: buildCurrencyInput(
                 controller: provider.isDZDtoCurrency

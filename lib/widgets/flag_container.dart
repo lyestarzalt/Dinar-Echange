@@ -33,6 +33,8 @@ class FlagContainer extends StatelessWidget {
   ImageProvider _buildImageProvider() {
     if (imageUrl == null || imageUrl!.isEmpty) {
       return const AssetImage('assets/logo.png');
+    } else if (imageUrl == 'DZD') {
+      return const AssetImage('assets/dz.png');
     }
     return CachedNetworkImageProvider(imageUrl!);
   }

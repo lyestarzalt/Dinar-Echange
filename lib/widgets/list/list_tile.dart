@@ -69,10 +69,7 @@ class CurrencyListItem extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 16.0, left: 16),
-            child: Divider(height: 1),
-          )
+          const Divider(height: 1)
         ],
       ),
     );

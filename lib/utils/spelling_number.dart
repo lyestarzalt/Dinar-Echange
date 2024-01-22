@@ -2805,13 +2805,13 @@ class SpellingNumber {
 
       units = [];
       scale = rawUnits.keys.toList();
-      List<int> _scale = [];
+      List<int> scale0 = [];
 
       for (int i = 0; i < scale.length; i++) {
         units.add(rawUnits[scale[i]]);
-        _scale.add(math.pow(10, int.parse(scale[i])) as int);
+        scale0.add(math.pow(10, int.parse(scale[i])) as int);
       }
-      scale = _scale;
+      scale = scale0;
     }
 
     var baseCardinals = language['base'];
@@ -2878,7 +2878,7 @@ class SpellingNumber {
         var shouldUseBaseException = unit['useBaseException'].indexOf(r) > -1 &&
             (unit['useBaseExceptionWhenNoTrailingNumbers'] != null &&
                     unit['useBaseExceptionWhenNoTrailingNumbers']
-                ? (i == 0 && ret.length > 0)
+                ? (i == 0 && ret.isNotEmpty)
                 : true);
         if (!shouldUseBaseException) {
           var k = (r * scale[i]).toString();
@@ -3125,8 +3125,7 @@ class SpellingNumber {
         b[1] = newDigitsNumber.toString();
       }
 
-      double fraction = double.parse("0." +
-          (b[1].substring(0, _spellingNumberDefault['digitsLengthW2F'])));
+      double fraction = double.parse("0.${b[1].substring(0, _spellingNumberDefault['digitsLengthW2F'])}");
       fraction = fraction *
           (math.pow(
               10,
@@ -3140,14 +3139,11 @@ class SpellingNumber {
 
     if (wholesSpelling != '') {
       wholesSpelling =
-          wholesSpelling + ' ' + _spellingNumberDefault['wholesUnit'];
+          '$wholesSpelling ' + _spellingNumberDefault['wholesUnit'];
     }
     if (fractionSpelling != '') {
-      fractionSpelling = ' ' +
-          _spellingNumberDefault['decimalSeperator'] +
-          ' ' +
-          fractionSpelling +
-          ' ' +
+      fractionSpelling = '${' ' +
+          _spellingNumberDefault['decimalSeperator']} $fractionSpelling ' +
           _spellingNumberDefault['fractionUnit'];
     }
 

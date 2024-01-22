@@ -42,14 +42,22 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         title: Text(
                           AppLocalizations.of(context)!.why_centime_title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
                         ),
                         content: Text(
-                            AppLocalizations.of(context)!.centime_explanation),
+                          AppLocalizations.of(context)!.centime_explanation,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(
+                                AppLocalizations.of(context)!.close_button),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
                       );
                     },
                   );

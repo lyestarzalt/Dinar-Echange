@@ -5,7 +5,7 @@ convert_app_bar_title,Option to convert values between dzd and currencies.,Conve
 select_currency_app_bar_title,Option for users to choose their preferred currency.,Select Currency,Währung auswählen,Sélectionnez la devise,اختر العملة,Seleccionar Moneda,选择货币
 trends_app_bar_title,Page displaying the latest trends and movements in different currencies.,Trends,Trends,Tendances,اتجاهات,Tendencias,趋势
 close_button,Button or option to close the app or a specific section within the app.,Close,Schließen,Fermer,إغلاق,Cerrar,关闭
-auto_button,Option for automatic settings or operations within the app.,Auto,Automatisch,Auto,تلقائي,Automático,自动
+auto_button,Option for automatic settings or operations within the app.,Auto,Auto,Auto,تلقائي,Auto,自动
 dark_button,Option to enable a dark color scheme for the app's interface.,Dark,Dunkel,Sombre,مظلم,Oscuro,黑暗
 light_button,Option to enable a light color scheme for the app's interface.,Light,Licht,Lumière,ضوء,Luz,黑暗
 languages_button,List of available languages,Languages,Sprachen,Langues,اللغات,Idiomas,语言

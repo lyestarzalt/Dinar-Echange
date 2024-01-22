@@ -30,43 +30,46 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
         title:
             Text(AppLocalizations.of(context)!.select_currency_app_bar_title),
       ),
-      body: ListView.separated(
-        itemCount: widget.coreCurrencies.length,
-        separatorBuilder: (context, index) => const Padding(
-          padding: EdgeInsets.only(right: 16.0, left: 16),
-          child: Divider(),
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          final currency = widget.coreCurrencies[index];
-          return Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: ListTile(
-              onTap: () {
-                widget.onCurrencySelected(currency);
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: ListView.separated(
+          itemCount: widget.coreCurrencies.length,
+          separatorBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Divider(),
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            final currency = widget.coreCurrencies[index];
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: ListTile(
+                onTap: () {
+                  widget.onCurrencySelected(currency);
 
-                Navigator.pop(context);
-              },
-              leading: FlagContainer(
-                imageUrl: currency.flag,
-                width: 50,
-                height: 40,
-                borderRadius: BorderRadius.circular(1),
-              ),
-              title: Text(
-                currency.currencyName ?? '',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  Navigator.pop(context);
+                },
+                leading: FlagContainer(
+                  imageUrl: currency.flag,
+                  width: 50,
+                  height: 40,
+                  borderRadius: BorderRadius.circular(1),
+                ),
+                title: Text(
+                  currency.currencyName ?? '',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                trailing: Text(
+                  currency.currencySymbol ?? '',
+                  style: GoogleFonts.notoSans(fontSize: 18),
                 ),
               ),
-              trailing: Text(
-                currency.currencySymbol ?? '',
-                style: GoogleFonts.notoSans(fontSize: 18),
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

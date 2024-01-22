@@ -28,30 +28,64 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settings_app_bar_title),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Text(AppLocalizations.of(context)!.theme_title,
-                  style: const TextStyle(fontSize: 15)),
-              const Divider(thickness: 2),
-              _buildThemeSelection(context),
-              const SizedBox(height: 10),
-              Text(AppLocalizations.of(context)!.general_title,
-                  style: const TextStyle(fontSize: 15)),
-              const Divider(thickness: 2),
-              _buildRateUsRow(),
-              _buildAboutUsRow(context),
-              _buildLanguageRow(),
-            ],
-          ),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.settings_app_bar_title),
         ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  buildSectionTitle(
+                      context, AppLocalizations.of(context)!.theme_title),
+                  _buildThemeSelection(context),
+                  buildSectionTitle(
+                      context, AppLocalizations.of(context)!.general_title),
+                  SettingsItem(
+                    icon: Icons.language,
+                    text: AppLocalizations.of(context)!.chose_language_title,
+                    onTap: () {
+                      _showLanguageDialog();
+                    },
+                  ),
+                  SettingsItem(
+                    icon: Icons.star,
+                    text: AppLocalizations.of(context)!.rate_us_button,
+                    onTap: () {
+                      // Rate us action
+                    },
+                  ),
+                  SettingsItem(
+                    icon: Icons.info_outline,
+                    text: AppLocalizations.of(context)!.about_app_button,
+                    onTap: () {
+                      _showAboutDialog(context);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              )),
+        ));
+  }
+
+  Widget buildSectionTitle(BuildContext context, String title) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          const Divider(thickness: 2),
+        ],
       ),
     );
   }
@@ -72,62 +106,40 @@ class SettingsPageState extends State<SettingsPage> {
             break;
         }
 
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                outlinedButtonTheme: OutlinedButtonThemeData(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              child: SegmentedButton(
-                segments: <ButtonSegment>[
-                  ButtonSegment(
-                      value: ThemeOption.auto,
-                      label: Text(AppLocalizations.of(context)!.auto_button),
-                      icon: const Icon(Icons.brightness_auto)),
-                  ButtonSegment(
-                      value: ThemeOption.dark,
-                      label: Text(AppLocalizations.of(context)!.dark_button),
-                      icon: const Icon(Icons.nights_stay)),
-                  ButtonSegment(
-                      value: ThemeOption.light,
-                      label: Text(AppLocalizations.of(context)!.light_button),
-                      icon: const Icon(Icons.wb_sunny)),
-                ],
-                selected: {currentThemeOption},
-                onSelectionChanged: (Set newSelection) {
-                  ThemeOption selectedOption = newSelection.first;
-                  themeProvider.setThemeMode(selectedOption);
-                },
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               ),
             ),
           ),
+          child: SegmentedButton(
+            segments: <ButtonSegment>[
+              ButtonSegment(
+                  value: ThemeOption.auto,
+                  label: Text(AppLocalizations.of(context)!.auto_button),
+                  icon: const Icon(Icons.brightness_auto)),
+              ButtonSegment(
+                  value: ThemeOption.dark,
+                  label: Text(AppLocalizations.of(context)!.dark_button),
+                  icon: const Icon(Icons.nights_stay)),
+              ButtonSegment(
+                  value: ThemeOption.light,
+                  label: Text(AppLocalizations.of(context)!.light_button),
+                  icon: const Icon(Icons.wb_sunny)),
+            ],
+            selected: {currentThemeOption},
+            onSelectionChanged: (Set newSelection) {
+              ThemeOption selectedOption = newSelection.first;
+              themeProvider.setThemeMode(selectedOption);
+            },
+          ),
         );
       },
-    );
-  }
-
-  Widget _buildLanguageRow() {
-    return InkWell(
-      onTap: _showLanguageDialog,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.language, size: 24.0),
-            const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.chose_language_title,
-                style: const TextStyle(fontSize: 15)),
-          ],
-        ),
-      ),
     );
   }
 
@@ -146,52 +158,42 @@ class SettingsPageState extends State<SettingsPage> {
                 )
                 .key;
 
-            return Dialog(
-              child: Material(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              title: Text(AppLocalizations.of(context)!.chose_language_title),
+              content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: languageCodes.entries
-                      .map((MapEntry<String, String> entry) =>
-                          RadioListTile<String>(
-                            title: Text(entry.key), // Language name
-                            value: entry.key, // Language name as value
-                            groupValue: currentLanguage,
-                            onChanged: (String? value) {
-                              if (value != null) {
-                                languageProvider.setLanguage(
-                                    Locale(languageCodes[value] ?? 'en'));
-                                Navigator.of(context).pop();
-                              }
-                            },
-                          ))
-                      .toList(),
+                  children: languageCodes.entries.map((entry) {
+                    return RadioListTile<String>(
+                      title: Text(entry.key),
+                      value: entry.key,
+                      groupValue: currentLanguage,
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          languageProvider.setLanguage(
+                              Locale(languageCodes[value] ?? 'en'));
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(AppLocalizations.of(context)!.close_button),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             );
           },
         );
       },
-    );
-  }
-
-  Widget _buildAboutUsRow(BuildContext context) {
-    return InkWell(
-      onTap: () => _showAboutDialog(context),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.info_outline, size: 24.0),
-            const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.about_app_button,
-                style: const TextStyle(fontSize: 15)),
-          ],
-        ),
-      ),
     );
   }
 
@@ -200,9 +202,20 @@ class SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           title: Text(AppLocalizations.of(context)!.about_app_button),
           content: SingleChildScrollView(
-            child: Text(AppLocalizations.of(context)!.about_body),
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ListBody(
+              children: [
+                Text(AppLocalizations.of(context)!.about_body),
+                const SizedBox(height: 16),
+                const Text('Version: 1.0.0'), // Replace with your app version
+                // Add more info here if needed
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -216,19 +229,34 @@ class SettingsPageState extends State<SettingsPage> {
       },
     );
   }
+}
 
-  Widget _buildRateUsRow() {
-    return InkWell(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+class SettingsItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+  final double verticalPadding;
+
+  const SettingsItem({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.onTap,
+    this.verticalPadding = 16.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+      child: InkWell(
+        onTap: onTap,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.star, size: 24.0),
-            const SizedBox(width: 10),
-            Text(AppLocalizations.of(context)!.rate_us_button,
-                style: const TextStyle(fontSize: 15)),
+            Icon(icon, size: 24.0),
+            const SizedBox(width: 16),
+            Text(text, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),
