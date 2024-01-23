@@ -32,38 +32,21 @@ class MaterialTheme {
             ),
           ),
         ),
-        appBarTheme: const AppBarTheme(toolbarHeight: 80),
+        appBarTheme: const AppBarTheme(toolbarHeight: 90),
         navigationBarTheme: NavigationBarThemeData(
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed) ||
-                  states.contains(MaterialState.focused) ||
-                  states.contains(MaterialState.hovered)) {
-                return Colors.transparent;
-              }
-              return null;
-            },
-          ),
-          backgroundColor:
-              colorScheme.background, // Background color from the color scheme
-          indicatorColor:
-              colorScheme.primary, // Primary color for the indicator
           labelTextStyle: MaterialStateProperty.all(
             TextStyle(
               fontSize: 14,
-              color: colorScheme.onBackground, // Text color on the background
+              color: colorScheme.onBackground,
             ),
           ),
           iconTheme: MaterialStateProperty.all(
             const IconThemeData(
-              size: 24, // Icon size
+              size: 24,
             ),
           ),
-          indicatorShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2),
-          ),
-          height: 56,
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          height: 70,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         ),
         checkboxTheme: CheckboxThemeData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -85,7 +68,7 @@ class MaterialTheme {
 
   static MaterialScheme lightScheme() {
     return const MaterialScheme(
-       brightness: Brightness.light,
+      brightness: Brightness.light,
       primary: Color(0xff415f91),
       surfaceTint: Color(0xff415f91),
       onPrimary: Color(0xffffffff),
@@ -144,7 +127,7 @@ class MaterialTheme {
 
   static MaterialScheme lightMediumContrastScheme() {
     return const MaterialScheme(
-     brightness: Brightness.light,
+      brightness: Brightness.light,
       primary: Color(0xff234373),
       surfaceTint: Color(0xff415f91),
       onPrimary: Color(0xffffffff),
@@ -262,7 +245,7 @@ class MaterialTheme {
 
   static MaterialScheme darkScheme() {
     return const MaterialScheme(
-       brightness: Brightness.dark,
+      brightness: Brightness.dark,
       primary: Color(0xffaac7ff),
       surfaceTint: Color(0xffaac7ff),
       onPrimary: Color(0xff0a305f),
@@ -321,7 +304,7 @@ class MaterialTheme {
 
   static MaterialScheme darkMediumContrastScheme() {
     return const MaterialScheme(
-       brightness: Brightness.dark,
+      brightness: Brightness.dark,
       primary: Color(0xffb1cbff),
       surfaceTint: Color(0xffaac7ff),
       onPrimary: Color(0xff001634),

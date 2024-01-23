@@ -81,8 +81,6 @@ class MainNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      height: 55,
-      indicatorColor: Colors.transparent,
       selectedIndex: selectedIndex,
       onDestinationSelected: onItemSelected,
       destinations: [
