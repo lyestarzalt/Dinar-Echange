@@ -15,7 +15,6 @@ class ErrorApp extends StatelessWidget {
       child: Scaffold(
         body: ErrorMessage(
           title: AppLocalizations.of(context)!.errormessage_message,
-          message: errorMessage,
           onRetry: onRetry,
         ),
       ),
