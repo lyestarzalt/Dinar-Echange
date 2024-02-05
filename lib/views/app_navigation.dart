@@ -20,33 +20,37 @@ class AppNavigation extends StatefulWidget {
 class MainScreenState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<NavigationProvider>(
-        builder: (context, navigationProvider, child) {
-          return PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 400),
-            transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
-            child: _getPageWidget(navigationProvider.selectedIndex),
-          );
-        },
-      ),
-      bottomNavigationBar: Consumer<NavigationProvider>(
-        builder: (context, navigationProvider, child) {
-          return MainNavigation(
-            selectedIndex: navigationProvider.selectedIndex,
-            onItemSelected: (index) => navigationProvider.selectedIndex = index,
-          );
-        },
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        body: Consumer<NavigationProvider>(
+          builder: (context, navigationProvider, child) {
+            return PageTransitionSwitcher(
+              duration: const Duration(milliseconds: 400),
+              transitionBuilder: (
+                Widget child,
+                Animation<double> animation,
+                Animation<double> secondaryAnimation,
+              ) {
+                return FadeThroughTransition(
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                );
+              },
+              child: _getPageWidget(navigationProvider.selectedIndex),
+            );
+          },
+        ),
+        bottomNavigationBar: Consumer<NavigationProvider>(
+          builder: (context, navigationProvider, child) {
+            return MainNavigation(
+              selectedIndex: navigationProvider.selectedIndex,
+              onItemSelected: (index) =>
+                  navigationProvider.selectedIndex = index,
+            );
+          },
+        ),
       ),
     );
   }

@@ -35,63 +35,66 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ConvertProvider>(context);
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
-        actions: [
-          IconButton(
-            tooltip:
-                AppLocalizations.of(context)!.currency_buy_sell_explanation,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  content: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .currency_buy_sell_explanation,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
+          actions: [
+            IconButton(
+              tooltip:
+                  AppLocalizations.of(context)!.currency_buy_sell_explanation,
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text(AppLocalizations.of(context)!.close_button),
-                      onPressed: () => Navigator.of(context).pop(),
+                    content: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .currency_buy_sell_explanation,
+                      ),
                     ),
-                  ],
-                );
-              },
-            ),
-            icon: const Icon(Icons.info_outline),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _converter(context, provider),
-              const SizedBox(
-                height: 10,
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text(AppLocalizations.of(context)!.close_button),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  );
+                },
               ),
-              Visibility(
-                visible: !provider.isDZDtoCurrency,
-                child: NumberToWordsDisplay(
-                  currency: provider.currency,
-                  isDZDtoCurrency: !provider.isDZDtoCurrency,
-                  numberController: provider.isDZDtoCurrency
-                      ? provider.amountController
-                      : provider.resultController,
-                  provider: provider,
+              icon: const Icon(Icons.info_outline),
+            )
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _converter(context, provider),
+                const SizedBox(
+                  height: 10,
                 ),
-              )
-            ],
+                Visibility(
+                  visible: !provider.isDZDtoCurrency,
+                  child: NumberToWordsDisplay(
+                    currency: provider.currency,
+                    isDZDtoCurrency: !provider.isDZDtoCurrency,
+                    numberController: provider.isDZDtoCurrency
+                        ? provider.amountController
+                        : provider.resultController,
+                    provider: provider,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

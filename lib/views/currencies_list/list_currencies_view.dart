@@ -22,7 +22,7 @@ class CurrencyListScreen extends StatelessWidget {
         builder: (context, selectionProvider, _) {
           LanguageProvider languageProvider =
               Provider.of<LanguageProvider>(context);
-
+          //selectionProvider!.filteredCurrencies[0].date CAN BE EMPTY
           String formattedDate = languageProvider
               .getDatetime(selectionProvider.filteredCurrencies[0].date);
 
@@ -34,7 +34,16 @@ class CurrencyListScreen extends StatelessWidget {
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0, left: 16, top: 5),
-                  child: Text(formattedDate),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        formattedDate,
+                      ),
+                     const SizedBox(width: 10),
+                      const Icon(Icons.update),
+                    ],
+                  ),
                 ),
               ],
             ),
