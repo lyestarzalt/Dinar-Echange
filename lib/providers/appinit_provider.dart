@@ -7,9 +7,9 @@ import 'package:dinar_watch/utils/logging.dart';
 import 'package:dinar_watch/utils/enums.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:http/http.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
-
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   CurrenciesState _state = CurrenciesState.loading();
@@ -21,9 +21,13 @@ class AppInitializationProvider with ChangeNotifier {
     FlutterNativeSplash.preserve(
         widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
     try {
-    await Firebase.initializeApp();
-    await requestNotificationPermissions();
-    await setupFirebaseMessaging();
+      await Firebase.initializeApp();
+      FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.debug,
+      );
+      await requestNotificationPermissions();
+      await setupFirebaseMessaging();
       await FirebaseAuth.instance.signInAnonymously();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
@@ -44,29 +48,22 @@ class AppInitializationProvider with ChangeNotifier {
       badge: true,
       sound: true,
     );
-    final fxm = await messaging.getToken();
-    print(fxm);
     // Log or handle the permissions state if needed
   }
 
   Future<void> setupFirebaseMessaging() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    // Handle foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // Handle the message. You can show a notification or update the UI.
+      // TODO Handle the foreground message.
     });
 
-    // Handle background messages
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 }
 
-// Define a top-level named handler outside of your class for background messages
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Make sure to initialize Firebase within the background handler
   await Firebase.initializeApp();
-  // Handle the message. Note: This handler runs in background, separate from the UI thread.
 }
 
 class CurrenciesState {

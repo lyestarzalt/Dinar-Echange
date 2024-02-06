@@ -8,19 +8,31 @@ class AppLogger {
     _logger.i(message);
   }
 
-static void logError(String message,
+  static void logError(String message,
       {Object? error, StackTrace? stackTrace}) {
-   
-   
     _logger.e(message, error: error, stackTrace: stackTrace);
-    
-    
-    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+
+    FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      reason: message,
+      information: [], 
+      printDetails: true, 
+      fatal: false, 
+    );
   }
 
   static void logFatal(String message,
       {Object? error, StackTrace? stackTrace}) {
     _logger.f(message, error: error, stackTrace: stackTrace);
-    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+
+    FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      reason: message,
+      information: [],
+      printDetails: true,
+      fatal: true,
+    );
   }
 }
