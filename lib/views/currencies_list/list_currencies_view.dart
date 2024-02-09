@@ -8,6 +8,7 @@ import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
+import 'package:dinar_watch/utils/analytics_service.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
@@ -61,6 +62,9 @@ class CurrencyListScreen extends StatelessWidget {
                     return InkWell(
                       key: ValueKey(currency.currencyCode),
                       onTap: () {
+                            AnalyticsService.trackScreenView(
+                            screenName: 'Converter');
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -84,7 +88,10 @@ class CurrencyListScreen extends StatelessWidget {
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => Navigator.push(
+              onPressed: () {
+                AnalyticsService.trackScreenView(screenName: 'AddCurrencies');
+
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider.value(
@@ -92,7 +99,8 @@ class CurrencyListScreen extends StatelessWidget {
                     child: const AddCurrencyPage(),
                   ),
                 ),
-              ),
+              );
+              } ,
               tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
               child: const Icon(Icons.add),
             ),

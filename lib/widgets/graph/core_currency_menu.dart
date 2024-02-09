@@ -3,10 +3,11 @@ import 'package:dinar_watch/data/models/currency.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_watch/utils/analytics_service.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
-  final Function(Currency) onCurrencySelected; // Change to accept Currency
+  final Function(Currency) onCurrencySelected;
   final BuildContext parentContext;
 
   const CurrencyMenu({
@@ -20,6 +21,13 @@ class CurrencyMenu extends StatefulWidget {
 }
 
 class _CurrencyMenuState extends State<CurrencyMenu> {
+  @override
+  void initState() {
+    AnalyticsService.trackScreenView(screenName: 'ChoseCurrecniesGraph');
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(

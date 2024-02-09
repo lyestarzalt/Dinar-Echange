@@ -13,7 +13,7 @@ class FirestoreService {
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
-
+      AppLogger.logInfo('one Read');
       if (snapshot.docs.isEmpty) {
         AppLogger.logError('No data available for today\'s currencies.');
         throw Exception('No data available.');

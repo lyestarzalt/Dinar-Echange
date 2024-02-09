@@ -16,6 +16,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:dinar_watch/utils/analytics_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,7 @@ class DinarWatchState extends State<DinarWatch> {
             .initializeApp());
   }
 
+
   @override
   Widget build(BuildContext context) {
     final MaterialTheme materialTheme = MaterialTheme();
@@ -67,9 +69,6 @@ class DinarWatchState extends State<DinarWatch> {
     return Consumer2<ThemeProvider, LanguageProvider>(
       builder: (context, themeProvider, languageProvider, _) {
         return MaterialApp(
-          navigatorObservers: [
-            FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance)
-          ],
           title: 'Dinar Watch',
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),

@@ -5,6 +5,7 @@ import 'package:dinar_watch/widgets/convert/number_words.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dinar_watch/utils/analytics_service.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});
@@ -19,6 +20,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 
   @override
   void initState() {
+
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -78,7 +80,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _converter(context, provider),
+                NewWidget(context: context, provider: provider),
                 const SizedBox(
                   height: 10,
                 ),
@@ -100,8 +102,20 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       ),
     );
   }
+}
 
-  Widget _converter(BuildContext context, provider) {
+class NewWidget extends StatelessWidget {
+  const NewWidget({
+    super.key,
+    required this.context,
+    required this.provider,
+  });
+
+  final BuildContext context;
+  final ConvertProvider  provider;
+
+  @override
+  Widget build(BuildContext context) {
     final provider = Provider.of<ConvertProvider>(context);
     final screenHeight =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
