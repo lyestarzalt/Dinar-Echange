@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import 'package:dinar_watch/theme/material_scheme.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MaterialTheme {
   ThemeData theme(ColorScheme colorScheme) => ThemeData(
@@ -61,7 +60,7 @@ class MaterialTheme {
         ),
       );
   static TextTheme _createCustomTextTheme(TextTheme base) {
-    return GoogleFonts.robotoSlabTextTheme(base);
+    return base.apply(fontFamily: 'UbuntuMono');
   }
 
   MaterialTheme();

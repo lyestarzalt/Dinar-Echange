@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui';
 
 class LanguageProvider with ChangeNotifier {
   Locale _currentLocale = const Locale('en');
@@ -20,7 +21,17 @@ class LanguageProvider with ChangeNotifier {
 
   Future<void> loadSelectedLanguage() async {
     String? languageCode = await PreferencesService().getSelectedLanguage();
-    _currentLocale = Locale(languageCode ?? 'en');
+
+    if (languageCode != null) {
+      // If there's a saved language preference, use that
+      _currentLocale = Locale(languageCode);
+    } else {
+      // No saved preference, so use the system's locale
+      final List<Locale> systemLocales = PlatformDispatcher.instance.locales;
+      _currentLocale =
+          systemLocales.isNotEmpty ? systemLocales.first : const Locale('en');
+    }
+
     notifyListeners();
   }
 

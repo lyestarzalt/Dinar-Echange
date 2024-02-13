@@ -2,10 +2,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:intl/intl.dart';
-import 'package:dinar_watch/services/remote_config.dart';
 import 'package:dinar_watch/utils/logging.dart';
 
 class CacheManager {
+  //TODO ADD logging
   Future<void> setCache(String key, Map<String, dynamic> data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     data['timestamp'] = DateTime.now().toUtc().millisecondsSinceEpoch;
@@ -40,9 +40,7 @@ class CacheManager {
   }
 
   bool shouldBypassCache(Map<String, dynamic> cachedData) {
-    bool forceRefresh = RemoteConfigService().forceRefresh;
-    AppLogger.logInfo('Bypass cache? $forceRefresh');
-    return forceRefresh || !cachedData.containsKey('timestamp');
+    return false;
   }
 
   bool isCacheDateValid(Map<String, dynamic> cachedData) {

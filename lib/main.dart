@@ -9,21 +9,20 @@ import 'package:dinar_watch/providers/navigation_provider.dart';
 import 'package:dinar_watch/theme/theme.dart';
 import 'package:dinar_watch/views/error/error_view.dart';
 import 'package:dinar_watch/providers/appinit_provider.dart';
-import 'package:dinar_watch/services/remote_config.dart';
 import 'package:dinar_watch/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  AppLogger.logInfo('Firebase initialized successfully.');
 
   await PreferencesService().init();
-  await RemoteConfigService().init();
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // The app is only usable in portrait mode
   SystemChrome.setPreferredOrientations([

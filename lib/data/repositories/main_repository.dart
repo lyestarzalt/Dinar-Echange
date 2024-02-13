@@ -41,18 +41,22 @@ class MainRepository implements CurrencyRepository {
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
 
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        AppLogger.logInfo('Cache hit for key: $cacheKey');
+        AppLogger.logInfo('_getCachedData: Cache hit for key: $cacheKey');
         return fromJson(cachedData['data']);
       }
 
       AppLogger.logInfo(
-          'Cache miss. Fetching from Firestore for key: $cacheKey');
+          '_getCachedData: Cache miss. Fetching from Firestore for key: $cacheKey');
+
       T data = await fetchFromFirestore();
       await _cacheManager.setCache(cacheKey, {'data': data});
       return data;
     } catch (e, stackTrace) {
-      AppLogger.logError('Failed to fetch data for key: $cacheKey',
-          error: e, stackTrace: stackTrace);
+      AppLogger.logError(
+          '_getCachedData: Failed to fetch data for key: $cacheKey. Error: $e',
+          error: e,
+          stackTrace: stackTrace);
+
       rethrow;
     }
   }

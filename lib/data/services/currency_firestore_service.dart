@@ -13,10 +13,11 @@ class FirestoreService {
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
-      AppLogger.logInfo('one Read');
       if (snapshot.docs.isEmpty) {
-        AppLogger.logError('No data available for today\'s currencies.');
-        throw Exception('No data available.');
+        String errMsg =
+        'fetchCurrenciesFromFirestore: No daily currency data found. Collection may be empty';
+        AppLogger.logError(errMsg);
+        throw Exception(errMsg);
       }
 
       DocumentSnapshot lastSnapshot = snapshot.docs.first;
@@ -36,27 +37,30 @@ class FirestoreService {
         );
       }).toList();
     } catch (e) {
-      AppLogger.logError('Error fetching today\'s currencies: $e');
+          AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
+
       rethrow;
     }
   }
 
   Future<Currency> fetchCurrencyHistoryFromFirestore(Currency currency) async {
     try {
-      DocumentSnapshot docSnapshot = await _firestore
+      DocumentSnapshot snapshot = await _firestore
           .collection('exchange-rate-trends')
           .doc(currency.currencyCode)
           .get();
 
-      if (!docSnapshot.exists) {
-        AppLogger.logError(
-            'No history available for ${currency.currencyCode}.');
-        throw Exception('No history available for ${currency.currencyCode}.');
+      if (!snapshot.exists) {
+             String errMsg =
+            'fetchCurrencyHistoryFromFirestore: No history found for ${currency.currencyCode}. Document does not exist.';
+
+        AppLogger.logError(errMsg);
+        throw Exception(errMsg);
       }
 
       List<CurrencyHistoryEntry> history = [];
 
-      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       data.forEach((date, buyRate) {
         double parsedBuyRate = (buyRate is num) ? buyRate.toDouble() : 0.0;
         history.add(CurrencyHistoryEntry(
@@ -70,7 +74,8 @@ class FirestoreService {
       return currency;
     } catch (e) {
       AppLogger.logError(
-          'Error in fetchCurrencyHistory for ${currency.currencyCode}: $e');
+          'fetchCurrencyHistoryFromFirestore: Exception for ${currency.currencyCode} - $e');
+
       rethrow;
     }
   }

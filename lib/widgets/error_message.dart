@@ -7,12 +7,10 @@ class ErrorMessage extends StatelessWidget {
 
   const ErrorMessage({
     super.key,
-    this.title = 'Oops! Something went wrong.',
-    this.message =
-        'Unable to load the data. Please check your connection and try again.',
+    required this.title,
+    required this.message,
     this.onRetry,
   });
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,12 +24,23 @@ class ErrorMessage extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          title,
+          title, // Assuming 'title' is a variable holding the error title
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onErrorContainer,
             fontSize: 18,
             fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8), // Adjust size as needed
+        Text(
+          message,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context)
+                .colorScheme
+                .onErrorContainer, // Adjust color as needed
+            fontSize: 16, // Adjust font size as needed
           ),
         ),
         const SizedBox(height: 16),
@@ -44,7 +53,7 @@ class ErrorMessage extends StatelessWidget {
             child: Text(
               'Retry',
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.onErrorContainer,
+                  color: Theme.of(context).colorScheme.onError,
                   fontWeight: FontWeight.bold),
             ),
           ),

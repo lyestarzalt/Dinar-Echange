@@ -5,7 +5,6 @@ import 'package:dinar_watch/widgets/convert/number_words.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});

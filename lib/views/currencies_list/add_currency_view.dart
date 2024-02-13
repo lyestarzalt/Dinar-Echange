@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:dinar_watch/providers/list_currency_provider.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
 
 class AddCurrencyPage extends StatelessWidget {
   const AddCurrencyPage({super.key});

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/utils/analytics_service.dart';
@@ -74,7 +73,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
                   ),
                   trailing: Text(
                     currency.currencySymbol ?? '',
-                    style: GoogleFonts.notoSans(fontSize: 18),
+                   
                   ),
                 ),
               );
