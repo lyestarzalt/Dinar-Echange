@@ -15,6 +15,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_watch/providers/admob_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ void main() async {
             ChangeNotifierProvider(create: (_) => LanguageProvider()),
             ChangeNotifierProvider(create: (_) => NavigationProvider()),
             ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+            ChangeNotifierProvider(create: (_) => AdProvider()),
           ],
           child: const DinarWatch(),
         ),
@@ -57,7 +59,6 @@ class DinarWatchState extends State<DinarWatch> {
         Provider.of<AppInitializationProvider>(context, listen: false)
             .initializeApp());
   }
-
 
   @override
   Widget build(BuildContext context) {

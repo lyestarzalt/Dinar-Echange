@@ -47,7 +47,6 @@ class ConvertProvider with ChangeNotifier {
         double rate = getRate(isDZDtoCurrency, currency);
         double result = amount * rate;
 
-        // TODO: Follow device local, instead of hardcoded.
         String formattedResult =
             NumberFormat.currency(locale: 'en_US', decimalDigits: 2, symbol: '')
                 .format(result);

@@ -9,6 +9,7 @@ import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:dinar_watch/utils/analytics_service.dart';
+import 'package:dinar_watch/providers/admob_provider.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
@@ -87,23 +88,52 @@ class CurrencyListScreen extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButton: FloatingActionButton(
+   floatingActionButton: FloatingActionButton(
               onPressed: () {
-                AnalyticsService.trackScreenView(screenName: 'AddCurrencies');
+                final adProvider =
+                    Provider.of<AdProvider>(context, listen: false);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider.value(
-                    value: selectionProvider,
-                    child: const AddCurrencyPage(),
-                  ),
-                ),
-              );
-              } ,
+                // Checking if an interstitial ad is loaded before attempting to show it
+                if (adProvider.isInterstitialAdLoaded) {
+                  // Use the enhanced showInterstitialAd method with callbacks
+                  adProvider.showInterstitialAd(
+                    onAdClosed: () {
+                      // Navigate after the ad is closed
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider.value(
+                            value: selectionProvider,
+                            child: const AddCurrencyPage(),
+                          ),
+                        ),
+                      );
+                      // Tracking the screen view after the ad is closed and navigation occurs
+                      AnalyticsService.trackScreenView(
+                          screenName: 'AddCurrencies');
+                    },
+               
+                  );
+                } else {
+                  // If no ad is loaded, navigate directly
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: selectionProvider,
+                        child: const AddCurrencyPage(),
+                      ),
+                    ),
+                  );
+                  // Optionally, track that the navigation happened without showing an ad
+                  AnalyticsService.trackScreenView(screenName: 'AddCurrencies');
+                }
+              },
               tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
               child: const Icon(Icons.add),
             ),
+
+
           );
         },
       ),

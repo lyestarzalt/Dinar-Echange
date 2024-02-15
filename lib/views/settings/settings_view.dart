@@ -3,6 +3,8 @@ import 'package:dinar_watch/utils/enums.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:dinar_watch/providers/theme_provider.dart';
+import 'package:dinar_watch/providers/admob_provider.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,14 @@ class SettingsPageState extends State<SettingsPage> {
     'Français': 'fr',
     '中文': 'zh',
   };
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final adProvider = Provider.of<AdProvider>(context, listen: false);
+      adProvider.loadBannerAd(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +68,7 @@ class SettingsPageState extends State<SettingsPage> {
                     icon: Icons.star,
                     text: AppLocalizations.of(context)!.rate_us_button,
                     onTap: () {
-                      // Rate us action
+                      //TODO Rate us action
                     },
                   ),
                   SettingsItem(
@@ -69,6 +79,20 @@ class SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   const SizedBox(height: 16),
+                  Consumer<AdProvider>(
+                    builder: (context, adProvider, child) {
+                      if (adProvider.isBannerAdLoaded) {
+                        return Container(
+                          alignment: Alignment.center,
+                          child: AdWidget(ad: adProvider.bannerAd!),
+                          width: adProvider.bannerAd!.size.width.toDouble(),
+                          height: adProvider.bannerAd!.size.height.toDouble(),
+                        );
+                      } else {
+                        return Center(child: Text("Ad is loading..."));
+                      }
+                    },
+                  ),
                 ],
               )),
         ));

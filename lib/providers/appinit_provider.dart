@@ -14,6 +14,7 @@ import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   CurrenciesState _state = CurrenciesState.loading();
@@ -32,8 +33,9 @@ class AppInitializationProvider with ChangeNotifier {
         await FirebaseAppCheck.instance
             .activate(androidProvider: AndroidProvider.playIntegrity);
       }
+      MobileAds.instance.initialize();
 
-      AppLogger.logInfo('Firebase App Check activated.');
+      AppLogger.logInfo('MobileAds activated.');
 
       await requestNotificationPermissions();
       AppLogger.logInfo('Notification permissions requested.');
