@@ -4,9 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:dinar_watch/providers/theme_provider.dart';
 import 'package:dinar_watch/providers/admob_provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:provider/provider.dart';
+import 'package:dinar_watch/widgets/adbanner.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -79,20 +79,7 @@ class SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Consumer<AdProvider>(
-                    builder: (context, adProvider, child) {
-                      if (adProvider.isBannerAdLoaded) {
-                        return Container(
-                          alignment: Alignment.center,
-                          child: AdWidget(ad: adProvider.bannerAd!),
-                          width: adProvider.bannerAd!.size.width.toDouble(),
-                          height: adProvider.bannerAd!.size.height.toDouble(),
-                        );
-                      } else {
-                        return Center(child: Text("Ad is loading..."));
-                      }
-                    },
-                  ),
+                  const AdBannerWidget(),
                 ],
               )),
         ));

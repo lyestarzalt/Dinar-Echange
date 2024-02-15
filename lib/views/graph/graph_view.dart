@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:dinar_watch/providers/admob_provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:dinar_watch/widgets/adbanner.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -200,24 +201,7 @@ class HistoryPage extends StatelessWidget {
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.processData(days: days),
           ),
-          Consumer<AdProvider>(
-            builder: (context, adProvider, child) {
-              if (adProvider.isBannerAdLoaded && adProvider.bannerAd != null) {
-                // Use a UniqueKey to prevent "already in the widget tree" errors.
-                return Container(
-                  alignment: Alignment.center,
-                  width: adProvider.bannerAd!.size.width.toDouble(),
-                  height: adProvider.bannerAd!.size.height.toDouble(),
-                  child: AdWidget(ad: adProvider.bannerAd!, key:  UniqueKey()),
-                );
-              } else {
-                // Ad is not loaded yet, show a placeholder or loading indicator
-                return Center(
-                  child: CircularProgressIndicator(), // Placeholder widget
-                );
-              }
-            },
-          )
+          const AdBannerWidget(),
         ],
       ),
     );
