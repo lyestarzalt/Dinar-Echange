@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -83,16 +86,11 @@ class AppInitializationProvider with ChangeNotifier {
 
     String? token = await messaging.getToken();
     AppLogger.logInfo("FCM Token: $token");
+    const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
 
-    // TODO refactor this
-    List<String> languageTopics = [
-      'allDevices_en',
-      'allDevices_de',
-      'allDevices_fr',
-      'allDevices_ar',
-      'allDevices_es',
-      'allDevices_zh'
-    ];
+    List<String> languageTopics = supportedLocales
+        .map((locale) => 'allDevices_${locale.languageCode}')
+        .toList();
 
     // Unsubscribe from all language topics
     for (String topic in languageTopics) {
@@ -113,7 +111,7 @@ class AppInitializationProvider with ChangeNotifier {
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
+  
 }
 
 class CurrenciesState {

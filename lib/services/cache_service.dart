@@ -2,7 +2,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:intl/intl.dart';
-import 'package:dinar_watch/utils/logging.dart';
 
 class CacheManager {
   //TODO ADD logging
