@@ -59,20 +59,47 @@ class GraphProvider with ChangeNotifier {
 
   Future<void> loadCurrencyHistory() async {
     if (selectedCurrency == null) {
-      AppLogger.logError("Failed to load currency history");
-      throw Exception('Selected currency is not set.');
+      const errorMessage = 'Selected currency is not set.';
+      AppLogger.logError(errorMessage);
+      _state = GraphState.error(errorMessage);
+      notifyListeners();
+      throw Exception(errorMessage);
     }
 
-    selectedCurrency =
-        await _mainRepository.getCurrencyHistory(selectedCurrency!);
+    try {
+      _state = GraphState.loading();
+      notifyListeners();
 
-    if (selectedCurrency!.history!.isNotEmpty) {
+      selectedCurrency =
+          await _mainRepository.getCurrencyHistory(selectedCurrency!);
+
+      if (selectedCurrency!.history!.isEmpty) {
+        const errorMessage =
+            'No history data available for the selected currency.';
+        AppLogger.logError(errorMessage);
+        _state = GraphState.error(errorMessage);
+        notifyListeners();
+        throw Exception(errorMessage);
+      }
+
       filteredHistoryEntries = selectedCurrency!.history!;
       processData(days: timeSpan);
-    } else {
-      throw Exception('No history data available for the selected currency.');
+
+      _state = GraphState.success(filteredHistoryEntries);
+      notifyListeners();
+    } catch (e) {
+      // Log the exception
+      AppLogger.logError('Error loading currency history: ${e.toString()}',
+          error: e);
+      // Update the state to error and notify listeners
+      _state = GraphState.error(e.toString());
+      notifyListeners();
+      // Rethrow the exception or handle it based on your app's needs
+      throw Exception(
+          'Failed to load currency history due to an error: ${e.toString()}');
     }
   }
+
 
   void processData({int days = 180}) {
     if (selectedCurrency == null) return;

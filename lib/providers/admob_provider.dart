@@ -11,8 +11,6 @@ class AdProvider with ChangeNotifier {
   double? _screenWidth;
   double get screenWidth => _screenWidth ?? 0.0;
 
-  // Existing properties and methods for BannerAd...
-
   bool get isBannerAdLoaded => _isBannerAdLoaded;
   bool get isInterstitialAdLoaded => _isInterstitialAdLoaded;
   BannerAd? get bannerAd => _bannerAd;

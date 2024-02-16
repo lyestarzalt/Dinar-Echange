@@ -14,8 +14,6 @@ import 'package:dinar_watch/utils/enums.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/providers/admob_provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:dinar_watch/widgets/adbanner.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -146,13 +144,13 @@ class HistoryPage extends StatelessWidget {
                         '1 ${provider.selectedCurrency!.currencyCode} = $value',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 30,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       );
                     },
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 1),
                   Consumer<LanguageProvider>(
                     builder: (context, languageProvider, child) {
                       return ValueListenableBuilder<DateTime>(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/providers/admob_provider.dart'; // Adjust the import based on your actual file structure
+import 'package:dinar_watch/providers/admob_provider.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class AdBannerWidget extends StatefulWidget {
   const AdBannerWidget({Key? key}) : super(key: key);
@@ -37,14 +38,14 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
     );
 
     if (adSize == null) {
-      print("Unable to get adaptive banner size");
+      AppLogger.logError("Unable to get adaptive banner size");
       return;
     }
 
     final BannerAd bannerAd = BannerAd(
-      adUnitId: adProvider.bannerAdUnitId, // Use your ad unit ID
+      adUnitId: adProvider.bannerAdUnitId,
       size: adSize,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           setState(() {
@@ -53,7 +54,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          debugPrint('Ad failed to load: $error');
+          AppLogger.logError('Ad failed to load: $error');
           ad.dispose();
         },
       ),
