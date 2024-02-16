@@ -1,4 +1,3 @@
-import 'package:dinar_watch/utils/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/providers/list_currency_provider.dart';

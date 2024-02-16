@@ -13,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_watch/utils/state.dart';
+import 'package:dinar_watch/utils/FirebaseErrorInterpreter.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _state = AppState.loading();
@@ -45,21 +46,18 @@ class AppInitializationProvider with ChangeNotifier {
       _state = AppState.success(fetchedCurrencies);
       AppLogger.logInfo('Fetched daily currencies successfully.');
     } catch (e, stackTrace) {
-      String userMessage;
-      if (e is FirebaseException && e.code == 'permission-denied') {
-        userMessage =
-            "There's a problem with the app's permissions. Please contact support.";
-      } else if (e is FirebaseException && e.code == 'network-request-failed') {
-        userMessage = "Please check your internet connection and try again.";
-      } else {
-        userMessage =
-            "Something went wrong during app initialization. Please try again later.";
-      }
+      final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
       AppLogger.logFatal(
-          'initializeApp: Failed during app initialization. Error: $e',
+          'initializeApp: Failed during app initialization. Error: ${errorResult.message}',
           error: e,
           stackTrace: stackTrace);
-      _state = AppState.error(userMessage);
+
+      if (errorResult.canContinue) {
+        List<Currency> fetchedCurrencies =
+            await MainRepository().getDailyCurrencies();
+        _state = AppState.success(fetchedCurrencies);
+      }
+      _state = AppState.error(errorResult.message);
     } finally {
       FlutterNativeSplash.remove();
       notifyListeners();

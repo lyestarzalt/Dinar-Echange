@@ -1,3 +1,4 @@
+
 extension CapitalizeExtension on String {
   String capitalizeEveryWord() {
     return split(' ')
