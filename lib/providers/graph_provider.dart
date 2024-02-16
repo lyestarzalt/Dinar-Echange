@@ -4,7 +4,7 @@ import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency_history.dart';
 import 'dart:math' as math;
 import 'package:dinar_watch/utils/logging.dart';
-import 'package:dinar_watch/utils/enums.dart';
+import 'package:dinar_watch/utils/state.dart';
 
 class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
@@ -20,9 +20,9 @@ class GraphProvider with ChangeNotifier {
   final int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
   final String dateformat = 'd MMMM y';
-  GraphState _state = GraphState.loading();
+  AppState _state = AppState.loading();
 
-  GraphState get state => _state;
+  AppState get state => _state;
 
   GraphProvider(List<Currency> allCurrencies) {
     fetchCurrencies(allCurrencies);
@@ -30,7 +30,7 @@ class GraphProvider with ChangeNotifier {
 
   Future<void> fetchCurrencies(List<Currency> allCurrencies) async {
     try {
-      _state = GraphState.loading();
+      _state = AppState.loading();
       notifyListeners();
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
@@ -39,11 +39,11 @@ class GraphProvider with ChangeNotifier {
         orElse: () => coreCurrencies.first,
       );
       await loadCurrencyHistory();
-      _state = GraphState.success(filteredHistoryEntries);
+      _state = AppState.success(filteredHistoryEntries);
       notifyListeners();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
-      _state = GraphState.error(e.toString());
+      _state = AppState.error(e.toString());
       notifyListeners();
     }
   }
@@ -61,13 +61,13 @@ class GraphProvider with ChangeNotifier {
     if (selectedCurrency == null) {
       const errorMessage = 'Selected currency is not set.';
       AppLogger.logError(errorMessage);
-      _state = GraphState.error(errorMessage);
+      _state = AppState.error(errorMessage);
       notifyListeners();
       throw Exception(errorMessage);
     }
 
     try {
-      _state = GraphState.loading();
+      _state = AppState.loading();
       notifyListeners();
 
       selectedCurrency =
@@ -77,7 +77,7 @@ class GraphProvider with ChangeNotifier {
         const errorMessage =
             'No history data available for the selected currency.';
         AppLogger.logError(errorMessage);
-        _state = GraphState.error(errorMessage);
+        _state = AppState.error(errorMessage);
         notifyListeners();
         throw Exception(errorMessage);
       }
@@ -85,16 +85,13 @@ class GraphProvider with ChangeNotifier {
       filteredHistoryEntries = selectedCurrency!.history!;
       processData(days: timeSpan);
 
-      _state = GraphState.success(filteredHistoryEntries);
+      _state = AppState.success(filteredHistoryEntries);
       notifyListeners();
     } catch (e) {
-      // Log the exception
       AppLogger.logError('Error loading currency history: ${e.toString()}',
           error: e);
-      // Update the state to error and notify listeners
-      _state = GraphState.error(e.toString());
+      _state = AppState.error(e.toString());
       notifyListeners();
-      // Rethrow the exception or handle it based on your app's needs
       throw Exception(
           'Failed to load currency history due to an error: ${e.toString()}');
     }
@@ -124,18 +121,3 @@ class GraphProvider with ChangeNotifier {
   }
 }
 
-class GraphState {
-  LoadState state;
-  List<CurrencyHistoryEntry>? historyEntries;
-  String? errorMessage;
-
-  GraphState._({required this.state, this.historyEntries, this.errorMessage});
-
-  factory GraphState.loading() => GraphState._(state: LoadState.loading);
-
-  factory GraphState.success(List<CurrencyHistoryEntry> historyEntries) =>
-      GraphState._(state: LoadState.success, historyEntries: historyEntries);
-
-  factory GraphState.error(String message) =>
-      GraphState._(state: LoadState.error, errorMessage: message);
-}

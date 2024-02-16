@@ -1,26 +1,26 @@
 import 'dart:ui';
-
 import 'package:dinar_watch/data/repositories/main_repository.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_watch/utils/logging.dart';
-import 'package:dinar_watch/utils/enums.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
+import 'package:dinar_watch/utils/state.dart';
 
 class AppInitializationProvider with ChangeNotifier {
-  CurrenciesState _state = CurrenciesState.loading();
+  AppState <List<Currency>> _state = AppState.loading();
 
-  CurrenciesState get state => _state;
-  List<Currency>? get currencies => _state.currencies;
+  AppState get state => _state;
+  List<Currency>? get currencies => _state.data;
+
+
   Future<void> initializeApp() async {
     try {
       FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
@@ -48,7 +48,7 @@ class AppInitializationProvider with ChangeNotifier {
 
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
-      _state = CurrenciesState.success(fetchedCurrencies);
+      _state = AppState.success(fetchedCurrencies);
       AppLogger.logInfo('Fetched daily currencies successfully.');
     } catch (e, stackTrace) {
       String userMessage;
@@ -65,7 +65,7 @@ class AppInitializationProvider with ChangeNotifier {
           'initializeApp: Failed during app initialization. Error: $e',
           error: e,
           stackTrace: stackTrace);
-      _state = CurrenciesState.error(userMessage);
+      _state = AppState.error(userMessage);
     } finally {
       FlutterNativeSplash.remove();
       notifyListeners();
@@ -113,22 +113,4 @@ class AppInitializationProvider with ChangeNotifier {
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  
-}
-
-class CurrenciesState {
-  LoadState state;
-  List<Currency>? currencies;
-  String? errorMessage;
-
-  CurrenciesState._({required this.state, this.currencies, this.errorMessage});
-
-  factory CurrenciesState.loading() =>
-      CurrenciesState._(state: LoadState.loading);
-
-  factory CurrenciesState.success(List<Currency> currencies) =>
-      CurrenciesState._(state: LoadState.success, currencies: currencies);
-
-  factory CurrenciesState.error(String message) =>
-      CurrenciesState._(state: LoadState.error, errorMessage: message);
 }
