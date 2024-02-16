@@ -15,24 +15,18 @@ import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_watch/utils/state.dart';
 
 class AppInitializationProvider with ChangeNotifier {
-  AppState <List<Currency>> _state = AppState.loading();
-
+  AppState<List<Currency>> _state = AppState.loading();
   AppState get state => _state;
   List<Currency>? get currencies => _state.data;
-
 
   Future<void> initializeApp() async {
     try {
       FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
       AppLogger.logInfo('Firebase Analytics collection enabled.');
 
-      if (kDebugMode) {
-        await FirebaseAppCheck.instance
-            .activate(androidProvider: AndroidProvider.debug);
-      } else {
-        await FirebaseAppCheck.instance
-            .activate(androidProvider: AndroidProvider.playIntegrity);
-      }
+      await FirebaseAppCheck.instance
+          .activate(androidProvider: AndroidProvider.debug);
+
       MobileAds.instance.initialize();
 
       AppLogger.logInfo('MobileAds activated.');

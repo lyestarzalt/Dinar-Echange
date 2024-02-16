@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_watch/providers/admob_provider.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_watch/utils/logging.dart'; // Ensure you have a logging utility
 
 class AdBannerWidget extends StatefulWidget {
   const AdBannerWidget({Key? key}) : super(key: key);
@@ -14,47 +14,41 @@ class AdBannerWidget extends StatefulWidget {
 class _AdBannerWidgetState extends State<AdBannerWidget> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  AdSize? _adSize;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // This ensures we have a context with MediaQuery available
-    _initBannerAd();
+    final adProvider = Provider.of<AdProvider>(context, listen: false);
+    _loadAd(adProvider);
   }
 
-  void _initBannerAd() async {
-    final adProvider = Provider.of<AdProvider>(context, listen: false);
+  void _loadAd(AdProvider adProvider) async {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Get adaptive banner size
-    final AdSize? adSize = await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
-      screenWidth.truncate(),
-    );
-
-    if (adSize == null) {
-      AppLogger.logError("Unable to get adaptive banner size");
-      return;
-    }
+    // Use the getPortraitInlineAdaptiveBannerAdSize method since the app is always in portrait mode.
+    final AdSize adSize =
+        AdSize.getPortraitInlineAdaptiveBannerAdSize(screenWidth.truncate());
 
     final BannerAd bannerAd = BannerAd(
       adUnitId: adProvider.bannerAdUnitId,
       size: adSize,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
+        onAdLoaded: (Ad ad) async {
+          AppLogger.logInfo('AdBannerWidget: Ad loaded.');
+          //get the actual size of the ad from the platform since the height can vary.
+          final AdSize? loadedAdSize =
+              await (ad as BannerAd).getPlatformAdSize();
+          if (!mounted) return;
           setState(() {
-            _bannerAd = ad as BannerAd;
+            _bannerAd = ad;
             _isAdLoaded = true;
+            _adSize = loadedAdSize;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          AppLogger.logError('Ad failed to load: $error');
+          AppLogger.logError('AdBannerWidget: Ad failed to load: $error');
           ad.dispose();
         },
       ),
@@ -65,12 +59,14 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: _isAdLoaded ? AdWidget(ad: _bannerAd!) : SizedBox(),
-      width: _bannerAd?.size.width.toDouble(),
-      height: _bannerAd?.size.height.toDouble(),
-    );
+    return _isAdLoaded && _adSize != null
+        ? Container(
+            alignment: Alignment.center,
+            width: _adSize!.width.toDouble(),
+            height: _adSize!.height.toDouble(),
+            child: AdWidget(ad: _bannerAd!),
+          )
+        : SizedBox();
   }
 
   @override

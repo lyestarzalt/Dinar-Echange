@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:dinar_watch/utils/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
@@ -16,37 +16,26 @@ class AdProvider with ChangeNotifier {
   BannerAd? get bannerAd => _bannerAd;
 
   final String bannerAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111' // Test Banner Ad ID for Android
-      : 'ca-app-pub-3940256099942544/2934735716'; // Test Banner Ad ID for iOS
+      ? 'ca-app-pub-3940256099942544/6300978111'
+      : 'ca-app-pub-3940256099942544/2934735716';
 
   final String interstitialAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1033173712' // Test Interstitial Ad ID for Android
-      : 'ca-app-pub-3940256099942544/4411468910'; // Test Interstitial Ad ID for iOS
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
 
-  AdProvider();
+  Future<void> loadInlineAdaptiveBannerAd(BuildContext context,
+      {int maxHeight = 0}) async {
+    final screenWidth = MediaQuery.of(context).size.width;
 
-  void updateScreenWidth(double newWidth) {
-    _screenWidth = newWidth;
-    notifyListeners();
-  }
-
-  Future<void> loadBannerAd(BuildContext context) async {
-    final AdSize? adSize = await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
-      MediaQuery.of(context).size.width.truncate(),
-    );
-
-    if (adSize == null) {
-      debugPrint('Unable to get adaptive banner ad size');
-      return;
-    }
+    final AdSize adSize = maxHeight > 0
+        ? AdSize.getInlineAdaptiveBannerAdSize(
+            screenWidth.truncate(), maxHeight)
+        : AdSize.getPortraitInlineAdaptiveBannerAdSize(screenWidth.truncate());
 
     _bannerAd = BannerAd(
-      adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/6300978111'
-          : 'ca-app-pub-3940256099942544/2934735716',
+      adUnitId: bannerAdUnitId,
       size: adSize,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
           _isBannerAdLoaded = true;
@@ -55,9 +44,16 @@ class AdProvider with ChangeNotifier {
         onAdFailedToLoad: (ad, error) {
           debugPrint('BannerAd failed to load: $error');
           ad.dispose();
+          _isBannerAdLoaded = false;
+          notifyListeners();
         },
       ),
     )..load();
+  }
+
+  void updateScreenWidth(double newWidth) {
+    _screenWidth = newWidth;
+    notifyListeners();
   }
 
   void loadInterstitialAd() {
@@ -66,14 +62,14 @@ class AdProvider with ChangeNotifier {
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
-          debugPrint('InterstitialAd loaded.');
+          AppLogger.logInfo('InterstitialAd loaded.');
           _interstitialAd = ad;
           _isInterstitialAdLoaded = true;
           notifyListeners();
           _setInterstitialAdCallbacks(ad);
         },
         onAdFailedToLoad: (LoadAdError error) {
-          debugPrint('InterstitialAd failed to load: $error');
+          AppLogger.logError('InterstitialAd failed to load: $error');
         },
       ),
     );
@@ -86,13 +82,13 @@ class AdProvider with ChangeNotifier {
     if (_isInterstitialAdLoaded && _interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          debugPrint('Ad dismissed fullscreen content.');
+          AppLogger.logInfo('Ad dismissed fullscreen content.');
           ad.dispose();
           loadInterstitialAd(); // Optionally preload the next ad
           onAdClosed(); // Execute the callback after the ad is closed
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          debugPrint('Ad failed to show fullscreen content: $error');
+          AppLogger.logError('Ad failed to show fullscreen content: $error');
           ad.dispose();
           loadInterstitialAd(); // Optionally preload the next ad
           if (onAdFailedToShow != null) {
@@ -104,7 +100,7 @@ class AdProvider with ChangeNotifier {
       _interstitialAd!.show();
       _isInterstitialAdLoaded = false; // Reset the loaded flag
     } else {
-      debugPrint('Interstitial ad was not ready to be shown.');
+      AppLogger.logInfo('Interstitial ad was not ready to be shown.');
       // Directly execute the onAdClosed callback if the ad is not ready
       // This ensures the user flow continues smoothly even without the ad
       onAdClosed();
@@ -114,15 +110,15 @@ class AdProvider with ChangeNotifier {
   void _setInterstitialAdCallbacks(InterstitialAd ad) {
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (Ad ad) =>
-          debugPrint('Ad show fullscreen content.'),
+          AppLogger.logInfo('Ad show fullscreen content.'),
       onAdDismissedFullScreenContent: (Ad ad) {
-        debugPrint('Ad dismissed fullscreen content.');
+        AppLogger.logInfo('Ad dismissed fullscreen content.');
         ad.dispose();
         // Optionally load a new ad
         loadInterstitialAd();
       },
       onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
-        debugPrint('Ad failed to show fullscreen content: $error');
+        AppLogger.logError('Ad failed to show fullscreen content: $error');
         ad.dispose();
       },
     );

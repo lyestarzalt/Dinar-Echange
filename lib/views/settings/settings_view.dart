@@ -26,14 +26,6 @@ class SettingsPageState extends State<SettingsPage> {
     'Français': 'fr',
     '中文': 'zh',
   };
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final adProvider = Provider.of<AdProvider>(context, listen: false);
-      adProvider.loadBannerAd(context);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,40 +39,42 @@ class SettingsPageState extends State<SettingsPage> {
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  buildSectionTitle(
-                      context, AppLocalizations.of(context)!.theme_title),
-                  _buildThemeSelection(context),
-                  const SizedBox(height: 16),
-                  buildSectionTitle(
-                      context, AppLocalizations.of(context)!.general_title),
-                  SettingsItem(
-                    icon: Icons.language,
-                    text: AppLocalizations.of(context)!.chose_language_title,
-                    onTap: () {
-                      _showLanguageDialog();
-                    },
-                  ),
-                  SettingsItem(
-                    icon: Icons.star,
-                    text: AppLocalizations.of(context)!.rate_us_button,
-                    onTap: () {
-                      //TODO Rate us action
-                    },
-                  ),
-                  SettingsItem(
-                    icon: Icons.info_outline,
-                    text: AppLocalizations.of(context)!.about_app_button,
-                    onTap: () {
-                      _showAboutDialog(context);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  const AdBannerWidget(),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    buildSectionTitle(
+                        context, AppLocalizations.of(context)!.theme_title),
+                    _buildThemeSelection(context),
+                    const SizedBox(height: 16),
+                    buildSectionTitle(
+                        context, AppLocalizations.of(context)!.general_title),
+                    SettingsItem(
+                      icon: Icons.language,
+                      text: AppLocalizations.of(context)!.chose_language_title,
+                      onTap: () {
+                        _showLanguageDialog();
+                      },
+                    ),
+                    SettingsItem(
+                      icon: Icons.star,
+                      text: AppLocalizations.of(context)!.rate_us_button,
+                      onTap: () {
+                        //TODO Rate us action
+                      },
+                    ),
+                    SettingsItem(
+                      icon: Icons.info_outline,
+                      text: AppLocalizations.of(context)!.about_app_button,
+                      onTap: () {
+                        _showAboutDialog(context);
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    const AdBannerWidget(),
+                  ],
+                ),
               )),
         ));
   }

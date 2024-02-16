@@ -5,6 +5,7 @@ import 'package:dinar_watch/widgets/convert/number_words.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dinar_watch/widgets/adbanner.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});
@@ -19,7 +20,6 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 
   @override
   void initState() {
-
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -74,15 +74,13 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 NewWidget(context: context, provider: provider),
-                const SizedBox(
-                  height: 10,
-                ),
+                const AdBannerWidget(),
                 Visibility(
                   visible: !provider.isDZDtoCurrency,
                   child: NumberToWordsDisplay(
@@ -111,7 +109,7 @@ class NewWidget extends StatelessWidget {
   });
 
   final BuildContext context;
-  final ConvertProvider  provider;
+  final ConvertProvider provider;
 
   @override
   Widget build(BuildContext context) {

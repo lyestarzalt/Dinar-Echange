@@ -18,10 +18,6 @@ class AppNavigation extends StatefulWidget {
 }
 
 class MainScreenState extends State<AppNavigation> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -82,10 +78,8 @@ class MainScreenState extends State<AppNavigation> {
 class MainNavigation extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
-
   const MainNavigation(
       {super.key, required this.selectedIndex, required this.onItemSelected});
-
   @override
   Widget build(BuildContext context) {
     return NavigationBar(

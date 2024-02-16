@@ -63,9 +63,6 @@ class DinarWatchState extends State<DinarWatch> {
   @override
   Widget build(BuildContext context) {
     final MaterialTheme materialTheme = MaterialTheme();
-    final currencies =
-        Provider.of<AppInitializationProvider>(context).currencies;
-
     return Consumer2<ThemeProvider, LanguageProvider>(
       builder: (context, themeProvider, languageProvider, _) {
         return MaterialApp(
@@ -86,7 +83,8 @@ class DinarWatchState extends State<DinarWatch> {
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:
-                  return AppNavigation(currencies: currencies!);
+                  return AppNavigation(
+                      currencies: currenciesProvider.state.data!);
                 case LoadState.error:
                   return ErrorApp(
                     errorMessage: currenciesProvider.state.errorMessage!,
