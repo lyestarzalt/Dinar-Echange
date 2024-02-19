@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:dinar_watch/data/repositories/main_repository.dart';
 
 class ListCurrencyProvider with ChangeNotifier {
   List<Currency> _allCurrencies = [];
@@ -36,6 +37,11 @@ class ListCurrencyProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> refresh_data() async {
+    _allCurrencies = await MainRepository().getDailyCurrencies();
+    notifyListeners();
+  }
+
   Future<void> _loadSelectedCurrencies() async {
     List<String> savedCurrencyNames =
         await PreferencesService().getSelectedCurrencies();
@@ -60,7 +66,6 @@ class ListCurrencyProvider with ChangeNotifier {
   void updateSelectedCurrencies(List<Currency> newSelection) {
     _selectedCurrencies = newSelection;
     notifyListeners();
-    
   }
 
   Future<void> saveSelectedCurrencies() async {

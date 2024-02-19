@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:intl/intl.dart';
 
+
+import 'package:dinar_watch/utils/logging.dart';
+
 class ConvertProvider with ChangeNotifier {
   final Currency currency;
   TextEditingController amountController = TextEditingController();
@@ -11,6 +14,11 @@ class ConvertProvider with ChangeNotifier {
   bool isDZDtoCurrency = false; // Conversion direction flag
 
   ConvertProvider(this.currency) {
+
+
+  AppLogger.logCurrencySelection(currency.currencyCode);
+    AppLogger.trackScreenView('Converter');
+
     amountController.addListener(convertCurrency);
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);

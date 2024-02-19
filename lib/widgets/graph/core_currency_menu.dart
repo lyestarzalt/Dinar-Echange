@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
@@ -22,7 +22,7 @@ class CurrencyMenu extends StatefulWidget {
 class _CurrencyMenuState extends State<CurrencyMenu> {
   @override
   void initState() {
-    AnalyticsService.trackScreenView(screenName: 'ChoseCurrecniesGraph');
+    AppLogger.trackScreenView('ChoseCurrecniesGraph');
 
     super.initState();
   }
@@ -73,7 +73,6 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
                   ),
                   trailing: Text(
                     currency.currencySymbol ?? '',
-                   
                   ),
                 ),
               );

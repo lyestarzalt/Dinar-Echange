@@ -2,28 +2,51 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:dinar_watch/services/preferences_service.dart';
 import 'package:intl/intl.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class CacheManager {
-  //TODO ADD logging
   Future<void> setCache(String key, Map<String, dynamic> data) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    data['timestamp'] = DateTime.now().toUtc().millisecondsSinceEpoch;
-    final String jsonData = json.encode(data);
-    await prefs.setString(key, jsonData);
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      data['timestamp'] = DateTime.now().toUtc().millisecondsSinceEpoch;
+      final String jsonData = json.encode(data);
+      await prefs.setString(key, jsonData);
+      AppLogger.logInfo('setCache: Successfully set cache for key: $key');
+    } catch (e, stackTrace) {
+      AppLogger.logError(
+        'setCache: Failed to set cache for key: $key. Error: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>?> getCache(String key) async {
-    final String? cachedData = await PreferencesService().getString(key);
-    if (cachedData != null) {
-      final Map<String, dynamic> decodedData =
-          json.decode(cachedData) as Map<String, dynamic>;
+    try {
+      final String? cachedData = await PreferencesService().getString(key);
+      if (cachedData != null) {
+        final Map<String, dynamic> decodedData =
+            json.decode(cachedData) as Map<String, dynamic>;
 
-      // Check if the cache is still valid
-      if (isCacheValid(decodedData)) {
-        return decodedData;
+        if (isCacheValid(decodedData)) {
+          AppLogger.logInfo(
+              'getCache: Successfully retrieved cache for key: $key');
+          return decodedData;
+        } else {
+          AppLogger.logInfo(
+              'getCache: Cache data invalid or expired for key: $key');
+        }
       }
+      return null;
+    } catch (e, stackTrace) {
+      AppLogger.logError(
+        'getCache: Failed to retrieve cache for key: $key. Error: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
-    return null;
   }
 
   bool isCacheValid(Map<String, dynamic> cachedData) {

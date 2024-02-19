@@ -54,8 +54,11 @@ class AdProvider with ChangeNotifier {
   void updateScreenWidth(double newWidth) {
     _screenWidth = newWidth;
     notifyListeners();
+  
   }
 
+
+//
   void loadInterstitialAd() {
     InterstitialAd.load(
       adUnitId: interstitialAdUnitId,
@@ -65,64 +68,56 @@ class AdProvider with ChangeNotifier {
           AppLogger.logInfo('InterstitialAd loaded.');
           _interstitialAd = ad;
           _isInterstitialAdLoaded = true;
-          notifyListeners();
-          _setInterstitialAdCallbacks(ad);
+          notifyListeners(); // Notify listeners in case you need to react to ad load state changes
         },
         onAdFailedToLoad: (LoadAdError error) {
           AppLogger.logError('InterstitialAd failed to load: $error');
+          _isInterstitialAdLoaded = false;
+          notifyListeners();
         },
       ),
     );
   }
 
-  void showInterstitialAd({
+  void prepareAndShowInterstitialAd({
     required VoidCallback onAdClosed,
     VoidCallback? onAdFailedToShow,
   }) {
     if (_isInterstitialAdLoaded && _interstitialAd != null) {
-      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          AppLogger.logInfo('Ad dismissed fullscreen content.');
-          ad.dispose();
-          loadInterstitialAd(); // Optionally preload the next ad
-          onAdClosed(); // Execute the callback after the ad is closed
-        },
-        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          AppLogger.logError('Ad failed to show fullscreen content: $error');
-          ad.dispose();
-          loadInterstitialAd(); // Optionally preload the next ad
-          if (onAdFailedToShow != null) {
-            onAdFailedToShow(); // Execute the callback if the ad fails to show
-          }
-        },
-      );
-
-      _interstitialAd!.show();
-      _isInterstitialAdLoaded = false; // Reset the loaded flag
+      _showInterstitialAd(
+          onAdClosed: onAdClosed, onAdFailedToShow: onAdFailedToShow);
     } else {
-      AppLogger.logInfo('Interstitial ad was not ready to be shown.');
-      // Directly execute the onAdClosed callback if the ad is not ready
-      // This ensures the user flow continues smoothly even without the ad
-      onAdClosed();
+      loadInterstitialAd(); // Attempt to load an ad if not already loaded
+      // This can be expanded to retry loading or handle a failed load more gracefully
     }
   }
 
-  void _setInterstitialAdCallbacks(InterstitialAd ad) {
-    ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (Ad ad) =>
-          AppLogger.logInfo('Ad show fullscreen content.'),
-      onAdDismissedFullScreenContent: (Ad ad) {
+  void _showInterstitialAd({
+    required VoidCallback onAdClosed,
+    VoidCallback? onAdFailedToShow,
+  }) {
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
         AppLogger.logInfo('Ad dismissed fullscreen content.');
+        onAdClosed();
         ad.dispose();
-        // Optionally load a new ad
-        loadInterstitialAd();
+        _isInterstitialAdLoaded = false;
+        loadInterstitialAd(); // Optionally preload the next ad
       },
-      onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         AppLogger.logError('Ad failed to show fullscreen content: $error');
+        onAdFailedToShow?.call();
         ad.dispose();
+        _isInterstitialAdLoaded = false;
+        loadInterstitialAd(); // Optionally preload the next ad
       },
     );
+
+    _interstitialAd!.show();
+    _isInterstitialAdLoaded =
+        false; // Reset the flag as the ad is about to be shown
   }
+
 
   void disposeAd() {
     _bannerAd?.dispose();

@@ -41,6 +41,7 @@ void main() async {
           child: const DinarWatch(),
         ),
       ));
+
 }
 
 class DinarWatch extends StatefulWidget {

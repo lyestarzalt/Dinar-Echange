@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class NavigationProvider with ChangeNotifier {
   int _selectedIndex = 0;
@@ -11,8 +11,7 @@ class NavigationProvider with ChangeNotifier {
   set selectedIndex(int index) {
     _selectedIndex = index;
     notifyListeners();
-    // Call trackScreenView with the screen name based on the current index
-    AnalyticsService.trackScreenView(screenName: getScreenNameByIndex(index));
+    AppLogger.trackScreenView(getScreenNameByIndex(index));
   }
 
   String getScreenNameByIndex(int index) {

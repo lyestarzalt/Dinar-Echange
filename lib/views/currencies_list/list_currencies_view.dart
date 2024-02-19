@@ -8,31 +8,27 @@ import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
 import 'package:dinar_watch/providers/language_provider.dart';
-import 'package:dinar_watch/utils/analytics_service.dart';
 import 'package:dinar_watch/providers/admob_provider.dart';
+import 'package:dinar_watch/utils/logging.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
 
   const CurrencyListScreen({super.key, required this.currencies});
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ListCurrencyProvider>(
       create: (_) => ListCurrencyProvider(currencies),
       child: Consumer<ListCurrencyProvider>(
-        builder: (context, selectionProvider, _) {
-          LanguageProvider languageProvider =
-              Provider.of<LanguageProvider>(context);
-          //selectionProvider!.filteredCurrencies[0].date CAN BE EMPTY
-          String formattedDate = languageProvider
-              .getDatetime(selectionProvider.filteredCurrencies[0].date);
+        builder: (context, selectionProvider, _) => Consumer<LanguageProvider>(
+          builder: (context, languageProvider, _) {
+            String formattedDate = languageProvider
+                .getDatetime(selectionProvider.filteredCurrencies[0].date);
 
-          return Scaffold(
+            return Scaffold(
               appBar: AppBar(
                 title: Text(
-                  AppLocalizations.of(context)!.currencies_app_bar_title,
-                ),
+                    AppLocalizations.of(context)!.currencies_app_bar_title),
                 actions: [
                   Padding(
                     padding:
@@ -40,9 +36,7 @@ class CurrencyListScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          formattedDate,
-                        ),
+                        Text(formattedDate),
                         const SizedBox(width: 10),
                         const Icon(Icons.update),
                       ],
@@ -54,9 +48,10 @@ class CurrencyListScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    // TODO Implement the refresh logic
+                    Future.delayed(Duration(seconds: 3));
                   },
                   child: ReorderableListView.builder(
+                    shrinkWrap: true,
                     itemCount: selectionProvider.selectedCurrencies.length,
                     itemBuilder: (context, index) {
                       final Currency currency =
@@ -64,9 +59,6 @@ class CurrencyListScreen extends StatelessWidget {
                       return InkWell(
                         key: ValueKey(currency.currencyCode),
                         onTap: () {
-                          AnalyticsService.trackScreenView(
-                              screenName: 'Converter');
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -78,7 +70,6 @@ class CurrencyListScreen extends StatelessWidget {
                           );
                         },
                         child: CurrencyListItem(
-                          key: ValueKey(currency.currencyCode),
                           currency: currency,
                         ),
                       );
@@ -91,36 +82,48 @@ class CurrencyListScreen extends StatelessWidget {
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  final adProvider =
-                      Provider.of<AdProvider>(context, listen: false);
-                  // Navigate first
-                  AnalyticsService.trackScreenView(screenName: 'AddCurrencies');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: selectionProvider,
-                        child: const AddCurrencyPage(),
-                      ),
-                    ),
-                  ).then((_) {
-                    // After navigating, check and possibly show the ad
-                    if (adProvider.isInterstitialAdLoaded) {
-                      adProvider.showInterstitialAd(
-                        onAdClosed: () {
-                          // Ad closed callback
-                        },
-                      );
-                    } else {
-                      adProvider.loadInterstitialAd();
-                    }
-                  });
+                  showAddCurrencyPage(context, selectionProvider);
                 },
                 tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
                 child: const Icon(Icons.add),
-              ));
-        },
+              ),
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  void showAddCurrencyPage(
+      BuildContext context, ListCurrencyProvider selectionProvider) {
+    AppLogger.trackScreenView('AddCurrencies');
+    final adProvider = Provider.of<AdProvider>(context, listen: false);
+
+    adProvider.prepareAndShowInterstitialAd(
+      onAdClosed: () {
+        // After the ad is closed, proceed to push the AddCurrencyPage onto the navigator stack
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider.value(
+              value: selectionProvider,
+              child: const AddCurrencyPage(),
+            ),
+          ),
+        );
+      },
+      onAdFailedToShow: () {
+        // Even if the ad fails to show, proceed to push the AddCurrencyPage
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider.value(
+              value: selectionProvider,
+              child: const AddCurrencyPage(),
+            ),
+          ),
+        );
+      },
     );
   }
 }

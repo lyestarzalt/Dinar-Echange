@@ -8,8 +8,8 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   ThemeProvider() {
-    //
-    loadThemeMode(    );
+    
+    loadThemeMode();
   }
 
   void setThemeMode(ThemeOption option) async {

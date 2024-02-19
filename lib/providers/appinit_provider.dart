@@ -14,6 +14,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_watch/utils/state.dart';
 import 'package:dinar_watch/utils/FirebaseErrorInterpreter.dart';
+import 'package:dinar_watch/providers/admob_provider.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _state = AppState.loading();
@@ -43,8 +44,14 @@ class AppInitializationProvider with ChangeNotifier {
 
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
+    
+    
+    
       _state = AppState.success(fetchedCurrencies);
       AppLogger.logInfo('Fetched daily currencies successfully.');
+    
+    
+    
     } catch (e, stackTrace) {
       final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
       AppLogger.logFatal(
