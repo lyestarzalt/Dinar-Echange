@@ -14,7 +14,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_watch/utils/state.dart';
 import 'package:dinar_watch/utils/FirebaseErrorInterpreter.dart';
-import 'package:dinar_watch/providers/admob_provider.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _state = AppState.loading();
@@ -22,55 +21,92 @@ class AppInitializationProvider with ChangeNotifier {
   List<Currency>? get currencies => _state.data;
 
   Future<void> initializeApp() async {
+    final overallStopwatch = Stopwatch()..start();
     try {
-      FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-      AppLogger.logInfo('Firebase Analytics collection enabled.');
+      await Future.wait([
+        _enableFirebaseAnalytics(),
+        _activateAppCheck(),
+        _initializeMobileAds(),
+        _requestNotificationPermissions(),
+        _signInAnonymously(),
+      ]);
 
-      await FirebaseAppCheck.instance
-          .activate(androidProvider: AndroidProvider.debug);
+      // Asynchronously start Firebase Messaging setup -> speedup
+      _setupFirebaseMessaging()
+          .then((_) => AppLogger.logInfo(
+              'Firebase Messaging setup completed.'))
+          .catchError((error) {
+        AppLogger.logFatal('Failed to setup Firebase Messaging',
+            error: error);
+      });
 
-      MobileAds.instance.initialize();
-
-      AppLogger.logInfo('MobileAds activated.');
-
-      await requestNotificationPermissions();
-      AppLogger.logInfo('Notification permissions requested.');
-
-      await setupFirebaseMessaging();
-      AppLogger.logInfo('Firebase Messaging setup completed.');
-
-      await FirebaseAuth.instance.signInAnonymously();
-      AppLogger.logInfo('Signed in anonymously to Firebase Auth.');
-
+      // Fetch Daily Currencies
+      final currenciesStopwatch = Stopwatch()..start();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
-    
-    
-    
       _state = AppState.success(fetchedCurrencies);
-      AppLogger.logInfo('Fetched daily currencies successfully.');
-    
-    
-    
+      currenciesStopwatch.stop();
+      AppLogger.logInfo(
+          'Fetched daily currencies in ${currenciesStopwatch.elapsedMilliseconds} ms');
     } catch (e, stackTrace) {
-      final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
-      AppLogger.logFatal(
-          'initializeApp: Failed during app initialization. Error: ${errorResult.message}',
-          error: e,
-          stackTrace: stackTrace);
-
-      if (errorResult.canContinue) {
-        List<Currency> fetchedCurrencies =
-            await MainRepository().getDailyCurrencies();
-        _state = AppState.success(fetchedCurrencies);
-      }
-      _state = AppState.error(errorResult.message);
+      handleInitializationError(e, stackTrace);
     } finally {
       FlutterNativeSplash.remove();
       notifyListeners();
-      AppLogger.logInfo('initializeApp: App initialization process completed.');
+      overallStopwatch.stop();
+      AppLogger.logInfo(
+          'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms, excluding Firebase Messaging setup.');
     }
   }
+
+  Future<void> handleInitializationError(e, stackTrace) async {
+    final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
+    AppLogger.logFatal(
+      'initializeApp: Failed during app initialization. Error: ${errorResult.message}',
+      error: e,
+      stackTrace: stackTrace,
+    );
+
+    if (errorResult.canContinue) {
+      final fetchedCurrencies = await MainRepository().getDailyCurrencies();
+      _state = AppState.success(fetchedCurrencies);
+    } else {
+      _state = AppState.error(errorResult.message);
+    }
+  }
+
+
+  Future<void> _enableFirebaseAnalytics() async {
+    FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    AppLogger.logInfo('Firebase Analytics collection enabled.');
+  }
+
+  Future<void> _activateAppCheck() async {
+    await FirebaseAppCheck.instance
+        .activate(androidProvider: AndroidProvider.debug);
+    AppLogger.logInfo('App Check activated.');
+  }
+
+  Future<void> _initializeMobileAds() async {
+    MobileAds.instance.initialize();
+    AppLogger.logInfo('MobileAds activated.');
+  }
+
+  Future<void> _requestNotificationPermissions() async {
+    await requestNotificationPermissions();
+    AppLogger.logInfo('Notification permissions requested.');
+  }
+
+  Future<void> _setupFirebaseMessaging() async {
+    await setupFirebaseMessaging();
+    AppLogger.logInfo('Firebase Messaging setup completed.');
+  }
+
+  Future<void> _signInAnonymously() async {
+    await FirebaseAuth.instance.signInAnonymously();
+    AppLogger.logInfo('Signed in anonymously to Firebase Auth.');
+  }
+
 
   Future<void> requestNotificationPermissions() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
