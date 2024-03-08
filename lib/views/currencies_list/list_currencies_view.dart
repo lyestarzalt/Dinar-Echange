@@ -37,8 +37,6 @@ class CurrencyListScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(formattedDate),
-                        const SizedBox(width: 10),
-                        const Icon(Icons.update),
                       ],
                     ),
                   ),

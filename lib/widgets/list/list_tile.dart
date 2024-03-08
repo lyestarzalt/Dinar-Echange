@@ -30,7 +30,7 @@ class CurrencyListItem extends StatelessWidget {
             title: Text(
               currency.currencyCode,
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onSurface,
                   height: 2.5),
