@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:dinar_watch/utils/spelling_number.dart';
 import 'package:dinar_watch/providers/converter_provider.dart';
-import 'package:dinar_watch/utils/extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NumberToWordsDisplay extends StatefulWidget {
@@ -149,5 +148,16 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
 
   String _formatResult(String languageCode, String numberInWords, String unit) {
     return "$numberInWords $unit";
+  }
+  
+}
+
+extension CapitalizeExtension on String {
+  String capitalizeEveryWord() {
+    return split(' ')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}')
+        .join(' ');
   }
 }
