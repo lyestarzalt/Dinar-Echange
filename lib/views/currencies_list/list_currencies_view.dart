@@ -46,7 +46,7 @@ class CurrencyListScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    Future.delayed(Duration(seconds: 3));
+                    selectionProvider.refreshData();
                   },
                   child: ReorderableListView.builder(
                     shrinkWrap: true,

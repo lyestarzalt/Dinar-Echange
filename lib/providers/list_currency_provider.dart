@@ -37,7 +37,7 @@ class ListCurrencyProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> refresh_data() async {
+  Future<void> refreshData() async {
     _allCurrencies = await MainRepository().getDailyCurrencies();
     notifyListeners();
   }
