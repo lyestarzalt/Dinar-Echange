@@ -5,7 +5,7 @@ import 'package:dinar_watch/providers/admob_provider.dart';
 import 'package:dinar_watch/utils/logging.dart'; // Ensure you have a logging utility
 
 class AdBannerWidget extends StatefulWidget {
-  const AdBannerWidget({Key? key}) : super(key: key);
+  const AdBannerWidget({super.key});
 
   @override
   _AdBannerWidgetState createState() => _AdBannerWidgetState();
@@ -66,7 +66,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
             height: _adSize!.height.toDouble(),
             child: AdWidget(ad: _bannerAd!),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   @override
