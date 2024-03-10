@@ -23,6 +23,9 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> initializeApp() async {
     final overallStopwatch = Stopwatch()..start();
     try {
+      // Start stopwatch for Firebase and related services initialization
+      final firebaseStopwatch = Stopwatch()..start();
+
       await Future.wait([
         _enableFirebaseAnalytics(),
         _activateAppCheck(),
@@ -30,17 +33,18 @@ class AppInitializationProvider with ChangeNotifier {
         _requestNotificationPermissions(),
         _signInAnonymously(),
       ]);
+      firebaseStopwatch.stop();
+      AppLogger.logInfo(
+          'Firebase and related services initialized in ${firebaseStopwatch.elapsedMilliseconds} ms');
 
       // Asynchronously start Firebase Messaging setup -> speedup
       _setupFirebaseMessaging()
-          .then((_) => AppLogger.logInfo(
-              'Firebase Messaging setup completed.'))
+          .then((_) => AppLogger.logInfo('Firebase Messaging setup completed.'))
           .catchError((error) {
-        AppLogger.logFatal('Failed to setup Firebase Messaging',
-            error: error);
+        AppLogger.logFatal('Failed to setup Firebase Messaging', error: error);
       });
 
-      // Fetch Daily Currencies
+      // Fetch Daily Currencies with its own stopwatch
       final currenciesStopwatch = Stopwatch()..start();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
@@ -58,6 +62,7 @@ class AppInitializationProvider with ChangeNotifier {
           'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms, excluding Firebase Messaging setup.');
     }
   }
+
 
   Future<void> handleInitializationError(e, stackTrace) async {
     final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
