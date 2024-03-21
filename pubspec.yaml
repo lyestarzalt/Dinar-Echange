@@ -42,11 +42,11 @@ flutter:
     - assets/logo.png
   generate: true
   fonts:
-    - family: UbuntuMono
+    - family: Geologica
       fonts:
-        - asset: fonts/UbuntuMono-Regular.ttf
-        - asset: fonts/UbuntuMono-Bold.ttf
-          weight: 700
+        - asset: fonts/Geologica-Regular.ttf
+        - asset: fonts/Geologica-Bold.ttf
+          weight: 500
 
 flutter_launcher_icons:
   android: "launcher_icon"

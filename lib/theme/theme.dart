@@ -60,7 +60,7 @@ class MaterialTheme {
         ),
       );
   static TextTheme _createCustomTextTheme(TextTheme base) {
-    return base.apply(fontFamily: 'UbuntuMono');
+    return base.apply(fontFamily: 'Geologica');
   }
 
   MaterialTheme();
