@@ -20,10 +20,8 @@ class SettingsPageState extends State<SettingsPage> {
   Map<String, String> languageCodes = {
     'English': 'en',
     'العربية': 'ar',
-    'Español': 'es',
-    'Deutsch': 'de',
     'Français': 'fr',
-    '中文': 'zh',
+
   };
 
   @override

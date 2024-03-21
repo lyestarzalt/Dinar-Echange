@@ -20,31 +20,20 @@ class AppInitializationProvider with ChangeNotifier {
   AppState get state => _state;
   List<Currency>? get currencies => _state.data;
 
-  Future<void> initializeApp() async {
+    Future<void> initializeApp() async {
     final overallStopwatch = Stopwatch()..start();
     try {
-      // Start stopwatch for Firebase and related services initialization
-      final firebaseStopwatch = Stopwatch()..start();
+      await Firebase.initializeApp();
+      AppLogger.logInfo('Firebase Core initialized.');
 
+      // Perform anonymous sign-in alongside Firebase Analytics activation since they're both quick and essential.
+      // Firebase Analytics is assumed to be non-blocking and can proceed in parallel with the sign-in.
       await Future.wait([
-        _enableFirebaseAnalytics(),
-        _activateAppCheck(),
-        _initializeMobileAds(),
-        _requestNotificationPermissions(),
         _signInAnonymously(),
+        _enableFirebaseAnalytics(),
       ]);
-      firebaseStopwatch.stop();
-      AppLogger.logInfo(
-          'Firebase and related services initialized in ${firebaseStopwatch.elapsedMilliseconds} ms');
 
-      // Asynchronously start Firebase Messaging setup -> speedup
-      _setupFirebaseMessaging()
-          .then((_) => AppLogger.logInfo('Firebase Messaging setup completed.'))
-          .catchError((error) {
-        AppLogger.logFatal('Failed to setup Firebase Messaging', error: error);
-      });
-
-      // Fetch Daily Currencies with its own stopwatch
+      // After sign-in, immediately fetch necessary data from Firestore
       final currenciesStopwatch = Stopwatch()..start();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
@@ -52,18 +41,33 @@ class AppInitializationProvider with ChangeNotifier {
       currenciesStopwatch.stop();
       AppLogger.logInfo(
           'Fetched daily currencies in ${currenciesStopwatch.elapsedMilliseconds} ms');
+
+      // Initialize other services asynchronously after the essential data is loaded
+      _deferOtherInitializations();
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
-      FlutterNativeSplash.remove();
+      FlutterNativeSplash
+          .remove(); // Assuming this is the right place to remove the splash screen
       notifyListeners();
       overallStopwatch.stop();
       AppLogger.logInfo(
-          'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms, excluding Firebase Messaging setup.');
+          'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms.');
     }
   }
 
-
+  void _deferOtherInitializations() async {
+    await Future.wait([
+      _activateAppCheck(),
+      _initializeMobileAds(),
+      _requestNotificationPermissions(),
+      _setupFirebaseMessaging(),
+    ])
+        .then((_) => AppLogger.logInfo(
+            'Deferred Firebase and related services initialized.'))
+        .catchError((error) =>
+            AppLogger.logFatal('Deferred initialization error', error: error));
+  }
   Future<void> handleInitializationError(e, stackTrace) async {
     final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
     AppLogger.logFatal(
@@ -79,7 +83,6 @@ class AppInitializationProvider with ChangeNotifier {
       _state = AppState.error(errorResult.message);
     }
   }
-
 
   Future<void> _enableFirebaseAnalytics() async {
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
@@ -111,7 +114,6 @@ class AppInitializationProvider with ChangeNotifier {
     await FirebaseAuth.instance.signInAnonymously();
     AppLogger.logInfo('Signed in anonymously to Firebase Auth.');
   }
-
 
   Future<void> requestNotificationPermissions() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
