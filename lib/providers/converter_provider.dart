@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:dinar_watch/data/models/currency.dart';
 import 'package:intl/intl.dart';
 
-
 import 'package:dinar_watch/utils/logging.dart';
 
 class ConvertProvider with ChangeNotifier {
@@ -11,12 +10,10 @@ class ConvertProvider with ChangeNotifier {
   TextEditingController resultController = TextEditingController();
   FocusNode amountFocusNode = FocusNode();
   FocusNode resultFocusNode = FocusNode();
-  bool isDZDtoCurrency = false; // Conversion direction flag
+  bool isDZDtoCurrency = true; // Conversion direction flag
 
   ConvertProvider(this.currency) {
-
-
-  AppLogger.logCurrencySelection(currency.currencyCode);
+    AppLogger.logCurrencySelection(currency.currencyCode);
     AppLogger.trackScreenView('Converter');
 
     amountController.addListener(convertCurrency);
@@ -40,9 +37,24 @@ class ConvertProvider with ChangeNotifier {
   static double getRate(bool isDZDtoCurrency, Currency currency) {
     //TODO: revise this
     if (isDZDtoCurrency) {
-      return currency.sell > 0 ? 1 / currency.sell : 0;
+      return currency.buy > 0 ? 1 / currency.buy : 0;
     } else {
-      return currency.buy;
+      return currency.sell;
+    }
+  }
+
+  bool validateInput(String input) {
+    try {
+      double? parsedAmount = double.tryParse(input);
+      bool isValid = parsedAmount != null &&
+          parsedAmount > 0 &&
+          !parsedAmount.isNaN &&
+          !parsedAmount.isInfinite;
+      return isValid;
+    } catch (e, stackTrace) {
+      AppLogger.logError('Error validating input',
+          error: e, stackTrace: stackTrace);
+      return false;
     }
   }
 
@@ -50,19 +62,21 @@ class ConvertProvider with ChangeNotifier {
     try {
       if (amountController.text.isEmpty) {
         resultController.clear();
-      } else {
-        double amount = double.tryParse(amountController.text) ?? 0.0;
+      } else if (validateInput(amountController.text)) {
+        double parsedAmount = double.parse(amountController.text);
         double rate = getRate(isDZDtoCurrency, currency);
-        double result = amount * rate;
-
+        double result = parsedAmount * rate;
         String formattedResult =
             NumberFormat.currency(locale: 'en_US', decimalDigits: 2, symbol: '')
                 .format(result);
-
         resultController.text = formattedResult;
+      } else {
+        resultController.clear();
       }
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.logError('Failed to convert currency',
+          error: e, stackTrace: stackTrace);
       notifyListeners();
     }
   }

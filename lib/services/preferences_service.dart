@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 
 class PreferencesService {
   static final PreferencesService _instance = PreferencesService._internal();
-  late SharedPreferences _prefs;
+  late SharedPreferences _pref;
 
   factory PreferencesService() {
     return _instance;
@@ -14,19 +14,19 @@ class PreferencesService {
   PreferencesService._internal();
 
   Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
+    _pref = await SharedPreferences.getInstance();
   }
 
   Future<List<String>> getSelectedCurrencies() async {
-    return _prefs.getStringList('selectedCurrencies') ?? [];
+    return _pref.getStringList('selectedCurrencies') ?? [];
   }
 
   Future<void> setSelectedCurrencies(List<String> currencies) async {
-    await _prefs.setStringList('selectedCurrencies', currencies);
+    await _pref.setStringList('selectedCurrencies', currencies);
   }
 
   Future<ThemeMode> getThemeMode() async {
-    String? themeOptionString = _prefs.getString('themeOption');
+    String? themeOptionString = _pref.getString('themeOption');
     ThemeOption themeOption = ThemeOption.values.firstWhere(
       (option) => option.toString().split('.').last == themeOptionString,
       orElse: () => ThemeOption.auto, // Default to auto if not set or invalid
@@ -46,22 +46,22 @@ class PreferencesService {
 
   Future<void> setThemeMode(ThemeOption themeOption) async {
     String themeOptionString = themeOption.toString().split('.').last;
-    await _prefs.setString('themeOption', themeOptionString);
+    await _pref.setString('themeOption', themeOptionString);
   }
 
   Future<String?> getSelectedLanguage() async {
-    return _prefs.getString('selectedLanguage');
+    return _pref.getString('selectedLanguage');
   }
 
   Future<void> setSelectedLanguage(String languageCode) async {
-    await _prefs.setString('selectedLanguage', languageCode);
+    await _pref.setString('selectedLanguage', languageCode);
   }
   
   Future<String?> getString(String key) async {
-    return _prefs.getString(key);
+    return _pref.getString(key);
   }
   Future<bool> setString(String key, String data) async {
-    return _prefs.setString(key, data);
+    return _pref.setString(key, data);
   }
 }
 

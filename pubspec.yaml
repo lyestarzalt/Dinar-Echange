@@ -11,10 +11,9 @@ dependencies:
     sdk: flutter
   intl: ^0.18.1
   shared_preferences: ^2.2.2
-  http: ^1.1.0
   fl_chart: ^0.66.0
   logger: ^2.0.2+1
-  firebase_auth: ^4.14.0
+  firebase_auth: ^4.17.8
   cached_network_image: ^3.3.0
   animations: ^2.0.10
   provider: ^6.1.1
@@ -30,8 +29,7 @@ dependencies:
   google_mobile_ads: ^4.0.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.1
 

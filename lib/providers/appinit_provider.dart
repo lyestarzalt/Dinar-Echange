@@ -14,6 +14,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_watch/utils/state.dart';
 import 'package:dinar_watch/utils/FirebaseErrorInterpreter.dart';
+import 'package:dinar_watch/providers/admob_provider.dart';
+
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _state = AppState.loading();
@@ -62,6 +64,7 @@ class AppInitializationProvider with ChangeNotifier {
       _initializeMobileAds(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
+         _loadInterstitialAd(),
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
@@ -81,6 +84,19 @@ class AppInitializationProvider with ChangeNotifier {
       _state = AppState.success(fetchedCurrencies);
     } else {
       _state = AppState.error(errorResult.message);
+    }
+  }
+Future<void> _loadInterstitialAd() async {
+    try {
+      // Initialize or ensure the AdProvider is ready
+      // This is a placeholder; you'll need to adjust it to fit your app's architecture
+      final adProvider =
+          AdProvider(); // Or however you obtain an instance of your AdProvider
+      adProvider.loadInterstitialAd();
+      AppLogger.logInfo('InterstitialAd loading initiated.');
+    } catch (error, stackTrace) {
+      AppLogger.logError('Failed to load InterstitialAd.',
+          error: error, stackTrace: stackTrace);
     }
   }
 
