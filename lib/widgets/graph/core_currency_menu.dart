@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
 

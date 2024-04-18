@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/views/settings/settings_view.dart';
-import 'package:dinar_watch/views/currencies_list/list_currencies_view.dart';
-import 'package:dinar_watch/views/graph/graph_view.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/views/settings/settings_view.dart';
+import 'package:dinar_echange/views/currencies_list/list_currencies_view.dart';
+import 'package:dinar_echange/views/graph/graph_view.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/providers/navigation_provider.dart';
+import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
 class AppNavigation extends StatefulWidget {

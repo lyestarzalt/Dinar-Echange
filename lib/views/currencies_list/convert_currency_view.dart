@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/widgets/convert/currency_input.dart';
-import 'package:dinar_watch/widgets/convert/number_words.dart';
+import 'package:dinar_echange/widgets/convert/currency_input.dart';
+import 'package:dinar_echange/widgets/convert/number_words.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/providers/converter_provider.dart';
+import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/widgets/adbanner.dart';
+import 'package:dinar_echange/widgets/adbanner.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});

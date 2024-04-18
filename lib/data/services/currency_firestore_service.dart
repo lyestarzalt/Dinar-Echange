@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/data/models/currency_history.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency_history.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

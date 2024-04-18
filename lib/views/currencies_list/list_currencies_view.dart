@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/providers/list_currency_provider.dart';
-import 'package:dinar_watch/widgets/list/list_tile.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/providers/list_currency_provider.dart';
+import 'package:dinar_echange/widgets/list/list_tile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/views/currencies_list/add_currency_view.dart';
-import 'package:dinar_watch/views/currencies_list/convert_currency_view.dart';
-import 'package:dinar_watch/providers/converter_provider.dart';
-import 'package:dinar_watch/providers/language_provider.dart';
-import 'package:dinar_watch/providers/admob_provider.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/views/currencies_list/add_currency_view.dart';
+import 'package:dinar_echange/views/currencies_list/convert_currency_view.dart';
+import 'package:dinar_echange/providers/converter_provider.dart';
+import 'package:dinar_echange/providers/language_provider.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;

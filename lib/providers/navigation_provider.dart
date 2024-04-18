@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class NavigationProvider with ChangeNotifier {
   int _selectedIndex = 0;

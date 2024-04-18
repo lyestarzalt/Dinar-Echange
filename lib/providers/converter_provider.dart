@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency.dart';
 import 'package:intl/intl.dart';
 
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class ConvertProvider with ChangeNotifier {
   final Currency currency;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/widgets/flag_container.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
 
 class CurrencyListItem extends StatelessWidget {
   final Currency currency;

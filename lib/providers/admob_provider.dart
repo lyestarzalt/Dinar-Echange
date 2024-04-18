@@ -1,4 +1,4 @@
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/utils/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;

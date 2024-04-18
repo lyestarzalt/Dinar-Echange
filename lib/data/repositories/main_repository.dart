@@ -1,8 +1,8 @@
-import 'package:dinar_watch/data/currency_repository.dart';
-import 'package:dinar_watch/data/services/currency_firestore_service.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/services/cache_service.dart';
-import 'package:dinar_watch/utils/logging.dart';
+import 'package:dinar_echange/data/currency_repository.dart';
+import 'package:dinar_echange/data/services/currency_firestore_service.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/services/cache_service.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class MainRepository implements CurrencyRepository {
   final FirestoreService _firestoreService = FirestoreService();

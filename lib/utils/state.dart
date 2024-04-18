@@ -1,4 +1,4 @@
-import 'package:dinar_watch/utils/enums.dart';
+import 'package:dinar_echange/utils/enums.dart';
 
 class AppState<T> {
   final LoadState state;

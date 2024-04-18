@@ -1,20 +1,20 @@
-import 'package:dinar_watch/providers/graph_provider.dart';
+import 'package:dinar_echange/providers/graph_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/widgets/graph/core_currency_menu.dart';
-import 'package:dinar_watch/widgets/graph/time_span_buttons.dart';
-import 'package:dinar_watch/widgets/graph/line_graph.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/widgets/graph/core_currency_menu.dart';
+import 'package:dinar_echange/widgets/graph/time_span_buttons.dart';
+import 'package:dinar_echange/widgets/graph/line_graph.dart';
 import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:dinar_watch/data/models/currency_history.dart';
-import 'package:dinar_watch/views/error/error_view.dart';
+import 'package:dinar_echange/data/models/currency_history.dart';
+import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/utils/enums.dart';
-import 'package:dinar_watch/providers/language_provider.dart';
+import 'package:dinar_echange/utils/enums.dart';
+import 'package:dinar_echange/providers/language_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/widgets/adbanner.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
+import 'package:dinar_echange/widgets/adbanner.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;

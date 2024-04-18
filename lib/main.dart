@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_watch/providers/theme_provider.dart';
-import 'package:dinar_watch/providers/language_provider.dart';
-import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:dinar_echange/providers/theme_provider.dart';
+import 'package:dinar_echange/providers/language_provider.dart';
+import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_watch/views/app_navigation.dart';
-import 'package:dinar_watch/providers/navigation_provider.dart';
-import 'package:dinar_watch/theme/theme.dart';
-import 'package:dinar_watch/views/error/error_view.dart';
-import 'package:dinar_watch/providers/appinit_provider.dart';
-import 'package:dinar_watch/firebase_options.dart';
+import 'package:dinar_echange/views/app_navigation.dart';
+import 'package:dinar_echange/providers/navigation_provider.dart';
+import 'package:dinar_echange/theme/theme.dart';
+import 'package:dinar_echange/views/error/error_view.dart';
+import 'package:dinar_echange/providers/appinit_provider.dart';
+import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:dinar_watch/utils/enums.dart';
+import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/services.dart';
-import 'package:dinar_watch/utils/logging.dart';
-import 'package:dinar_watch/providers/admob_provider.dart';
+import 'package:dinar_echange/utils/logging.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

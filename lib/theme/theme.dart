@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:dinar_watch/theme/material_scheme.dart';
+import 'package:dinar_echange/theme/material_scheme.dart';
 
 class MaterialTheme {
   ThemeData theme(ColorScheme colorScheme) => ThemeData(

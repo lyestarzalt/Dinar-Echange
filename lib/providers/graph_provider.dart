@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/data/repositories/main_repository.dart';
-import 'package:dinar_watch/data/models/currency_history.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/repositories/main_repository.dart';
+import 'package:dinar_echange/data/models/currency_history.dart';
 import 'dart:math' as math;
-import 'package:dinar_watch/utils/logging.dart';
-import 'package:dinar_watch/utils/state.dart';
+import 'package:dinar_echange/utils/logging.dart';
+import 'package:dinar_echange/utils/state.dart';
 
 class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();

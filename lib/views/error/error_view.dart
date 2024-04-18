@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/widgets/error_message.dart';
+import 'package:dinar_echange/widgets/error_message.dart';
 
 class ErrorApp extends StatelessWidget {
   final String errorMessage;

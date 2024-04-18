@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/utils/enums.dart';
+import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/scheduler.dart';
 
 class PreferencesService {

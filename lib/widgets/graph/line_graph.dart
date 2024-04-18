@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency_history.dart';
+import 'package:dinar_echange/data/models/currency_history.dart';
 import 'package:intl/intl.dart';
 
 List<LineChartBarData> buildLineBarsData(
@@ -44,7 +44,10 @@ LineTouchData buildLineTouchData(
     },
     handleBuiltInTouches: true,
     touchTooltipData: LineTouchTooltipData(
-      tooltipBgColor: Colors.transparent,
+     
+      getTooltipColor: (LineBarSpot lineBarSpot) {
+        return Colors.transparent;
+      },
       tooltipRoundedRadius: 0,
       getTooltipItems: (List<LineBarSpot> touchedSpots) {
         return touchedSpots

@@ -1,5 +1,5 @@
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/services/preferences_service.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/services/preferences_service.dart';
 
 class CurrencyService {
   final PreferencesService _preferencesService = PreferencesService();

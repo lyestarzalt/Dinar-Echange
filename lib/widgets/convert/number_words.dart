@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/data/models/currency.dart';
-import 'package:dinar_watch/utils/spelling_number.dart';
-import 'package:dinar_watch/providers/converter_provider.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/utils/spelling_number.dart';
+import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NumberToWordsDisplay extends StatefulWidget {

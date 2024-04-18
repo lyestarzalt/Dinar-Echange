@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_watch/widgets/flag_container.dart';
-import 'package:dinar_watch/utils/textfield_format.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
+import 'package:dinar_echange/utils/textfield_format.dart';
 
 Widget buildCurrencyInput({
   required TextEditingController controller,
