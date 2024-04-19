@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'exchange-dinar.appspot.com',
     iosBundleId: 'come.dinarechange.dinarEchange',
   );
+
 }
