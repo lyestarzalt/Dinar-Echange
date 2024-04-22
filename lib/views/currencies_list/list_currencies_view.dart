@@ -10,7 +10,6 @@ import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:dinar_echange/providers/language_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/utils/logging.dart';
-
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
 
@@ -48,27 +47,43 @@ class CurrencyListScreen extends StatelessWidget {
                   onRefresh: () async {
                     selectionProvider.refreshData();
                   },
-                  child: ReorderableListView.builder(
+         child: ReorderableListView.builder(
                     shrinkWrap: true,
                     itemCount: selectionProvider.selectedCurrencies.length,
                     itemBuilder: (context, index) {
                       final Currency currency =
                           selectionProvider.selectedCurrencies[index];
-                      return InkWell(
+                      return Dismissible(
                         key: ValueKey(currency.currencyCode),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChangeNotifierProvider(
-                                create: (_) => ConvertProvider(currency),
-                                child: const CurrencyConverterPage(),
-                              ),
-                            ),
-                          );
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          selectionProvider.addOrRemoveCurrency(
+                              currency, false);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('Removed ${currency.currencyCode}')));
                         },
-                        child: CurrencyListItem(
-                          currency: currency,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChangeNotifierProvider(
+                                  create: (_) => ConvertProvider(currency),
+                                  child: const CurrencyConverterPage(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: CurrencyListItem(
+                            currency: currency,
+                          ),
                         ),
                       );
                     },
@@ -76,6 +91,7 @@ class CurrencyListScreen extends StatelessWidget {
                       selectionProvider.reorderCurrencies(oldIndex, newIndex);
                     },
                   ),
+
                 ),
               ),
               floatingActionButton: FloatingActionButton(
