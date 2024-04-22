@@ -63,5 +63,15 @@ class PreferencesService {
   Future<bool> setString(String key, String data) async {
     return _pref.setString(key, data);
   }
+
+
+  Future<bool> hasAcceptedTerms() async {
+    return _pref.getBool('acceptedTerms') ?? false;
+  }
+
+  Future<void> setAcceptedTerms(bool accepted) async {
+    await _pref.setBool('acceptedTerms', accepted);
+  }
+
 }
 

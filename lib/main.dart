@@ -16,7 +16,7 @@ import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
-
+import 'package:dinar_echange/views/terms_condition.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -77,27 +77,45 @@ class DinarWatchState extends State<DinarWatch> {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Consumer<AppInitializationProvider>(
-            builder: (context, currenciesProvider, _) {
-              switch (currenciesProvider.state.state) {
+            builder: (context, appInitProvider, _) {
+              switch (appInitProvider.state.state) {
                 case LoadState.loading:
                   return const Scaffold(
-                    body: Center(child: LinearProgressIndicator()),
+                    body: Center(child: CircularProgressIndicator()),
                   );
                 case LoadState.success:
-                  return AppNavigation(
-                      currencies: currenciesProvider.state.data!);
+                  return AppNavigation(currencies: appInitProvider.currencies!);
                 case LoadState.error:
-                  return ErrorApp(
-                    errorMessage: currenciesProvider.state.errorMessage!,
-                    onRetry: () => currenciesProvider.initializeApp(),
-                  );
+                  if (appInitProvider.state.errorMessage ==
+                      'Terms not accepted') {
+                    // Show the Terms and Conditions screen if the terms haven't been accepted
+                    return TermsAndConditionsScreen(
+                      onUserDecision: (accepted) async {
+                        if (accepted) {
+                          // User accepted the Terms and Conditions.
+                          await PreferencesService().setAcceptedTerms(true);
+                          appInitProvider.initializeApp();
+                        } else {
+                          // User did not accept the Terms and Conditions.
+                          SystemNavigator.pop();
+                        }
+                      },
+                    );
+                  } else {
+                    // Show the error screen for other types of errors
+                    return ErrorApp(
+                      errorMessage: appInitProvider.state.errorMessage!,
+                      onRetry: () => appInitProvider.initializeApp(),
+                    );
+                  }
                 default:
                   return const Scaffold(
-                    body: Center(child: LinearProgressIndicator()),
+                    body: Center(child: CircularProgressIndicator()),
                   );
               }
             },
           ),
+
         );
       },
     );

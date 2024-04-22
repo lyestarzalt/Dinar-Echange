@@ -151,5 +151,89 @@
   "currency_buy_sell_tooltip": "يوضح أسعار شراء وبيع العملات.",
   "@currency_buy_sell_tooltip": {
     "description": "Brief tooltip for currency buy and sell values"
+  },
+  "terms_title": "None",
+  "@terms_title": {
+    "description": "None"
+  },
+  "terms_introduction_title": "None",
+  "@terms_introduction_title": {
+    "description": "None"
+  },
+  "terms_introduction_content": "None",
+  "@terms_introduction_content": {
+    "description": "None"
+  },
+  "terms_ip_rights_title": "None",
+  "@terms_ip_rights_title": {
+    "description": "None"
+  },
+  "terms_ip_rights_content": "None",
+  "@terms_ip_rights_content": {
+    "description": "None"
+  },
+  "terms_use_title": "None",
+  "@terms_use_title": {
+    "description": "None"
+  },
+  "terms_use_content": "None",
+  "@terms_use_content": {
+    "description": "None"
+  },
+  "terms_liability_title": "None",
+  "@terms_liability_title": {
+    "description": "None"
+  },
+  "terms_liability_content": "None",
+  "@terms_liability_content": {
+    "description": "None"
+  },
+  "terms_compliance_title": "None",
+  "@terms_compliance_title": {
+    "description": "None"
+  },
+  "terms_compliance_content": "None",
+  "@terms_compliance_content": {
+    "description": "None"
+  },
+  "terms_acceptance_title": "None",
+  "@terms_acceptance_title": {
+    "description": "None"
+  },
+  "terms_acceptance_content": "None",
+  "@terms_acceptance_content": {
+    "description": "None"
+  },
+  "terms_contact_title": "None",
+  "@terms_contact_title": {
+    "description": "None"
+  },
+  "terms_contact_content": "None",
+  "@terms_contact_content": {
+    "description": "None"
+  },
+  "terms_modifications_title": "None",
+  "@terms_modifications_title": {
+    "description": "None"
+  },
+  "terms_modifications_content": "None",
+  "@terms_modifications_content": {
+    "description": "None"
+  },
+  "terms_last_updated": "None",
+  "@terms_last_updated": {
+    "description": "None"
+  },
+  "accept_terms_and_conditions": "None",
+  "@accept_terms_and_conditions": {
+    "description": "None"
+  },
+  "continue_button": "None",
+  "@continue_button": {
+    "description": "None"
+  },
+  "decline_button": "None",
+  "@decline_button": {
+    "description": "None"
   }
 }

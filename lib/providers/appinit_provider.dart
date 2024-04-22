@@ -27,7 +27,12 @@ class AppInitializationProvider with ChangeNotifier {
     try {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
-
+         bool acceptedTerms = await PreferencesService().hasAcceptedTerms();
+      if (!acceptedTerms) {
+        _state = AppState.error('Terms not accepted');
+        notifyListeners();
+        return; // Exit the initialization as we need user to accept terms
+      }
       // Perform anonymous sign-in alongside Firebase Analytics activation since they're both quick and essential.
       // Firebase Analytics is assumed to be non-blocking and can proceed in parallel with the sign-in.
       await Future.wait([

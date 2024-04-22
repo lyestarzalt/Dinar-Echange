@@ -140,7 +140,7 @@
   "@centime_explanation": {
     "description": "Explanation of the term 'centime' in Algeria"
   },
-  "why_centime_title": "he Usage of 'Centime",
+  "why_centime_title": "The Usage of 'Centime",
   "@why_centime_title": {
     "description": "Title for centime use"
   },
@@ -151,5 +151,89 @@
   "currency_buy_sell_tooltip": "Explains the buying and selling rates of currencies.",
   "@currency_buy_sell_tooltip": {
     "description": "Brief tooltip for currency buy and sell values"
+  },
+  "terms_title": "Terms and Conditions",
+  "@terms_title": {
+    "description": "None"
+  },
+  "terms_introduction_title": "1. Introduction",
+  "@terms_introduction_title": {
+    "description": "None"
+  },
+  "terms_introduction_content": "Welcome to our application. By accessing and using our application, you agree to comply with and be bound by the following terms and conditions. Please review them carefully. If you do not agree to these terms and conditions, you should not continue to use the application.",
+  "@terms_introduction_content": {
+    "description": "None"
+  },
+  "terms_ip_rights_title": "2. Intellectual Property Rights",
+  "@terms_ip_rights_title": {
+    "description": "None"
+  },
+  "terms_ip_rights_content": "The content, layout, design, data, databases, and graphics on this application are protected by international intellectual property laws. The content is solely owned by the application unless otherwise indicated. Unless expressly authorized by us or the relevant copyright holder, you may not copy, distribute, display, reproduce, modify, publish, adapt, edit, or otherwise use any material from the application.",
+  "@terms_ip_rights_content": {
+    "description": "None"
+  },
+  "terms_use_title": "3. Use of the Application",
+  "@terms_use_title": {
+    "description": "None"
+  },
+  "terms_use_content": "This application provides information on currency exchange rates from various sources around the world. The information is intended for informational purposes only and should not be considered as financial advice, nor should it be used as the sole basis for any financial decisions. We strictly do not facilitate currency exchange transactions, broker currency trades, provide financial services, or endorse or promote any form of financial speculation or investment. Additionally, this application does not support or encourage any illegal activities related to currency exchange. The rates provided are subject to change and may vary between different regions and over time. Given the nature of currency fluctuations, users are advised to verify the authenticity of any financial information and consult with a qualified professional before engaging in any currency trading or investment. This app is designed to offer general insights and should be used as one of several tools for users who wish to understand currency market trends.",
+  "@terms_use_content": {
+    "description": "None"
+  },
+  "terms_liability_title": "4. Disclaimer of Liability",
+  "@terms_liability_title": {
+    "description": "None"
+  },
+  "terms_liability_content": "The application owner shall not be responsible for and disclaims all liability for any loss, liability, damage (whether direct, indirect, or consequential), personal injury, or expense of any nature whatsoever which may be suffered by you or any third party, as a result of or which may be attributable, directly or indirectly, to your access and use of the application, any information contained on the application, your or your company's personal information or material and information transmitted over our system.",
+  "@terms_liability_content": {
+    "description": "None"
+  },
+  "terms_compliance_title": "5. Compliance with Laws",
+  "@terms_compliance_title": {
+    "description": "None"
+  },
+  "terms_compliance_content": "You agree to comply with all applicable laws regarding your use of the application. You further agree that information provided by you is truthful and accurate to the best of your knowledge.",
+  "@terms_compliance_content": {
+    "description": "None"
+  },
+  "terms_acceptance_title": "6. Acceptance of Terms",
+  "@terms_acceptance_title": {
+    "description": "None"
+  },
+  "terms_acceptance_content": "By using this application, you are deemed to have read, understood, and agreed to the Terms and Conditions. If you do not agree to these Terms and Conditions, you should not use this application.",
+  "@terms_acceptance_content": {
+    "description": "None"
+  },
+  "terms_contact_title": "7. Contact Information",
+  "@terms_contact_title": {
+    "description": "None"
+  },
+  "terms_contact_content": "If you have any questions or concerns regarding these Terms and Conditions, please contact us at",
+  "@terms_contact_content": {
+    "description": "None"
+  },
+  "terms_modifications_title": "8. Modifications to Terms",
+  "@terms_modifications_title": {
+    "description": "None"
+  },
+  "terms_modifications_content": "We reserve the right to modify these terms and conditions at any time. Such modifications will be effective immediately upon posting on the application. Your continued use of the application after any modifications to these terms and conditions shall mean your acceptance of those changes.",
+  "@terms_modifications_content": {
+    "description": "None"
+  },
+  "terms_last_updated": "These Terms and Conditions were last updated on ",
+  "@terms_last_updated": {
+    "description": "None"
+  },
+  "accept_terms_and_conditions": "I agree to the Terms and Conditions.",
+  "@accept_terms_and_conditions": {
+    "description": "None"
+  },
+  "continue_button": "Continue",
+  "@continue_button": {
+    "description": "None"
+  },
+  "decline_button": "Decline",
+  "@decline_button": {
+    "description": "None"
   }
 }
