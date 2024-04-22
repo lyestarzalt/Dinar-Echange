@@ -16,6 +16,9 @@ class CurrencyListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Access the TextScaler from MediaQuery
+    TextScaler textScaler = MediaQuery.textScalerOf(context);
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Column(
@@ -29,8 +32,11 @@ class CurrencyListItem extends StatelessWidget {
             ),
             title: Text(
               currency.currencyCode,
+              softWrap: false,
               style: TextStyle(
-                  fontSize: 22,
+              
+                  fontSize:
+                      textScaler.scale(15), // Use scale method of TextScaler
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onSurface,
                   height: 2.5),
@@ -39,32 +45,34 @@ class CurrencyListItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  width: 80, // Width of the container for the currency values
+                  width: 80,
                   child: Text(
-                    _formatCurrencyValue(currency.buy), // Buy value
+                    _formatCurrencyValue(currency.buy),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: textScaler
+                          .scale(20), // Use scale method of TextScaler
                       height: 2.5,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    textAlign: TextAlign.right, // Align text to the left
+                    textAlign: TextAlign.right,
                   ),
                 ),
                 Text(
-                  " DZD", // Currency unit
+                  " DZD",
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
-                      fontSize: 12,
+                      fontSize: textScaler
+                          .scale(12), // Use scale method of TextScaler
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 2.5),
                 ),
-                const SizedBox(width: 15), // Space between DZD and arrow icon
+                const SizedBox(width: 15),
                 Icon(
                   Icons.arrow_forward_ios,
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                  size: 14,
+                  size: textScaler.scale(14), // Use scale method of TextScaler
                 ),
               ],
             ),
