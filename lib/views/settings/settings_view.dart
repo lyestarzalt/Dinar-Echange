@@ -237,6 +237,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 }
 
+
 class SettingsItem extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -248,22 +249,33 @@ class SettingsItem extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
-    this.verticalPadding = 10.0,
+    this.verticalPadding = 6.0, // Increased padding for a larger touch target
   });
 
   @override
   Widget build(BuildContext context) {
+    // Use Theme.of(context) to ensure we follow Material Design 3 guidelines
+    final theme = Theme.of(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: InkWell(
         onTap: onTap,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 24.0),
-            const SizedBox(width: 16),
-            Text(text, style: const TextStyle(fontSize: 16)),
-          ],
+        borderRadius: BorderRadius.circular(12), 
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), 
+          child: Row(
+            children: [
+              Icon(icon, size: 28.0, color: theme.colorScheme.onSurface),
+              const SizedBox(width: 24), 
+              Expanded( 
+                child: Text(
+                  text,
+                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
