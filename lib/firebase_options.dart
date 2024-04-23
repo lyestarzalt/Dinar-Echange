@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAHd53rpCta6lG9Ei_M6Unrymlluf5ajeY',
-    appId: '1:971801769486:android:5552f26ac1996825b62e5f',
+    appId: '1:971801769486:android:9d8879197343c3bfb62e5f',
     messagingSenderId: '971801769486',
     projectId: 'exchange-dinar',
     storageBucket: 'exchange-dinar.appspot.com',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC9bIlIOCnROggdtA9lVlWvJh0cWDRYljY',
-    appId: '1:971801769486:ios:fa44329bd0976665b62e5f',
+    appId: '1:971801769486:ios:bceb49ee14e1b016b62e5f',
     messagingSenderId: '971801769486',
     projectId: 'exchange-dinar',
     storageBucket: 'exchange-dinar.appspot.com',
-    iosBundleId: 'come.dinarechange.dinarEchange',
+    iosBundleId: 'com.dinarexchange.app',
   );
 
 }

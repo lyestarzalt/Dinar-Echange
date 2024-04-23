@@ -1,4 +1,4 @@
-package come.dinar_echange.dinar_echange
+package com.dinarexchange.app
 
 import io.flutter.embedding.android.FlutterActivity
 
