@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:dinar_echange/providers/language_provider.dart';
-import 'package:dinar_echange/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -30,72 +29,71 @@ class SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           title: Text(text.settings_app_bar_title),
         ),
-        body: Consumer<LanguageProvider>(
-         builder: (context, languageProvider, child) {
-           final textDirection =
+        body:
+            Consumer<AppProvider>(builder: (context, languageProvider, child) {
+          final textDirection =
               languageProvider.currentLocale.languageCode == 'ar'
                   ? TextDirection.rtl
                   : TextDirection.ltr;
-            return Directionality(
-                textDirection: textDirection,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height,
+          return Directionality(
+            textDirection: textDirection,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        buildSectionTitle(context, text.theme_title),
+                        _buildThemeSelection(context),
+                        const SizedBox(height: 16),
+                        buildSectionTitle(context, text.general_title),
+                        SettingsItem(
+                          icon: Icons.language,
+                          text: text.chose_language_title,
+                          onTap: () {
+                            _showLanguageDialog();
+                          },
+                        ),
+                        SettingsItem(
+                          icon: Icons.star,
+                          text: text.rate_us_button,
+                          onTap: () {
+                            //TODO Rate us action
+                          },
+                        ),
+                        SettingsItem(
+                          icon: Icons.info_outline,
+                          text: text.about_app_button,
+                          onTap: () {
+                            _showAboutDialog(context);
+                          },
+                        ),
+                        const AdBannerWidget(),
+                        buildSectionTitle(context, text.legal_title),
+                        SettingsItem(
+                          icon: Icons.article,
+                          text: text.terms_title,
+                          onTap: () =>
+                              _openLegalDocument(LegalDocumentType.terms),
+                        ),
+                        SettingsItem(
+                          icon: Icons.privacy_tip,
+                          text: text.privacy_title,
+                          onTap: () =>
+                              _openLegalDocument(LegalDocumentType.privacy),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          buildSectionTitle(
-                              context, text.theme_title),
-                          _buildThemeSelection(context),
-                          const SizedBox(height: 16),
-                          buildSectionTitle(
-                              context, text.general_title),
-                          SettingsItem(
-                            icon: Icons.language,
-                            text: text.chose_language_title,
-                            onTap: () {
-                              _showLanguageDialog();
-                            },
-                          ),
-                          SettingsItem(
-                            icon: Icons.star,
-                            text: text.rate_us_button,
-                            onTap: () {
-                              //TODO Rate us action
-                            },
-                          ),
-                          SettingsItem(
-                            icon: Icons.info_outline,
-                            text: text.about_app_button,
-                            onTap: () {
-                              _showAboutDialog(context);
-                            },
-                          ),                    const AdBannerWidget(),
-              buildSectionTitle(context,text.legal_title),
-                          SettingsItem(
-                            icon: Icons.article,
-                            text: text.terms_title,
-                            onTap: () => _openLegalDocument(LegalDocumentType.terms),
-                          ),
-                          SettingsItem(
-                            icon: Icons.privacy_tip,
-                            text: text.privacy_title,
-                            onTap: () =>
-                                _openLegalDocument(LegalDocumentType.privacy),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
-                    )),
-              ),
-            );
-          }
-        ));
+                  )),
+            ),
+          );
+        }));
   }
 
   void _openLegalDocument(LegalDocumentType type) {
@@ -123,10 +121,10 @@ class SettingsPageState extends State<SettingsPage> {
 
   Widget _buildThemeSelection(BuildContext context) {
     final text = AppLocalizations.of(context)!;
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, child) {
         ThemeOption currentThemeOption = ThemeOption.auto; // Default
-        switch (themeProvider.themeMode) {
+        switch (appProvider.themeMode) {
           case ThemeMode.dark:
             currentThemeOption = ThemeOption.dark;
             break;
@@ -169,7 +167,7 @@ class SettingsPageState extends State<SettingsPage> {
               selected: {currentThemeOption},
               onSelectionChanged: (Set newSelection) {
                 ThemeOption selectedOption = newSelection.first;
-                themeProvider.setThemeMode(selectedOption);
+                appProvider.setThemeMode(selectedOption);
               },
             ),
           ),
@@ -182,17 +180,16 @@ class SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Consumer<LanguageProvider>(
-          builder: (context, languageProvider, child) {
+        return Consumer<AppProvider>(
+          builder: (context, appProvider, child) {
             String currentLanguage = languageCodes.entries
                 .firstWhere(
                   (entry) =>
-                      entry.value ==
-                      languageProvider.currentLocale.languageCode,
+                      entry.value == appProvider.currentLocale.languageCode,
                   orElse: () => const MapEntry('English', 'en'),
                 )
                 .key;
-final text = AppLocalizations.of(context)!;
+            final text = AppLocalizations.of(context)!;
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -208,7 +205,7 @@ final text = AppLocalizations.of(context)!;
                       groupValue: currentLanguage,
                       onChanged: (String? value) {
                         if (value != null) {
-                          languageProvider.setLanguage(
+                          appProvider.setLanguage(
                               Locale(languageCodes[value] ?? 'en'));
                           Navigator.of(context).pop();
                         }
@@ -232,38 +229,71 @@ final text = AppLocalizations.of(context)!;
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
+ void _showAboutDialog(BuildContext context) {
     final text = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Text(text.about_app_button),
-          content: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: ListBody(
-              children: [
-                Text(text.about_body),
-                const SizedBox(height: 16),
-                const Text('Version: 1.0.0'), 
+        return Consumer<AppProvider>(
+          builder: (context, provider, child) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              title: Text(text.about_app_button),
+              content: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: ListBody(
+                  children: [
+                    Text(text.about_body),
+                    const SizedBox(height: 16),
+  
+                    Text(
+                        'Version: ${provider.packageInfo.version}'), 
+                    Text(
+                        'Build Number: ${provider.packageInfo.buildNumber}'), 
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(text.licenses),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showLicensesPage(
+                        context,
+                        provider.packageInfo.appName,
+                        provider
+                            .packageInfo.version); 
+                  },
+                ),
+                TextButton(
+                  child: Text(text.close_button),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(text.close_button),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
+
+  void _showLicensesPage(BuildContext context, String appName, String version) {
+    showLicensePage(
+      context: context,
+      applicationIcon: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Image.asset('assets/logo/test.png', scale:4),
+      ),
+      applicationName: appName,
+      applicationVersion: version,
+   
+    );
+  }
+
 }
 
 class SettingsItem extends StatelessWidget {
@@ -277,7 +307,7 @@ class SettingsItem extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
-    this.verticalPadding = 6.0, 
+    this.verticalPadding = 6.0,
   });
 
   @override

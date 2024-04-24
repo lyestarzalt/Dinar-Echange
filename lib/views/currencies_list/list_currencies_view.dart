@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_echange/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_echange/providers/converter_provider.dart';
-import 'package:dinar_echange/providers/language_provider.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/utils/logging.dart';
 class CurrencyListScreen extends StatelessWidget {
@@ -19,9 +19,9 @@ class CurrencyListScreen extends StatelessWidget {
     return ChangeNotifierProvider<ListCurrencyProvider>(
       create: (_) => ListCurrencyProvider(currencies),
       child: Consumer<ListCurrencyProvider>(
-        builder: (context, selectionProvider, _) => Consumer<LanguageProvider>(
-          builder: (context, languageProvider, _) {
-            String formattedDate = languageProvider
+        builder: (context, selectionProvider, _) => Consumer<AppProvider>(
+          builder: (context, appProvider, _) {
+            String formattedDate = appProvider
                 .getDatetime(selectionProvider.filteredCurrencies[0].date);
 
             return Scaffold(

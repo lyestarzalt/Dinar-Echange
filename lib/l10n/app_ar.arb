@@ -175,5 +175,9 @@
   "legal_title": "قانوني",
   "@legal_title": {
     "description": "Title for the legal section in the settings"
+  },
+  "licenses": "رخص",
+  "@licenses": {
+    "description": "Word for licenses"
   }
 }

@@ -175,5 +175,9 @@
   "legal_title": "Legal",
   "@legal_title": {
     "description": "Title for the legal section in the settings"
+  },
+  "licenses": "Licenses",
+  "@licenses": {
+    "description": "Word for licenses"
   }
 }

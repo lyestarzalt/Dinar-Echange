@@ -11,7 +11,7 @@ import 'package:dinar_echange/data/models/currency_history.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/enums.dart';
-import 'package:dinar_echange/providers/language_provider.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
@@ -151,7 +151,7 @@ class HistoryPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 1),
-                  Consumer<LanguageProvider>(
+                  Consumer<AppProvider>(
                     builder: (context, languageProvider, child) {
                       return ValueListenableBuilder<DateTime>(
                         valueListenable: provider.selectedDate,

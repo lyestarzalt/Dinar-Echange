@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_echange/providers/legal_provider.dart';
 import 'package:dinar_echange/utils/enums.dart';
-import 'package:dinar_echange/providers/theme_provider.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 
 class LegalDocumentsScreen extends StatelessWidget {
   final LegalDocumentType documentType;
@@ -28,12 +27,12 @@ class LegalDocumentsScreen extends StatelessWidget {
       body: Directionality(
               textDirection: TextDirection.ltr,
 
-        child: ChangeNotifierProvider<LegalProvider>(
-          create: (_) => LegalProvider()..loadContent(documentType),
-          child: Consumer<LegalProvider>(
+        child: ChangeNotifierProvider<AppProvider>(
+          create: (_) => AppProvider()..loadContent(documentType),
+          child: Consumer<AppProvider>(
             builder: (context, legalProvider, child) {
-              return Consumer<ThemeProvider>(
-                builder: (context, themeProvider, child) {
+              return Consumer<AppProvider>(
+                builder: (context, appProvider, child) {
   
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
