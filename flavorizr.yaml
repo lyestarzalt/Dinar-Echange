@@ -1,0 +1,15 @@
+flavors:
+  development:
+    app:
+      name: "Dinar Exchange Dev"
+    android:
+      applicationId: "com.dinarexchange.app.dev"
+    ios:
+      bundleId: "com.dinarexchange.app.dev"
+  release:
+    app:
+      name: "Dinar Exchange"
+    android:
+      applicationId: "com.dinarexchange.app"
+    ios:
+      bundleId: "com.dinarexchange.app"

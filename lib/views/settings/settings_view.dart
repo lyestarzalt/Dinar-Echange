@@ -5,7 +5,6 @@ import 'package:dinar_echange/providers/language_provider.dart';
 import 'package:dinar_echange/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
-import 'package:dinar_echange/providers/legal_provider.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
 
 class SettingsPage extends StatefulWidget {

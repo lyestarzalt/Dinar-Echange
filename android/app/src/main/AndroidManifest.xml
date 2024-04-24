@@ -2,7 +2,7 @@
     <application
         android:label="Dinar Echange"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
                 <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" 
         android:value="ca-app-pub-7264503053372654~9297330500"/>
         <activity
