@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_echange/providers/theme_provider.dart';
-import 'package:dinar_echange/providers/language_provider.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/views/app_navigation.dart';
@@ -32,8 +31,7 @@ void main() async {
   ]).then((_) => runApp(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ThemeProvider()),
-            ChangeNotifierProvider(create: (_) => LanguageProvider()),
+            ChangeNotifierProvider(create: (_) => AppProvider()),
             ChangeNotifierProvider(create: (_) => NavigationProvider()),
             ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
             ChangeNotifierProvider(create: (_) => AdProvider()),
@@ -63,17 +61,17 @@ class DinarWatchState extends State<DinarWatch> {
   @override
   Widget build(BuildContext context) {
     final MaterialTheme materialTheme = MaterialTheme();
-    return Consumer2<ThemeProvider, LanguageProvider>(
-      builder: (context, themeProvider, languageProvider, _) {
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, _) {
         return MaterialApp(
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.app_title,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
-          themeMode: themeProvider.themeMode,
+          themeMode: appProvider.themeMode,
           highContrastTheme: materialTheme.lightHighContrast(),
           highContrastDarkTheme: materialTheme.darkHighContrast(),
-          locale: languageProvider.currentLocale,
+          locale: appProvider.currentLocale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Consumer<AppInitializationProvider>(
