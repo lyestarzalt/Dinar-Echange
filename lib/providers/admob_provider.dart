@@ -97,14 +97,14 @@ class AdProvider with ChangeNotifier {
   }) {
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        AppLogger.logInfo('Ad dismissed fullscreen content.');
+        AppLogger.logInfo('Ad dismissed full screen content.');
         onAdClosed();
         ad.dispose();
         _isInterstitialAdLoaded = false;
         loadInterstitialAd();
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        AppLogger.logError('Ad failed to show fullscreen content: $error');
+        AppLogger.logError('Ad failed to show full screen content: $error');
         onAdFailedToShow?.call();
         ad.dispose();
         _isInterstitialAdLoaded = false;

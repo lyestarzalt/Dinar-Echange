@@ -8,10 +8,10 @@ class AdBannerWidget extends StatefulWidget {
   const AdBannerWidget({super.key});
 
   @override
-  _AdBannerWidgetState createState() => _AdBannerWidgetState();
+  AdBannerWidgetState createState() => AdBannerWidgetState();
 }
 
-class _AdBannerWidgetState extends State<AdBannerWidget> {
+class AdBannerWidgetState extends State<AdBannerWidget> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
   AdSize? _adSize;

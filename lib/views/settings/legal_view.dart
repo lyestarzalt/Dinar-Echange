@@ -10,9 +10,9 @@ class LegalDocumentsScreen extends StatelessWidget {
   final LegalDocumentType documentType;
 
   const LegalDocumentsScreen({
-    Key? key,
+    super.key,
     required this.documentType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

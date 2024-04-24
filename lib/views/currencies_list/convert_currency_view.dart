@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/widgets/convert/currency_input.dart';
 import 'package:dinar_echange/widgets/convert/number_words.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
@@ -118,9 +117,9 @@ class NewWidget extends StatelessWidget {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final middlePoint = screenHeight * 0.17;
     final cardHeight = screenHeight / 8;
-    const cardsgap = 5;
+    const gapBetweenCards = 5;
     final topCardTopPosition = middlePoint - cardHeight;
-    final bottomCardTopPosition = middlePoint + cardsgap;
+    final bottomCardTopPosition = middlePoint + gapBetweenCards;
     const fabSize = 56.0;
     final fabTopPosition = middlePoint - (fabSize / 2);
 
