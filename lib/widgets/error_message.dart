@@ -24,7 +24,7 @@ class ErrorMessage extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          title, // Assuming 'title' is a variable holding the error title
+          title,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onErrorContainer,
@@ -32,15 +32,15 @@ class ErrorMessage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8), // Adjust size as needed
+        const SizedBox(height: 8),
         Text(
           message,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(context)
                 .colorScheme
-                .onErrorContainer, // Adjust color as needed
-            fontSize: 16, // Adjust font size as needed
+                .onErrorContainer, 
+            fontSize: 16,
           ),
         ),
         const SizedBox(height: 16),

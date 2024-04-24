@@ -21,31 +21,17 @@ class AppInitializationProvider with ChangeNotifier {
   AppState get state => _state;
   List<Currency>? get currencies => _state.data;
 
-   Future<void> initializeApp() async {
+  Future<void> initializeApp() async {
     final overallStopwatch = Stopwatch()..start();
     try {
-      // Initialize Firebase and related services
+      await Firebase.initializeApp();
+      AppLogger.logInfo('Firebase Core initialized.');
+
       await Future.wait([
-        _enableFirebaseAnalytics(),
-        _activateAppCheck(),
-        _initializeMobileAds(),
-        _requestNotificationPermissions(),
         _signInAnonymously(),
+        _enableFirebaseAnalytics(),
       ]);
-      AppLogger.logInfo('Firebase and related services initialized.');
 
-      // Start Firebase Messaging setup asynchronously
-      _setupFirebaseMessaging().catchError((error) {
-        AppLogger.logFatal('Failed to setup Firebase Messaging', error: error);
-      });
-
-      // Check and handle terms conditions synchronously
-      bool termsAccepted = await _checkAndHandleTermsConditions();
-      if (!termsAccepted) {
-        return; // Stop initialization if terms are not accepted
-      }
-
-      // Fetch Daily Currencies once terms are accepted
       final currenciesStopwatch = Stopwatch()..start();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
@@ -53,29 +39,34 @@ class AppInitializationProvider with ChangeNotifier {
       currenciesStopwatch.stop();
       AppLogger.logInfo(
           'Fetched daily currencies in ${currenciesStopwatch.elapsedMilliseconds} ms');
+
+      // Initialize other services asynchronously after the essential data is loaded
+      _deferOtherInitializations();
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
-      FlutterNativeSplash.remove();
+      FlutterNativeSplash
+          .remove();
       notifyListeners();
       overallStopwatch.stop();
-      AppLogger.logInfo('App initialization process completed.');
+      AppLogger.logInfo(
+          'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms.');
     }
-  }
-  Future<bool> _checkAndHandleTermsConditions() async {
-    bool acceptedTerms = await _checkTermsAndConditions();
-    if (!acceptedTerms) {
-      _state = AppState.error('Terms not accepted');
-      notifyListeners();
-      return false;
-    }
-    return true;
   }
 
-  Future<bool> _checkTermsAndConditions() async {
-    return await PreferencesService().hasAcceptedTerms();
+  void _deferOtherInitializations() async {
+    await Future.wait([
+      _activateAppCheck(),
+      _initializeMobileAds(),
+      _requestNotificationPermissions(),
+      _setupFirebaseMessaging(),
+      _loadInterstitialAd(),
+    ])
+        .then((_) => AppLogger.logInfo(
+            'Deferred Firebase and related services initialized.'))
+        .catchError((error) =>
+            AppLogger.logFatal('Deferred initialization error', error: error));
   }
-  
 
   Future<void> handleInitializationError(e, stackTrace) async {
     final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
@@ -90,6 +81,18 @@ class AppInitializationProvider with ChangeNotifier {
       _state = AppState.success(fetchedCurrencies);
     } else {
       _state = AppState.error(errorResult.message);
+    }
+  }
+
+  Future<void> _loadInterstitialAd() async {
+    try {
+      final adProvider =
+          AdProvider(); 
+      adProvider.loadInterstitialAd();
+      AppLogger.logInfo('InterstitialAd loading initiated.');
+    } catch (error, stackTrace) {
+      AppLogger.logError('Failed to load InterstitialAd.',
+          error: error, stackTrace: stackTrace);
     }
   }
 

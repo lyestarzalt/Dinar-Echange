@@ -1,5 +1,9 @@
 {
   "@@locale": "ar",
+  "app_title": "دينار إيشانج",
+  "@app_title": {
+    "description": "The app's name as shown in system contexts like the home screen or app switcher."
+  },
   "currencies_app_bar_title": "العملات",
   "@currencies_app_bar_title": {
     "description": "A list of all available currencies in the app."
@@ -32,7 +36,7 @@
   "@dark_button": {
     "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "light_button": "ضوء",
+  "light_button": "مضيء",
   "@light_button": {
     "description": "Option to enable a light color scheme for the app's interface."
   },
@@ -44,7 +48,7 @@
   "@chose_language_title": {
     "description": "Option to select a language"
   },
-  "theme_title": "موضوع",
+  "theme_title": "المظهر",
   "@theme_title": {
     "description": "Option for visual theme customization."
   },
@@ -52,13 +56,13 @@
   "@general_title": {
     "description": "Overall settings or information for the app."
   },
-  "rate_us_button": "أعطنا تقييمك",
+  "rate_us_button": "قيّم التطبيق",
   "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "about_body": "Dinar Watch هو تطبيقك المرافق الأساسي لمراقبة الدينار الجزائري. فهو يوفر تحديثات في الوقت الفعلي وميزات سهلة الاستخدام، ويسعى جاهداً لتوفير البيانات الأكثر دقة قدر الإمكان، على الرغم من احتمال حدوث اختلافات إقليمية. لمزيد من التفاصيل يرجى الاتصال بنا.",
+  "about_body": "شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.",
   "@about_body": {
-    "description": "Detailed Description"
+    "description": "App's detailed description"
   },
   "about_app_button": "حول التطبيق",
   "@about_app_button": {
@@ -152,88 +156,24 @@
   "@currency_buy_sell_tooltip": {
     "description": "Brief tooltip for currency buy and sell values"
   },
-  "terms_title": "None",
+  "terms_title": "شروط وأحكام",
   "@terms_title": {
-    "description": "None"
+    "description": "Title for the terms and conditions page"
   },
-  "terms_introduction_title": "None",
-  "@terms_introduction_title": {
-    "description": "None"
-  },
-  "terms_introduction_content": "None",
-  "@terms_introduction_content": {
-    "description": "None"
-  },
-  "terms_ip_rights_title": "None",
-  "@terms_ip_rights_title": {
-    "description": "None"
-  },
-  "terms_ip_rights_content": "None",
-  "@terms_ip_rights_content": {
-    "description": "None"
-  },
-  "terms_use_title": "None",
-  "@terms_use_title": {
-    "description": "None"
-  },
-  "terms_use_content": "None",
-  "@terms_use_content": {
-    "description": "None"
-  },
-  "terms_liability_title": "None",
-  "@terms_liability_title": {
-    "description": "None"
-  },
-  "terms_liability_content": "None",
-  "@terms_liability_content": {
-    "description": "None"
-  },
-  "terms_compliance_title": "None",
-  "@terms_compliance_title": {
-    "description": "None"
-  },
-  "terms_compliance_content": "None",
-  "@terms_compliance_content": {
-    "description": "None"
-  },
-  "terms_acceptance_title": "None",
-  "@terms_acceptance_title": {
-    "description": "None"
-  },
-  "terms_acceptance_content": "None",
-  "@terms_acceptance_content": {
-    "description": "None"
-  },
-  "terms_contact_title": "None",
-  "@terms_contact_title": {
-    "description": "None"
-  },
-  "terms_contact_content": "None",
-  "@terms_contact_content": {
-    "description": "None"
-  },
-  "terms_modifications_title": "None",
-  "@terms_modifications_title": {
-    "description": "None"
-  },
-  "terms_modifications_content": "None",
-  "@terms_modifications_content": {
-    "description": "None"
-  },
-  "terms_last_updated": "None",
-  "@terms_last_updated": {
-    "description": "None"
-  },
-  "accept_terms_and_conditions": "None",
-  "@accept_terms_and_conditions": {
-    "description": "None"
-  },
-  "continue_button": "None",
+  "continue_button": "استمر",
   "@continue_button": {
-    "description": "None"
+    "description": "Button to proceed or accept conditions"
   },
-  "decline_button": "None",
+  "decline_button": "رفض",
   "@decline_button": {
-    "description": "None"
+    "description": "Button to reject conditions or navigate back"
+  },
+  "privacy_title": "سياسة الخصوصية",
+  "@privacy_title": {
+    "description": "Title for the privacy policy page"
+  },
+  "legal_title": "قانوني",
+  "@legal_title": {
+    "description": "Title for the legal section in the settings"
   }
 }

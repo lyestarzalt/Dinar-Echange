@@ -87,8 +87,7 @@ class AdProvider with ChangeNotifier {
       _showInterstitialAd(
           onAdClosed: onAdClosed, onAdFailedToShow: onAdFailedToShow);
     } else {
-      loadInterstitialAd(); // Attempt to load an ad if not already loaded
-      // This can be expanded to retry loading or handle a failed load more gracefully
+      loadInterstitialAd(); 
     }
   }
 
@@ -102,20 +101,20 @@ class AdProvider with ChangeNotifier {
         onAdClosed();
         ad.dispose();
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd(); // Optionally preload the next ad
+        loadInterstitialAd();
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         AppLogger.logError('Ad failed to show fullscreen content: $error');
         onAdFailedToShow?.call();
         ad.dispose();
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd(); // Optionally preload the next ad
+        loadInterstitialAd(); 
       },
     );
 
     _interstitialAd!.show();
     _isInterstitialAdLoaded =
-        false; // Reset the flag as the ad is about to be shown
+        false; 
   }
 
 

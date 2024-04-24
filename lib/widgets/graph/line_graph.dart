@@ -38,7 +38,7 @@ LineTouchData buildLineTouchData(
         final newIndex = spot.x.toInt();
         if (newIndex != touchedIndex) {
           onIndexChangeCallback(
-              newIndex, historyEntries); // Pass both arguments
+              newIndex, historyEntries); 
         }
       }
     },
@@ -67,10 +67,10 @@ LineTouchData buildLineTouchData(
             show: true,
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
-                radius: 6, // Adjust the size of the dot
+                radius: 6,
                 color:
-                    Theme.of(context).colorScheme.secondary, // Color of the dot
-                strokeColor: Colors.transparent, // Border color of the dot
+                    Theme.of(context).colorScheme.secondary,
+                strokeColor: Colors.transparent,
               );
             },
           ),
@@ -165,7 +165,6 @@ IndexChangeResult onIndexChange(
           DateFormat('dd/MM/yyyy').format(historyEntries[newIndex].date),
     );
   } else {
-    // Return current state or default values if the index is invalid
     return IndexChangeResult(
         touchedIndex: -1, selectedValue: '', selectedDate: '');
   }

@@ -3,9 +3,10 @@ import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/language_provider.dart';
 import 'package:dinar_echange/providers/theme_provider.dart';
-
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
+import 'package:dinar_echange/providers/legal_provider.dart';
+import 'package:dinar_echange/views/settings/legal_view.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -21,59 +22,87 @@ class SettingsPageState extends State<SettingsPage> {
     'English': 'en',
     'العربية': 'ar',
     'Français': 'fr',
-
   };
 
   @override
   Widget build(BuildContext context) {
+    final text = AppLocalizations.of(context)!;
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.settings_app_bar_title),
+          title: Text(text.settings_app_bar_title),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height,
+        body: Consumer<LanguageProvider>(
+         builder: (context, languageProvider, child) {
+           final textDirection =
+              languageProvider.currentLocale.languageCode == 'ar'
+                  ? TextDirection.rtl
+                  : TextDirection.ltr;
+            return Directionality(
+                textDirection: textDirection,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          buildSectionTitle(
+                              context, text.theme_title),
+                          _buildThemeSelection(context),
+                          const SizedBox(height: 16),
+                          buildSectionTitle(
+                              context, text.general_title),
+                          SettingsItem(
+                            icon: Icons.language,
+                            text: text.chose_language_title,
+                            onTap: () {
+                              _showLanguageDialog();
+                            },
+                          ),
+                          SettingsItem(
+                            icon: Icons.star,
+                            text: text.rate_us_button,
+                            onTap: () {
+                              //TODO Rate us action
+                            },
+                          ),
+                          SettingsItem(
+                            icon: Icons.info_outline,
+                            text: text.about_app_button,
+                            onTap: () {
+                              _showAboutDialog(context);
+                            },
+                          ),                    const AdBannerWidget(),
+              buildSectionTitle(context,text.legal_title),
+                          SettingsItem(
+                            icon: Icons.article,
+                            text: text.terms_title,
+                            onTap: () => _openLegalDocument(LegalDocumentType.terms),
+                          ),
+                          SettingsItem(
+                            icon: Icons.privacy_tip,
+                            text: text.privacy_title,
+                            onTap: () =>
+                                _openLegalDocument(LegalDocumentType.privacy),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      ),
+                    )),
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    buildSectionTitle(
-                        context, AppLocalizations.of(context)!.theme_title),
-                    _buildThemeSelection(context),
-                    const SizedBox(height: 16),
-                    buildSectionTitle(
-                        context, AppLocalizations.of(context)!.general_title),
-                    SettingsItem(
-                      icon: Icons.language,
-                      text: AppLocalizations.of(context)!.chose_language_title,
-                      onTap: () {
-                        _showLanguageDialog();
-                      },
-                    ),
-                    SettingsItem(
-                      icon: Icons.star,
-                      text: AppLocalizations.of(context)!.rate_us_button,
-                      onTap: () {
-                        //TODO Rate us action
-                      },
-                    ),
-                    SettingsItem(
-                      icon: Icons.info_outline,
-                      text: AppLocalizations.of(context)!.about_app_button,
-                      onTap: () {
-                        _showAboutDialog(context);
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    const AdBannerWidget(),
-                  ],
-                ),
-              )),
+            );
+          }
         ));
+  }
+
+  void _openLegalDocument(LegalDocumentType type) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => LegalDocumentsScreen(documentType: type),
+    ));
   }
 
   Widget buildSectionTitle(BuildContext context, String title) {
@@ -94,6 +123,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeSelection(BuildContext context) {
+    final text = AppLocalizations.of(context)!;
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         ThemeOption currentThemeOption = ThemeOption.auto; // Default
@@ -126,15 +156,15 @@ class SettingsPageState extends State<SettingsPage> {
               segments: <ButtonSegment>[
                 ButtonSegment(
                     value: ThemeOption.auto,
-                    label: Text(AppLocalizations.of(context)!.auto_button),
+                    label: Text(text.auto_button),
                     icon: const Icon(Icons.brightness_auto)),
                 ButtonSegment(
                     value: ThemeOption.dark,
-                    label: Text(AppLocalizations.of(context)!.dark_button),
+                    label: Text(text.dark_button),
                     icon: const Icon(Icons.nights_stay)),
                 ButtonSegment(
                     value: ThemeOption.light,
-                    label: Text(AppLocalizations.of(context)!.light_button),
+                    label: Text(text.light_button),
                     icon: const Icon(Icons.wb_sunny)),
               ],
               selected: {currentThemeOption},
@@ -163,12 +193,12 @@ class SettingsPageState extends State<SettingsPage> {
                   orElse: () => const MapEntry('English', 'en'),
                 )
                 .key;
-
+final text = AppLocalizations.of(context)!;
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              title: Text(AppLocalizations.of(context)!.chose_language_title),
+              title: Text(text.chose_language_title),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -190,7 +220,7 @@ class SettingsPageState extends State<SettingsPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text(AppLocalizations.of(context)!.close_button),
+                  child: Text(text.close_button),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -204,6 +234,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void _showAboutDialog(BuildContext context) {
+    final text = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -211,21 +242,20 @@ class SettingsPageState extends State<SettingsPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          title: Text(AppLocalizations.of(context)!.about_app_button),
+          title: Text(text.about_app_button),
           content: SingleChildScrollView(
             padding: const EdgeInsets.only(top: 8.0),
             child: ListBody(
               children: [
-                Text(AppLocalizations.of(context)!.about_body),
+                Text(text.about_body),
                 const SizedBox(height: 16),
-                const Text('Version: 1.0.0'), // Replace with your app version
-                // Add more info here if needed
+                const Text('Version: 1.0.0'), 
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(AppLocalizations.of(context)!.close_button),
+              child: Text(text.close_button),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -236,7 +266,6 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
 
 class SettingsItem extends StatelessWidget {
   final IconData icon;
@@ -249,26 +278,25 @@ class SettingsItem extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
-    this.verticalPadding = 6.0, // Increased padding for a larger touch target
+    this.verticalPadding = 6.0, 
   });
 
   @override
   Widget build(BuildContext context) {
-    // Use Theme.of(context) to ensure we follow Material Design 3 guidelines
     final theme = Theme.of(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12), 
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), 
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Row(
             children: [
               Icon(icon, size: 28.0, color: theme.colorScheme.onSurface),
-              const SizedBox(width: 24), 
-              Expanded( 
+              const SizedBox(width: 24),
+              Expanded(
                 child: Text(
                   text,
                   style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),

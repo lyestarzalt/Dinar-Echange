@@ -16,9 +16,7 @@ import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
-import 'package:dinar_echange/providers/terms_provider.dart';
 
-import 'package:dinar_echange/views/terms_condition.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -43,7 +41,6 @@ void main() async {
           child: const DinarWatch(),
         ),
       ));
-
 }
 
 class DinarWatch extends StatefulWidget {
@@ -69,7 +66,8 @@ class DinarWatchState extends State<DinarWatch> {
     return Consumer2<ThemeProvider, LanguageProvider>(
       builder: (context, themeProvider, languageProvider, _) {
         return MaterialApp(
-          title: 'Dinar Watch',
+          onGenerateTitle: (BuildContext context) =>
+              AppLocalizations.of(context)!.app_title,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: themeProvider.themeMode,
@@ -79,42 +77,27 @@ class DinarWatchState extends State<DinarWatch> {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Consumer<AppInitializationProvider>(
-            builder: (context, appInitProvider, _) {
-              switch (appInitProvider.state.state) {
+            builder: (context, currenciesProvider, _) {
+              switch (currenciesProvider.state.state) {
                 case LoadState.loading:
                   return const Scaffold(
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:
-                  return AppNavigation(currencies: appInitProvider.currencies!);
+                  return AppNavigation(
+                      currencies: currenciesProvider.state.data!);
                 case LoadState.error:
-                  if (appInitProvider.state.errorMessage ==
-                      'Terms not accepted') {
-                      
-                    return TermsAndConditionsScreen(
-                      onUserDecision: (accepted) async {
-                        if (accepted) {
-                          await PreferencesService().setAcceptedTerms(true);
-                          appInitProvider.initializeApp();
-                        } else {
-                          SystemNavigator.pop();
-                        }
-                      },
-                    );
-                  } else {
-                    return ErrorApp(
-                      errorMessage: appInitProvider.state.errorMessage!,
-                      onRetry: () => appInitProvider.initializeApp(),
-                    );
-                  }
+                  return ErrorApp(
+                    errorMessage: currenciesProvider.state.errorMessage!,
+                    onRetry: () => currenciesProvider.initializeApp(),
+                  );
                 default:
                   return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
+                    body: Center(child: LinearProgressIndicator()),
                   );
               }
             },
           ),
-
         );
       },
     );

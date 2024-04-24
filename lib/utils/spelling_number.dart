@@ -2997,8 +2997,6 @@ class SpellingNumber {
     var result = ret.reversed.toList().join(" ");
     return result;
   }
-
-  // Throw error
   Error throwError(content) {
     throw Exception('spellingNumber: ' + content);
   }

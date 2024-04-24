@@ -16,7 +16,6 @@ class CurrencyListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access the TextScaler from MediaQuery
     TextScaler textScaler = MediaQuery.textScalerOf(context);
 
     return Directionality(
@@ -36,7 +35,7 @@ class CurrencyListItem extends StatelessWidget {
               style: TextStyle(
               
                   fontSize:
-                      textScaler.scale(15), // Use scale method of TextScaler
+                      textScaler.scale(15), 
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onSurface,
                   height: 2.5),
@@ -51,7 +50,7 @@ class CurrencyListItem extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: textScaler
-                          .scale(20), // Use scale method of TextScaler
+                          .scale(20),
                       height: 2.5,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -63,7 +62,7 @@ class CurrencyListItem extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: textScaler
-                          .scale(12), // Use scale method of TextScaler
+                          .scale(12),  
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 2.5),
                 ),
@@ -72,7 +71,7 @@ class CurrencyListItem extends StatelessWidget {
                   Icons.arrow_forward_ios,
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                  size: textScaler.scale(14), // Use scale method of TextScaler
+                  size: textScaler.scale(14), 
                 ),
               ],
             ),

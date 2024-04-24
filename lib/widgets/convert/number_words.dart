@@ -26,7 +26,6 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // why does the Card comes with pridefined padding??
       margin: EdgeInsets.zero,
       child: Column(
         children: [

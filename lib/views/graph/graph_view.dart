@@ -156,7 +156,6 @@ class HistoryPage extends StatelessWidget {
                       return ValueListenableBuilder<DateTime>(
                         valueListenable: provider.selectedDate,
                         builder: (context, value, child) {
-                          // Extract day, month, and year as separate strings
 
                           String date = DateFormat('d MMMM y',
                                   languageProvider.currentLocale.toString())

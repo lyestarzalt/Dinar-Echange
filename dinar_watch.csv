@@ -1,4 +1,5 @@
 Keys,Description,en,fr,ar
+app_title,"The app's name as shown in system contexts like the home screen or app switcher.","Dinar Echange","Dinar Échange","دينار إيشانج"
 currencies_app_bar_title,A list of all available currencies in the app.,Currencies,Devises,العملات
 settings_app_bar_title,Section to customize app preferences and configurations.,Settings,Paramètres,إعدادات
 convert_app_bar_title,Option to convert values between dzd and currencies.,Convert,Convertir,تحويل
@@ -7,13 +8,13 @@ trends_app_bar_title,Page displaying the latest trends and movements in differen
 close_button,Button or option to close the app or a specific section within the app.,Close,Fermer,إغلاق
 auto_button,Option for automatic settings or operations within the app.,Auto,Auto,تلقائي
 dark_button,Option to enable a dark color scheme for the app's interface.,Dark,Sombre,مظلم
-light_button,Option to enable a light color scheme for the app's interface.,Light,Lumière,ضوء
+light_button,Option to enable a light color scheme for the app's interface.,Light,Lumière,مضيء
 languages_button,List of available languages,Languages,Langues,اللغات
 chose_language_title,Option to select a language,Choose Language,Choisissez la langue,اختر اللغة
-theme_title,Option for visual theme customization.,Theme,Thème,موضوع
+theme_title,Option for visual theme customization.,Theme,Thème,المظهر
 general_title,Overall settings or information for the app.,General,Général,عام
-rate_us_button,Invitation to rate the app.,Give Us Your Rating,Donnez-nous votre avis,أعطنا تقييمك
-about_body,Detailed Description,"Dinar Watch is your essential companion app for monitoring the Algerian Dinar. It offers real-time updates and user-friendly features, striving to provide the most accurate data possible, although regional variations may occur. For further details, please contact us.","Dinar Watch est votre application compagnon indispensable pour surveiller le Dinar algérien. Il propose des mises à jour en temps réel et des fonctionnalités conviviales, s'efforçant de fournir les données les plus précises possibles, bien que des variations régionales puissent survenir. Pour plus de détails, veuillez nous contacter.",Dinar Watch هو تطبيقك المرافق الأساسي لمراقبة الدينار الجزائري. فهو يوفر تحديثات في الوقت الفعلي وميزات سهلة الاستخدام، ويسعى جاهداً لتوفير البيانات الأكثر دقة قدر الإمكان، على الرغم من احتمال حدوث اختلافات إقليمية. لمزيد من التفاصيل يرجى الاتصال بنا.
+rate_us_button,"Invitation to rate the app.","Rate the App","Évaluez l'application","قيّم التطبيق"
+about_body,"App's detailed description","Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.","Merci d'utiliser Dinar Echange, votre outil de suivi des devises. Nous fournissons des mises à jour opportunes et nous efforçons d'offrir des fonctionnalités conviviales qui soutiennent vos besoins de suivi financier.","شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية."
 about_app_button,About the App,About the App,À propos de l'application,حول التطبيق
 one_month_button,Short time filter for viewing currency data over the past month.,1M,1M,1ش
 six_months_button,Short time filter for viewing currency data over the past six months.,6M,6M,6ش
@@ -37,6 +38,8 @@ centime_explanation,Explanation of the term 'centime' in Algeria,"In Algerian so
 why_centime_title,Title for centime use,The Usage of 'Centime,L'utilisation du 'Centime,استخدام 'السنتيم
 currency_buy_sell_explanation,"Detailed explanation of the difference between buy and sell	","The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you'll receive 237.00","Le taux d'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 Euro, cela vous coûtera 235,00 dans votre monnaie, et si vous voulez vendre 1 Euro, vous recevrez 237,00",سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.
 currency_buy_sell_tooltip,Brief tooltip for currency buy and sell values,Explains the buying and selling rates of currencies.,Explique les taux d'achat et de vente des devises.,يوضح أسعار شراء وبيع العملات.
-terms_title,None,Terms and Conditions,None,None
-continue_button,None,Continue,None,None
-decline_button,None,Decline,None,None
+terms_title,"Title for the terms and conditions page","Terms and Conditions","Conditions générales","شروط وأحكام"
+continue_button,"Button to proceed or accept conditions","Continue","Continuer","استمر"
+decline_button,"Button to reject conditions or navigate back","Decline","Refuser","رفض"
+privacy_title,"Title for the privacy policy page","Privacy Policy","Politique de confidentialité","سياسة الخصوصية"
+legal_title,"Title for the legal section in the settings",Legal,Légal,قانوني

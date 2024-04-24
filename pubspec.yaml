@@ -63,6 +63,7 @@ flutter:
     - assets/dz.png
     - assets/logo.png
     - assets/terms_and_conditions.html
+    - assets/privacy_policy.html
   generate: true
   fonts:
     - family: Geologica
