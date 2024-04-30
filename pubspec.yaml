@@ -18,6 +18,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.2.0+1
 
+# Documenting the current Flutter and Dart SDK versions used in development:
+# Flutter version: 3.19.6 (stable channel) on Microsoft Windows [Version 10.0.22631.3296]
+# Dart SDK version: 3.3.4 (stable) (Tue Apr 16 19:56:12 2024 +0000) on "windows_x64"
+
 environment:
   sdk: '>=3.3.3 <4.0.0'
 
@@ -56,17 +60,15 @@ dependencies:
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.1
-  flutter_flavorizr: ^2.2.3
   arb_generator:
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/dz.png
-    - assets/logo.png
+    - assets/dz_flag.png
     - assets/terms_and_conditions.html
     - assets/privacy_policy.html
-    - assets/logo/test.png
+    - assets/logo/light_large.png
   generate: true
   fonts:
     - family: Geologica
@@ -78,7 +80,7 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo/test.png"
+  image_path: "assets/logo/light_large.png"
   min_sdk_android: 21
   remove_alpha_ios: true
 
@@ -99,7 +101,7 @@ flutter_native_splash:
   web: false
 
 arb_generator:
-  input_filepath: "dinar_watch.csv"
+  input_filepath: "assets/multilingual_content.csv"
   output_directory: "lib/l10n"
   filename_prepend: "app_"
   csv_settings:
