@@ -35,22 +35,22 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.18.1
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.2.3
   fl_chart: ^0.67.0
-  logger: ^2.0.2+1
+  logger: ^2.2.0
   firebase_auth: ^4.17.8
-  cached_network_image: ^3.3.0
-  animations: ^2.0.10
-  provider: ^6.1.1
-  firebase_core: ^2.24.2
+  cached_network_image: ^3.3.1
+  animations: ^2.0.11
+  provider: ^6.1.2
+  firebase_core: ^2.30.1
   flutter_native_splash: ^2.3.8
-  firebase_analytics: ^10.8.0
-  firebase_crashlytics: ^3.4.9
-  firebase_app_check: ^0.2.1+13
-  cloud_firestore: ^4.15.4
+  firebase_analytics: ^10.10.4
+  firebase_crashlytics: ^3.5.4
+  firebase_app_check: ^0.2.2+4
+  cloud_firestore: ^4.17.2
   flutter_localizations:
     sdk: flutter
-  firebase_messaging: ^14.7.14
+  firebase_messaging: ^14.9.1
   google_mobile_ads: ^5.0.0
   dio: ^5.4.3+1
   flutter_html: ^3.0.0-beta.2
