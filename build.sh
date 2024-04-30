@@ -15,6 +15,12 @@ then
     exit
 fi
 
+echo "Cleaning build..."
+flutter clean
+
+echo "Getting dependencies..."
+flutter pub get
+
 echo "Creating native splash..."
 dart run flutter_native_splash:create
 
