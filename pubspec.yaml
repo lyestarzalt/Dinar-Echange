@@ -113,3 +113,4 @@ arb_generator:
 flutter_intl:
   enabled: true
   class_name: AppLocalizations
+  

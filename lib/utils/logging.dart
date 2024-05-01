@@ -10,6 +10,10 @@ class AppLogger {
     _logger.i(message);
   }
 
+  static void logDebug(dynamic message) {
+    _logger.d(message);
+  }
+
   static void logError(String message,
       {Object? error, StackTrace? stackTrace}) {
     _logger.e(message, error: error, stackTrace: stackTrace);
@@ -18,9 +22,9 @@ class AppLogger {
       error,
       stackTrace,
       reason: message,
-      information: [], 
-      printDetails: true, 
-      fatal: false, 
+      information: [],
+      printDetails: true,
+      fatal: false,
     );
   }
 
@@ -42,13 +46,10 @@ class AppLogger {
       {String screenClass = 'FlutterScreen'}) async {
     await _analytics.logScreenView(
       screenName: screenName,
-      screenClass:
-          screenClass, 
+      screenClass: screenClass,
     );
     logInfo('Screen View Logged: $screenName');
   }
-
-
 
   static Future<void> logCurrencySelection(String currencyCode) async {
     await _analytics.logEvent(
@@ -59,6 +60,4 @@ class AppLogger {
     );
     logInfo('Currency Selected: $currencyCode');
   }
-
-
 }

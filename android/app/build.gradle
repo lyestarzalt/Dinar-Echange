@@ -43,20 +43,42 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.dinarexchange.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
+     signingConfigs {
+        debug {
+            if (System.getenv("SIGNING_KEY_PATH") != null) {
+                keyAlias System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+                storeFile file(System.getenv("SIGNING_KEY_PATH"))
+                storePassword System.getenv("SIGNING_KEY_STORE_PASSWORD")
+            } else {
+                
+                // TODO
+            }
+        }
+        release {
+            if (System.getenv("SIGNING_KEY_PATH") != null) {
+                keyAlias System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+                storeFile file(System.getenv("SIGNING_KEY_PATH"))
+                storePassword System.getenv("SIGNING_KEY_STORE_PASSWORD")
+            } else {
+                
+                // TODO
+            }
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
+        }
+        debug {
             signingConfig signingConfigs.debug
         }
     }

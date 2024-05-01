@@ -31,9 +31,9 @@ void main() async {
   ]).then((_) => runApp(
         MultiProvider(
           providers: [
+            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
             ChangeNotifierProvider(create: (_) => AppProvider()),
             ChangeNotifierProvider(create: (_) => NavigationProvider()),
-            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
             ChangeNotifierProvider(create: (_) => AdProvider()),
           ],
           child: const DinarWatch(),

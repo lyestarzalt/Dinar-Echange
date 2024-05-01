@@ -101,12 +101,23 @@ class AppInitializationProvider with ChangeNotifier {
     AppLogger.logInfo('Firebase Analytics collection enabled.');
   }
 
-  Future<void> _activateAppCheck() async {
-    await FirebaseAppCheck.instance
-        .activate(androidProvider: AndroidProvider.debug);
-    AppLogger.logInfo('App Check activated.');
+Future<void> _activateAppCheck() async {
+  if (kReleaseMode) {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+      appleProvider: AppleProvider.deviceCheck,
+    );
+  } else {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.debug,
+      appleProvider: AppleProvider.debug,
+    );
+    // Retrieve and log the debug token for both Android and iOS
+    String? token = await FirebaseAppCheck.instance.getToken(true);
+    AppLogger.logInfo('Debug App Check Token: $token');
   }
-
+  AppLogger.logInfo('App Check activated.');
+}
   Future<void> _initializeMobileAds() async {
     MobileAds.instance.initialize();
     AppLogger.logInfo('MobileAds activated.');
