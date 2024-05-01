@@ -26,7 +26,7 @@ class AppInitializationProvider with ChangeNotifier {
     try {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
-
+      _activateAppCheck();
       await Future.wait([
         _signInAnonymously(),
         _enableFirebaseAnalytics(),
@@ -45,8 +45,7 @@ class AppInitializationProvider with ChangeNotifier {
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
-      FlutterNativeSplash
-          .remove();
+      FlutterNativeSplash.remove();
       notifyListeners();
       overallStopwatch.stop();
       AppLogger.logInfo(
@@ -56,7 +55,6 @@ class AppInitializationProvider with ChangeNotifier {
 
   void _deferOtherInitializations() async {
     await Future.wait([
-      _activateAppCheck(),
       _initializeMobileAds(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
@@ -86,8 +84,7 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> _loadInterstitialAd() async {
     try {
-      final adProvider =
-          AdProvider(); 
+      final adProvider = AdProvider();
       adProvider.loadInterstitialAd();
       AppLogger.logInfo('InterstitialAd loading initiated.');
     } catch (error, stackTrace) {
@@ -101,23 +98,29 @@ class AppInitializationProvider with ChangeNotifier {
     AppLogger.logInfo('Firebase Analytics collection enabled.');
   }
 
-Future<void> _activateAppCheck() async {
-  if (kReleaseMode) {
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.playIntegrity,
-      appleProvider: AppleProvider.deviceCheck,
-    );
-  } else {
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
-      appleProvider: AppleProvider.debug,
-    );
-    // Retrieve and log the debug token for both Android and iOS
-    String? token = await FirebaseAppCheck.instance.getToken(true);
-    AppLogger.logInfo('Debug App Check Token: $token');
+  Future<void> _activateAppCheck() async {
+    if (kReleaseMode) {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.playIntegrity,
+        //appleProvider: AppleProvider.deviceCheck,
+      );
+    } else {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.debug,
+        //appleProvider: AppleProvider.debug,
+      );
+      String? token;
+      try {
+        token = await FirebaseAppCheck.instance.getToken(false);
+      } catch (e) {
+        AppLogger.logError('Error fetching App Check token: $e');
+        // Implement a fallback mechanism or exponential backoff retry logic if needed
+      }
+
+    }
+    AppLogger.logInfo('App Check activated.');
   }
-  AppLogger.logInfo('App Check activated.');
-}
+
   Future<void> _initializeMobileAds() async {
     MobileAds.instance.initialize();
     AppLogger.logInfo('MobileAds activated.');

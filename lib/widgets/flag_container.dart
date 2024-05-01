@@ -34,7 +34,7 @@ class FlagContainer extends StatelessWidget {
     if (imageUrl == null || imageUrl!.isEmpty) {
       return const AssetImage('assets/logo.png');
     } else if (imageUrl == 'DZD') {
-      return const AssetImage('assets/dz.png');
+      return const AssetImage('assets/dz_flag.png');
     }
     return CachedNetworkImageProvider(imageUrl!);
   }

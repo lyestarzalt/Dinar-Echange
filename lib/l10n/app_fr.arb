@@ -1,0 +1,183 @@
+{
+  "@@locale": "fr",
+  "app_title": "Dinar Échange",
+  "@app_title": {
+    "description": "The app's name as shown in system contexts like the home screen or app switcher."
+  },
+  "currencies_app_bar_title": "Devises",
+  "@currencies_app_bar_title": {
+    "description": "A list of all available currencies in the app."
+  },
+  "settings_app_bar_title": "Paramètres",
+  "@settings_app_bar_title": {
+    "description": "Section to customize app preferences and configurations."
+  },
+  "convert_app_bar_title": "Convertir",
+  "@convert_app_bar_title": {
+    "description": "Option to convert values between dzd and currencies."
+  },
+  "select_currency_app_bar_title": "Sélectionnez la devise",
+  "@select_currency_app_bar_title": {
+    "description": "Option for users to choose their preferred currency."
+  },
+  "trends_app_bar_title": "Tendances",
+  "@trends_app_bar_title": {
+    "description": "Page displaying the latest trends and movements in different currencies."
+  },
+  "close_button": "Fermer",
+  "@close_button": {
+    "description": "Button or option to close the app or a specific section within the app."
+  },
+  "auto_button": "Auto",
+  "@auto_button": {
+    "description": "Option for automatic settings or operations within the app."
+  },
+  "dark_button": "Sombre",
+  "@dark_button": {
+    "description": "Option to enable a dark color scheme for the app's interface."
+  },
+  "light_button": "Lumière",
+  "@light_button": {
+    "description": "Option to enable a light color scheme for the app's interface."
+  },
+  "languages_button": "Langues",
+  "@languages_button": {
+    "description": "List of available languages"
+  },
+  "chose_language_title": "Choisissez la langue",
+  "@chose_language_title": {
+    "description": "Option to select a language"
+  },
+  "theme_title": "Thème",
+  "@theme_title": {
+    "description": "Option for visual theme customization."
+  },
+  "general_title": "Général",
+  "@general_title": {
+    "description": "Overall settings or information for the app."
+  },
+  "rate_us_button": "Évaluez l'application",
+  "@rate_us_button": {
+    "description": "Invitation to rate the app."
+  },
+  "about_body": "Merci d'utiliser Dinar Echange, votre outil de suivi des devises. Nous fournissons des mises à jour opportunes et nous efforçons d'offrir des fonctionnalités conviviales qui soutiennent vos besoins de suivi financier.",
+  "@about_body": {
+    "description": "App's detailed description"
+  },
+  "about_app_button": "À propos de l'application",
+  "@about_app_button": {
+    "description": "About the App"
+  },
+  "one_month_button": "1M",
+  "@one_month_button": {
+    "description": "Short time filter for viewing currency data over the past month."
+  },
+  "six_months_button": "6M",
+  "@six_months_button": {
+    "description": "Short time filter for viewing currency data over the past six months."
+  },
+  "one_year_button": "1Y",
+  "@one_year_button": {
+    "description": "Short time filter for viewing currency data over the past year."
+  },
+  "two_years_button": "2Y",
+  "@two_years_button": {
+    "description": "Short time filter for viewing currency data over the past two years."
+  },
+  "add_selected_currencies_tooltip": "Ajouter les devises sélectionnées",
+  "@add_selected_currencies_tooltip": {
+    "description": "Option to add selected currencies to the list|"
+  },
+  "error_message_title": "Oups! Un problème est survenu.",
+  "@error_message_title": {
+    "description": "Title for an error message dialog."
+  },
+  "error_fetching_currencies_message": "Erreur lors de la récupération des devises",
+  "@error_fetching_currencies_message": {
+    "description": "Error message indicating an issue in retrieving currency data."
+  },
+  "no_currencies_message": "Pas de devises",
+  "@no_currencies_message": {
+    "description": "Message for no currency data."
+  },
+  "retry_button": "Réessayer",
+  "@retry_button": {
+    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
+  },
+  "errormessage_message": "Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.",
+  "@errormessage_message": {
+    "description": "Detailed text explaining the error."
+  },
+  "search_hint": "Recherche",
+  "@search_hint": {
+    "description": "Option to search"
+  },
+  "add_currencies_tooltip": "Ajouter des devises",
+  "@add_currencies_tooltip": {
+    "description": "Option to add currencies"
+  },
+  "switch_tooltip": "Échanger des devises",
+  "@switch_tooltip": {
+    "description": "Option to switch from buy to sell"
+  },
+  "use_centime_tooltip": "Utiliser des centimes",
+  "@use_centime_tooltip": {
+    "description": "Option to switch to centime as counting method"
+  },
+  "reorder_tooltip": "Réorganiser les articles",
+  "@reorder_tooltip": {
+    "description": "Option to reorder the items in the list"
+  },
+  "pull_refresh_tooltip": "Récupérer les dernières infos sur les devises",
+  "@pull_refresh_tooltip": {
+    "description": "Option to fetch latest currencies information"
+  },
+  "centime_symbol": "centimes",
+  "@centime_symbol": {
+    "description": "Algerian centime"
+  },
+  "dzd_symbol": "DZD",
+  "@dzd_symbol": {
+    "description": "Algerian dinar"
+  },
+  "centime_explanation": "En Algérie, le terme 'centime' est utilisé de manière informelle pour représenter de plus petites quantités de monnaie. Par exemple, lorsque l'on dit que quelque chose coûte 1 million, cela signifie en réalité 10 000 DZD",
+  "@centime_explanation": {
+    "description": "Explanation of the term 'centime' in Algeria"
+  },
+  "why_centime_title": "L'utilisation du 'Centime",
+  "@why_centime_title": {
+    "description": "Title for centime use"
+  },
+  "currency_buy_sell_explanation": "Le taux d'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 Euro, cela vous coûtera 235,00 dans votre monnaie, et si vous voulez vendre 1 Euro, vous recevrez 237,00",
+  "@currency_buy_sell_explanation": {
+    "description": "Detailed explanation of the difference between buy and sell\t"
+  },
+  "currency_buy_sell_tooltip": "Explique les taux d'achat et de vente des devises.",
+  "@currency_buy_sell_tooltip": {
+    "description": "Brief tooltip for currency buy and sell values"
+  },
+  "terms_title": "Conditions générales",
+  "@terms_title": {
+    "description": "Title for the terms and conditions page"
+  },
+  "continue_button": "Continuer",
+  "@continue_button": {
+    "description": "Button to proceed or accept conditions"
+  },
+  "decline_button": "Refuser",
+  "@decline_button": {
+    "description": "Button to reject conditions or navigate back"
+  },
+  "privacy_title": "Politique de confidentialité",
+  "@privacy_title": {
+    "description": "Title for the privacy policy page"
+  },
+  "legal_title": "Légal",
+  "@legal_title": {
+    "description": "Title for the legal section in the settings"
+  },
+  "licenses": "Licences",
+  "@licenses": {
+    "description": "Word for licenses"
+  }
+}

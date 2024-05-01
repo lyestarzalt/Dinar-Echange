@@ -31,7 +31,7 @@ Widget buildCurrencyInput({
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (currencyCode == 'DZD')
-            Image.asset('assets/dz.png', width: 50, height: 40)
+            Image.asset('assets/dz_flag.png', width: 50, height: 40)
           else if (flag!.isNotEmpty)
             FlagContainer(
               imageUrl: flag,
