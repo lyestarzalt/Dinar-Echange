@@ -53,12 +53,12 @@ class AppInitializationProvider with ChangeNotifier {
     }
   }
 
-  void _deferOtherInitializations() async {
+ Future<void> _deferOtherInitializations() async {
     await Future.wait([
       _initializeMobileAds(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
-      _loadInterstitialAd(),
+      _loadInterstitialAd(), 
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))

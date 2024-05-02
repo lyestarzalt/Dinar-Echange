@@ -10,6 +10,7 @@ import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/utils/logging.dart';
+
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
 
@@ -25,7 +26,6 @@ class CurrencyListScreen extends StatelessWidget {
                 .getDatetime(selectionProvider.allCurrencies[0].date);
 
             return Scaffold(
-              
               appBar: AppBar(
                 title: Text(
                     AppLocalizations.of(context)!.currencies_app_bar_title),
@@ -48,7 +48,7 @@ class CurrencyListScreen extends StatelessWidget {
                   onRefresh: () async {
                     selectionProvider.refreshData();
                   },
-         child: ReorderableListView.builder(
+                  child: ReorderableListView.builder(
                     shrinkWrap: true,
                     itemCount: selectionProvider.selectedCurrencies.length,
                     itemBuilder: (context, index) {
@@ -92,7 +92,6 @@ class CurrencyListScreen extends StatelessWidget {
                       selectionProvider.reorderCurrencies(oldIndex, newIndex);
                     },
                   ),
-
                 ),
               ),
               floatingActionButton: FloatingActionButton(
@@ -109,36 +108,30 @@ class CurrencyListScreen extends StatelessWidget {
     );
   }
 
-  void showAddCurrencyPage(
+ void showAddCurrencyPage(
       BuildContext context, ListCurrencyProvider selectionProvider) {
     AppLogger.trackScreenView('AddCurrencies');
     final adProvider = Provider.of<AdProvider>(context, listen: false);
 
-    adProvider.prepareAndShowInterstitialAd(
-      onAdClosed: () {
-        // After the ad is closed, proceed to push the AddCurrencyPage onto the navigator stack
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider.value(
-              value: selectionProvider,
-              child: const AddCurrencyPage(),
-            ),
-          ),
-        );
-      },
-      onAdFailedToShow: () {
-        // Even if the ad fails to show, proceed to push the AddCurrencyPage
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider.value(
-              value: selectionProvider,
-              child: const AddCurrencyPage(),
-            ),
-          ),
-        );
-      },
+    adProvider.ensureAdIsReadyToShow(
+      onReadyToShow: () =>
+          _navigateToAddCurrencyPage(context, selectionProvider),
+      onFailToShow: () =>
+          _navigateToAddCurrencyPage(context, selectionProvider),
     );
   }
+
+  void _navigateToAddCurrencyPage(
+      BuildContext context, ListCurrencyProvider selectionProvider) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider.value(
+          value: selectionProvider,
+          child: const AddCurrencyPage(),
+        ),
+      ),
+    );
+  }
+
 }

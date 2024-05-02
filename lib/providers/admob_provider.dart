@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -54,12 +56,18 @@ class AdProvider with ChangeNotifier {
   void updateScreenWidth(double newWidth) {
     _screenWidth = newWidth;
     notifyListeners();
-  
   }
-
 
 //
   void loadInterstitialAd() {
+if (_isInterstitialAdLoaded || _interstitialAd != null) {
+      AppLogger.logInfo(
+          'Attempted to load ad again but one is already loaded or loading.');
+      return; 
+    }
+
+
+
     InterstitialAd.load(
       adUnitId: interstitialAdUnitId,
       request: const AdRequest(),
@@ -68,7 +76,7 @@ class AdProvider with ChangeNotifier {
           AppLogger.logInfo('InterstitialAd loaded.');
           _interstitialAd = ad;
           _isInterstitialAdLoaded = true;
-          notifyListeners(); // Notify listeners in case you need to react to ad load state changes
+          notifyListeners();
         },
         onAdFailedToLoad: (LoadAdError error) {
           AppLogger.logError('InterstitialAd failed to load: $error');
@@ -79,19 +87,48 @@ class AdProvider with ChangeNotifier {
     );
   }
 
+  void ensureAdIsReadyToShow({
+    required VoidCallback onReadyToShow,
+    VoidCallback? onFailToShow,
+  }) {
+    AppLogger.logDebug('message');
+    if (_isInterstitialAdLoaded && _interstitialAd != null) {
+      _showInterstitialAd(
+        onAdClosed: onReadyToShow,
+        onAdFailedToShow: onFailToShow,
+      );
+    } else {
+   
+      loadInterstitialAd();
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_isInterstitialAdLoaded && _interstitialAd != null) {
+          timer.cancel();
+          _showInterstitialAd(
+            onAdClosed: onReadyToShow,
+            onAdFailedToShow: onFailToShow,
+          );
+        }
+      });
+    }
+  }
+
   void prepareAndShowInterstitialAd({
     required VoidCallback onAdClosed,
     VoidCallback? onAdFailedToShow,
   }) {
+    AppLogger.logInfo(
+        'Preparing to show ad. Ad loaded: $_isInterstitialAdLoaded');
     if (_isInterstitialAdLoaded && _interstitialAd != null) {
+      AppLogger.logInfo('Ad is loaded, showing now...');
       _showInterstitialAd(
           onAdClosed: onAdClosed, onAdFailedToShow: onAdFailedToShow);
     } else {
-      loadInterstitialAd(); 
+      AppLogger.logInfo('Ad not loaded, loading now...');
+      loadInterstitialAd();
     }
   }
 
-  void _showInterstitialAd({
+void _showInterstitialAd({
     required VoidCallback onAdClosed,
     VoidCallback? onAdFailedToShow,
   }) {
@@ -100,21 +137,23 @@ class AdProvider with ChangeNotifier {
         AppLogger.logInfo('Ad dismissed full screen content.');
         onAdClosed();
         ad.dispose();
+        _interstitialAd = null;
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd();
+        loadInterstitialAd(); 
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         AppLogger.logError('Ad failed to show full screen content: $error');
         onAdFailedToShow?.call();
         ad.dispose();
+        _interstitialAd = null;
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd(); 
+        loadInterstitialAd(); // Manage loading logic based on your strategy
       },
     );
 
     _interstitialAd!.show();
     _isInterstitialAdLoaded =
-        false; 
+        false; // Update state to reflect that the ad is being shown
   }
 
 
