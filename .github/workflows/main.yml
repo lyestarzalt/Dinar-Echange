@@ -50,8 +50,12 @@ jobs:
       run: ./build.sh
       shell: bash
 
-    - name: Show Version Base
-      run: echo "Version base is $VERSION_BASE"
+    - name: Export Environment Variables for Signing
+      run: |
+        echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> $GITHUB_ENV
+        echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
+        echo "SIGNING_KEY_STORE_PASSWORD=${{ secrets.SIGNING_KEY_STORE_PASSWORD }}" >> $GITHUB_ENV
+        echo "SIGNING_KEY_PATH=${{ env.SIGNING_KEY_PATH }}" >> $GITHUB_ENV
 
     - name: Build App Bundle
       run: flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }}
