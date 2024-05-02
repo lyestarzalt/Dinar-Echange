@@ -17,7 +17,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Decode Keystore File
-      run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $SIGNING_KEY_PATH
+      run: |
+              echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $SIGNING_KEY_PATH
+              ls -l $SIGNING_KEY_PATH  # Check the decoded file
 
     - name: Extract Version from pubspec.yaml
       id: get_version
@@ -47,12 +49,12 @@ jobs:
     - name: Run custom build script
       run: ./build.sh
       shell: bash
-      
+
     - name: Show Version Base
       run: echo "Version base is $VERSION_BASE"
 
     - name: Build App Bundle
-      run: flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }} --verbose
+      run: flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }}
 
     - name: Upload App Bundle
       uses: actions/upload-artifact@v3

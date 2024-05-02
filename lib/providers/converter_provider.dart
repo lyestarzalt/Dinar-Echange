@@ -6,11 +6,11 @@ import 'package:dinar_echange/utils/logging.dart';
 
 class ConvertProvider with ChangeNotifier {
   final Currency currency;
-  TextEditingController amountController = TextEditingController();
+  TextEditingController amountController = TextEditingController(text: "100");
   TextEditingController resultController = TextEditingController();
   FocusNode amountFocusNode = FocusNode();
   FocusNode resultFocusNode = FocusNode();
-  bool isDZDtoCurrency = true; // Conversion direction flag
+  bool isDZDtoCurrency = false; // Conversion direction flag
 
   ConvertProvider(this.currency) {
     AppLogger.logCurrencySelection(currency.currencyCode);
@@ -19,6 +19,17 @@ class ConvertProvider with ChangeNotifier {
     amountController.addListener(convertCurrency);
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
+    // a callback to set the focus once the widget is built
+    convertCurrency(); 
+    
+    // show the keypad after we open the page
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      amountFocusNode.requestFocus();
+    });
+
+
+
+
   }
   bool _useCentimes = false;
   bool get useCentimes => _useCentimes;
