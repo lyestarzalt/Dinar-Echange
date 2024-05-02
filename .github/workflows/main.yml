@@ -47,9 +47,11 @@ jobs:
     - name: Run custom build script
       run: ./build.sh
       shell: bash
+    - name: Show Version Base
+      run: echo "Version base is $VERSION_BASE"
 
     - name: Build App Bundle
-      run: flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }}
+      run: flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }} --verbose
 
     - name: Upload App Bundle
       uses: actions/upload-artifact@v3
