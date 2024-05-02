@@ -64,6 +64,8 @@ class DinarWatchState extends State<DinarWatch> {
     return Consumer<AppProvider>(
       builder: (context, appProvider, _) {
         return MaterialApp(
+            debugShowCheckedModeBanner: false,
+    debugShowMaterialGrid: false,
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.app_title,
           theme: materialTheme.light(),
@@ -79,6 +81,7 @@ class DinarWatchState extends State<DinarWatch> {
               switch (currenciesProvider.state.state) {
                 case LoadState.loading:
                   return const Scaffold(
+                  
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:

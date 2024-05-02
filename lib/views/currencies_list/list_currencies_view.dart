@@ -22,9 +22,10 @@ class CurrencyListScreen extends StatelessWidget {
         builder: (context, selectionProvider, _) => Consumer<AppProvider>(
           builder: (context, appProvider, _) {
             String formattedDate = appProvider
-                .getDatetime(selectionProvider.filteredCurrencies[0].date);
+                .getDatetime(selectionProvider.allCurrencies[0].date);
 
             return Scaffold(
+              
               appBar: AppBar(
                 title: Text(
                     AppLocalizations.of(context)!.currencies_app_bar_title),

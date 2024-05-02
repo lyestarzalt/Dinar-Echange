@@ -4,7 +4,7 @@ import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
 
 class ListCurrencyProvider with ChangeNotifier {
-  List<Currency> _allCurrencies = [];
+  List<Currency> allCurrencies = [];
 
   List<Currency> _selectedCurrencies = [];
   List<Currency> _filteredCurrencies = [];
@@ -14,8 +14,8 @@ class ListCurrencyProvider with ChangeNotifier {
   List<Currency> get filteredCurrencies => _filteredCurrencies;
 
   ListCurrencyProvider(List<Currency> currencies) {
-    _allCurrencies = currencies;
-    _filteredCurrencies = _allCurrencies;
+    allCurrencies = currencies;
+    _filteredCurrencies = allCurrencies;
     _loadSelectedCurrencies();
 
     searchController.addListener(_filterCurrencies);
@@ -28,7 +28,7 @@ class ListCurrencyProvider with ChangeNotifier {
 
   void _filterCurrencies() {
     String searchTerm = searchController.text.toLowerCase();
-    _filteredCurrencies = _allCurrencies
+    _filteredCurrencies = allCurrencies
         .where((currency) =>
             currency.currencyCode.toLowerCase().contains(searchTerm) ||
             (currency.currencyName?.toLowerCase().contains(searchTerm) ??
@@ -38,7 +38,7 @@ class ListCurrencyProvider with ChangeNotifier {
   }
 
   Future<void> refreshData() async {
-    _allCurrencies = await MainRepository().getDailyCurrencies();
+    allCurrencies = await MainRepository().getDailyCurrencies();
     notifyListeners();
   }
 
@@ -49,12 +49,12 @@ class ListCurrencyProvider with ChangeNotifier {
     if (savedCurrencyNames.isEmpty) {
       // Initialize with core currencies if no saved preferences
       _selectedCurrencies =
-          _allCurrencies.where((currency) => currency.isCore).toList();
+          allCurrencies.where((currency) => currency.isCore).toList();
       await _saveCurrencyOrder(); // Save the initial order
     } else {
       // Load the currencies in the order they were saved
       _selectedCurrencies = savedCurrencyNames
-          .map((code) => _allCurrencies.firstWhere(
+          .map((code) => allCurrencies.firstWhere(
                 (currency) => currency.currencyCode == code,
               ))
           .whereType<Currency>()
@@ -101,7 +101,7 @@ class ListCurrencyProvider with ChangeNotifier {
 
   void filterCurrencies(String searchTerm) {
     searchTerm = searchTerm.toLowerCase();
-    _filteredCurrencies = _allCurrencies
+    _filteredCurrencies = allCurrencies
         .where((currency) =>
             currency.currencyCode.toLowerCase().contains(searchTerm) ||
             (currency.currencyName?.toLowerCase().contains(searchTerm) ??
