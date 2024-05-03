@@ -10,10 +10,6 @@ class CurrencyListItem extends StatelessWidget {
     required this.currency,
   });
 
-  String _formatCurrencyValue(double value) {
-    return value.toStringAsFixed(2);
-  }
-
   @override
   Widget build(BuildContext context) {
     TextScaler textScaler = MediaQuery.textScalerOf(context);
@@ -33,12 +29,11 @@ class CurrencyListItem extends StatelessWidget {
               currency.currencyCode,
               softWrap: false,
               style: TextStyle(
-              
-                  fontSize:
-                      textScaler.scale(15), 
+                  fontSize: textScaler.scale(15),
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onSurface,
-                  height: 2.5),
+                  height: 2.5), // We can control the list tile height with
+              //this along side the Divider.
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -46,11 +41,10 @@ class CurrencyListItem extends StatelessWidget {
                 SizedBox(
                   width: 80,
                   child: Text(
-                    _formatCurrencyValue(currency.buy),
+                    currency.buy.toStringAsFixed(2),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: textScaler
-                          .scale(20),
+                      fontSize: textScaler.scale(25),
                       height: 2.5,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -61,8 +55,7 @@ class CurrencyListItem extends StatelessWidget {
                   " DZD",
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
-                      fontSize: textScaler
-                          .scale(12),  
+                      fontSize: textScaler.scale(12),
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 2.5),
                 ),
@@ -71,12 +64,12 @@ class CurrencyListItem extends StatelessWidget {
                   Icons.arrow_forward_ios,
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                  size: textScaler.scale(14), 
+                  size: textScaler.scale(14),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1)
+          const Divider(height: 15)
         ],
       ),
     );
