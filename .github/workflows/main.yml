@@ -1,18 +1,19 @@
-name: Build and Publish Flutter Bundle
+name: Build and Publish Flutter Bundle 
 
 on:
   push:
-    tags:
-      - "v*.*.*"
-  workflow_dispatch:  
+    branches:
+      - main 
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to enable proper tagging
 
       - name: Setup Java and Flutter
         uses: actions/setup-java@v2
@@ -27,43 +28,48 @@ jobs:
           channel: stable
 
       - name: Decode Keystore File
-        env:
-          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: |
-          echo "$KEYSTORE_FILE" | base64 --decode > ${{ github.workspace }}/release.keystore
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > ${{ github.workspace }}/release.keystore
 
       - name: Install Dependencies and Setup Build Environment
         run: |
           chmod +x ./unix_build.sh
           ./unix_build.sh
-          echo "Extracting version from pubspec.yaml..."
+
+      - name: Extract Version from pubspec.yaml
+        id: versioning
+        run: |
           VERSION_LINE=$(grep 'version:' pubspec.yaml)
           VERSION_BASE=$(echo $VERSION_LINE | cut -d '+' -f 1 | awk '{print $2}')
           echo "VERSION_BASE=$VERSION_BASE" >> $GITHUB_ENV
           echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
-          echo "Configuring signing variables..."
-          echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> $GITHUB_ENV
-          echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
-          echo "SIGNING_KEY_STORE_PASSWORD=${{ secrets.SIGNING_KEY_STORE_PASSWORD }}" >> $GITHUB_ENV
-          echo "SIGNING_KEY_PATH=${{ github.workspace }}/release.keystore" >> $GITHUB_ENV
+          echo "::set-output name=version::$VERSION_BASE"  # Output the version for later use
 
       - name: Build App Bundle
         run: |
-          flutter build appbundle --release --build-name=$VERSION_BASE --build-number=$BUILD_NUMBER
+          flutter build appbundle --release --build-name=${{ steps.versioning.outputs.version }} --build-number=${{ github.run_number }}
           mkdir -p upload_payload
-          mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
+          mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
+
+      - name: Create Git Tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag ${{ steps.versioning.outputs.version }}
+          git push origin ${{ steps.versioning.outputs.version }}
 
       - name: Release and Upload to GitHub
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
+          files: upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
+          tag_name: ${{ steps.versioning.outputs.version }}
+          name: Release ${{ steps.versioning.outputs.version }}
+          body: 'Automated release of dinar_exchange_${{ steps.versioning.outputs.version }}'
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
-        if: startsWith(github.ref, 'refs/tags/v')
         with:
           serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_ACCOUNT }}
           packageName: com.dinarexchange.app
-          releaseFiles: upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
+          releaseFiles: upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
           track: DinarExchangeClosed
