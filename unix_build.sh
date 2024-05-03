@@ -3,16 +3,16 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-if ! command -v dart &> /dev/null
-then
+# Check for Dart
+if ! command -v dart &> /dev/null; then
     echo "Dart could not be found, please install it!"
-    exit
+    exit 1
 fi
 
-if ! command -v flutter &> /dev/null
-then
+# Check for Flutter
+if ! command -v flutter &> /dev/null; then
     echo "Flutter could not be found, please install it!"
-    exit
+    exit 1
 fi
 
 echo "Cleaning build..."
