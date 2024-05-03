@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Setup Java and Flutter
         uses: actions/setup-java@v2
@@ -18,28 +19,35 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
         
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.6'
           channel: stable
 
+      - name: Decode Keystore File
+        env:
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+        run: |
+          echo "$KEYSTORE_FILE" | base64 --decode > ${{ github.workspace }}/release.keystore
+
       - name: Install Dependencies and Setup Build Environment
         run: |
-          flutter pub get
           chmod +x ./unix_build.sh
-          echo "Extracting version..."
+          ./unix_build.sh
+          echo "Extracting version from pubspec.yaml..."
           VERSION_LINE=$(grep 'version:' pubspec.yaml)
           VERSION_BASE=$(echo $VERSION_LINE | cut -d '+' -f 1 | awk '{print $2}')
           echo "VERSION_BASE=$VERSION_BASE" >> $GITHUB_ENV
           echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
-          echo "Configuring signing..."
+          echo "Configuring signing variables..."
           echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
           echo "SIGNING_KEY_STORE_PASSWORD=${{ secrets.SIGNING_KEY_STORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "SIGNING_KEY_PATH=${{ github.workspace }}/release.keystore" >> $GITHUB_ENV
 
-      - name: Build and Bundle
+      - name: Build App Bundle
         run: |
-          ./unix_build.sh
           flutter build appbundle --release --build-name=$VERSION_BASE --build-number=$BUILD_NUMBER
           mkdir -p upload_payload
           mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
