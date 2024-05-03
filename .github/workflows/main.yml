@@ -7,7 +7,7 @@ on:
       
 permissions:
   contents: write
-  
+
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
@@ -67,6 +67,7 @@ jobs:
         with:
           tag: ${{ steps.versioning.outputs.version }}
           message: 'Release ${{ steps.versioning.outputs.version }}'
+          force_push_tag: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release and Upload to GitHub
@@ -84,4 +85,4 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_ACCOUNT }}
           packageName: com.dinarexchange.app
           releaseFiles: upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
-          track: DinarExchangeClosed
+          track: DinarEchangeClosed
