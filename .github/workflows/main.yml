@@ -1,10 +1,9 @@
-name: Build Flutter Bundle
+name: Build and Publish Flutter Bundle
 
 on:
   push:
     tags:
-      - 'release-*'
-  workflow_dispatch:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -32,6 +31,7 @@ jobs:
           VERSION_LINE=$(grep 'version:' pubspec.yaml)
           VERSION_BASE=$(echo $VERSION_LINE | cut -d '+' -f 1 | awk '{print $2}')
           echo "VERSION_BASE=$VERSION_BASE" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
           echo "Configuring signing..."
           echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
@@ -40,18 +40,21 @@ jobs:
       - name: Build and Bundle
         run: |
           ./unix_build.sh
-          flutter build appbundle --release --build-name=$VERSION_BASE --build-number=${{ github.run_number }}
-
-      - name: Distribute
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/release-')
-        run: |
+          flutter build appbundle --release --build-name=$VERSION_BASE --build-number=$BUILD_NUMBER
           mkdir -p upload_payload
-          mv build/app/outputs/bundle/release/app-release.aab upload_payload/app-release.aab
-          echo 'Uploading to Google Play...'
+          mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
 
-      - uses: r0adkll/upload-google-play@v1
+      - name: Release and Upload to GitHub
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        if: startsWith(github.ref, 'refs/tags/v')
         with:
           serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_ACCOUNT }}
           packageName: com.dinarexchange.app
-          releaseFiles: upload_payload/app-release.aab
-          track: DinarEchangeClosed
+          releaseFiles: upload_payload/dinar_exchange_${{ env.VERSION_BASE }}_${{ env.BUILD_NUMBER }}.aab
+          track: DinarExchangeClosed
