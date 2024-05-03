@@ -59,20 +59,20 @@ jobs:
           mkdir -p upload_payload
           mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
 
-      - name: Create Git Tag
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag ${{ steps.versioning.outputs.version }}
-          git push origin ${{ steps.versioning.outputs.version }}
+      - name: Create and Push Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ env.VERSION }}
+          message: 'Release ${{ env.VERSION }}'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Release and Upload to GitHub
+      - name: Create Release and Upload to GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
-          tag_name: ${{ steps.versioning.outputs.version }}
-          name: Release ${{ steps.versioning.outputs.version }}
-          body: 'Automated release of dinar_exchange_${{ steps.versioning.outputs.version }}'
+          files: upload_payload/dinar_exchange_$VERSION_${{ github.run_number }}.aab
+          tag_name: ${{ env.VERSION }}
+          name: 'Release ${{ env.VERSION }}'
+          body: 'Automated release of dinar_exchange_$VERSION'
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
