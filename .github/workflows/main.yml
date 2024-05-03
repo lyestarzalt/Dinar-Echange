@@ -26,20 +26,24 @@ jobs:
         with:
           flutter-version: '3.19.6'
           channel: stable
-          
+
       - name: Decode Keystore File
         env:
-          SIGNING_KEY_PATH: ${{ github.workspace }}/release.keystore
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > "${SIGNING_KEY_PATH}"
-        shell: bash
+          echo "$KEYSTORE_FILE" | base64 --decode > ${{ github.workspace }}/release.keystore
 
 
       - name: Install Dependencies and Setup Build Environment
         run: |
           chmod +x ./unix_build.sh
           ./unix_build.sh
-
+          echo "Configuring signing variables..."
+          echo "SIGNING_KEY_ALIAS=${{ secrets.SIGNING_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "SIGNING_KEY_STORE_PASSWORD=${{ secrets.SIGNING_KEY_STORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "SIGNING_KEY_PATH=${{ github.workspace }}/release.keystore" >> $GITHUB_ENV
+          
       - name: Extract Version from pubspec.yaml
         id: versioning
         run: |
