@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:dinar_echange/theme/theme.dart';
