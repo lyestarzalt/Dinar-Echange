@@ -63,12 +63,14 @@ class CurrencyListScreen extends StatelessWidget {
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
+                        onDismissed: 
+                        
+                        
+                        
+                        (direction) {
                           selectionProvider.addOrRemoveCurrency(
                               currency, false);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text('Removed ${currency.currencyCode}')));
+                      
                         },
                         child: InkWell(
                           onTap: () {

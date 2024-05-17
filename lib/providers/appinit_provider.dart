@@ -53,12 +53,12 @@ class AppInitializationProvider with ChangeNotifier {
     }
   }
 
- Future<void> _deferOtherInitializations() async {
+  Future<void> _deferOtherInitializations() async {
     await Future.wait([
       _initializeMobileAds(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
-      _loadInterstitialAd(), 
+      _loadInterstitialAd(),
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
@@ -109,14 +109,13 @@ class AppInitializationProvider with ChangeNotifier {
         androidProvider: AndroidProvider.debug,
         //appleProvider: AppleProvider.debug,
       );
-      String? token;
       try {
-        token = await FirebaseAppCheck.instance.getToken(false);
+         String? token = await FirebaseAppCheck.instance.getToken(false);
+        AppLogger.logInfo("Temp token: $token");
       } catch (e) {
         AppLogger.logError('Error fetching App Check token: $e');
         // Implement a fallback mechanism or exponential backoff retry logic if needed
       }
-
     }
     AppLogger.logInfo('App Check activated.');
   }
@@ -154,8 +153,8 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> setupFirebaseMessaging() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    String? token = await messaging.getToken();
-    AppLogger.logInfo("FCM Token: $token");
+    //String? token = await messaging.getToken();
+    //AppLogger.logInfo("FCM Token: $token");
     const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
 
     List<String> languageTopics = supportedLocales

@@ -74,11 +74,17 @@ class ListCurrencyProvider with ChangeNotifier {
     await PreferencesService().setSelectedCurrencies(currencyNames);
   }
 
-  void addOrRemoveCurrency(Currency currency, bool isSelected) {
+  void addOrRemoveCurrency(Currency currency, bool isSelected) async {
     if (isSelected) {
       _selectedCurrencies.add(currency);
+      List<String> currencyNames =
+          _selectedCurrencies.map((c) => c.currencyCode).toList();
+      await PreferencesService().setSelectedCurrencies(currencyNames);
     } else {
       _selectedCurrencies.remove(currency);
+      List<String> currencyNames =
+          _selectedCurrencies.map((c) => c.currencyCode).toList();
+      await PreferencesService().setSelectedCurrencies(currencyNames);
     }
     notifyListeners();
   }
