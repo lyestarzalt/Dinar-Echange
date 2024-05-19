@@ -33,4 +33,9 @@ dart run arb_generator
 echo "Generating localized messages..."
 flutter gen-l10n
 
+# silly temp fix for 3.22
+dart run build_runner build --delete-conflicting-outputs
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+# silly temp fix for 3.22
 echo "Build completed successfully!"
