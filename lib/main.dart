@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 
 import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/providers/navigation_provider.dart';
@@ -68,7 +68,7 @@ class DinarWatchState extends State<DinarWatch> {
             debugShowCheckedModeBanner: false,
     debugShowMaterialGrid: false,
           onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.app_title,
+              AppLocalizations.of(context).app_title,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: appProvider.themeMode,

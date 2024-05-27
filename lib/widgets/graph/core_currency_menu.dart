@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyMenu extends StatefulWidget {
@@ -37,7 +37,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title:
-              Text(AppLocalizations.of(context)!.select_currency_app_bar_title),
+              Text(AppLocalizations.of(context).select_currency_app_bar_title),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

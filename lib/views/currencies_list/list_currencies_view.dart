@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/providers/list_currency_provider.dart';
 import 'package:dinar_echange/widgets/list/list_tile.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/views/currencies_list/add_currency_view.dart';
 import 'package:dinar_echange/views/currencies_list/convert_currency_view.dart';
@@ -28,7 +28,7 @@ class CurrencyListScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: Text(
-                    AppLocalizations.of(context)!.currencies_app_bar_title),
+                    AppLocalizations.of(context).currencies_app_bar_title),
                 actions: [
                   Padding(
                     padding:
@@ -100,7 +100,7 @@ class CurrencyListScreen extends StatelessWidget {
                 onPressed: () {
                   showAddCurrencyPage(context, selectionProvider);
                 },
-                tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
+                tooltip: AppLocalizations.of(context).add_currencies_tooltip,
                 child: const Icon(Icons.add),
               ),
             );

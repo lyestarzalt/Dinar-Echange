@@ -9,7 +9,7 @@ import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_echange/data/models/currency_history.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +26,7 @@ class HistoryPage extends StatelessWidget {
       create: (_) => GraphProvider(currencies),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.trends_app_bar_title),
+          title: Text(AppLocalizations.of(context).trends_app_bar_title),
         ),
         floatingActionButton: Consumer<GraphProvider>(
           builder: (context, provider, _) =>

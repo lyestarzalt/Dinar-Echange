@@ -129,7 +129,7 @@ LineChartData buildMainData({
           .map((yValue) => HorizontalLine(
               y: yValue,
               color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               strokeWidth: 1,
               dashArray: [5]))
           .toList(),

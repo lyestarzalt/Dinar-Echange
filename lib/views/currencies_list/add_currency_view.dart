@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'dart:ui' as ui;
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
@@ -22,7 +22,7 @@ class AddCurrencyPage extends StatelessWidget {
               title: TextField(
                 controller: provider.searchController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.search_hint,
+                  hintText: AppLocalizations.of(context).search_hint,
                   border: InputBorder.none,
                   prefixIcon: const Icon(Icons.search),
                 ),
@@ -36,7 +36,7 @@ class AddCurrencyPage extends StatelessWidget {
                       provider.saveSelectedCurrencies();
                       Navigator.pop(context);
                     },
-                    tooltip: AppLocalizations.of(context)!
+                    tooltip: AppLocalizations.of(context)
                         .add_selected_currencies_tooltip,
                     child: const Icon(Icons.check),
                   ),

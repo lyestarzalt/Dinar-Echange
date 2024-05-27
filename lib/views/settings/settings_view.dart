@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/utils/enums.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
@@ -24,7 +24,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final text = AppLocalizations.of(context)!;
+    final text = AppLocalizations.of(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(text.settings_app_bar_title),
@@ -120,7 +120,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeSelection(BuildContext context) {
-    final text = AppLocalizations.of(context)!;
+    final text = AppLocalizations.of(context);
     return Consumer<AppProvider>(
       builder: (context, appProvider, child) {
         ThemeOption currentThemeOption = ThemeOption.auto; // Default
@@ -189,7 +189,7 @@ class SettingsPageState extends State<SettingsPage> {
                   orElse: () => const MapEntry('English', 'en'),
                 )
                 .key;
-            final text = AppLocalizations.of(context)!;
+            final text = AppLocalizations.of(context);
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -230,7 +230,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
  void _showAboutDialog(BuildContext context) {
-    final text = AppLocalizations.of(context)!;
+    final text = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {

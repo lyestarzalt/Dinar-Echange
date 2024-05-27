@@ -24,7 +24,7 @@ Widget buildCurrencyInput({
       ),
     ),
     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-    color: Theme.of(context).colorScheme.background,
+    color: Theme.of(context).colorScheme.surface,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
       child: Row(

@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_echange/utils/state.dart';
@@ -153,8 +153,8 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> setupFirebaseMessaging() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    //String? token = await messaging.getToken();
-    //AppLogger.logInfo("FCM Token: $token");
+    String? token = await messaging.getToken();
+    AppLogger.logInfo("FCM Token: $token");
     const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
 
     List<String> languageTopics = supportedLocales

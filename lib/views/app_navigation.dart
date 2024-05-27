@@ -4,7 +4,7 @@ import 'package:dinar_echange/views/settings/settings_view.dart';
 import 'package:dinar_echange/views/currencies_list/list_currencies_view.dart';
 import 'package:dinar_echange/views/graph/graph_view.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -88,15 +88,15 @@ class MainNavigation extends StatelessWidget {
       destinations: [
         NavigationDestination(
           icon: const Icon(Icons.list),
-          label: AppLocalizations.of(context)!.currencies_app_bar_title,
+          label: AppLocalizations.of(context).currencies_app_bar_title,
         ),
         NavigationDestination(
           icon: const Icon(Icons.history),
-          label: AppLocalizations.of(context)!.trends_app_bar_title,
+          label: AppLocalizations.of(context).trends_app_bar_title,
         ),
         NavigationDestination(
           icon: const Icon(Icons.settings),
-          label: AppLocalizations.of(context)!.settings_app_bar_title,
+          label: AppLocalizations.of(context).settings_app_bar_title,
         ),
       ],
     );

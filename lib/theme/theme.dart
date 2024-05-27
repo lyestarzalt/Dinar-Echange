@@ -10,36 +10,36 @@ class MaterialTheme {
             colorScheme.brightness == Brightness.light
                 ? ThemeData.light().textTheme
                 : ThemeData.dark().textTheme),
-        scaffoldBackgroundColor: colorScheme.background,
+        scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
         segmentedButtonTheme: SegmentedButtonThemeData(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            side: MaterialStateProperty.all(
+            side: WidgetStateProperty.all(
               BorderSide(color: colorScheme.onSurface, width: 1.0),
             ),
-            backgroundColor: MaterialStateProperty.all(colorScheme.background),
+            backgroundColor: WidgetStateProperty.all(colorScheme.surface),
             foregroundColor:
-                MaterialStateProperty.all(colorScheme.onBackground),
-            textStyle: MaterialStateProperty.all(
-              TextStyle(color: colorScheme.onBackground),
+                WidgetStateProperty.all(colorScheme.onSurface),
+            textStyle: WidgetStateProperty.all(
+              TextStyle(color: colorScheme.onSurface),
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             ),
           ),
         ),
         appBarTheme: const AppBarTheme(toolbarHeight: 90),
         navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: MaterialStateProperty.all(
+          labelTextStyle: WidgetStateProperty.all(
             TextStyle(
               fontSize: 14,
-              color: colorScheme.onBackground,
+              color: colorScheme.onSurface,
             ),
           ),
-          iconTheme: MaterialStateProperty.all(
+          iconTheme: WidgetStateProperty.all(
             const IconThemeData(
               size: 24,
             ),
@@ -49,9 +49,9 @@ class MaterialTheme {
         ),
         checkboxTheme: CheckboxThemeData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          fillColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
+          fillColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
                 return colorScheme.secondary;
               }
               return colorScheme.onSurface.withOpacity(0.6);
@@ -439,11 +439,9 @@ extension MaterialSchemeUtils on MaterialScheme {
       onError: onError,
       errorContainer: errorContainer,
       onErrorContainer: onErrorContainer,
-      background: background,
-      onBackground: onBackground,
       surface: surface,
       onSurface: onSurface,
-      surfaceVariant: surfaceVariant,
+      surfaceContainerHighest: surfaceVariant,
       onSurfaceVariant: onSurfaceVariant,
       outline: outline,
       outlineVariant: outlineVariant,
