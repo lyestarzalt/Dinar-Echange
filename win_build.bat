@@ -34,6 +34,4 @@ dart run arb_generator
 echo Generating localized messages...
 flutter gen-l10n
 
-
-
 echo Build completed successfully!
