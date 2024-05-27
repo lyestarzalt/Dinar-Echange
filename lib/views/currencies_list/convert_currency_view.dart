@@ -40,11 +40,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).convert_app_bar_title),
+          title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
           actions: [
             IconButton(
               tooltip:
-                  AppLocalizations.of(context).currency_buy_sell_explanation,
+                  AppLocalizations.of(context)!.currency_buy_sell_explanation,
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
@@ -55,13 +55,13 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                     content: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        AppLocalizations.of(context)
+                        AppLocalizations.of(context)!
                             .currency_buy_sell_explanation,
                       ),
                     ),
                     actions: <Widget>[
                       TextButton(
-                        child: Text(AppLocalizations.of(context).close_button),
+                        child: Text(AppLocalizations.of(context)!.close_button),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
@@ -176,7 +176,7 @@ class NewWidget extends StatelessWidget {
             top: fabTopPosition,
             right: 8,
             child: FloatingActionButton(
-              tooltip: AppLocalizations.of(context).switch_tooltip,
+              tooltip: AppLocalizations.of(context)!.switch_tooltip,
               onPressed: provider.toggleConversionDirection,
               elevation: 2,
               child: const Icon(Icons.swap_vert),

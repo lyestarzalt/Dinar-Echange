@@ -7,6 +7,7 @@ import 'package:dinar_echange/services/http_service.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 
 class AppProvider with ChangeNotifier {
   // Theme Management
@@ -60,6 +61,7 @@ class AppProvider with ChangeNotifier {
     await PreferencesService().setThemeMode(option);
     notifyListeners();
   }
+
   String getDatetime(DateTime currentDateTime) {
     String langLocal = currentLocale.toString();
     if (langLocal == 'ar') {
@@ -74,6 +76,7 @@ class AppProvider with ChangeNotifier {
 
     return formattedDate;
   }
+
   Future<void> loadSelectedLanguage() async {
     String? languageCode = await PreferencesService().getSelectedLanguage();
 
@@ -89,6 +92,7 @@ class AppProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
   // Set Language
   void setLanguage(Locale newLocale) async {
     if (newLocale != _currentLocale) {
@@ -119,5 +123,16 @@ class AppProvider with ChangeNotifier {
   Future<void> loadAppVersion() async {
     _packageInfo = await PackageInfo.fromPlatform();
     notifyListeners();
+  }
+
+  String getBuildMode() {
+    if (kReleaseMode) {
+      return "Release";
+    } else if (kDebugMode) {
+      return "Debug";
+    } else if (kProfileMode) {
+      return "Profile";
+    }
+    return "Unknown";
   }
 }

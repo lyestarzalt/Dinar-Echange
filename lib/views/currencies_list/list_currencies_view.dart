@@ -27,8 +27,8 @@ class CurrencyListScreen extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text(
-                    AppLocalizations.of(context).currencies_app_bar_title),
+                title:
+                    Text(AppLocalizations.of(context)!.currencies_app_bar_title),
                 actions: [
                   Padding(
                     padding:
@@ -47,6 +47,13 @@ class CurrencyListScreen extends StatelessWidget {
                 child: RefreshIndicator(
                   onRefresh: () async {
                     selectionProvider.refreshData();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            '${AppLocalizations.of(context)!.latest_updates_on} $formattedDate'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
                   },
                   child: ReorderableListView.builder(
                     shrinkWrap: true,
@@ -63,14 +70,9 @@ class CurrencyListScreen extends StatelessWidget {
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
                         direction: DismissDirection.endToStart,
-                        onDismissed: 
-                        
-                        
-                        
-                        (direction) {
+                        onDismissed: (direction) {
                           selectionProvider.addOrRemoveCurrency(
                               currency, false);
-                      
                         },
                         child: InkWell(
                           onTap: () {
@@ -100,7 +102,7 @@ class CurrencyListScreen extends StatelessWidget {
                 onPressed: () {
                   showAddCurrencyPage(context, selectionProvider);
                 },
-                tooltip: AppLocalizations.of(context).add_currencies_tooltip,
+                tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
                 child: const Icon(Icons.add),
               ),
             );
@@ -110,9 +112,9 @@ class CurrencyListScreen extends StatelessWidget {
     );
   }
 
- void showAddCurrencyPage(
+  void showAddCurrencyPage(
       BuildContext context, ListCurrencyProvider selectionProvider) {
-    AppLogger.trackScreenView('AddCurrencies');
+    AppLogger.trackScreenView('AddCurrencies_Screen');
     final adProvider = Provider.of<AdProvider>(context, listen: false);
 
     adProvider.ensureAdIsReadyToShow(
@@ -135,5 +137,4 @@ class CurrencyListScreen extends StatelessWidget {
       ),
     );
   }
-
 }

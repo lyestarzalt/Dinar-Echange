@@ -15,7 +15,7 @@ class LegalDocumentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context)!;
     String title = documentType == LegalDocumentType.terms
         ? localizations.terms_title
         : localizations.privacy_title;
@@ -25,15 +25,13 @@ class LegalDocumentsScreen extends StatelessWidget {
         title: Text(title),
       ),
       body: Directionality(
-              textDirection: TextDirection.ltr,
-
+        textDirection: TextDirection.ltr,
         child: ChangeNotifierProvider<AppProvider>(
           create: (_) => AppProvider()..loadContent(documentType),
           child: Consumer<AppProvider>(
             builder: (context, legalProvider, child) {
               return Consumer<AppProvider>(
                 builder: (context, appProvider, child) {
-  
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: legalProvider.isLoading
@@ -43,9 +41,8 @@ class LegalDocumentsScreen extends StatelessWidget {
                               data: legalProvider.htmlContent,
                               style: {
                                 "html": Style(
-                                                         backgroundColor:
+                                  backgroundColor:
                                       theme.scaffoldBackgroundColor,
-
                                   color: theme.textTheme.bodyLarge!.color ??
                                       Colors.black,
                                 ),
@@ -53,7 +50,6 @@ class LegalDocumentsScreen extends StatelessWidget {
                                   color: theme.textTheme.bodyLarge?.color ??
                                       Colors.black,
                                 ),
-                               
                               },
                             ),
                           ),

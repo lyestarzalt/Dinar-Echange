@@ -15,7 +15,7 @@ class FirestoreService {
           .get();
       if (snapshot.docs.isEmpty) {
         String errMsg =
-        'fetchCurrenciesFromFirestore: No daily currency data found. Collection may be empty';
+            'fetchCurrenciesFromFirestore: No daily currency data found. Collection may be empty';
         AppLogger.logError(errMsg);
         throw Exception(errMsg);
       }
@@ -37,7 +37,7 @@ class FirestoreService {
         );
       }).toList();
     } catch (e) {
-          AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
+      AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
 
       rethrow;
     }
@@ -51,7 +51,7 @@ class FirestoreService {
           .get();
 
       if (!snapshot.exists) {
-             String errMsg =
+        String errMsg =
             'fetchCurrencyHistoryFromFirestore: No history found for ${currency.currencyCode}. Document does not exist.';
 
         AppLogger.logError(errMsg);

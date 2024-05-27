@@ -37,9 +37,7 @@ class ErrorMessage extends StatelessWidget {
           message,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Theme.of(context)
-                .colorScheme
-                .onErrorContainer, 
+            color: Theme.of(context).colorScheme.onErrorContainer,
             fontSize: 16,
           ),
         ),

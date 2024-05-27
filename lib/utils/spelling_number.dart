@@ -2997,6 +2997,7 @@ class SpellingNumber {
     var result = ret.reversed.toList().join(" ");
     return result;
   }
+
   Error throwError(content) {
     throw Exception('spellingNumber: ' + content);
   }
@@ -3098,7 +3099,7 @@ class SpellingNumber {
 
     if (language != null) {
       if (!languages.contains(_spellingNumberDefault['lang'])) {
-          language = 'en';
+        language = 'en';
         _spellingNumberDefault['defaults']['lang'] = "en";
       }
       language = _spellingNumberDefault['i18n'][_spellingNumberDefault['lang']];
@@ -3123,7 +3124,8 @@ class SpellingNumber {
         b[1] = newDigitsNumber.toString();
       }
 
-      double fraction = double.parse("0.${b[1].substring(0, _spellingNumberDefault['digitsLengthW2F'])}");
+      double fraction = double.parse(
+          "0.${b[1].substring(0, _spellingNumberDefault['digitsLengthW2F'])}");
       fraction = fraction *
           (math.pow(
               10,
@@ -3140,9 +3142,9 @@ class SpellingNumber {
           '$wholesSpelling ' + _spellingNumberDefault['wholesUnit'];
     }
     if (fractionSpelling != '') {
-      fractionSpelling = '${' ' +
-          _spellingNumberDefault['decimalSeperator']} $fractionSpelling ' +
-          _spellingNumberDefault['fractionUnit'];
+      fractionSpelling =
+          '${' ' + _spellingNumberDefault['decimalSeperator']} $fractionSpelling ' +
+              _spellingNumberDefault['fractionUnit'];
     }
 
     return (wholesSpelling + fractionSpelling).trim();

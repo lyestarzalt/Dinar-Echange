@@ -179,5 +179,9 @@
   "licenses": "Licenses",
   "@licenses": {
     "description": "Word for licenses"
+  },
+  "latest_updates_on": "Latest updates on",
+  "@latest_updates_on": {
+    "description": "Latest updates on"
   }
 }

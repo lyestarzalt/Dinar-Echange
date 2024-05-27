@@ -23,7 +23,7 @@ class Currency {
     this.flag,
     this.history,
   });
-    List<CurrencyHistoryEntry> getFilteredHistory(int timeSpan) {
+  List<CurrencyHistoryEntry> getFilteredHistory(int timeSpan) {
     if (history == null || history!.isEmpty) {
       return [];
     }
@@ -34,7 +34,6 @@ class Currency {
         ? List<CurrencyHistoryEntry>.from(history!)
         : List<CurrencyHistoryEntry>.from(history!.sublist(startIndex));
   }
-  
 
   factory Currency.fromJson(Map<String, dynamic> json) {
     num? buy = json['buy'] as num?;

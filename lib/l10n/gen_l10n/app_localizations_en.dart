@@ -50,7 +50,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rate_us_button => 'Rate the App';
 
   @override
-  String get about_body => 'Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.';
+  String get about_body =>
+      'Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.';
 
   @override
   String get about_app_button => 'About the App';
@@ -83,7 +84,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retry_button => 'Retry';
 
   @override
-  String get errormessage_message => 'Unable to load the data. Please check your connection and try again.';
+  String get errormessage_message =>
+      'Unable to load the data. Please check your connection and try again.';
 
   @override
   String get search_hint => 'Search';
@@ -110,16 +112,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dzd_symbol => 'DZD';
 
   @override
-  String get centime_explanation => 'In Algerian society, \'centime\' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it\'s 10,000 DZD';
+  String get centime_explanation =>
+      'In Algerian society, \'centime\' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it\'s 10,000 DZD';
 
   @override
   String get why_centime_title => 'The Usage of \'Centime';
 
   @override
-  String get currency_buy_sell_explanation => 'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00';
+  String get currency_buy_sell_explanation =>
+      'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00';
 
   @override
-  String get currency_buy_sell_tooltip => 'Explains the buying and selling rates of currencies.';
+  String get currency_buy_sell_tooltip =>
+      'Explains the buying and selling rates of currencies.';
 
   @override
   String get terms_title => 'Terms and Conditions';
@@ -138,4 +143,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get licenses => 'Licenses';
+
+  @override
+  String get latest_updates_on => 'Latest updates on';
 }

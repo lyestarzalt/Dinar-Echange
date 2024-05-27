@@ -71,14 +71,14 @@ class CacheManager {
     DateTime currentDateInAlgeriaTime = getCurrentDateInAlgeriaTime();
 
     bool isBeforeUpdateTime = currentDateInAlgeriaTime.hour < 9;
-    bool isPreviousDayCache =isPreviousDay(cachedDate, currentDateInAlgeriaTime);
+    bool isPreviousDayCache =
+        isPreviousDay(cachedDate, currentDateInAlgeriaTime);
     bool isSameDayCache = isSameDay(cachedDate, currentDateInAlgeriaTime);
 
     return isSameDayCache || (isPreviousDayCache && isBeforeUpdateTime);
   }
 
-
-bool isDataNotEmpty(Map<String, dynamic> cachedData) {
+  bool isDataNotEmpty(Map<String, dynamic> cachedData) {
     if (cachedData.containsKey('data')) {
       var data = cachedData['data'];
       if (data is List) {
@@ -94,7 +94,6 @@ bool isDataNotEmpty(Map<String, dynamic> cachedData) {
     // Default to false if none of the above conditions are met.
     return false;
   }
-
 
   DateTime getCurrentDateInAlgeriaTime() {
     const int algeriaTimezoneOffset = 1;

@@ -44,6 +44,9 @@ class GraphProvider with ChangeNotifier {
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
       _state = AppState.error(e.toString());
+      //TODO
+      /*       FlutterError (A GraphProvider was used after being disposed.
+        Once you have called dispose() on a GraphProvider, it can no longer be used.) */
       notifyListeners();
     }
   }
@@ -92,14 +95,13 @@ class GraphProvider with ChangeNotifier {
           error: e);
       _state = AppState.error(e.toString());
       notifyListeners();
-      //_Exception (Exception: Failed to load currency history due to an error: [cloud_firestore/unavailable] 
+      //_Exception (Exception: Failed to load currency history due to an error: [cloud_firestore/unavailable]
       //The service is currently unavailable. This is a most likely a transient condition and may be corrected
       // by retrying with a backoff.)
       throw Exception(
           'Failed to load currency history due to an error: ${e.toString()}');
     }
   }
-
 
   void processData({int days = 180}) {
     if (selectedCurrency == null) return;
@@ -123,4 +125,3 @@ class GraphProvider with ChangeNotifier {
     notifyListeners();
   }
 }
-

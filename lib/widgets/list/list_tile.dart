@@ -69,7 +69,6 @@ class CurrencyListItem extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 15)
         ],
       ),
     );

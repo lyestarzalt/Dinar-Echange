@@ -22,7 +22,6 @@ class CurrencyService {
           .toList();
     }
 
-
     return _selectedCurrencies;
   }
 
@@ -46,5 +45,4 @@ class CurrencyService {
     await saveCurrencyOrder();
     return _selectedCurrencies;
   }
-
 }

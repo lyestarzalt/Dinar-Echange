@@ -13,23 +13,19 @@ class ConvertProvider with ChangeNotifier {
   bool isDZDtoCurrency = false; // Conversion direction flag
 
   ConvertProvider(this.currency) {
-    AppLogger.logCurrencySelection(currency.currencyCode);
-    AppLogger.trackScreenView('Converter');
+    AppLogger.logCurrencySelection(currency.currencyCode, true);
+    AppLogger.trackScreenView('Converter_Screen');
 
     amountController.addListener(convertCurrency);
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
     // a callback to set the focus once the widget is built
-    convertCurrency(); 
-    
+    convertCurrency();
+
     // show the keypad after we open the page
     WidgetsBinding.instance.addPostFrameCallback((_) {
       amountFocusNode.requestFocus();
     });
-
-
-
-
   }
   bool _useCentimes = false;
   bool get useCentimes => _useCentimes;

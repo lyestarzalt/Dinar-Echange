@@ -1,4 +1,3 @@
-
 class CurrencyHistoryEntry {
   final DateTime date;
   final double buy;
@@ -16,4 +15,3 @@ class CurrencyHistoryEntry {
     };
   }
 }
-

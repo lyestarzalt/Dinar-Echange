@@ -179,5 +179,9 @@
   "licenses": "رخص",
   "@licenses": {
     "description": "Word for licenses"
+  },
+  "latest_updates_on": "آخر التحديثات في",
+  "@latest_updates_on": {
+    "description": "Latest updates on"
   }
 }

@@ -27,8 +27,6 @@ LineTouchData buildLineTouchData(
   int touchedIndex,
   List<CurrencyHistoryEntry> historyEntries,
   Function(int, List<CurrencyHistoryEntry>) onIndexChangeCallback,
-
-
 ) {
   return LineTouchData(
     touchCallback: (event, touchResponse) {
@@ -37,14 +35,12 @@ LineTouchData buildLineTouchData(
         final spot = touchResponse!.lineBarSpots!.first;
         final newIndex = spot.x.toInt();
         if (newIndex != touchedIndex) {
-          onIndexChangeCallback(
-              newIndex, historyEntries); 
+          onIndexChangeCallback(newIndex, historyEntries);
         }
       }
     },
     handleBuiltInTouches: true,
     touchTooltipData: LineTouchTooltipData(
-     
       getTooltipColor: (LineBarSpot lineBarSpot) {
         return Colors.transparent;
       },
@@ -68,8 +64,7 @@ LineTouchData buildLineTouchData(
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
                 radius: 6,
-                color:
-                    Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.secondary,
                 strokeColor: Colors.transparent,
               );
             },
@@ -128,8 +123,7 @@ LineChartData buildMainData({
       horizontalLines: [minYValue, midYValue.round().toDouble(), maxYValue]
           .map((yValue) => HorizontalLine(
               y: yValue,
-              color:
-                  Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               strokeWidth: 1,
               dashArray: [5]))
           .toList(),

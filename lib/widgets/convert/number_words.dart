@@ -41,15 +41,15 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       title: Text(
-                        AppLocalizations.of(context).why_centime_title,
+                        AppLocalizations.of(context)!.why_centime_title,
                       ),
                       content: Text(
-                        AppLocalizations.of(context).centime_explanation,
+                        AppLocalizations.of(context)!.centime_explanation,
                       ),
                       actions: <Widget>[
                         TextButton(
                           child:
-                              Text(AppLocalizations.of(context).close_button),
+                              Text(AppLocalizations.of(context)!.close_button),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -132,8 +132,8 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
 
   String _getUnit(bool useCentimes, BuildContext context) {
     return useCentimes
-        ? AppLocalizations.of(context).centime_symbol
-        : AppLocalizations.of(context).dzd_symbol;
+        ? AppLocalizations.of(context)!.centime_symbol
+        : AppLocalizations.of(context)!.dzd_symbol;
   }
 
   String _getLanguageForConversion(String languageCode) {
@@ -148,7 +148,6 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
   String _formatResult(String languageCode, String numberInWords, String unit) {
     return "$numberInWords $unit";
   }
-  
 }
 
 extension CapitalizeExtension on String {

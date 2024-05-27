@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/utils/enums.dart';
-import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -24,7 +24,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final text = AppLocalizations.of(context);
+    final text = AppLocalizations.of(context)!;
     return Scaffold(
         appBar: AppBar(
           title: Text(text.settings_app_bar_title),
@@ -120,7 +120,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeSelection(BuildContext context) {
-    final text = AppLocalizations.of(context);
+    final text = AppLocalizations.of(context)!;
     return Consumer<AppProvider>(
       builder: (context, appProvider, child) {
         ThemeOption currentThemeOption = ThemeOption.auto; // Default
@@ -189,7 +189,7 @@ class SettingsPageState extends State<SettingsPage> {
                   orElse: () => const MapEntry('English', 'en'),
                 )
                 .key;
-            final text = AppLocalizations.of(context);
+            final text = AppLocalizations.of(context)!;
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -229,8 +229,8 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
- void _showAboutDialog(BuildContext context) {
-    final text = AppLocalizations.of(context);
+  void _showAboutDialog(BuildContext context) {
+    final text = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -247,11 +247,9 @@ class SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(text.about_body),
                     const SizedBox(height: 16),
-  
-                    Text(
-                        'Version: ${provider.packageInfo.version}'), 
-                    Text(
-                        'Build Number: ${provider.packageInfo.buildNumber}'), 
+                    Text('Version: ${provider.packageInfo.version}'),
+                    Text('Build Number: ${provider.packageInfo.buildNumber}'),
+                    Text('Build Mode: ${provider.getBuildMode()}'),
                   ],
                 ),
               ),
@@ -260,11 +258,8 @@ class SettingsPageState extends State<SettingsPage> {
                   child: Text(text.licenses),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _showLicensesPage(
-                        context,
-                        provider.packageInfo.appName,
-                        provider
-                            .packageInfo.version); 
+                    _showLicensesPage(context, provider.packageInfo.appName,
+                        provider.packageInfo.version);
                   },
                 ),
                 TextButton(
@@ -286,14 +281,12 @@ class SettingsPageState extends State<SettingsPage> {
       context: context,
       applicationIcon: Padding(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Image.asset('assets/logo/test.png', scale:4),
+        child: Image.asset('assets/logo/light_large.png', scale: 4),
       ),
       applicationName: appName,
       applicationVersion: version,
-   
     );
   }
-
 }
 
 class SettingsItem extends StatelessWidget {

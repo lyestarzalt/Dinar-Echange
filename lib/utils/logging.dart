@@ -46,12 +46,23 @@ class AppLogger {
       {String screenClass = 'FlutterScreen'}) async {
     await _analytics.logScreenView(
       screenName: screenName,
-      screenClass: screenClass,
+      screenClass: "${screenName}_class",
     );
-    logInfo('Screen View Logged: $screenName');
+    logInfo('Screen View Logged: $screenName and ');
   }
 
-  static Future<void> logCurrencySelection(String currencyCode) async {
+  static Future<void> logCurrencySelection(
+      String currencyCode, bool isAdded) async {
+    await _analytics.logEvent(
+      name: isAdded ? 'currency_selection' : 'currency_deletion',
+      parameters: {
+        'currency_code': currencyCode,
+      },
+    );
+    logInfo('Currency Selected: $currencyCode');
+  }
+
+  static Future<void> logCurrencyRemove(String currencyCode) async {
     await _analytics.logEvent(
       name: 'currency_selection',
       parameters: {

@@ -22,7 +22,7 @@ class CurrencyMenu extends StatefulWidget {
 class _CurrencyMenuState extends State<CurrencyMenu> {
   @override
   void initState() {
-    AppLogger.trackScreenView('ChoseCurrecniesGraph');
+    AppLogger.trackScreenView('ChoseCurrecniesGraph_Screen');
 
     super.initState();
   }
@@ -37,7 +37,7 @@ class _CurrencyMenuState extends State<CurrencyMenu> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title:
-              Text(AppLocalizations.of(context).select_currency_app_bar_title),
+              Text(AppLocalizations.of(context)!.select_currency_app_bar_title),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -56,14 +56,14 @@ class PreferencesService {
   Future<void> setSelectedLanguage(String languageCode) async {
     await _pref.setString('selectedLanguage', languageCode);
   }
-  
+
   Future<String?> getString(String key) async {
     return _pref.getString(key);
   }
+
   Future<bool> setString(String key, String data) async {
     return _pref.setString(key, data);
   }
-
 
   Future<bool> hasAcceptedTerms() async {
     return _pref.getBool('acceptedTerms') ?? false;
@@ -72,6 +72,4 @@ class PreferencesService {
   Future<void> setAcceptedTerms(bool accepted) async {
     await _pref.setBool('acceptedTerms', accepted);
   }
-
 }
-

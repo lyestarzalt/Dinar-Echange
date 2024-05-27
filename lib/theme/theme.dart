@@ -21,8 +21,7 @@ class MaterialTheme {
               BorderSide(color: colorScheme.onSurface, width: 1.0),
             ),
             backgroundColor: WidgetStateProperty.all(colorScheme.surface),
-            foregroundColor:
-                WidgetStateProperty.all(colorScheme.onSurface),
+            foregroundColor: WidgetStateProperty.all(colorScheme.onSurface),
             textStyle: WidgetStateProperty.all(
               TextStyle(color: colorScheme.onSurface),
             ),

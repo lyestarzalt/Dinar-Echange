@@ -9,7 +9,6 @@ import 'package:dinar_echange/providers/list_currency_provider.dart';
 class AddCurrencyPage extends StatelessWidget {
   const AddCurrencyPage({super.key});
   @override
-  
   @override
   Widget build(BuildContext context) {
     return Consumer<ListCurrencyProvider>(
@@ -22,7 +21,7 @@ class AddCurrencyPage extends StatelessWidget {
               title: TextField(
                 controller: provider.searchController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).search_hint,
+                  hintText: AppLocalizations.of(context)!.search_hint,
                   border: InputBorder.none,
                   prefixIcon: const Icon(Icons.search),
                 ),
@@ -36,7 +35,7 @@ class AddCurrencyPage extends StatelessWidget {
                       provider.saveSelectedCurrencies();
                       Navigator.pop(context);
                     },
-                    tooltip: AppLocalizations.of(context)
+                    tooltip: AppLocalizations.of(context)!
                         .add_selected_currencies_tooltip,
                     child: const Icon(Icons.check),
                   ),

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
-
 import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:dinar_echange/theme/theme.dart';
@@ -16,6 +15,7 @@ import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,10 +65,10 @@ class DinarWatchState extends State<DinarWatch> {
     return Consumer<AppProvider>(
       builder: (context, appProvider, _) {
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-    debugShowMaterialGrid: false,
+          debugShowCheckedModeBanner: !kReleaseMode,
+          debugShowMaterialGrid: false,
           onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context).app_title,
+              AppLocalizations.of(context)!.app_title,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: appProvider.themeMode,
@@ -82,7 +82,6 @@ class DinarWatchState extends State<DinarWatch> {
               switch (currenciesProvider.state.state) {
                 case LoadState.loading:
                   return const Scaffold(
-                  
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:

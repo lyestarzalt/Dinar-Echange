@@ -2,7 +2,6 @@
 // ignore: file_names
 import 'package:firebase_core/firebase_core.dart';
 
-
 class FirebaseErrorInterpreter {
   static ErrorResult interpret(Exception exception) {
     if (exception is FirebaseException) {
@@ -41,6 +40,7 @@ class FirebaseErrorInterpreter {
     }
   }
 }
+
 class ErrorResult {
   final String message;
   final int code;

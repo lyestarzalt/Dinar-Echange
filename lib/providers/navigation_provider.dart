@@ -17,13 +17,13 @@ class NavigationProvider with ChangeNotifier {
   String getScreenNameByIndex(int index) {
     switch (index) {
       case 0:
-        return 'CurrencyListScreen';
+        return 'MainCurrencyList_Screen';
       case 1:
-        return 'HistoryPage';
+        return 'Trends_Screen';
       case 2:
-        return 'SettingsPage';
+        return 'Settings_Screen';
       default:
-        return 'UnknownScreen';
+        return 'Unknown_Screen';
     }
   }
 }

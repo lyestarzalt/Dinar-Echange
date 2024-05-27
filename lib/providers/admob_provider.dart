@@ -60,13 +60,11 @@ class AdProvider with ChangeNotifier {
 
 //
   void loadInterstitialAd() {
-if (_isInterstitialAdLoaded || _interstitialAd != null) {
+    if (_isInterstitialAdLoaded || _interstitialAd != null) {
       AppLogger.logInfo(
           'Attempted to load ad again but one is already loaded or loading.');
-      return; 
+      return;
     }
-
-
 
     InterstitialAd.load(
       adUnitId: interstitialAdUnitId,
@@ -98,7 +96,6 @@ if (_isInterstitialAdLoaded || _interstitialAd != null) {
         onAdFailedToShow: onFailToShow,
       );
     } else {
-   
       loadInterstitialAd();
       Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_isInterstitialAdLoaded && _interstitialAd != null) {
@@ -128,7 +125,7 @@ if (_isInterstitialAdLoaded || _interstitialAd != null) {
     }
   }
 
-void _showInterstitialAd({
+  void _showInterstitialAd({
     required VoidCallback onAdClosed,
     VoidCallback? onAdFailedToShow,
   }) {
@@ -139,7 +136,7 @@ void _showInterstitialAd({
         ad.dispose();
         _interstitialAd = null;
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd(); 
+        loadInterstitialAd();
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         AppLogger.logError('Ad failed to show full screen content: $error');
@@ -155,7 +152,6 @@ void _showInterstitialAd({
     _isInterstitialAdLoaded =
         false; // Update state to reflect that the ad is being shown
   }
-
 
   void disposeAd() {
     _bannerAd?.dispose();

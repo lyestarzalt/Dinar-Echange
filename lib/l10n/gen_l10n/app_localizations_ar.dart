@@ -50,7 +50,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rate_us_button => 'قيّم التطبيق';
 
   @override
-  String get about_body => 'شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.';
+  String get about_body =>
+      'شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.';
 
   @override
   String get about_app_button => 'حول التطبيق';
@@ -83,7 +84,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry_button => 'إعادة المحاولة';
 
   @override
-  String get errormessage_message => 'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+  String get errormessage_message =>
+      'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
 
   @override
   String get search_hint => 'بحث';
@@ -110,13 +112,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dzd_symbol => 'دج';
 
   @override
-  String get centime_explanation => 'في الجزائر، يُستخدم مصطلح \'سنتيم\' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.';
+  String get centime_explanation =>
+      'في الجزائر، يُستخدم مصطلح \'سنتيم\' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.';
 
   @override
   String get why_centime_title => 'استخدام \'السنتيم';
 
   @override
-  String get currency_buy_sell_explanation => 'سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.';
+  String get currency_buy_sell_explanation =>
+      'سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.';
 
   @override
   String get currency_buy_sell_tooltip => 'يوضح أسعار شراء وبيع العملات.';
@@ -138,4 +142,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get licenses => 'رخص';
+
+  @override
+  String get latest_updates_on => 'آخر التحديثات في';
 }

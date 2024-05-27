@@ -26,7 +26,7 @@ class HistoryPage extends StatelessWidget {
       create: (_) => GraphProvider(currencies),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).trends_app_bar_title),
+          title: Text(AppLocalizations.of(context)!.trends_app_bar_title),
         ),
         floatingActionButton: Consumer<GraphProvider>(
           builder: (context, provider, _) =>
@@ -156,7 +156,6 @@ class HistoryPage extends StatelessWidget {
                       return ValueListenableBuilder<DateTime>(
                         valueListenable: provider.selectedDate,
                         builder: (context, value, child) {
-
                           String date = DateFormat('d MMMM y',
                                   languageProvider.currentLocale.toString())
                               .format(value);

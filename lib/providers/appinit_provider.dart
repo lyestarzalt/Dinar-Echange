@@ -110,7 +110,7 @@ class AppInitializationProvider with ChangeNotifier {
         //appleProvider: AppleProvider.debug,
       );
       try {
-         String? token = await FirebaseAppCheck.instance.getToken(false);
+        String? token = await FirebaseAppCheck.instance.getToken(false);
         AppLogger.logInfo("Temp token: $token");
       } catch (e) {
         AppLogger.logError('Error fetching App Check token: $e');
