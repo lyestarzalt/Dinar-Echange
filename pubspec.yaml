@@ -66,12 +66,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/dz_flag.png
     - assets/terms_and_conditions.html
     - assets/privacy_policy.html
     - assets/logo/light_large.png
-  generate: true
   fonts:
     - family: Geologica
       fonts:
@@ -115,6 +115,7 @@ flutter_intl:
   enabled: true
   class_name: AppLocalizations
   arb-dir: lib/l10n
-  output-localization-file: app_localizations.dart
-
+  output-dir: lib/l10n
+  output-localization-file: lib/l10n/app_localizations.dart
+  synthetic-package: false
   

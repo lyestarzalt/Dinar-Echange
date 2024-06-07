@@ -148,9 +148,9 @@
   "@why_centime_title": {
     "description": "Title for centime use"
   },
-  "currency_buy_sell_explanation": "The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you'll receive 237.00",
+  "currency_buy_sell_explanation": "The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you'll receive 237.00.",
   "@currency_buy_sell_explanation": {
-    "description": "Detailed explanation of the difference between buy and sell\t"
+    "description": "Detailed explanation of the difference between buy and sell rates"
   },
   "currency_buy_sell_tooltip": "Explains the buying and selling rates of currencies.",
   "@currency_buy_sell_tooltip": {

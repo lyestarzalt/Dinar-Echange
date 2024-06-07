@@ -31,4 +31,4 @@ dart run flutter_native_splash:create
 echo "Generating launcher icons..."
 flutter pub run flutter_launcher_icons
 
-echo "Build completed successfully!"
+echo "Updates and configurations applied successfully!"

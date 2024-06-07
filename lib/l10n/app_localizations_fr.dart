@@ -116,7 +116,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get why_centime_title => 'L\'utilisation du \'Centime';
 
   @override
-  String get currency_buy_sell_explanation => 'Le taux d\'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 Euro, cela vous coûtera 235,00 dans votre monnaie, et si vous voulez vendre 1 Euro, vous recevrez 237,00.';
+  String get currency_buy_sell_explanation => 'Le taux d\'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 Euro, cela vous coûtera 235,00 dans votre monnaie, et si vous voulez vendre 1 Euro, vous recevrez 237,00';
 
   @override
   String get currency_buy_sell_tooltip => 'Explique les taux d\'achat et de vente des devises.';

@@ -150,7 +150,7 @@
   },
   "currency_buy_sell_explanation": "سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.",
   "@currency_buy_sell_explanation": {
-    "description": "Detailed explanation of the difference between buy and sell\t"
+    "description": "Detailed explanation of the difference between buy and sell rates"
   },
   "currency_buy_sell_tooltip": "يوضح أسعار شراء وبيع العملات.",
   "@currency_buy_sell_tooltip": {

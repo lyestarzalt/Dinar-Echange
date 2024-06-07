@@ -116,7 +116,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get why_centime_title => 'The Usage of \'Centime';
 
   @override
-  String get currency_buy_sell_explanation => 'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00.';
+  String get currency_buy_sell_explanation => 'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00';
 
   @override
   String get currency_buy_sell_tooltip => 'Explains the buying and selling rates of currencies.';

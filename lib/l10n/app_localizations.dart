@@ -17,7 +17,7 @@ import 'app_localizations_fr.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'gen_l10n/app_localizations.dart';
+/// import 'l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -317,10 +317,10 @@ abstract class AppLocalizations {
   /// **'The Usage of \'Centime'**
   String get why_centime_title;
 
-  /// Detailed explanation of the difference between buy and sell rates
+  /// Detailed explanation of the difference between buy and sell
   ///
   /// In en, this message translates to:
-  /// **'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00.'**
+  /// **'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00'**
   String get currency_buy_sell_explanation;
 
   /// Brief tooltip for currency buy and sell values
