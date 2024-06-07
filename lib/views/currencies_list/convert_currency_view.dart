@@ -43,8 +43,6 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
           title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
           actions: [
             IconButton(
-              tooltip:
-                  AppLocalizations.of(context)!.currency_buy_sell_explanation,
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
@@ -56,7 +54,10 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         AppLocalizations.of(context)!
-                            .currency_buy_sell_explanation,
+                            .currency_buy_sell_explanation(
+                                provider.currency.buy,
+                                provider.currency.currencyCode,
+                                provider.currency.sell),
                       ),
                     ),
                     actions: <Widget>[

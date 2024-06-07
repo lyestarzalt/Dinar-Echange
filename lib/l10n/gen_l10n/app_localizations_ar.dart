@@ -116,10 +116,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get why_centime_title => 'استخدام \'السنتيم';
 
   @override
-  String get currency_buy_sell_explanation => 'سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.';
-
-  @override
-  String get currency_buy_sell_tooltip => 'يوضح أسعار شراء وبيع العملات.';
+  String currency_buy_sell_explanation(Object buy_rate, Object currency_code, Object sell_rate) {
+    return 'سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 $currency_code، فسيكلفك ذلك $buy_rate دج، وإذا أردت بيع 1 $currency_code، ستتلقى $sell_rate دج.';
+  }
 
   @override
   String get terms_title => 'شروط وأحكام';

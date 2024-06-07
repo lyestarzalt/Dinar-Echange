@@ -317,17 +317,11 @@ abstract class AppLocalizations {
   /// **'The Usage of \'Centime'**
   String get why_centime_title;
 
-  /// Detailed explanation of the difference between buy and sell rates
+  /// Detailed explanation of the difference between buy and sell
   ///
   /// In en, this message translates to:
-  /// **'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, if you want to buy 1 Euro, it costs 235.00 in your currency, and if you want to sell 1 Euro, you\'ll receive 237.00.'**
-  String get currency_buy_sell_explanation;
-
-  /// Brief tooltip for currency buy and sell values
-  ///
-  /// In en, this message translates to:
-  /// **'Explains the buying and selling rates of currencies.'**
-  String get currency_buy_sell_tooltip;
+  /// **'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, to buy 1 {currency_code}, it costs {buy_rate} DZD, and to sell 1 {currency_code}, you\'ll receive {sell_rate} DZD.'**
+  String currency_buy_sell_explanation(Object buy_rate, Object currency_code, Object sell_rate);
 
   /// Title for the terms and conditions page
   ///

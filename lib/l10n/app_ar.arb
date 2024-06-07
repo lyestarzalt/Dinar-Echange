@@ -148,13 +148,9 @@
   "@why_centime_title": {
     "description": "Title for centime use"
   },
-  "currency_buy_sell_explanation": "سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 يورو، فسيكلفك ذلك 235.00 من عملتك، وإذا أردت بيع 1 يورو، ستتلقى 237.00.",
+  "currency_buy_sell_explanation": "سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 {currency_code}، فسيكلفك ذلك {buy_rate} دج، وإذا أردت بيع 1 {currency_code}، ستتلقى {sell_rate} دج.",
   "@currency_buy_sell_explanation": {
-    "description": "Detailed explanation of the difference between buy and sell rates"
-  },
-  "currency_buy_sell_tooltip": "يوضح أسعار شراء وبيع العملات.",
-  "@currency_buy_sell_tooltip": {
-    "description": "Brief tooltip for currency buy and sell values"
+    "description": "Detailed explanation of the difference between buy and sell"
   },
   "terms_title": "شروط وأحكام",
   "@terms_title": {
