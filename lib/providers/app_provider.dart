@@ -13,6 +13,9 @@ class AppProvider with ChangeNotifier {
   // Theme Management
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
+    TabController? _tabController;
+
+  TabController get tabController => _tabController!;
 
   // Language Management
   Locale _currentLocale = const Locale('en');

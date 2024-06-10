@@ -140,4 +140,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get latest_updates_on => 'آخر التحديثات في';
+
+  @override
+  String get parallel_market => 'السوق الموازي';
+
+  @override
+  String get official_market => 'السوق الرسمي';
 }

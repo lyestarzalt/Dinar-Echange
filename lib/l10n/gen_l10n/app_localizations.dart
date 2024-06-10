@@ -364,6 +364,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Latest updates on'**
   String get latest_updates_on;
+
+  /// Tab title for the non-official market
+  ///
+  /// In en, this message translates to:
+  /// **'Parallel Market'**
+  String get parallel_market;
+
+  /// Tab title for the official market
+  ///
+  /// In en, this message translates to:
+  /// **'Official Market'**
+  String get official_market;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

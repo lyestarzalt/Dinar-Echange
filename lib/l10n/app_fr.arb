@@ -179,5 +179,13 @@
   "latest_updates_on": "Dernières mises à jour le",
   "@latest_updates_on": {
     "description": "Latest updates on"
+  },
+  "parallel_market": "Marché Parallèle",
+  "@parallel_market": {
+    "description": "Tab title for the non-official market"
+  },
+  "official_market": "Marché Officiel",
+  "@official_market": {
+    "description": "Tab title for the official market"
   }
 }

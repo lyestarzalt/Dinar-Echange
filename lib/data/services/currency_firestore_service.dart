@@ -79,4 +79,41 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  Future<List<Currency>> fetchOfficialCurrenciesFromFirestore() async {
+    try {
+      var snapshot = await _firestore
+          .collection('exchange-daily-official')
+          .orderBy(FieldPath.documentId, descending: true)
+          .limit(1)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        String errMsg =
+            'fetchCurrenciesFromFirestore: No  official daily currency data found. Collection may be empty';
+        AppLogger.logError(errMsg);
+        throw Exception(errMsg);
+      }
+
+      DocumentSnapshot lastSnapshot = snapshot.docs.first;
+      Map<String, dynamic> data = lastSnapshot.data() as Map<String, dynamic>;
+      String docDate = lastSnapshot.id;
+
+      return data.entries.map((entry) {
+        return Currency(
+          currencyCode: entry.key.toUpperCase(),
+          buy: entry.value['buy'] ?? 0.0,
+          sell: entry.value['sell'] ?? 0.0,
+          date: DateTime.parse(docDate),
+          isCore: entry.value['is_core'] ?? false,
+          currencyName: entry.value['name'],
+          currencySymbol: entry.value['symbol'],
+          flag: entry.value['flag'],
+        );
+      }).toList();
+    } catch (e) {
+      AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
+
+      rethrow;
+    }
+  }
 }

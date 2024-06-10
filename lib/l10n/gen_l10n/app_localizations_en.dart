@@ -140,4 +140,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get latest_updates_on => 'Latest updates on';
+
+  @override
+  String get parallel_market => 'Parallel Market';
+
+  @override
+  String get official_market => 'Official Market';
 }

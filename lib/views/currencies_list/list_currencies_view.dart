@@ -13,12 +13,16 @@ import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyListScreen extends StatelessWidget {
   final List<Currency> currencies;
+  final String marketType;
 
-  const CurrencyListScreen({super.key, required this.currencies});
+  const CurrencyListScreen(
+      {super.key, required this.currencies, required this.marketType});
   @override
   Widget build(BuildContext context) {
+    
     return ChangeNotifierProvider<ListCurrencyProvider>(
-      create: (_) => ListCurrencyProvider(currencies),
+      create: (_) =>
+          ListCurrencyProvider(currencies: currencies, marketType: marketType),
       child: Consumer<ListCurrencyProvider>(
         builder: (context, selectionProvider, _) => Consumer<AppProvider>(
           builder: (context, appProvider, _) {
@@ -26,22 +30,6 @@ class CurrencyListScreen extends StatelessWidget {
                 .getDatetime(selectionProvider.allCurrencies[0].date);
 
             return Scaffold(
-              appBar: AppBar(
-                title:
-                    Text(AppLocalizations.of(context)!.currencies_app_bar_title),
-                actions: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 16.0, left: 16, top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(formattedDate),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: RefreshIndicator(

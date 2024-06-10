@@ -18,11 +18,15 @@ import 'package:dinar_echange/providers/admob_provider.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _state = AppState.loading();
+  AppState<List<Currency>> _officialState = AppState.loading();
+
   AppState get state => _state;
+  AppState get officialState => _officialState;
+
   List<Currency>? get currencies => _state.data;
+  List<Currency>? get officialCurrencies => _officialState.data;
 
   Future<void> initializeApp() async {
-    final overallStopwatch = Stopwatch()..start();
     try {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
@@ -32,13 +36,14 @@ class AppInitializationProvider with ChangeNotifier {
         _enableFirebaseAnalytics(),
       ]);
 
-      final currenciesStopwatch = Stopwatch()..start();
       List<Currency> fetchedCurrencies =
           await MainRepository().getDailyCurrencies();
-      _state = AppState.success(fetchedCurrencies);
-      currenciesStopwatch.stop();
-      AppLogger.logInfo(
-          'Fetched daily currencies in ${currenciesStopwatch.elapsedMilliseconds} ms');
+      List<Currency> fetchedOfficialCurrencies =
+          await MainRepository().getOfficialDailyCurrencies();
+     _state = AppState.success(fetchedCurrencies);
+      _officialState = AppState.success(fetchedOfficialCurrencies);
+
+    
 
       // Initialize other services asynchronously after the essential data is loaded
       _deferOtherInitializations();
@@ -47,9 +52,7 @@ class AppInitializationProvider with ChangeNotifier {
     } finally {
       FlutterNativeSplash.remove();
       notifyListeners();
-      overallStopwatch.stop();
-      AppLogger.logInfo(
-          'App initialization process completed in ${overallStopwatch.elapsedMilliseconds} ms.');
+  
     }
   }
 

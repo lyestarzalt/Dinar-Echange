@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class PreferencesService {
   static final PreferencesService _instance = PreferencesService._internal();
@@ -17,12 +18,20 @@ class PreferencesService {
     _pref = await SharedPreferences.getInstance();
   }
 
-  Future<List<String>> getSelectedCurrencies() async {
-    return _pref.getStringList('selectedCurrencies') ?? [];
+  Future<List<String>> getSelectedCurrencies(String marketType) async {
+    String key = '${marketType}_selectedCurrencies';
+    List<String> selectedCurrencies = _pref.getStringList(key) ?? [];
+    AppLogger.logDebug(
+        'Loaded selected currencies for $marketType: $selectedCurrencies');
+    return selectedCurrencies;
   }
 
-  Future<void> setSelectedCurrencies(List<String> currencies) async {
-    await _pref.setStringList('selectedCurrencies', currencies);
+  Future<void> setSelectedCurrencies(
+      String marketType, List<String> currencyCodes) async {
+    String key = '${marketType}_selectedCurrencies';
+    await _pref.setStringList(key, currencyCodes);
+    AppLogger.logDebug(
+        'Saved selected currencies for $marketType: $currencyCodes');
   }
 
   Future<ThemeMode> getThemeMode() async {

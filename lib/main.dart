@@ -85,8 +85,10 @@ class DinarWatchState extends State<DinarWatch> {
                     body: Center(child: LinearProgressIndicator()),
                   );
                 case LoadState.success:
-                  return AppNavigation(
-                      currencies: currenciesProvider.state.data!);
+                   return AppNavigation(
+                    currencies: currenciesProvider.currencies!,
+                    officialCurrencies: currenciesProvider.officialCurrencies!,
+                  );
                 case LoadState.error:
                   return ErrorApp(
                     errorMessage: currenciesProvider.state.errorMessage!,

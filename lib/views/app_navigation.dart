@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/views/settings/settings_view.dart';
-import 'package:dinar_echange/views/currencies_list/list_currencies_view.dart';
+import 'package:dinar_echange/views/currencies_list/main_view.dart';
 import 'package:dinar_echange/views/graph/graph_view.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 
 class AppNavigation extends StatefulWidget {
   final List<Currency> currencies;
+  final List<Currency> officialCurrencies;
 
-  const AppNavigation({super.key, required this.currencies});
+  const AppNavigation(
+      {super.key, required this.currencies, required this.officialCurrencies});
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -58,8 +60,9 @@ class MainScreenState extends State<AppNavigation> {
   Widget _getPageWidget(int index) {
     switch (index) {
       case 0:
-        return CurrencyListScreen(
-          currencies: widget.currencies,
+        return MainView(
+          alternativeMarketCurrencies: widget.currencies,
+          officialMarketCurrencies: widget.officialCurrencies,
         );
       case 1:
         return HistoryPage(
@@ -68,8 +71,9 @@ class MainScreenState extends State<AppNavigation> {
       case 2:
         return const SettingsPage();
       default:
-        return CurrencyListScreen(
-          currencies: widget.currencies,
+        return MainView(
+          alternativeMarketCurrencies: widget.currencies,
+          officialMarketCurrencies: widget.officialCurrencies,
         );
     }
   }

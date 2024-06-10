@@ -12,8 +12,12 @@ class ListCurrencyProvider with ChangeNotifier {
 
   List<Currency> get selectedCurrencies => _selectedCurrencies;
   List<Currency> get filteredCurrencies => _filteredCurrencies;
+  String marketType; // 'official' or 'alternative'
 
-  ListCurrencyProvider(List<Currency> currencies) {
+  ListCurrencyProvider({
+    required List<Currency> currencies,
+    required this.marketType,
+  }) {
     allCurrencies = currencies;
     _filteredCurrencies = allCurrencies;
     _loadSelectedCurrencies();
@@ -55,7 +59,7 @@ class ListCurrencyProvider with ChangeNotifier {
   Future<void> _loadSelectedCurrencies() async {
     try {
       List<String> savedCurrencyNames =
-          await PreferencesService().getSelectedCurrencies();
+          await PreferencesService().getSelectedCurrencies(marketType);
       if (savedCurrencyNames.isEmpty) {
         _selectedCurrencies =
             allCurrencies.where((currency) => currency.isCore).toList();
@@ -89,7 +93,8 @@ class ListCurrencyProvider with ChangeNotifier {
     try {
       List<String> currencyNames =
           _selectedCurrencies.map((c) => c.currencyCode).toList();
-      await PreferencesService().setSelectedCurrencies(currencyNames);
+      await PreferencesService()
+          .setSelectedCurrencies(marketType, currencyNames);
       AppLogger.logInfo("Saved selected currencies.");
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to save selected currencies",
@@ -106,7 +111,8 @@ class ListCurrencyProvider with ChangeNotifier {
       }
       List<String> currencyNames =
           _selectedCurrencies.map((c) => c.currencyCode).toList();
-      await PreferencesService().setSelectedCurrencies(currencyNames);
+      await PreferencesService()
+          .setSelectedCurrencies(marketType, currencyNames);
       AppLogger.logCurrencySelection(currency.currencyCode, isSelected);
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to add or remove currency",
@@ -130,7 +136,8 @@ class ListCurrencyProvider with ChangeNotifier {
     try {
       final List<String> currencyOrder =
           _selectedCurrencies.map((currency) => currency.currencyCode).toList();
-      await PreferencesService().setSelectedCurrencies(currencyOrder);
+      await PreferencesService()
+          .setSelectedCurrencies(marketType, currencyOrder);
       AppLogger.logInfo("Saved currency order.");
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to save currency order",

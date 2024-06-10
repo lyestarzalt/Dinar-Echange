@@ -20,6 +20,17 @@ class MainRepository implements CurrencyRepository {
   }
 
   @override
+  Future<List<Currency>> getOfficialDailyCurrencies() async {
+    return _getCachedData<List<Currency>>(
+      baseKey: 'officialDailyCurrencies',
+      fetchFromFirestore:
+          _firestoreService.fetchOfficialCurrenciesFromFirestore,
+      fromJson: (data) => (data as List<dynamic>)
+          .map((model) => Currency.fromJson(model as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+  @override
   Future<Currency> getCurrencyHistory(Currency currency) async {
     return _getCachedData<Currency>(
       baseKey: 'currencyWithHistory',

@@ -179,5 +179,13 @@
   "latest_updates_on": "Latest updates on",
   "@latest_updates_on": {
     "description": "Latest updates on"
+  },
+  "parallel_market": "Parallel Market",
+  "@parallel_market": {
+    "description": "Tab title for the non-official market"
+  },
+  "official_market": "Official Market",
+  "@official_market": {
+    "description": "Tab title for the official market"
   }
 }

@@ -179,5 +179,13 @@
   "latest_updates_on": "آخر التحديثات في",
   "@latest_updates_on": {
     "description": "Latest updates on"
+  },
+  "parallel_market": "السوق الموازي",
+  "@parallel_market": {
+    "description": "Tab title for the non-official market"
+  },
+  "official_market": "السوق الرسمي",
+  "@official_market": {
+    "description": "Tab title for the official market"
   }
 }
