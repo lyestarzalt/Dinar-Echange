@@ -10,14 +10,17 @@ class ErrorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        body: Center(
-          child: ErrorMessage(
-            title: 'Oops! Something went wrong',
-            message: errorMessage,
-            onRetry: onRetry,
+    return Semantics(
+      label: 'Error Screen',
+      child: Material(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          body: Center(
+            child: ErrorMessage(
+              title: 'Oops! Something went wrong',
+              message: errorMessage,
+              onRetry: onRetry,
+            ),
           ),
         ),
       ),
