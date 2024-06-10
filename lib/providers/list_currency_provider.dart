@@ -24,6 +24,7 @@ class ListCurrencyProvider with ChangeNotifier {
     searchController.addListener(_filterCurrencies);
     AppLogger.logInfo(
         "ListCurrencyProvider initialized with ${currencies.length} currencies.");
+    notifyListeners();
   }
 
   @override

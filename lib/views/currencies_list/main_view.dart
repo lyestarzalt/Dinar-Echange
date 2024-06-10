@@ -4,6 +4,7 @@ import 'package:dinar_echange/views/currencies_list/list_currencies_view.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dinar_echange/providers/list_currency_provider.dart';
 
 class MainView extends StatefulWidget {
   final List<Currency> alternativeMarketCurrencies;
@@ -25,6 +26,7 @@ class _MainViewState extends State<MainView>
 
   @override
   void initState() {
+    print('hello from main view here is the data during initstate ${widget.alternativeMarketCurrencies}');
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
   }
@@ -59,13 +61,23 @@ class _MainViewState extends State<MainView>
       body: TabBarView(
         controller: _tabController,
         children: [
-          CurrencyListScreen(
-            currencies: widget.alternativeMarketCurrencies,
-            marketType: 'alternative',
+          ChangeNotifierProvider(
+            create: (_) => ListCurrencyProvider(
+              currencies: widget.alternativeMarketCurrencies,
+              marketType: 'alternative',
+            ),
+            child: CurrencyListScreen(
+              marketType: 'alternative',
+            ),
           ),
-          CurrencyListScreen(
-            currencies: widget.officialMarketCurrencies,
-            marketType: 'official',
+          ChangeNotifierProvider(
+            create: (_) => ListCurrencyProvider(
+              currencies: widget.officialMarketCurrencies,
+              marketType: 'official',
+            ),
+            child: CurrencyListScreen(
+              marketType: 'official',
+            ),
           ),
         ],
       ),

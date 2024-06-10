@@ -26,7 +26,7 @@ class AppInitializationProvider with ChangeNotifier {
   List<Currency>? get currencies => _state.data;
   List<Currency>? get officialCurrencies => _officialState.data;
 
-  Future<void> initializeApp() async {
+Future<void> initializeApp() async {
     try {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
@@ -36,14 +36,16 @@ class AppInitializationProvider with ChangeNotifier {
         _enableFirebaseAnalytics(),
       ]);
 
-      List<Currency> fetchedCurrencies =
-          await MainRepository().getDailyCurrencies();
-      List<Currency> fetchedOfficialCurrencies =
-          await MainRepository().getOfficialDailyCurrencies();
-     _state = AppState.success(fetchedCurrencies);
-      _officialState = AppState.success(fetchedOfficialCurrencies);
+      // Load both sets of currencies concurrently
+      var fetchedResults = await Future.wait([
+        MainRepository().getDailyCurrencies(),
+        MainRepository().getOfficialDailyCurrencies(),
+      ]);
 
-    
+      List<Currency> fetchedCurrencies = fetchedResults[0];
+      List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
+      _state = AppState.success(fetchedCurrencies);
+      _officialState = AppState.success(fetchedOfficialCurrencies);
 
       // Initialize other services asynchronously after the essential data is loaded
       _deferOtherInitializations();
@@ -52,7 +54,6 @@ class AppInitializationProvider with ChangeNotifier {
     } finally {
       FlutterNativeSplash.remove();
       notifyListeners();
-  
     }
   }
 

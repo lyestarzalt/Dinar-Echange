@@ -16,7 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:dinar_echange/providers/list_currency_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -36,6 +36,7 @@ void main() async {
             ChangeNotifierProvider(create: (_) => AppProvider()),
             ChangeNotifierProvider(create: (_) => NavigationProvider()),
             ChangeNotifierProvider(create: (_) => AdProvider()),
+
           ],
           child: const DinarWatch(),
         ),
@@ -79,25 +80,28 @@ class DinarWatchState extends State<DinarWatch> {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Consumer<AppInitializationProvider>(
             builder: (context, currenciesProvider, _) {
-              switch (currenciesProvider.state.state) {
-                case LoadState.loading:
-                  return const Scaffold(
-                    body: Center(child: LinearProgressIndicator()),
-                  );
-                case LoadState.success:
-                   return AppNavigation(
-                    currencies: currenciesProvider.currencies!,
-                    officialCurrencies: currenciesProvider.officialCurrencies!,
-                  );
-                case LoadState.error:
-                  return ErrorApp(
-                    errorMessage: currenciesProvider.state.errorMessage!,
-                    onRetry: () => currenciesProvider.initializeApp(),
-                  );
-                default:
-                  return const Scaffold(
-                    body: Center(child: LinearProgressIndicator()),
-                  );
+              bool isLoading = currenciesProvider.state.isLoading &&
+                  currenciesProvider.officialState.isLoading;
+              bool hasError = currenciesProvider.state.isError ||
+                  currenciesProvider.officialState.isError;
+
+              if (isLoading) {
+                return const Scaffold(
+                  body: Center(child: LinearProgressIndicator()),
+                );
+              } else if (hasError) {
+                String errorMessage = currenciesProvider.state.errorMessage ??
+                    currenciesProvider.officialState.errorMessage ??
+                    "An unknown error occurred";
+                return ErrorApp(
+                  errorMessage: errorMessage,
+                  onRetry: () => currenciesProvider.initializeApp(),
+                );
+              } else {
+                return AppNavigation(
+                  currencies: currenciesProvider.currencies!,
+                  officialCurrencies: currenciesProvider.officialCurrencies!,
+                );
               }
             },
           ),
