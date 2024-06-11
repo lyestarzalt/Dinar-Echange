@@ -195,7 +195,7 @@ class HistoryPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TimeSpanButtons(
-            onTimeSpanSelected: (days) => provider.processData(days: days),
+            onTimeSpanSelected: (days) => provider.setTimeSpan(days),
           ),
           const AdBannerWidget(),
         ],

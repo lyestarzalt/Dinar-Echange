@@ -17,7 +17,7 @@ class GraphProvider with ChangeNotifier {
       ValueNotifier<DateTime>(DateTime.now());
 
   double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
-  final int timeSpan = 180; // Default to 6 months
+  int timeSpan = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR'; // Default currency
   final String dateformat = 'd MMMM y';
   AppState _state = AppState.loading();
@@ -114,6 +114,16 @@ class GraphProvider with ChangeNotifier {
       // by retrying with a backoff.)
       throw Exception(
           'Failed to load currency history due to an error: ${e.toString()}');
+    }
+  }
+void setTimeSpan(int days) {
+    if (timeSpan != days) {
+      timeSpan = days;
+      processData(days: timeSpan);
+      AppLogger.logEvent('time_span_changed', {
+        'new_time_span_days': days,
+        'currency_code': selectedCurrency?.currencyCode ?? 'N/A'
+      });
     }
   }
 

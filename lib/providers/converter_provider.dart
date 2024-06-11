@@ -13,8 +13,8 @@ class ConvertProvider with ChangeNotifier {
   bool isDZDtoCurrency = false; // Conversion direction flag
 
   ConvertProvider(this.currency) {
-    AppLogger.logCurrencySelection(currency.currencyCode, true);
-    AppLogger.trackScreenView('Converter_Screen');
+    AppLogger.logEvent(
+        'currency_converted', {'currency_code': currency.currencyCode});    AppLogger.trackScreenView('Converter_Screen', 'MainList');
 
     amountController.addListener(convertCurrency);
     amountFocusNode.addListener(notifyListeners);

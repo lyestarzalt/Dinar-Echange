@@ -100,7 +100,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
 
 void showAddCurrencyPage(
     BuildContext context, ListCurrencyProvider selectionProvider) {
-  AppLogger.trackScreenView('AddCurrencies_Screen');
+AppLogger.trackScreenView('AddCurrencies_Screen', 'MainList');
   final adProvider = Provider.of<AdProvider>(context, listen: false);
 
   adProvider.ensureAdIsReadyToShow(

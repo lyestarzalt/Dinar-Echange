@@ -2,6 +2,9 @@ class CurrencyHistoryEntry {
   final DateTime date;
   final double buy;
   CurrencyHistoryEntry({required this.date, required this.buy});
+  
+  
+  
   factory CurrencyHistoryEntry.fromJson(Map<String, dynamic> json) {
     return CurrencyHistoryEntry(
       date: DateTime.parse(json['date'] as String),

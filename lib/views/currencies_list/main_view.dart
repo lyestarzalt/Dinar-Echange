@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart'; // Ensure you import the AppProvider
 import 'package:dinar_echange/providers/list_currency_provider.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class MainView extends StatefulWidget {
   final List<Currency> alternativeMarketCurrencies;
@@ -28,6 +29,27 @@ class _MainViewState extends State<MainView>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+    _tabController!.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    if (_tabController!.indexIsChanging) {
+      switch (_tabController!.index) {
+        case 0:
+          AppLogger.trackScreenView('Parallel Market', 'mainList');
+          break;
+        case 1:
+          AppLogger.trackScreenView('Official Market', 'MainList');
+          break;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController!.removeListener(_handleTabSelection);
+    _tabController!.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,7 +61,7 @@ class _MainViewState extends State<MainView>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Currencies'),
+        title: Text(AppLocalizations.of(context)!.currencies_app_bar_title),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0, left: 16, top: 5),
@@ -67,14 +89,14 @@ class _MainViewState extends State<MainView>
               currencies: widget.alternativeMarketCurrencies,
               marketType: 'alternative',
             ),
-            child: CurrencyListScreen(marketType: 'alternative'),
+            child: const CurrencyListScreen(marketType: 'alternative'),
           ),
           ChangeNotifierProvider(
             create: (_) => ListCurrencyProvider(
               currencies: widget.officialMarketCurrencies,
               marketType: 'official',
             ),
-            child: CurrencyListScreen(marketType: 'official'),
+            child: const CurrencyListScreen(marketType: 'official'),
           ),
         ],
       ),

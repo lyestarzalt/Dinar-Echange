@@ -7,6 +7,7 @@ import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -112,6 +113,11 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void _openLegalDocument(LegalDocumentType type) {
+    AppLogger.trackScreenView('${type.toString()}_Document', 'Settings');
+    AppLogger.logEvent('legal_document_accessed', {
+      'document_type': type.toString(),
+    });
+
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => LegalDocumentsScreen(documentType: type),
     ));
@@ -183,6 +189,9 @@ class SettingsPageState extends State<SettingsPage> {
               onSelectionChanged: (Set newSelection) {
                 ThemeOption selectedOption = newSelection.first;
                 appProvider.setThemeMode(selectedOption);
+                AppLogger.logEvent('theme_changed', {
+                  'theme_mode': selectedOption.name,
+                });
               },
             ),
           ),
@@ -195,6 +204,8 @@ class SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        AppLogger.trackScreenView('Language_Selection', 'Settings');
+
         return Consumer<AppProvider>(
           builder: (context, appProvider, child) {
             String currentLanguage = languageCodes.entries
@@ -222,6 +233,10 @@ class SettingsPageState extends State<SettingsPage> {
                         if (value != null) {
                           appProvider.setLanguage(
                               Locale(languageCodes[value] ?? 'en'));
+                          AppLogger.logEvent('language_changed', {
+                            'language_code': languageCodes[value] ?? 'en',
+                          });
+
                           Navigator.of(context).pop();
                         }
                       },
@@ -245,6 +260,8 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void _showAboutDialog(BuildContext context) {
+    AppLogger.trackScreenView('About_App', 'Settings');
+
     final text = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -292,6 +309,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void _showLicensesPage(BuildContext context, String appName, String version) {
+    AppLogger.trackScreenView('Licenses', 'Settings');
     showLicensePage(
       context: context,
       applicationIcon: Padding(

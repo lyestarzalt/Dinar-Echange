@@ -16,11 +16,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.3.1+4
+version: 1.3.2+4
 
 # Documenting the current Flutter and Dart SDK versions used in development:
-# Flutter version: 3.19.6 (stable channel) on Microsoft Windows [Version 10.0.22631.3296]
-# Dart SDK version: 3.3.4 (stable) (Tue Apr 16 19:56:12 2024 +0000) on "windows_x64"
+# Flutter (Channel stable, 3.22.1, on Microsoft Windows [Version 10.0.22631.3155], locale en-MY)
+# Dart SDK version: 3.4.1 (stable) (Tue May 21 15:46:25 2024 +0000) on "windows_x64"
 
 environment:
   sdk: '>=3.3.3 <4.0.0'

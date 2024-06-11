@@ -98,6 +98,8 @@ class ListCurrencyProvider with ChangeNotifier {
           _selectedCurrencies.map((c) => c.currencyCode).toList();
       await PreferencesService()
           .setSelectedCurrencies(marketType, currencyNames);
+                  logSelectedCurrenciesSummary();
+
       AppLogger.logInfo("Saved selected currencies.");
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to save selected currencies",
@@ -116,7 +118,6 @@ class ListCurrencyProvider with ChangeNotifier {
           _selectedCurrencies.map((c) => c.currencyCode).toList();
       await PreferencesService()
           .setSelectedCurrencies(marketType, currencyNames);
-      AppLogger.logCurrencySelection(currency.currencyCode, isSelected);
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to add or remove currency",
           error: e, stackTrace: stacktrace);
@@ -147,4 +148,13 @@ class ListCurrencyProvider with ChangeNotifier {
           error: e, stackTrace: stacktrace);
     }
   }
+  void logSelectedCurrenciesSummary() {
+    List<String> currencyCodes =
+        _selectedCurrencies.map((c) => c.currencyCode).toList();
+    AppLogger.logEvent('selected_currencies_updated',
+        {'selected_currencies': currencyCodes.join(', ')});
+    AppLogger.logInfo(
+        "Current selected currencies: ${currencyCodes.join(', ')}");
+  }
+
 }
