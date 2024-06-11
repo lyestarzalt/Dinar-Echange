@@ -42,35 +42,39 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
           actions: [
-            IconButton(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    content: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .currency_buy_sell_explanation(
-                                provider.currency.buy,
-                                provider.currency.currencyCode,
-                                provider.currency.sell),
+            Semantics(
+              button: true,
+              child: IconButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text(AppLocalizations.of(context)!.close_button),
-                        onPressed: () => Navigator.of(context).pop(),
+                      content: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .currency_buy_sell_explanation(
+                                  provider.currency.buy,
+                                  provider.currency.currencyCode,
+                                  provider.currency.sell),
+                        ),
                       ),
-                    ],
-                  );
-                },
+                      actions: <Widget>[
+                        TextButton(
+                          child:
+                              Text(AppLocalizations.of(context)!.close_button),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                icon: const Icon(Icons.info_outline),
               ),
-              icon: const Icon(Icons.info_outline),
-            )
+            ),
           ],
         ),
         body: Padding(
@@ -80,7 +84,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 NewWidget(context: context, provider: provider),
-                const AdBannerWidget(),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minHeight: 50),
+                  child: const AdBannerWidget(),
+                ),
                 Visibility(
                   visible: !provider.isDZDtoCurrency,
                   child: NumberToWordsDisplay(
@@ -172,15 +180,18 @@ class NewWidget extends StatelessWidget {
                     : provider.amountFocusNode,
                 context: context),
           ),
-          // FAB positioned in the middle of the cards
           Positioned(
             top: fabTopPosition,
             right: 8,
-            child: FloatingActionButton(
-              tooltip: AppLocalizations.of(context)!.switch_tooltip,
-              onPressed: provider.toggleConversionDirection,
-              elevation: 2,
-              child: const Icon(Icons.swap_vert),
+            child: Semantics(
+              button: true,
+              label: AppLocalizations.of(context)!.switch_tooltip,
+              child: FloatingActionButton(
+                tooltip: AppLocalizations.of(context)!.switch_tooltip,
+                onPressed: provider.toggleConversionDirection,
+                elevation: 2,
+                child: const Icon(Icons.swap_vert),
+              ),
             ),
           ),
         ],

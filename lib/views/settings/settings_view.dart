@@ -89,7 +89,10 @@ class SettingsPageState extends State<SettingsPage> {
                             _showAboutDialog(context);
                           },
                         ),
-                        const AdBannerWidget(),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: 50),
+                          child: const AdBannerWidget(),
+                        ),
                         buildSectionTitle(context, text.legal_title),
                         SettingsItem(
                           icon: Icons.article,

@@ -82,13 +82,17 @@ class HistoryPage extends StatelessWidget {
       ),
       closedColor: Theme.of(context).colorScheme.primaryContainer,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
-        return SizedBox(
-          height: 56.0,
-          width: 56.0,
-          child: Center(
-            child: Icon(
-              Icons.menu,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+        return Semantics(
+          button: true,
+          label: AppLocalizations.of(context)!.select_currency_app_bar_title,
+          child: SizedBox(
+            height: 56.0,
+            width: 56.0,
+            child: Center(
+              child: Icon(
+                Icons.menu,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
         );
