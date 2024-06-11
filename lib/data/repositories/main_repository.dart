@@ -30,6 +30,7 @@ class MainRepository implements CurrencyRepository {
           .toList(),
     );
   }
+
   @override
   Future<Currency> getCurrencyHistory(Currency currency) async {
     return _getCachedData<Currency>(
@@ -59,15 +60,22 @@ class MainRepository implements CurrencyRepository {
       AppLogger.logInfo(
           '_getCachedData: Cache miss. Fetching from Firestore for key: $cacheKey');
 
+      // Start timing here, right before fetching from Firestore
+      Stopwatch stopwatch = Stopwatch()..start();
       T data = await fetchFromFirestore();
+      stopwatch.stop();
       await _cacheManager.setCache(cacheKey, {'data': data});
+      AppLogger.logEvent('fetch_currency_duration', {
+        'duration_ms': stopwatch.elapsedMilliseconds,
+        'cache_key': cacheKey
+      });
+
       return data;
     } catch (e, stackTrace) {
       AppLogger.logError(
           '_getCachedData: Failed to fetch data for key: $cacheKey. Error: $e',
           error: e,
           stackTrace: stackTrace);
-
       rethrow;
     }
   }

@@ -35,24 +35,19 @@ Future<void> initializeApp() async {
         _signInAnonymously(),
         _enableFirebaseAnalytics(),
       ]);
-      final stopwatch = Stopwatch()..start();
 
       // Load both sets of currencies concurrently
       var fetchedResults = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
       ]);
-      stopwatch.stop();
 
       List<Currency> fetchedCurrencies = fetchedResults[0];
       List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
       _state = AppState.success(fetchedCurrencies);
       _officialState = AppState.success(fetchedOfficialCurrencies);
       // Log the fetch time
-      AppLogger.logEvent('fetch_currency_duration', {
-        'duration_ms': stopwatch.elapsedMilliseconds,
-        'market_type': 'daily and official'
-      });
+
       // Initialize other services asynchronously after the essential data is loaded
       _deferOtherInitializations();
     } catch (e, stackTrace) {
