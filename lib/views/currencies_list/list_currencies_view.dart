@@ -11,13 +11,21 @@ import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/utils/logging.dart';
 
-class CurrencyListScreen extends StatelessWidget {
+class CurrencyListScreen extends StatefulWidget {
   final String marketType;
 
-  const CurrencyListScreen({super.key, required this.marketType});
+  const CurrencyListScreen({Key? key, required this.marketType})
+      : super(key: key);
 
   @override
+  _CurrencyListScreenState createState() => _CurrencyListScreenState();
+}
+
+class _CurrencyListScreenState extends State<CurrencyListScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final selectionProvider = Provider.of<ListCurrencyProvider>(context);
     final appProvider = Provider.of<AppProvider>(context);
 
@@ -25,9 +33,6 @@ class CurrencyListScreen extends StatelessWidget {
         appProvider.getDatetime(selectionProvider.allCurrencies[0].date);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.currencies_app_bar_title),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: RefreshIndicator(
@@ -85,9 +90,12 @@ class CurrencyListScreen extends StatelessWidget {
         onPressed: () => showAddCurrencyPage(context, selectionProvider),
         tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
         child: const Icon(Icons.add),
+        heroTag: 'AddCurrencyFAB${widget.marketType}',
       ),
     );
   }
+
+  bool get wantKeepAlive => true; // Important to keep state alive
 }
 
 void showAddCurrencyPage(

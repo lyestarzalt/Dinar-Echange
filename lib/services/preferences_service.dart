@@ -81,4 +81,11 @@ class PreferencesService {
   Future<void> setAcceptedTerms(bool accepted) async {
     await _pref.setBool('acceptedTerms', accepted);
   }
+
+  Future<void> clearAllPreferences() async {
+    await _pref.clear();
+    AppLogger.logDebug('All preferences cleared');
+  }
+
+
 }

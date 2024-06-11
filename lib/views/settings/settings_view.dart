@@ -5,6 +5,8 @@ import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/services/preferences_service.dart';
+import 'package:flutter/foundation.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -24,6 +26,8 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final prefsService = PreferencesService();
+
     final text = AppLocalizations.of(context)!;
     return Scaffold(
         appBar: AppBar(
@@ -48,6 +52,17 @@ class SettingsPageState extends State<SettingsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (kDebugMode)
+                          ListTile(
+                            leading: Icon(Icons.delete_forever),
+                            title: Text('Clear Cache (Debug Only)'),
+                            onTap: () async {
+                              await prefsService.clearAllPreferences();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Cache cleared!')),
+                              );
+                            },
+                          ),
                         buildSectionTitle(context, text.theme_title),
                         _buildThemeSelection(context),
                         const SizedBox(height: 16),

@@ -11,12 +11,11 @@ import 'package:dinar_echange/providers/appinit_provider.dart';
 import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:dinar_echange/utils/enums.dart';
 import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:dinar_echange/providers/list_currency_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

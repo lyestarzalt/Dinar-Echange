@@ -61,26 +61,28 @@ class ListCurrencyProvider with ChangeNotifier {
     try {
       List<String> savedCurrencyNames =
           await PreferencesService().getSelectedCurrencies(marketType);
-      if (savedCurrencyNames.isEmpty) {
+      if (savedCurrencyNames.isEmpty && allCurrencies.isNotEmpty) {
         _selectedCurrencies =
             allCurrencies.where((currency) => currency.isCore).toList();
         await _saveCurrencyOrder();
         AppLogger.logInfo(
-            "Initialized selected currencies with core currencies.");
-      } else {
-        // Load the currencies in the order they were saved
+            "Initialized selected currencies with core currencies. $_selectedCurrencies");
+      } else if (savedCurrencyNames.isNotEmpty) {
         _selectedCurrencies = savedCurrencyNames
             .map((code) => allCurrencies.firstWhere(
                   (currency) => currency.currencyCode == code,
                 ))
             .whereType<Currency>()
             .toList();
-        notifyListeners();
         AppLogger.logInfo("Loaded selected currencies from saved preferences.");
+      } else {
+        AppLogger.logDebug("No saved currencies and allCurrencies is empty.");
       }
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to load selected currencies",
           error: e, stackTrace: stacktrace);
+    } finally {
+      notifyListeners(); // Ensure UI is always updated after attempting to load currencies
     }
   }
 

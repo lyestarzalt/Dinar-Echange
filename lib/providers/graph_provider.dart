@@ -47,6 +47,20 @@ class GraphProvider with ChangeNotifier {
       //TODO
       /*       FlutterError (A GraphProvider was used after being disposed.
         Once you have called dispose() on a GraphProvider, it can no longer be used.) */
+      _notifySafe();
+    }
+  }
+
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  void _notifySafe() {
+    if (!_isDisposed) {
       notifyListeners();
     }
   }
