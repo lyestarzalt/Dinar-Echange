@@ -19,7 +19,6 @@ class AppState<T> {
     return AppState<T>._(state: LoadState.error, errorMessage: message);
   }
 
-  // Helper properties to easily check state
   bool get isLoading => state == LoadState.loading;
   bool get isSuccess => state == LoadState.success;
   bool get isError => state == LoadState.error;

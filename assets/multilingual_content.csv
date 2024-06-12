@@ -21,10 +21,7 @@ six_months_button,Short time filter for viewing currency data over the past six 
 one_year_button,Short time filter for viewing currency data over the past year.,1Y,1Y,1س
 two_years_button,Short time filter for viewing currency data over the past two years.,2Y,2Y,2س
 add_selected_currencies_tooltip,Option to add selected currencies to the list|,Add Selected Currencies,Ajouter les devises sélectionnées,أضف العملات المختارة
-error_message_title,Title for an error message dialog.,Oops! Something went wrong.,Oups! Un problème est survenu.,عفوًا! هناك خطأ ما.
-error_fetching_currencies_message,Error message indicating an issue in retrieving currency data.,Error fetching currencies,Erreur lors de la récupération des devises,خطأ في استرداد العملات
 no_currencies_message,Message for no currency data.,No currencies,Pas de devises,لا توجد عملات
-retry_button,"Button to attempt a previous action again (e.g., refreshing data or reconnecting).",Retry,Réessayer,إعادة المحاولة
 errormessage_message,Detailed text explaining the error.,Unable to load the data. Please check your connection and try again.,Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.,تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.
 search_hint,Option to search,Search,Recherche,بحث
 add_currencies_tooltip,Option to add currencies,Add Currencies,Ajouter des devises,إضافة العملات
@@ -46,3 +43,6 @@ licenses,Word for licenses,Licenses,Licences,رخص
 latest_updates_on,Latest updates on,Latest updates on,Dernières mises à jour le,آخر التحديثات في
 parallel_market,Tab title for the non-official market,Parallel Market,Marché Parallèle,السوق الموازي
 official_market,Tab title for the official market,Official Market,Marché Officiel,السوق الرسمي
+retry,Retry button text,Retry,Réessayer,إعادة المحاولة
+error_title,Title for generic error messages,"Something Went Wrong","Un problème est survenu","حدث خطأ ما"
+error_message,Generic error message suggesting a retry,"Oops! Something didn't go as planned. Please try again.","Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.","أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى."

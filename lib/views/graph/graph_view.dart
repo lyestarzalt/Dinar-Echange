@@ -8,13 +8,13 @@ import 'package:dinar_echange/widgets/graph/line_graph.dart';
 import 'package:animations/animations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dinar_echange/data/models/currency_history.dart';
-import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
+import 'package:dinar_echange/widgets/error_message.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -42,16 +42,11 @@ class HistoryPage extends StatelessWidget {
                 case LoadState.success:
                   return _buildCurrencyContent(context, provider);
                 case LoadState.error:
-                  // Use the error message from the provider's state
-                  return ErrorApp(
-                    errorMessage:
-                        provider.state.errorMessage ?? 'Error loading data',
+                  return ErrorMessage(
                     onRetry: () => provider.fetchCurrencies(currencies),
                   );
                 default:
-                  return ErrorApp(
-                    errorMessage:
-                        provider.state.errorMessage ?? 'Error loading data',
+                  return ErrorMessage(
                     onRetry: () => provider.fetchCurrencies(currencies),
                   );
               }
@@ -201,7 +196,10 @@ class HistoryPage extends StatelessWidget {
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.setTimeSpan(days),
           ),
-          const AdBannerWidget(),
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 50),
+            child: const AdBannerWidget(),
+          ),
         ],
       ),
     );

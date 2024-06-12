@@ -37,14 +37,17 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: RefreshIndicator(
           onRefresh: () async {
-            await selectionProvider.refreshData();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    '${AppLocalizations.of(context)!.latest_updates_on} $formattedDate'),
-                duration: const Duration(seconds: 2),
-              ),
-            );
+            await selectionProvider.refreshData().then((_) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        '${AppLocalizations.of(context)!.latest_updates_on} $formattedDate'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            });
           },
           child: ReorderableListView.builder(
             shrinkWrap: true,
@@ -100,7 +103,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
 
 void showAddCurrencyPage(
     BuildContext context, ListCurrencyProvider selectionProvider) {
-AppLogger.trackScreenView('AddCurrencies_Screen', 'MainList');
+  AppLogger.trackScreenView('AddCurrencies_Screen', 'MainList');
   final adProvider = Provider.of<AdProvider>(context, listen: false);
 
   adProvider.ensureAdIsReadyToShow(

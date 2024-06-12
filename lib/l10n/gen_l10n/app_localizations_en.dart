@@ -71,12 +71,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_selected_currencies_tooltip => 'Add Selected Currencies';
 
   @override
-  String get error_message_title => 'Oops! Something went wrong.';
-
-  @override
-  String get error_fetching_currencies_message => 'Error fetching currencies';
-
-  @override
   String get no_currencies_message => 'No currencies';
 
   @override
@@ -139,6 +133,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get licenses => 'Licenses';
 
   @override
+  String get error_title => 'Something Went Wrong';
+
+  @override
+  String get error_message => 'Oops! Something didn\'t go as planned. Please try again.';
+
+  @override
   String get latest_updates_on => 'Latest updates on';
 
   @override
@@ -146,4 +146,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get official_market => 'Official Market';
+
+  @override
+  String get retry => 'Retry';
 }

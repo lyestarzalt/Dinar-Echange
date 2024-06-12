@@ -65,8 +65,6 @@ class ListCurrencyProvider with ChangeNotifier {
         _selectedCurrencies =
             allCurrencies.where((currency) => currency.isCore).toList();
         await _saveCurrencyOrder();
-        AppLogger.logInfo(
-            "Initialized selected currencies with core currencies. $_selectedCurrencies");
       } else if (savedCurrencyNames.isNotEmpty) {
         _selectedCurrencies = savedCurrencyNames
             .map((code) => allCurrencies.firstWhere(
@@ -98,7 +96,7 @@ class ListCurrencyProvider with ChangeNotifier {
           _selectedCurrencies.map((c) => c.currencyCode).toList();
       await PreferencesService()
           .setSelectedCurrencies(marketType, currencyNames);
-                  logSelectedCurrenciesSummary();
+      logSelectedCurrenciesSummary();
 
       AppLogger.logInfo("Saved selected currencies.");
     } catch (e, stacktrace) {
@@ -148,6 +146,7 @@ class ListCurrencyProvider with ChangeNotifier {
           error: e, stackTrace: stacktrace);
     }
   }
+
   void logSelectedCurrenciesSummary() {
     List<String> currencyCodes =
         _selectedCurrencies.map((c) => c.currencyCode).toList();
@@ -156,5 +155,4 @@ class ListCurrencyProvider with ChangeNotifier {
     AppLogger.logInfo(
         "Current selected currencies: ${currencyCodes.join(', ')}");
   }
-
 }

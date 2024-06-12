@@ -88,14 +88,6 @@
   "@add_selected_currencies_tooltip": {
     "description": "Option to add selected currencies to the list|"
   },
-  "error_message_title": "Oups! Un problème est survenu.",
-  "@error_message_title": {
-    "description": "Title for an error message dialog."
-  },
-  "error_fetching_currencies_message": "Erreur lors de la récupération des devises",
-  "@error_fetching_currencies_message": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
   "no_currencies_message": "Pas de devises",
   "@no_currencies_message": {
     "description": "Message for no currency data."
@@ -176,6 +168,14 @@
   "@licenses": {
     "description": "Word for licenses"
   },
+  "error_title": "Un problème est survenu",
+  "@error_title": {
+    "description": "Title for generic error messages"
+  },
+  "error_message": "Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.",
+  "@error_message": {
+    "description": "Generic error message suggesting a retry"
+  },
   "latest_updates_on": "Dernières mises à jour le",
   "@latest_updates_on": {
     "description": "Latest updates on"
@@ -187,5 +187,9 @@
   "official_market": "Marché Officiel",
   "@official_market": {
     "description": "Tab title for the official market"
+  },
+  "retry": "Réessayer",
+  "@retry": {
+    "description": "Retry button text"
   }
 }

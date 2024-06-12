@@ -89,11 +89,7 @@ class DinarWatchState extends State<DinarWatch> {
                   body: Center(child: LinearProgressIndicator()),
                 );
               } else if (hasError) {
-                String errorMessage = currenciesProvider.state.errorMessage ??
-                    currenciesProvider.officialState.errorMessage ??
-                    "An unknown error occurred";
                 return ErrorApp(
-                  errorMessage: errorMessage,
                   onRetry: () => currenciesProvider.initializeApp(),
                 );
               } else {

@@ -71,12 +71,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get add_selected_currencies_tooltip => 'أضف العملات المختارة';
 
   @override
-  String get error_message_title => 'عفوًا! هناك خطأ ما.';
-
-  @override
-  String get error_fetching_currencies_message => 'خطأ في استرداد العملات';
-
-  @override
   String get no_currencies_message => 'لا توجد عملات';
 
   @override
@@ -139,6 +133,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get licenses => 'رخص';
 
   @override
+  String get error_title => 'حدث خطأ ما';
+
+  @override
+  String get error_message => 'أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.';
+
+  @override
   String get latest_updates_on => 'آخر التحديثات في';
 
   @override
@@ -146,4 +146,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get official_market => 'السوق الرسمي';
+
+  @override
+  String get retry => 'إعادة المحاولة';
 }

@@ -227,18 +227,6 @@ abstract class AppLocalizations {
   /// **'Add Selected Currencies'**
   String get add_selected_currencies_tooltip;
 
-  /// Title for an error message dialog.
-  ///
-  /// In en, this message translates to:
-  /// **'Oops! Something went wrong.'**
-  String get error_message_title;
-
-  /// Error message indicating an issue in retrieving currency data.
-  ///
-  /// In en, this message translates to:
-  /// **'Error fetching currencies'**
-  String get error_fetching_currencies_message;
-
   /// Message for no currency data.
   ///
   /// In en, this message translates to:
@@ -359,6 +347,18 @@ abstract class AppLocalizations {
   /// **'Licenses'**
   String get licenses;
 
+  /// Title for generic error messages
+  ///
+  /// In en, this message translates to:
+  /// **'Something Went Wrong'**
+  String get error_title;
+
+  /// Generic error message suggesting a retry
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! Something didn\'t go as planned. Please try again.'**
+  String get error_message;
+
   /// Latest updates on
   ///
   /// In en, this message translates to:
@@ -376,6 +376,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Official Market'**
   String get official_market;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

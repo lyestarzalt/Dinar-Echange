@@ -8,6 +8,7 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dinar_echange/utils/logging.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,7 +29,7 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final prefsService = PreferencesService();
-
+    final InAppReview inAppReview = InAppReview.instance;
     final text = AppLocalizations.of(context)!;
     return Scaffold(
         appBar: AppBar(
@@ -79,7 +80,9 @@ class SettingsPageState extends State<SettingsPage> {
                           icon: Icons.star,
                           text: text.rate_us_button,
                           onTap: () {
-                            //TODO Rate us action
+                            inAppReview.openStoreListing(
+                                appStoreId: 'com.dinarexchange.app',
+                                microsoftStoreId: '...');
                           },
                         ),
                         SettingsItem(
@@ -90,7 +93,7 @@ class SettingsPageState extends State<SettingsPage> {
                           },
                         ),
                         ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: 50),
+                          constraints: BoxConstraints(minHeight: 80),
                           child: const AdBannerWidget(),
                         ),
                         buildSectionTitle(context, text.legal_title),

@@ -88,14 +88,6 @@
   "@add_selected_currencies_tooltip": {
     "description": "Option to add selected currencies to the list|"
   },
-  "error_message_title": "عفوًا! هناك خطأ ما.",
-  "@error_message_title": {
-    "description": "Title for an error message dialog."
-  },
-  "error_fetching_currencies_message": "خطأ في استرداد العملات",
-  "@error_fetching_currencies_message": {
-    "description": "Error message indicating an issue in retrieving currency data."
-  },
   "no_currencies_message": "لا توجد عملات",
   "@no_currencies_message": {
     "description": "Message for no currency data."
@@ -176,6 +168,14 @@
   "@licenses": {
     "description": "Word for licenses"
   },
+  "error_title": "حدث خطأ ما",
+  "@error_title": {
+    "description": "Title for generic error messages"
+  },
+  "error_message": "أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.",
+  "@error_message": {
+    "description": "Generic error message suggesting a retry"
+  },
   "latest_updates_on": "آخر التحديثات في",
   "@latest_updates_on": {
     "description": "Latest updates on"
@@ -187,5 +187,9 @@
   "official_market": "السوق الرسمي",
   "@official_market": {
     "description": "Tab title for the official market"
+  },
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "Retry button text"
   }
 }

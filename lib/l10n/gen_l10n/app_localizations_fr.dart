@@ -71,12 +71,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get add_selected_currencies_tooltip => 'Ajouter les devises sélectionnées';
 
   @override
-  String get error_message_title => 'Oups! Un problème est survenu.';
-
-  @override
-  String get error_fetching_currencies_message => 'Erreur lors de la récupération des devises';
-
-  @override
   String get no_currencies_message => 'Pas de devises';
 
   @override
@@ -139,6 +133,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get licenses => 'Licences';
 
   @override
+  String get error_title => 'Un problème est survenu';
+
+  @override
+  String get error_message => 'Oups ! Quelque chose n\'a pas fonctionné comme prévu. Veuillez réessayer.';
+
+  @override
   String get latest_updates_on => 'Dernières mises à jour le';
 
   @override
@@ -146,4 +146,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get official_market => 'Marché Officiel';
+
+  @override
+  String get retry => 'Réessayer';
 }
