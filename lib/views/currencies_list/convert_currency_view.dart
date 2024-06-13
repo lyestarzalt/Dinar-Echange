@@ -5,6 +5,7 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});
@@ -84,10 +85,14 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 NewWidget(context: context, provider: provider),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                      minHeight: 50),
-                  child: const AdBannerWidget(),
+               ChangeNotifierProvider<AdProvider>(
+                  create: (_) => AdProvider(),
+                  child: Consumer<AdProvider>(
+                    builder: (context, adProvider, _) => ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: 50),
+                      child: const AdBannerWidget(),
+                    ),
+                  ),
                 ),
                 Visibility(
                   visible: !provider.isDZDtoCurrency,

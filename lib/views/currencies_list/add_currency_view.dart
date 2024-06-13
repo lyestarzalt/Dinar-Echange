@@ -9,7 +9,6 @@ import 'package:dinar_echange/providers/list_currency_provider.dart';
 class AddCurrencyPage extends StatelessWidget {
   const AddCurrencyPage({super.key});
   @override
-  @override
   Widget build(BuildContext context) {
     return Consumer<ListCurrencyProvider>(
       builder: (context, provider, child) {

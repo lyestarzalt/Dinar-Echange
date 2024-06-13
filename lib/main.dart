@@ -31,25 +31,22 @@ void main() async {
   ]).then((_) => runApp(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
             ChangeNotifierProvider(create: (_) => AppProvider()),
-            ChangeNotifierProvider(create: (_) => NavigationProvider()),
-            ChangeNotifierProvider(create: (_) => AdProvider()),
-
+            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
           ],
-          child: const DinarWatch(),
+          child: const DinarEchange(),
         ),
       ));
 }
 
-class DinarWatch extends StatefulWidget {
-  const DinarWatch({super.key});
+class DinarEchange extends StatefulWidget {
+  const DinarEchange({super.key});
 
   @override
-  DinarWatchState createState() => DinarWatchState();
+  DinarEchangeState createState() => DinarEchangeState();
 }
 
-class DinarWatchState extends State<DinarWatch> {
+class DinarEchangeState extends State<DinarEchange> {
   @override
   void initState() {
     super.initState();
@@ -64,41 +61,46 @@ class DinarWatchState extends State<DinarWatch> {
     final MaterialTheme materialTheme = MaterialTheme();
     return Consumer<AppProvider>(
       builder: (context, appProvider, _) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: !kReleaseMode,
-          debugShowMaterialGrid: false,
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.app_title,
-          theme: materialTheme.light(),
-          darkTheme: materialTheme.dark(),
-          themeMode: appProvider.themeMode,
-          highContrastTheme: materialTheme.lightHighContrast(),
-          highContrastDarkTheme: materialTheme.darkHighContrast(),
-          locale: appProvider.currentLocale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Consumer<AppInitializationProvider>(
-            builder: (context, currenciesProvider, _) {
-              bool isLoading = currenciesProvider.state.isLoading &&
-                  currenciesProvider.officialState.isLoading;
-              bool hasError = currenciesProvider.state.isError ||
-                  currenciesProvider.officialState.isError;
-
-              if (isLoading) {
-                return const Scaffold(
-                  body: Center(child: LinearProgressIndicator()),
-                );
-              } else if (hasError) {
-                return ErrorApp(
-                  onRetry: () => currenciesProvider.initializeApp(),
-                );
-              } else {
-                return AppNavigation(
-                  currencies: currenciesProvider.currencies!,
-                  officialCurrencies: currenciesProvider.officialCurrencies!,
-                );
-              }
-            },
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => NavigationProvider()),
+            ChangeNotifierProvider(create: (_) => AdProvider()),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: !kReleaseMode,
+            debugShowMaterialGrid: false,
+            onGenerateTitle: (BuildContext context) =>
+                AppLocalizations.of(context)!.app_title,
+            theme: materialTheme.light(),
+            darkTheme: materialTheme.dark(),
+            themeMode: appProvider.themeMode,
+            highContrastTheme: materialTheme.lightHighContrast(),
+            highContrastDarkTheme: materialTheme.darkHighContrast(),
+            locale: appProvider.currentLocale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Consumer<AppInitializationProvider>(
+              builder: (context, currenciesProvider, _) {
+                bool isLoading = currenciesProvider.Paralleltate.isLoading &&
+                    currenciesProvider.officialState.isLoading;
+                bool hasError = currenciesProvider.Paralleltate.isError ||
+                    currenciesProvider.officialState.isError;
+                if (isLoading) {
+                  return const Scaffold(
+                    body: Center(child: LinearProgressIndicator()),
+                  );
+                } else if (hasError) {
+                  return ErrorApp(
+                    onRetry: () => currenciesProvider.initializeApp(),
+                  );
+                } else {
+                  return AppNavigation(
+                    currencies: currenciesProvider.currencies!,
+                    officialCurrencies: currenciesProvider.officialCurrencies!,
+                  );
+                }
+              },
+            ),
           ),
         );
       },

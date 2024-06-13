@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/error_message.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
 
 class HistoryPage extends StatelessWidget {
   final List<Currency> currencies;
@@ -196,9 +197,14 @@ class HistoryPage extends StatelessWidget {
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.setTimeSpan(days),
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(minHeight: 50),
-            child: const AdBannerWidget(),
+          ChangeNotifierProvider<AdProvider>(
+            create: (_) => AdProvider(),
+            child: Consumer<AdProvider>(
+              builder: (context, adProvider, _) => ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 50),
+                child: const AdBannerWidget(),
+              ),
+            ),
           ),
         ],
       ),

@@ -26,71 +26,24 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final selectionProvider = Provider.of<ListCurrencyProvider>(context);
-    final appProvider = Provider.of<AppProvider>(context);
-
-    String formattedDate =
-        appProvider.getDatetime(selectionProvider.allCurrencies[0].date);
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: RefreshIndicator(
-          onRefresh: () async {
-            await selectionProvider.refreshData().then((_) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        '${AppLocalizations.of(context)!.latest_updates_on} $formattedDate'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            });
-          },
-          child: ReorderableListView.builder(
-            shrinkWrap: true,
-            itemCount: selectionProvider.selectedCurrencies.length,
-            itemBuilder: (context, index) {
-              final Currency currency =
-                  selectionProvider.selectedCurrencies[index];
-              return Dismissible(
-                key: ValueKey(currency.currencyCode),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                direction: DismissDirection.endToStart,
-                onDismissed: (direction) {
-                  selectionProvider.addOrRemoveCurrency(currency, false);
-                },
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (_) => ConvertProvider(currency),
-                          child: const CurrencyConverterPage(),
-                        ),
-                      ),
-                    );
-                  },
-                  child: CurrencyListItem(currency: currency),
-                ),
-              );
-            },
-            onReorder: (int oldIndex, int newIndex) {
-              selectionProvider.reorderCurrencies(oldIndex, newIndex);
-            },
+          onRefresh: _handleRefresh,
+          child: Consumer<ListCurrencyProvider>(
+            builder: (_, provider, __) => ReorderableListView.builder(
+              shrinkWrap: true,
+              itemCount: provider.selectedCurrencies.length,
+              itemBuilder: (context, index) =>
+                  _buildCurrencyItem(context, provider, index),
+              onReorder: provider.reorderCurrencies,
+            ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showAddCurrencyPage(context, selectionProvider),
+        onPressed: () => _showAddCurrencyPage(context),
         tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
         child: const Icon(Icons.add),
         heroTag: 'AddCurrencyFAB${widget.marketType}',
@@ -98,7 +51,68 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
     );
   }
 
-  bool get wantKeepAlive => true; // Important to keep state alive
+  Future<void> _handleRefresh() async {
+    final provider = Provider.of<ListCurrencyProvider>(context, listen: false);
+    final appprovider = Provider.of<AppProvider>(context, listen: false);
+
+    await provider.refreshData();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              '${AppLocalizations.of(context)!.latest_updates_on} ${appprovider.getDatetime(provider.getFormattedDate())}'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Widget _buildCurrencyItem(
+      BuildContext context, ListCurrencyProvider provider, int index) {
+    final currency = provider.selectedCurrencies[index];
+    return Dismissible(
+      key: ValueKey(currency.currencyCode),
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) => provider.addOrRemoveCurrency(currency, false),
+      child: InkWell(
+        onTap: () => _navigateToConverter(context, currency),
+        child: CurrencyListItem(currency: currency),
+      ),
+    );
+  }
+
+  void _showAddCurrencyPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: Provider.of<ListCurrencyProvider>(context, listen: false),
+          child: const AddCurrencyPage(),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToConverter(BuildContext context, Currency currency) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider(
+          create: (_) => ConvertProvider(currency),
+          child: const CurrencyConverterPage(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 void showAddCurrencyPage(

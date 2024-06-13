@@ -8,18 +8,14 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
-class AppNavigation extends StatefulWidget {
+class AppNavigation extends StatelessWidget {
   final List<Currency> currencies;
   final List<Currency> officialCurrencies;
 
   const AppNavigation(
-      {super.key, required this.currencies, required this.officialCurrencies});
+      {Key? key, required this.currencies, required this.officialCurrencies})
+      : super(key: key);
 
-  @override
-  MainScreenState createState() => MainScreenState();
-}
-
-class MainScreenState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -61,19 +57,19 @@ class MainScreenState extends State<AppNavigation> {
     switch (index) {
       case 0:
         return MainView(
-          alternativeMarketCurrencies: widget.currencies,
-          officialMarketCurrencies: widget.officialCurrencies,
+          alternativeMarketCurrencies: currencies,
+          officialMarketCurrencies: officialCurrencies,
         );
       case 1:
         return HistoryPage(
-          currencies: widget.currencies,
+          currencies: currencies,
         );
       case 2:
         return const SettingsPage();
       default:
         return MainView(
-          alternativeMarketCurrencies: widget.currencies,
-          officialMarketCurrencies: widget.officialCurrencies,
+          alternativeMarketCurrencies: currencies,
+          officialMarketCurrencies: officialCurrencies,
         );
     }
   }

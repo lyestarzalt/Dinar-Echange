@@ -13,20 +13,19 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_echange/utils/state.dart';
-import 'package:dinar_echange/utils/FirebaseErrorInterpreter.dart';
+import 'package:dinar_echange/utils/custom_exception.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
-
 class AppInitializationProvider with ChangeNotifier {
-  AppState<List<Currency>> _state = AppState.loading();
+  AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
 
-  AppState get state => _state;
+  AppState get Paralleltate => _parallelstate;
   AppState get officialState => _officialState;
 
-  List<Currency>? get currencies => _state.data;
+  List<Currency>? get currencies => _parallelstate.data;
   List<Currency>? get officialCurrencies => _officialState.data;
 
-Future<void> initializeApp() async {
+  Future<void> initializeApp() async {
     try {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
@@ -44,7 +43,7 @@ Future<void> initializeApp() async {
 
       List<Currency> fetchedCurrencies = fetchedResults[0];
       List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
-      _state = AppState.success(fetchedCurrencies);
+      _parallelstate = AppState.success(fetchedCurrencies);
       _officialState = AppState.success(fetchedOfficialCurrencies);
       // Log the fetch time
 
@@ -67,23 +66,26 @@ Future<void> initializeApp() async {
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
-        .catchError((error) =>
-            AppLogger.logFatal('Deferred initialization error', error: error));
+        .catchError((error) => AppLogger.logError(
+            'Deferred initialization error',
+            error: error,
+            isFatal: true));
   }
 
-  Future<void> handleInitializationError(e, stackTrace) async {
-    final errorResult = FirebaseErrorInterpreter.interpret(e as Exception);
-    AppLogger.logFatal(
-      'initializeApp: Failed during app initialization. Error: ${errorResult.message}',
-      error: e,
-      stackTrace: stackTrace,
-    );
-
-    if (errorResult.canContinue) {
-      final fetchedCurrencies = await MainRepository().getDailyCurrencies();
-      _state = AppState.success(fetchedCurrencies);
+  Future<void> handleInitializationError(
+      Object? e, StackTrace stackTrace) async {
+ 
+    if (e is DataFetchFailureException) {
+         AppLogger.logError('initializeApp: Failed during app initialization.',
+          error: e, stackTrace: stackTrace, isFatal: true);
+      _parallelstate = AppState.error('Failed to load essential data: ${e.message}');
     } else {
-      _state = AppState.error(errorResult.message);
+        AppLogger.logError(
+          'initializeApp: Unhandled exception during initialization',
+          error: e,
+          stackTrace: stackTrace,
+          isFatal: true);
+      _parallelstate = AppState.error('Unhandled exception during initialization');
     }
   }
 

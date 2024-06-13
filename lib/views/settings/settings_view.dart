@@ -9,6 +9,8 @@ import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/widgets/settings_item.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -92,9 +94,14 @@ class SettingsPageState extends State<SettingsPage> {
                             _showAboutDialog(context);
                           },
                         ),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: 80),
-                          child: const AdBannerWidget(),
+                        ChangeNotifierProvider<AdProvider>(
+                          create: (_) => AdProvider(),
+                          child: Consumer<AdProvider>(
+                            builder: (context, adProvider, _) => ConstrainedBox(
+                              constraints: BoxConstraints(minHeight: 50),
+                              child: const AdBannerWidget(),
+                            ),
+                          ),
                         ),
                         buildSectionTitle(context, text.legal_title),
                         SettingsItem(
@@ -139,7 +146,7 @@ class SettingsPageState extends State<SettingsPage> {
             title,
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 10),
           const Divider(thickness: 2),
         ],
       ),
@@ -324,49 +331,6 @@ class SettingsPageState extends State<SettingsPage> {
       ),
       applicationName: appName,
       applicationVersion: version,
-    );
-  }
-}
-
-class SettingsItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final VoidCallback onTap;
-  final double verticalPadding;
-
-  const SettingsItem({
-    super.key,
-    required this.icon,
-    required this.text,
-    required this.onTap,
-    this.verticalPadding = 6.0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: verticalPadding),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-          child: Row(
-            children: [
-              Icon(icon, size: 28.0, color: theme.colorScheme.onSurface),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Text(
-                  text,
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

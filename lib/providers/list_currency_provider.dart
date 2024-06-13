@@ -3,6 +3,7 @@ import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
 import 'package:dinar_echange/utils/logging.dart';
+import 'package:intl/intl.dart';
 
 class ListCurrencyProvider with ChangeNotifier {
   List<Currency> allCurrencies = [];
@@ -154,5 +155,14 @@ class ListCurrencyProvider with ChangeNotifier {
         {'selected_currencies': currencyCodes.join(', ')});
     AppLogger.logInfo(
         "Current selected currencies: ${currencyCodes.join(', ')}");
+  }
+
+  DateTime getFormattedDate() {
+    if (allCurrencies.isNotEmpty) {
+      DateTime firstCurrencyDate = allCurrencies[0].date;
+      return firstCurrencyDate;
+    } else {
+      return DateTime.fromMicrosecondsSinceEpoch(0);
+    }
   }
 }

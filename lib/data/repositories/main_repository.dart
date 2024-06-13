@@ -3,7 +3,8 @@ import 'package:dinar_echange/data/services/currency_firestore_service.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/services/cache_service.dart';
 import 'package:dinar_echange/utils/logging.dart';
-
+import 'package:intl/intl.dart';
+import 'package:dinar_echange/utils/custom_exception.dart';
 class MainRepository implements CurrencyRepository {
   final FirestoreService _firestoreService = FirestoreService();
   final CacheManager _cacheManager = CacheManager();
@@ -76,7 +77,29 @@ class MainRepository implements CurrencyRepository {
           '_getCachedData: Failed to fetch data for key: $cacheKey. Error: $e',
           error: e,
           stackTrace: stackTrace);
-      rethrow;
+      // Attempt to retrieve the most recent valid cache if fetch fails
+      return await _getFallbackCacheData(baseKey, fromJson);
     }
+  }
+
+  Future<T> _getFallbackCacheData<T>(
+      String baseKey, T Function(dynamic) fromJson) async {
+    int DaysLookBack = 7;
+    for (int i = 1; i <= DaysLookBack; i++) {
+      // Limit to 30 days for example
+      String historicalKey = _cacheManager.generateCacheKey(baseKey,
+          suffix: DateFormat('yyyy-MM-dd')
+              .format(DateTime.now().subtract(Duration(days: i))));
+      Map<String, dynamic>? data = await _cacheManager.getCache(historicalKey);
+      if (data != null && data['data'] != null) {
+        AppLogger.logInfo(
+            '_getFallbackCacheData: Fallback cache hit for key: $historicalKey');
+        return fromJson(data['data']);
+      }
+    }
+    String errorMsg =
+        'No valid cache data available as fallback for base key: $baseKey. All attempts to fetch data failed.';
+    AppLogger.logError(errorMsg, isFatal: true);
+    throw DataFetchFailureException(errorMsg, canContinue: false);
   }
 }

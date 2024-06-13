@@ -10,24 +10,20 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 
 class AppProvider with ChangeNotifier {
-  // Theme Management
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
-    TabController? _tabController;
+  TabController? _tabController;
 
   TabController get tabController => _tabController!;
 
-  // Language Management
   Locale _currentLocale = const Locale('en');
   Locale get currentLocale => _currentLocale;
 
-  // Legal Document Content
   late String _htmlContent;
   bool _isLoading = true;
   String get htmlContent => _htmlContent;
   bool get isLoading => _isLoading;
 
-  // Version Information
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'unknown',

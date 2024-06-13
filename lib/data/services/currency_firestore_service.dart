@@ -8,18 +8,17 @@ class FirestoreService {
 
   Future<List<Currency>> fetchCurrenciesFromFirestore() async {
     try {
-      var snapshot = await _firestore
+      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
           .collection('exchange-daily')
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
       if (snapshot.docs.isEmpty) {
         String errMsg =
-            'fetchCurrenciesFromFirestore: No daily currency data found. Collection may be empty';
+            'fetchCurrenciesFromFirestore: No data found in "exchange-daily" collection. Expected daily exchange data not available.';
         AppLogger.logError(errMsg);
         throw Exception(errMsg);
       }
-
       DocumentSnapshot lastSnapshot = snapshot.docs.first;
       Map<String, dynamic> data = lastSnapshot.data() as Map<String, dynamic>;
       String docDate = lastSnapshot.id;
@@ -36,9 +35,10 @@ class FirestoreService {
           flag: entry.value['flag'],
         );
       }).toList();
-    } catch (e) {
-      AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
-
+    } catch (e, stackTrace) {
+      String errorDetails =
+          'Error fetching Alternative Currencies from Firestore due to an exception: ${e.toString()}';
+      AppLogger.logError(errorDetails, error: e, stackTrace: stackTrace);
       rethrow;
     }
   }
@@ -54,7 +54,9 @@ class FirestoreService {
         String errMsg =
             'fetchCurrencyHistoryFromFirestore: No history found for ${currency.currencyCode}. Document does not exist.';
 
-        AppLogger.logError(errMsg);
+        AppLogger.logError(
+          errMsg,
+        );
         throw Exception(errMsg);
       }
 
@@ -82,14 +84,14 @@ class FirestoreService {
 
   Future<List<Currency>> fetchOfficialCurrenciesFromFirestore() async {
     try {
-      var snapshot = await _firestore
+      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
           .collection('exchange-daily-official')
           .orderBy(FieldPath.documentId, descending: true)
           .limit(1)
           .get();
       if (snapshot.docs.isEmpty) {
         String errMsg =
-            'fetchCurrenciesFromFirestore: No  official daily currency data found. Collection may be empty';
+            'fetchCurrenciesFromFirestore: No  official daily currency data found. exchange-daily-official may be empty';
         AppLogger.logError(errMsg);
         throw Exception(errMsg);
       }
@@ -110,9 +112,10 @@ class FirestoreService {
           flag: entry.value['flag'],
         );
       }).toList();
-    } catch (e) {
-      AppLogger.logError('fetchCurrenciesFromFirestore: Exception - $e');
-
+    } catch (e, stackTrace) {
+      String errorDetails =
+          'Error fetching Official Currencies from Firestore due to an exception: ${e.toString()}';
+      AppLogger.logError(errorDetails, error: e, stackTrace: stackTrace);
       rethrow;
     }
   }
