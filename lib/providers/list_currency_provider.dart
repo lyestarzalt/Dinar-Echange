@@ -51,7 +51,7 @@ class ListCurrencyProvider with ChangeNotifier {
     try {
       allCurrencies = await MainRepository().getDailyCurrencies();
       notifyListeners();
-      AppLogger.logInfo("Currencies data refreshed.");
+      AppLogger.logInfo("$marketType Currencies data refreshed.");
     } catch (e, stacktrace) {
       AppLogger.logError("Failed to refresh currency data",
           error: e, stackTrace: stacktrace);
@@ -73,12 +73,12 @@ class ListCurrencyProvider with ChangeNotifier {
                 ))
             .whereType<Currency>()
             .toList();
-        AppLogger.logInfo("Loaded selected currencies from saved preferences.");
+        AppLogger.logInfo("$marketType Loaded selected currencies from saved preferences.");
       } else {
-        AppLogger.logDebug("No saved currencies and allCurrencies is empty.");
+        AppLogger.logDebug("$marketType No saved currencies and allCurrencies is empty.");
       }
     } catch (e, stacktrace) {
-      AppLogger.logError("Failed to load selected currencies",
+      AppLogger.logError("$marketType Failed to load selected currencies",
           error: e, stackTrace: stacktrace);
     } finally {
       notifyListeners(); // Ensure UI is always updated after attempting to load currencies
@@ -88,7 +88,7 @@ class ListCurrencyProvider with ChangeNotifier {
   void updateSelectedCurrencies(List<Currency> newSelection) {
     _selectedCurrencies = newSelection;
     notifyListeners();
-    AppLogger.logInfo("Updated selected currencies.");
+    AppLogger.logInfo("$marketType Updated selected currencies.");
   }
 
   Future<void> saveSelectedCurrencies() async {
@@ -99,9 +99,9 @@ class ListCurrencyProvider with ChangeNotifier {
           .setSelectedCurrencies(marketType, currencyNames);
       logSelectedCurrenciesSummary();
 
-      AppLogger.logInfo("Saved selected currencies.");
+      AppLogger.logInfo("$marketType Saved selected currencies.");
     } catch (e, stacktrace) {
-      AppLogger.logError("Failed to save selected currencies",
+      AppLogger.logError("$marketType Failed to save selected currencies",
           error: e, stackTrace: stacktrace);
     }
   }
@@ -118,7 +118,7 @@ class ListCurrencyProvider with ChangeNotifier {
       await PreferencesService()
           .setSelectedCurrencies(marketType, currencyNames);
     } catch (e, stacktrace) {
-      AppLogger.logError("Failed to add or remove currency",
+      AppLogger.logError("$marketType Failed to add or remove currency",
           error: e, stackTrace: stacktrace);
     }
     notifyListeners();
@@ -132,7 +132,7 @@ class ListCurrencyProvider with ChangeNotifier {
     _selectedCurrencies.insert(newIndex, item);
     _saveCurrencyOrder();
     notifyListeners();
-    AppLogger.logInfo("Reordered currencies.");
+    AppLogger.logInfo("$marketType Reordered currencies.");
   }
 
   Future<void> _saveCurrencyOrder() async {
@@ -141,9 +141,9 @@ class ListCurrencyProvider with ChangeNotifier {
           _selectedCurrencies.map((currency) => currency.currencyCode).toList();
       await PreferencesService()
           .setSelectedCurrencies(marketType, currencyOrder);
-      AppLogger.logInfo("Saved currency order.");
+      AppLogger.logInfo("$marketType Saved currency order.");
     } catch (e, stacktrace) {
-      AppLogger.logError("Failed to save currency order",
+      AppLogger.logError("$marketType Failed to save currency order",
           error: e, stackTrace: stacktrace);
     }
   }
@@ -151,10 +151,9 @@ class ListCurrencyProvider with ChangeNotifier {
   void logSelectedCurrenciesSummary() {
     List<String> currencyCodes =
         _selectedCurrencies.map((c) => c.currencyCode).toList();
-    AppLogger.logEvent('selected_currencies_updated',
+    AppLogger.logEvent('$marketType selected_currencies_updated',
         {'selected_currencies': currencyCodes.join(', ')});
-    AppLogger.logInfo(
-        "Current selected currencies: ${currencyCodes.join(', ')}");
+  
   }
 
   DateTime getFormattedDate() {

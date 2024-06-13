@@ -50,7 +50,7 @@ class AppLogger {
       screenName: screenName,
       screenClass: screenClass,
     );
-    logInfo('Screen View Logged: $screenName, Class: $screenClass');
+    logDebug('Screen View Logged: $screenName, Class: $screenClass');
   }
 
   static Future<void> logEvent(
@@ -59,7 +59,7 @@ class AppLogger {
       name: eventName,
       parameters: parameters,
     );
-    logInfo('Event Logged: $eventName, Details: $parameters');
+    logDebug('Event Logged: $eventName, Details: $parameters');
   }
 }
 

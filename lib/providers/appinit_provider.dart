@@ -15,6 +15,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_echange/utils/state.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
@@ -74,18 +75,19 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> handleInitializationError(
       Object? e, StackTrace stackTrace) async {
- 
     if (e is DataFetchFailureException) {
-         AppLogger.logError('initializeApp: Failed during app initialization.',
+      AppLogger.logError('initializeApp: Failed during app initialization.',
           error: e, stackTrace: stackTrace, isFatal: true);
-      _parallelstate = AppState.error('Failed to load essential data: ${e.message}');
+      _parallelstate =
+          AppState.error('Failed to load essential data: ${e.message}');
     } else {
-        AppLogger.logError(
+      AppLogger.logError(
           'initializeApp: Unhandled exception during initialization',
           error: e,
           stackTrace: stackTrace,
           isFatal: true);
-      _parallelstate = AppState.error('Unhandled exception during initialization');
+      _parallelstate =
+          AppState.error('Unhandled exception during initialization');
     }
   }
 
@@ -118,7 +120,7 @@ class AppInitializationProvider with ChangeNotifier {
       );
       try {
         String? token = await FirebaseAppCheck.instance.getToken(false);
-        AppLogger.logInfo("Temp token: $token");
+        AppLogger.logDebug("Temp token: $token");
       } catch (e) {
         AppLogger.logError('Error fetching App Check token: $e');
         // Implement a fallback mechanism or exponential backoff retry logic if needed
@@ -161,7 +163,7 @@ class AppInitializationProvider with ChangeNotifier {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     String? token = await messaging.getToken();
-    AppLogger.logInfo("FCM Token: $token");
+    AppLogger.logDebug("FCM Token: $token");
     const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
 
     List<String> languageTopics = supportedLocales

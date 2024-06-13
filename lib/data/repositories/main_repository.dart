@@ -54,12 +54,12 @@ class MainRepository implements CurrencyRepository {
       Map<String, dynamic>? cachedData = await _cacheManager.getCache(cacheKey);
 
       if (cachedData != null && _cacheManager.isCacheValid(cachedData)) {
-        AppLogger.logInfo('_getCachedData: Cache hit for key: $cacheKey');
+        AppLogger.logInfo('Cache hit for key: $cacheKey');
         return fromJson(cachedData['data']);
       }
 
       AppLogger.logInfo(
-          '_getCachedData: Cache miss. Fetching from Firestore for key: $cacheKey');
+          'Cache miss. Fetching from Firestore for key: $cacheKey');
 
       // Start timing here, right before fetching from Firestore
       Stopwatch stopwatch = Stopwatch()..start();
@@ -84,16 +84,14 @@ class MainRepository implements CurrencyRepository {
 
   Future<T> _getFallbackCacheData<T>(
       String baseKey, T Function(dynamic) fromJson) async {
-    int DaysLookBack = 7;
-    for (int i = 1; i <= DaysLookBack; i++) {
-      // Limit to 30 days for example
-      String historicalKey = _cacheManager.generateCacheKey(baseKey,
+    int DaysLookBack = 7; // Limit to 7days
+    for (int i = 1; i <= DaysLookBack; i++) {      String historicalKey = _cacheManager.generateCacheKey(baseKey,
           suffix: DateFormat('yyyy-MM-dd')
               .format(DateTime.now().subtract(Duration(days: i))));
       Map<String, dynamic>? data = await _cacheManager.getCache(historicalKey);
       if (data != null && data['data'] != null) {
         AppLogger.logInfo(
-            '_getFallbackCacheData: Fallback cache hit for key: $historicalKey');
+            'Fallback cache hit for key: $historicalKey');
         return fromJson(data['data']);
       }
     }
