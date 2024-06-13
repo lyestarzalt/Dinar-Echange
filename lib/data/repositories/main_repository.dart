@@ -5,6 +5,7 @@ import 'package:dinar_echange/services/cache_service.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
+
 class MainRepository implements CurrencyRepository {
   final FirestoreService _firestoreService = FirestoreService();
   final CacheManager _cacheManager = CacheManager();

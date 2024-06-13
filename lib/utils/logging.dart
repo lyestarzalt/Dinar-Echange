@@ -16,11 +16,14 @@ class AppLogger {
     _logger = Logger(
       filter: CustomLogFilter(),
       printer: PrettyPrinter(
-        methodCount: kReleaseMode ? 0 : 2,
+        excludePaths: ['package:dinar_echange/utils/logging.dart'],
+        noBoxingByDefault: false,
+        //stackTraceBeginIndex: 1,
+        methodCount: 2,
         errorMethodCount: 8,
-        lineLength: 120,
-        colors: !kReleaseMode,
-        printEmojis: !kReleaseMode,
+        lineLength: 80,
+        colors: true,
+        printEmojis: false,
         printTime: true,
       ),
     );
