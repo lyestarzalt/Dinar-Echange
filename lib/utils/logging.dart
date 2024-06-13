@@ -57,7 +57,7 @@ class AppLogger {
   }
 
   static Future<void> logEvent(
-      String eventName, Map<String, dynamic> parameters) async {
+      String eventName, Map<String, Object> parameters) async {
     await _analytics.logEvent(
       name: eventName,
       parameters: parameters,
