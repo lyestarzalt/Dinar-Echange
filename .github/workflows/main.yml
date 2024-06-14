@@ -59,26 +59,6 @@ jobs:
           mkdir -p upload_payload
           mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
 
-      - name: Get Latest Tag
-        id: latest-tag
-        run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
-
-      - name: Generate Changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fromTag: ${{ steps.latest-tag.outputs.tag }}
-          toTag: ${{ steps.versioning.outputs.version}}
-          writeToFile: true
-
-      - name: Commit Changelog
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "docs: Update CHANGELOG.md"
-          branch: main
-          commit_options: "--no-verify --signoff"
-          file_pattern: "CHANGELOG.md"
-
       - name: Create and Push Tag
         uses: rickstaa/action-create-tag@v1
         with:
