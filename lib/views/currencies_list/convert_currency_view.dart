@@ -6,6 +6,8 @@ import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});
@@ -40,56 +42,22 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       textDirection: TextDirection.ltr,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.convert_app_bar_title),
-          actions: [
-            Semantics(
-              button: true,
-              child: IconButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      content: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .currency_buy_sell_explanation(
-                                  provider.currency.buy,
-                                  provider.currency.currencyCode,
-                                  provider.currency.sell),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child:
-                              Text(AppLocalizations.of(context)!.close_button),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                icon: const Icon(Icons.info_outline),
-              ),
-            ),
-          ],
-        ),
+        appBar: CurrencyAppBar(currency: provider.currency),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                NewWidget(context: context, provider: provider),
-               ChangeNotifierProvider<AdProvider>(
+/*                 CurrencyValueCard(
+                  currency: provider.currency,
+                ), */
+                Converter(context: context, provider: provider),
+                ChangeNotifierProvider<AdProvider>(
                   create: (_) => AdProvider(),
                   child: Consumer<AdProvider>(
                     builder: (context, adProvider, _) => ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: 50),
+                      constraints: const BoxConstraints(minHeight: 50),
                       child: const AdBannerWidget(),
                     ),
                   ),
@@ -114,8 +82,8 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   }
 }
 
-class NewWidget extends StatelessWidget {
-  const NewWidget({
+class Converter extends StatelessWidget {
+  const Converter({
     super.key,
     required this.context,
     required this.provider,
@@ -203,4 +171,79 @@ class NewWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Currency currency;
+
+  const CurrencyAppBar({
+    super.key,
+    required this.currency,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      title: Container(
+        alignment: Alignment.centerLeft, // Align title to the left
+        width:
+            double.infinity, // Ensure the container takes all available space
+        child: RichText(
+          text: TextSpan(
+            style: DefaultTextStyle.of(context).style,
+            children: [
+              TextSpan(
+                text: "${currency.currencyName} ",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextSpan(
+                text: "(${currency.currencySymbol})",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black54, // Subdued color for less emphasis
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        _buildRateDisplay(context, "Buy", currency.buy),
+        _buildRateDisplay(context, "Sell", currency.sell),
+        SizedBox(width: 16), // Right padding for the last item
+      ],
+      elevation: 0,
+      centerTitle: true, // Center the title
+    );
+  }
+
+  Widget _buildRateDisplay(BuildContext context, String label, double rate) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            rate.toStringAsFixed(2),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

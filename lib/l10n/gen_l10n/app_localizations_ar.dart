@@ -74,9 +74,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_currencies_message => 'لا توجد عملات';
 
   @override
-  String get retry_button => 'إعادة المحاولة';
-
-  @override
   String get errormessage_message => 'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
 
   @override
@@ -133,12 +130,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get licenses => 'رخص';
 
   @override
-  String get error_title => 'حدث خطأ ما';
-
-  @override
-  String get error_message => 'أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.';
-
-  @override
   String get latest_updates_on => 'آخر التحديثات في';
 
   @override
@@ -149,4 +140,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get retry => 'إعادة المحاولة';
+
+  @override
+  String get error_title => 'حدث خطأ ما';
+
+  @override
+  String get error_message => 'أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get buy => 'شراء';
+
+  @override
+  String get sell => 'بيع';
 }

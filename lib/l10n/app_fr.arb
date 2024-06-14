@@ -92,10 +92,6 @@
   "@no_currencies_message": {
     "description": "Message for no currency data."
   },
-  "retry_button": "Réessayer",
-  "@retry_button": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
   "errormessage_message": "Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
@@ -168,14 +164,6 @@
   "@licenses": {
     "description": "Word for licenses"
   },
-  "error_title": "Un problème est survenu",
-  "@error_title": {
-    "description": "Title for generic error messages"
-  },
-  "error_message": "Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.",
-  "@error_message": {
-    "description": "Generic error message suggesting a retry"
-  },
   "latest_updates_on": "Dernières mises à jour le",
   "@latest_updates_on": {
     "description": "Latest updates on"
@@ -191,5 +179,21 @@
   "retry": "Réessayer",
   "@retry": {
     "description": "Retry button text"
+  },
+  "error_title": "Un problème est survenu",
+  "@error_title": {
+    "description": "Title for generic error messages"
+  },
+  "error_message": "Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.",
+  "@error_message": {
+    "description": "Generic error message suggesting a retry"
+  },
+  "buy": "Achat",
+  "@buy": {
+    "description": "Buy"
+  },
+  "sell": "Vente",
+  "@sell": {
+    "description": "Sell"
   }
 }

@@ -92,10 +92,6 @@
   "@no_currencies_message": {
     "description": "Message for no currency data."
   },
-  "retry_button": "Retry",
-  "@retry_button": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
   "errormessage_message": "Unable to load the data. Please check your connection and try again.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
@@ -168,14 +164,6 @@
   "@licenses": {
     "description": "Word for licenses"
   },
-  "error_title": "Something Went Wrong",
-  "@error_title": {
-    "description": "Title for generic error messages"
-  },
-  "error_message": "Oops! Something didn't go as planned. Please try again.",
-  "@error_message": {
-    "description": "Generic error message suggesting a retry"
-  },
   "latest_updates_on": "Latest updates on",
   "@latest_updates_on": {
     "description": "Latest updates on"
@@ -191,5 +179,21 @@
   "retry": "Retry",
   "@retry": {
     "description": "Retry button text"
+  },
+  "error_title": "Something Went Wrong",
+  "@error_title": {
+    "description": "Title for generic error messages"
+  },
+  "error_message": "Oops! Something didn't go as planned. Please try again.",
+  "@error_message": {
+    "description": "Generic error message suggesting a retry"
+  },
+  "buy": "Buy",
+  "@buy": {
+    "description": "Buy"
+  },
+  "sell": "Sell",
+  "@sell": {
+    "description": "Sell"
   }
 }

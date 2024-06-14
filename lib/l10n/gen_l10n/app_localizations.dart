@@ -233,12 +233,6 @@ abstract class AppLocalizations {
   /// **'No currencies'**
   String get no_currencies_message;
 
-  /// Button to attempt a previous action again (e.g., refreshing data or reconnecting).
-  ///
-  /// In en, this message translates to:
-  /// **'Retry'**
-  String get retry_button;
-
   /// Detailed text explaining the error.
   ///
   /// In en, this message translates to:
@@ -347,18 +341,6 @@ abstract class AppLocalizations {
   /// **'Licenses'**
   String get licenses;
 
-  /// Title for generic error messages
-  ///
-  /// In en, this message translates to:
-  /// **'Something Went Wrong'**
-  String get error_title;
-
-  /// Generic error message suggesting a retry
-  ///
-  /// In en, this message translates to:
-  /// **'Oops! Something didn\'t go as planned. Please try again.'**
-  String get error_message;
-
   /// Latest updates on
   ///
   /// In en, this message translates to:
@@ -382,6 +364,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// Title for generic error messages
+  ///
+  /// In en, this message translates to:
+  /// **'Something Went Wrong'**
+  String get error_title;
+
+  /// Generic error message suggesting a retry
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! Something didn\'t go as planned. Please try again.'**
+  String get error_message;
+
+  /// Buy
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get buy;
+
+  /// Sell
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get sell;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

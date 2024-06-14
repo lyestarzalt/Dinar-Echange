@@ -74,9 +74,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_currencies_message => 'No currencies';
 
   @override
-  String get retry_button => 'Retry';
-
-  @override
   String get errormessage_message => 'Unable to load the data. Please check your connection and try again.';
 
   @override
@@ -133,12 +130,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get licenses => 'Licenses';
 
   @override
-  String get error_title => 'Something Went Wrong';
-
-  @override
-  String get error_message => 'Oops! Something didn\'t go as planned. Please try again.';
-
-  @override
   String get latest_updates_on => 'Latest updates on';
 
   @override
@@ -149,4 +140,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get error_title => 'Something Went Wrong';
+
+  @override
+  String get error_message => 'Oops! Something didn\'t go as planned. Please try again.';
+
+  @override
+  String get buy => 'Buy';
+
+  @override
+  String get sell => 'Sell';
 }

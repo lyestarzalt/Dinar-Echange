@@ -46,3 +46,5 @@ official_market,Tab title for the official market,Official Market,Marché Offici
 retry,Retry button text,Retry,Réessayer,إعادة المحاولة
 error_title,Title for generic error messages,"Something Went Wrong","Un problème est survenu","حدث خطأ ما"
 error_message,Generic error message suggesting a retry,"Oops! Something didn't go as planned. Please try again.","Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.","أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى."
+buy,Buy,Buy,Achat,شراء
+sell,Sell,Sell,Vente,بيع

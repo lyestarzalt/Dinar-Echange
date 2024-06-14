@@ -92,10 +92,6 @@
   "@no_currencies_message": {
     "description": "Message for no currency data."
   },
-  "retry_button": "إعادة المحاولة",
-  "@retry_button": {
-    "description": "Button to attempt a previous action again (e.g., refreshing data or reconnecting)."
-  },
   "errormessage_message": "تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
@@ -168,14 +164,6 @@
   "@licenses": {
     "description": "Word for licenses"
   },
-  "error_title": "حدث خطأ ما",
-  "@error_title": {
-    "description": "Title for generic error messages"
-  },
-  "error_message": "أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.",
-  "@error_message": {
-    "description": "Generic error message suggesting a retry"
-  },
   "latest_updates_on": "آخر التحديثات في",
   "@latest_updates_on": {
     "description": "Latest updates on"
@@ -191,5 +179,21 @@
   "retry": "إعادة المحاولة",
   "@retry": {
     "description": "Retry button text"
+  },
+  "error_title": "حدث خطأ ما",
+  "@error_title": {
+    "description": "Title for generic error messages"
+  },
+  "error_message": "أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.",
+  "@error_message": {
+    "description": "Generic error message suggesting a retry"
+  },
+  "buy": "شراء",
+  "@buy": {
+    "description": "Buy"
+  },
+  "sell": "بيع",
+  "@sell": {
+    "description": "Sell"
   }
 }

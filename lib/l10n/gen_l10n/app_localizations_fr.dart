@@ -74,9 +74,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get no_currencies_message => 'Pas de devises';
 
   @override
-  String get retry_button => 'Réessayer';
-
-  @override
   String get errormessage_message => 'Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.';
 
   @override
@@ -133,12 +130,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get licenses => 'Licences';
 
   @override
-  String get error_title => 'Un problème est survenu';
-
-  @override
-  String get error_message => 'Oups ! Quelque chose n\'a pas fonctionné comme prévu. Veuillez réessayer.';
-
-  @override
   String get latest_updates_on => 'Dernières mises à jour le';
 
   @override
@@ -149,4 +140,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get retry => 'Réessayer';
+
+  @override
+  String get error_title => 'Un problème est survenu';
+
+  @override
+  String get error_message => 'Oups ! Quelque chose n\'a pas fonctionné comme prévu. Veuillez réessayer.';
+
+  @override
+  String get buy => 'Achat';
+
+  @override
+  String get sell => 'Vente';
 }
