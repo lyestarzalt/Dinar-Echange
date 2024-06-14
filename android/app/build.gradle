@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId "com.dinarexchange.app"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
