@@ -2,7 +2,7 @@ name: Build and Publish to DinarEchangeClosed
 
 on:
   workflow_dispatch:
-    
+
 permissions:
   contents: write
 
@@ -14,18 +14,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history to enable proper tagging
+          fetch-depth: 0 # Fetch all history to enable proper tagging
 
       - name: Setup Java and Flutter
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          distribution: 'adopt'
-        
+          java-version: "17"
+          distribution: "adopt"
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.1'
+          flutter-version: "3.22.1"
           channel: stable
 
       - name: Decode Keystore File
@@ -33,7 +33,6 @@ jobs:
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: |
           echo "$KEYSTORE_FILE" | base64 --decode > ${{ github.workspace }}/release.keystore
-
 
       - name: Install Dependencies and Setup Build Environment
         run: |
@@ -44,7 +43,7 @@ jobs:
           echo "SIGNING_KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}" >> $GITHUB_ENV
           echo "SIGNING_KEY_STORE_PASSWORD=${{ secrets.SIGNING_KEY_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "SIGNING_KEY_PATH=${{ github.workspace }}/release.keystore" >> $GITHUB_ENV
-          
+
       - name: Extract Version from pubspec.yaml
         id: versioning
         run: |
@@ -60,11 +59,26 @@ jobs:
           mkdir -p upload_payload
           mv build/app/outputs/bundle/release/app-release.aab upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
 
+      - name: Generate Changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          writeToFile: true
+
+      - name: Commit Changelog
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: Update CHANGELOG.md"
+          branch: main
+          commit_options: "--no-verify --signoff"
+          file_pattern: "CHANGELOG.md"
+
       - name: Create and Push Tag
         uses: rickstaa/action-create-tag@v1
         with:
           tag: ${{ steps.versioning.outputs.version }}
-          message: 'Release ${{ steps.versioning.outputs.version }}'
+          message: "Release ${{ steps.versioning.outputs.version }}"
           force_push_tag: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -73,9 +87,8 @@ jobs:
         with:
           files: upload_payload/dinar_exchange_${{ steps.versioning.outputs.version }}_${{ github.run_number }}.aab
           tag_name: ${{ steps.versioning.outputs.version }}
-          name: 'Release ${{ steps.versioning.outputs.version }}'
-          body: 'Automated release of dinar_exchange_${{ steps.versioning.outputs.version }}'
-
+          name: "Release ${{ steps.versioning.outputs.version }}"
+          body: "Automated release of dinar_exchange_${{ steps.versioning.outputs.version }}"
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
