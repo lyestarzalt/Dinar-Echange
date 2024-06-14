@@ -109,7 +109,9 @@ class ListCurrencyProvider with ChangeNotifier {
   void addOrRemoveCurrency(Currency currency, bool isSelected) async {
     try {
       if (isSelected) {
-        _selectedCurrencies.add(currency);
+     if (!_selectedCurrencies.contains(currency)) {
+          _selectedCurrencies.insert(0, currency);
+        }
       } else {
         _selectedCurrencies.remove(currency);
       }
