@@ -3,7 +3,6 @@ import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
 import 'package:dinar_echange/utils/logging.dart';
-import 'package:intl/intl.dart';
 
 class ListCurrencyProvider with ChangeNotifier {
   List<Currency> allCurrencies = [];

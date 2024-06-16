@@ -14,8 +14,7 @@ import 'package:dinar_echange/utils/logging.dart';
 class CurrencyListScreen extends StatefulWidget {
   final String marketType;
 
-  const CurrencyListScreen({Key? key, required this.marketType})
-      : super(key: key);
+  const CurrencyListScreen({super.key, required this.marketType});
 
   @override
   _CurrencyListScreenState createState() => _CurrencyListScreenState();
@@ -45,8 +44,8 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddCurrencyPage(context),
         tooltip: AppLocalizations.of(context)!.add_currencies_tooltip,
-        child: const Icon(Icons.add),
         heroTag: 'AddCurrencyFAB${widget.marketType}',
+        child: const Icon(Icons.add),
       ),
     );
   }

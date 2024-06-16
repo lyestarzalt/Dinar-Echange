@@ -58,12 +58,12 @@ class SettingsPageState extends State<SettingsPage> {
                       children: [
                         if (kDebugMode)
                           ListTile(
-                            leading: Icon(Icons.delete_forever),
-                            title: Text('Clear Cache (Debug Only)'),
+                            leading: const Icon(Icons.delete_forever),
+                            title: const Text('Clear Cache (Debug Only)'),
                             onTap: () async {
                               await prefsService.clearAllPreferences();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Cache cleared!')),
+                                const SnackBar(content: Text('Cache cleared!')),
                               );
                             },
                           ),
@@ -98,7 +98,7 @@ class SettingsPageState extends State<SettingsPage> {
                           create: (_) => AdProvider(),
                           child: Consumer<AdProvider>(
                             builder: (context, adProvider, _) => ConstrainedBox(
-                              constraints: BoxConstraints(minHeight: 50),
+                              constraints: const BoxConstraints(minHeight: 50),
                               child: const AdBannerWidget(),
                             ),
                           ),

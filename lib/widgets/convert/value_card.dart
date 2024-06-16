@@ -66,7 +66,7 @@ class CurrencyValueCard extends StatelessWidget {
           height: 40,
           borderRadius: BorderRadius.circular(1),
         ),
-        SizedBox(width: 8), // Space between flag and text
+        const SizedBox(width: 8), // Space between flag and text
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

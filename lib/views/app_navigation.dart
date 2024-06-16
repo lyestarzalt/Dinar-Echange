@@ -13,8 +13,7 @@ class AppNavigation extends StatelessWidget {
   final List<Currency> officialCurrencies;
 
   const AppNavigation(
-      {Key? key, required this.currencies, required this.officialCurrencies})
-      : super(key: key);
+      {super.key, required this.currencies, required this.officialCurrencies});
 
   @override
   Widget build(BuildContext context) {
