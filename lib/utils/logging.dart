@@ -29,6 +29,7 @@ class AppLogger {
     );
   }
   static void logInfo(dynamic message) {
+    if(!kReleaseMode)
     _instance._logger.i(message);
   }
 
