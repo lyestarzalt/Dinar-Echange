@@ -153,12 +153,12 @@ class Converter extends StatelessWidget {
                     : provider.amountFocusNode,
                 context: context),
           ),
-          Positioned(
-            top: fabTopPosition,
-            right: 8,
-            child: Semantics(
-              button: true,
-              label: AppLocalizations.of(context)!.switch_tooltip,
+          Semantics(
+            button: true,
+            label: AppLocalizations.of(context)!.switch_tooltip,
+            child: Positioned(
+              top: fabTopPosition,
+              right: 8,
               child: FloatingActionButton(
                 tooltip: AppLocalizations.of(context)!.switch_tooltip,
                 onPressed: provider.toggleConversionDirection,
