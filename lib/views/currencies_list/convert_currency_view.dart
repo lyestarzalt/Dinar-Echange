@@ -202,14 +202,6 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextSpan(
-                text: "(${currency.currencySymbol})",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black54, // Subdued color for less emphasis
-                ),
-              ),
             ],
           ),
         ),
@@ -232,11 +224,11 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
           Text(
             rate.toStringAsFixed(2),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ],
       ),
