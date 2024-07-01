@@ -5,7 +5,7 @@ import 'package:dinar_echange/views/currencies_list/main_view.dart';
 import 'package:dinar_echange/views/graph/graph_view.dart';
 import 'package:animations/animations.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
-import 'package:dinar_echange/providers/navigation_provider.dart';
+import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 
 class AppNavigation extends StatelessWidget {
@@ -20,7 +20,7 @@ class AppNavigation extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
-        body: Consumer<NavigationProvider>(
+        body: Consumer<AppProvider>(
           builder: (context, navigationProvider, child) {
             return PageTransitionSwitcher(
               duration: const Duration(milliseconds: 400),
@@ -39,7 +39,7 @@ class AppNavigation extends StatelessWidget {
             );
           },
         ),
-        bottomNavigationBar: Consumer<NavigationProvider>(
+        bottomNavigationBar: Consumer<AppProvider>(
           builder: (context, navigationProvider, child) {
             return MainNavigation(
               selectedIndex: navigationProvider.selectedIndex,

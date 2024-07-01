@@ -4,7 +4,6 @@ import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/views/app_navigation.dart';
-import 'package:dinar_echange/providers/navigation_provider.dart';
 import 'package:dinar_echange/theme/theme.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
@@ -63,7 +62,7 @@ class DinarEchangeState extends State<DinarEchange> {
       builder: (context, appProvider, _) {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => NavigationProvider()),
+            ChangeNotifierProvider(create: (_) => AppProvider()),
             ChangeNotifierProvider(create: (_) => AdProvider()),
           ],
           child: MaterialApp(
