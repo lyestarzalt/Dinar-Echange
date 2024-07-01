@@ -36,7 +36,7 @@ class _MainViewState extends State<MainView>
     if (_tabController!.indexIsChanging) {
       switch (_tabController!.index) {
         case 0:
-          AppLogger.trackScreenView('Parallel Market', 'mainList');
+          AppLogger.trackScreenView('Parallel Market', 'MainList');
           break;
         case 1:
           AppLogger.trackScreenView('Official Market', 'MainList');
