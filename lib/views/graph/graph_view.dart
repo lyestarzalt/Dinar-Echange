@@ -201,7 +201,7 @@ class HistoryPage extends StatelessWidget {
             create: (_) => AdProvider(),
             child: Consumer<AdProvider>(
               builder: (context, adProvider, _) => ConstrainedBox(
-                constraints: BoxConstraints(minHeight: 50),
+                constraints: const BoxConstraints(minHeight: 50),
                 child: const AdBannerWidget(),
               ),
             ),

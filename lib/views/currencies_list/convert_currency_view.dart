@@ -197,7 +197,7 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               TextSpan(
                 text: "${currency.currencyName} ",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -209,7 +209,7 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         _buildRateDisplay(context, "Buy", currency.buy),
         _buildRateDisplay(context, "Sell", currency.sell),
-        SizedBox(width: 16), // Right padding for the last item
+        const SizedBox(width: 16), // Right padding for the last item
       ],
       elevation: 0,
       centerTitle: true, // Center the title
@@ -224,11 +224,11 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
           Text(
             rate.toStringAsFixed(2),
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ],
       ),

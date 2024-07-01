@@ -12,10 +12,10 @@ class MainView extends StatefulWidget {
   final List<Currency> officialMarketCurrencies;
 
   const MainView({
-    Key? key,
+    super.key,
     required this.alternativeMarketCurrencies,
     required this.officialMarketCurrencies,
-  }) : super(key: key);
+  });
 
   @override
   State<MainView> createState() => _MainViewState();
