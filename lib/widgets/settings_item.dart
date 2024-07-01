@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class SettingsItem extends StatelessWidget {
   final IconData icon;
   final String text;

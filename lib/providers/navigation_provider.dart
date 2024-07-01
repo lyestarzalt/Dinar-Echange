@@ -11,13 +11,13 @@ class NavigationProvider with ChangeNotifier {
   set selectedIndex(int index) {
     _selectedIndex = index;
     notifyListeners();
-     AppLogger.trackScreenView(
+    AppLogger.trackScreenView(
       getScreenNameByIndex(index),
-       getScreenClassByIndex(index),
+      getScreenClassByIndex(index),
     );
   }
 
-   String getScreenNameByIndex(int index) {
+  String getScreenNameByIndex(int index) {
     switch (index) {
       case 0:
         return 'MainCurrencyList_Screen';
@@ -37,7 +37,7 @@ class NavigationProvider with ChangeNotifier {
       case 1:
         return 'Trends';
       case 2:
-        return 'Settings'; 
+        return 'Settings';
       default:
         return 'UnknownClass';
     }

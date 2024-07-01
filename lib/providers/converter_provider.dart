@@ -14,7 +14,8 @@ class ConvertProvider with ChangeNotifier {
 
   ConvertProvider(this.currency) {
     AppLogger.logEvent(
-        'currency_converted', {'currency_code': currency.currencyCode});    AppLogger.trackScreenView('Converter_Screen', 'MainList');
+        'currency_converted', {'currency_code': currency.currencyCode});
+    AppLogger.trackScreenView('Converter_Screen', 'MainList');
 
     amountController.addListener(convertCurrency);
     amountFocusNode.addListener(notifyListeners);

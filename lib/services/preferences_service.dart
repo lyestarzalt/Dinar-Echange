@@ -86,6 +86,4 @@ class PreferencesService {
     await _pref.clear();
     AppLogger.logDebug('All preferences cleared');
   }
-
-
 }

@@ -73,9 +73,11 @@ class ListCurrencyProvider with ChangeNotifier {
                 ))
             .whereType<Currency>()
             .toList();
-        AppLogger.logInfo("$marketType Loaded selected currencies from saved preferences.");
+        AppLogger.logInfo(
+            "$marketType Loaded selected currencies from saved preferences.");
       } else {
-        AppLogger.logDebug("$marketType No saved currencies and allCurrencies is empty.");
+        AppLogger.logDebug(
+            "$marketType No saved currencies and allCurrencies is empty.");
       }
     } catch (e, stacktrace) {
       AppLogger.logError("$marketType Failed to load selected currencies",
@@ -109,7 +111,7 @@ class ListCurrencyProvider with ChangeNotifier {
   void addOrRemoveCurrency(Currency currency, bool isSelected) async {
     try {
       if (isSelected) {
-     if (!_selectedCurrencies.contains(currency)) {
+        if (!_selectedCurrencies.contains(currency)) {
           _selectedCurrencies.insert(0, currency);
         }
       } else {
@@ -155,7 +157,6 @@ class ListCurrencyProvider with ChangeNotifier {
         _selectedCurrencies.map((c) => c.currencyCode).toList();
     AppLogger.logEvent('$marketType selected_currencies_updated',
         {'selected_currencies': currencyCodes.join(', ')});
-  
   }
 
   DateTime getFormattedDate() {

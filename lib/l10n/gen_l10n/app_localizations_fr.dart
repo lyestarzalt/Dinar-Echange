@@ -50,7 +50,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rate_us_button => 'Évaluez l\'application';
 
   @override
-  String get about_body => 'Merci d\'utiliser Dinar Echange, votre outil de suivi des devises. Nous fournissons des mises à jour opportunes et nous efforçons d\'offrir des fonctionnalités conviviales qui soutiennent vos besoins de suivi financier.';
+  String get about_body =>
+      'Merci d\'utiliser Dinar Echange, votre outil de suivi des devises. Nous fournissons des mises à jour opportunes et nous efforçons d\'offrir des fonctionnalités conviviales qui soutiennent vos besoins de suivi financier.';
 
   @override
   String get about_app_button => 'À propos de l\'application';
@@ -68,13 +69,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get two_years_button => '2Y';
 
   @override
-  String get add_selected_currencies_tooltip => 'Ajouter les devises sélectionnées';
+  String get add_selected_currencies_tooltip =>
+      'Ajouter les devises sélectionnées';
 
   @override
   String get no_currencies_message => 'Pas de devises';
 
   @override
-  String get errormessage_message => 'Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.';
+  String get errormessage_message =>
+      'Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.';
 
   @override
   String get search_hint => 'Recherche';
@@ -92,7 +95,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reorder_tooltip => 'Réorganiser les articles';
 
   @override
-  String get pull_refresh_tooltip => 'Récupérer les dernières infos sur les devises';
+  String get pull_refresh_tooltip =>
+      'Récupérer les dernières infos sur les devises';
 
   @override
   String get centime_symbol => 'centimes';
@@ -101,13 +105,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dzd_symbol => 'DZD';
 
   @override
-  String get centime_explanation => 'En Algérie, le terme \'centime\' est utilisé de manière informelle pour représenter de plus petites quantités de monnaie. Par exemple, lorsque l\'on dit que quelque chose coûte 1 million, cela signifie en réalité 10 000 DZD';
+  String get centime_explanation =>
+      'En Algérie, le terme \'centime\' est utilisé de manière informelle pour représenter de plus petites quantités de monnaie. Par exemple, lorsque l\'on dit que quelque chose coûte 1 million, cela signifie en réalité 10 000 DZD';
 
   @override
   String get why_centime_title => 'L\'utilisation du \'Centime';
 
   @override
-  String currency_buy_sell_explanation(Object buy_rate, Object currency_code, Object sell_rate) {
+  String currency_buy_sell_explanation(
+      Object buy_rate, Object currency_code, Object sell_rate) {
     return 'Le taux d\'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 $currency_code, cela vous coûtera $buy_rate DZD, et si vous voulez vendre 1 Euro, vous recevrez $sell_rate DZD.';
   }
 
@@ -145,7 +151,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error_title => 'Un problème est survenu';
 
   @override
-  String get error_message => 'Oups ! Quelque chose n\'a pas fonctionné comme prévu. Veuillez réessayer.';
+  String get error_message =>
+      'Oups ! Quelque chose n\'a pas fonctionné comme prévu. Veuillez réessayer.';
 
   @override
   String get buy => 'Achat';
@@ -157,7 +164,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirm_delete_title => 'Confirmer la suppression';
 
   @override
-  String get confirm_delete_message => 'Êtes-vous sûr de vouloir supprimer cette devise?';
+  String get confirm_delete_message =>
+      'Êtes-vous sûr de vouloir supprimer cette devise?';
 
   @override
   String get cancel => 'Annuler';

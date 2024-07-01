@@ -13,7 +13,6 @@ class ErrorMessage extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-
         children: [
           Icon(
             Icons.error_outline_rounded,

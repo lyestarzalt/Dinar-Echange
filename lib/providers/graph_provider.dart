@@ -116,7 +116,8 @@ class GraphProvider with ChangeNotifier {
           'Failed to load currency history due to an error: ${e.toString()}');
     }
   }
-void setTimeSpan(int days) {
+
+  void setTimeSpan(int days) {
     if (timeSpan != days) {
       timeSpan = days;
       processData(days: timeSpan);
