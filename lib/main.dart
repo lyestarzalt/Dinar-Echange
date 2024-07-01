@@ -32,6 +32,7 @@ void main() async {
           providers: [
             ChangeNotifierProvider(create: (_) => AppProvider()),
             ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+            ChangeNotifierProvider(create: (_) => AdProvider()),
           ],
           child: const DinarEchange(),
         ),
@@ -60,46 +61,40 @@ class DinarEchangeState extends State<DinarEchange> {
     final MaterialTheme materialTheme = MaterialTheme();
     return Consumer<AppProvider>(
       builder: (context, appProvider, _) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => AppProvider()),
-            ChangeNotifierProvider(create: (_) => AdProvider()),
-          ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: !kReleaseMode,
-            debugShowMaterialGrid: false,
-            onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context)!.app_title,
-            theme: materialTheme.light(),
-            darkTheme: materialTheme.dark(),
-            themeMode: appProvider.themeMode,
-            highContrastTheme: materialTheme.lightHighContrast(),
-            highContrastDarkTheme: materialTheme.darkHighContrast(),
-            locale: appProvider.currentLocale,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Consumer<AppInitializationProvider>(
-              builder: (context, currenciesProvider, _) {
-                bool isLoading = currenciesProvider.Paralleltate.isLoading &&
-                    currenciesProvider.officialState.isLoading;
-                bool hasError = currenciesProvider.Paralleltate.isError ||
-                    currenciesProvider.officialState.isError;
-                if (isLoading) {
-                  return const Scaffold(
-                    body: Center(child: LinearProgressIndicator()),
-                  );
-                } else if (hasError) {
-                  return ErrorApp(
-                    onRetry: () => currenciesProvider.initializeApp(),
-                  );
-                } else {
-                  return AppNavigation(
-                    currencies: currenciesProvider.currencies!,
-                    officialCurrencies: currenciesProvider.officialCurrencies!,
-                  );
-                }
-              },
-            ),
+        return MaterialApp(
+          debugShowCheckedModeBanner: !kReleaseMode,
+          debugShowMaterialGrid: false,
+          onGenerateTitle: (BuildContext context) =>
+              AppLocalizations.of(context)!.app_title,
+          theme: materialTheme.light(),
+          darkTheme: materialTheme.dark(),
+          themeMode: appProvider.themeMode,
+          highContrastTheme: materialTheme.lightHighContrast(),
+          highContrastDarkTheme: materialTheme.darkHighContrast(),
+          locale: appProvider.currentLocale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Consumer<AppInitializationProvider>(
+            builder: (context, currenciesProvider, _) {
+              bool isLoading = currenciesProvider.Paralleltate.isLoading &&
+                  currenciesProvider.officialState.isLoading;
+              bool hasError = currenciesProvider.Paralleltate.isError ||
+                  currenciesProvider.officialState.isError;
+              if (isLoading) {
+                return const Scaffold(
+                  body: Center(child: LinearProgressIndicator()),
+                );
+              } else if (hasError) {
+                return ErrorApp(
+                  onRetry: () => currenciesProvider.initializeApp(),
+                );
+              } else {
+                return AppNavigation(
+                  currencies: currenciesProvider.currencies!,
+                  officialCurrencies: currenciesProvider.officialCurrencies!,
+                );
+              }
+            },
           ),
         );
       },
