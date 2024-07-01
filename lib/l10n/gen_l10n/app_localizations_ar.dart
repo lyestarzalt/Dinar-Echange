@@ -2,7 +2,7 @@ import 'app_localizations.dart';
 
 /// The translations for Arabic (`ar`).
 class AppLocalizationsAr extends AppLocalizations {
-  AppLocalizationsAr([super.locale = 'ar']);
+  AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
   String get app_title => 'دينار إيشانج';
@@ -50,8 +50,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rate_us_button => 'قيّم التطبيق';
 
   @override
-  String get about_body =>
-      'شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.';
+  String get about_body => 'شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.';
 
   @override
   String get about_app_button => 'حول التطبيق';
@@ -75,8 +74,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_currencies_message => 'لا توجد عملات';
 
   @override
-  String get errormessage_message =>
-      'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+  String get errormessage_message => 'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
 
   @override
   String get search_hint => 'بحث';
@@ -103,15 +101,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dzd_symbol => 'دج';
 
   @override
-  String get centime_explanation =>
-      'في الجزائر، يُستخدم مصطلح \'سنتيم\' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.';
+  String get centime_explanation => 'في الجزائر، يُستخدم مصطلح \'سنتيم\' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.';
 
   @override
   String get why_centime_title => 'استخدام \'السنتيم';
 
   @override
-  String currency_buy_sell_explanation(
-      Object buy_rate, Object currency_code, Object sell_rate) {
+  String currency_buy_sell_explanation(Object buy_rate, Object currency_code, Object sell_rate) {
     return 'سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 $currency_code، فسيكلفك ذلك $buy_rate دج، وإذا أردت بيع 1 $currency_code، ستتلقى $sell_rate دج.';
   }
 
@@ -149,8 +145,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get error_title => 'حدث خطأ ما';
 
   @override
-  String get error_message =>
-      'أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.';
+  String get error_message => 'أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى.';
 
   @override
   String get buy => 'شراء';
@@ -162,8 +157,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirm_delete_title => 'تأكيد الحذف';
 
   @override
-  String get confirm_delete_message =>
-      'هل أنت متأكد من أنك تريد حذف هذه العملة؟';
+  String get confirm_delete_message => 'هل أنت متأكد من أنك تريد حذف هذه العملة؟';
 
   @override
   String get cancel => 'إلغاء';
