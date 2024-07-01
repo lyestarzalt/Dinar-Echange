@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/data/models/currency.dart';
-import 'package:dinar_echange/widgets/flag_container.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   const CurrencyConverterPage({super.key});
@@ -153,12 +152,12 @@ class Converter extends StatelessWidget {
                     : provider.amountFocusNode,
                 context: context),
           ),
-          Semantics(
-            button: true,
-            label: AppLocalizations.of(context)!.switch_tooltip,
-            child: Positioned(
-              top: fabTopPosition,
-              right: 8,
+          Positioned(
+            top: fabTopPosition,
+            right: 8,
+            child: Semantics(
+              button: true,
+              label: AppLocalizations.of(context)!.switch_tooltip,
               child: FloatingActionButton(
                 tooltip: AppLocalizations.of(context)!.switch_tooltip,
                 onPressed: provider.toggleConversionDirection,
