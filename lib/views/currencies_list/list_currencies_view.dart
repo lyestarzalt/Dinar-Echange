@@ -79,7 +79,49 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) => provider.addOrRemoveCurrency(currency, false),
+      confirmDismiss: (DismissDirection direction) async {
+        return await showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title:
+                      Text(AppLocalizations.of(context)!.confirm_delete_title),
+                  content: Text(
+                      AppLocalizations.of(context)!.confirm_delete_message),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        provider.addOrRemoveCurrency(currency, false);
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text(AppLocalizations.of(context)!.delete),
+                    ),
+                  ],
+                );
+              },
+            ) ??
+            false; // Return false if null is returned (dialog is dismissed)
+      },
+      onDismissed: (direction) {
+        //TODO
+        /*     provider.addOrRemoveCurrency(currency, false);    
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Currency ${currency.currencyCode} deleted'),
+            action: SnackBarAction(
+              label: 'UNDO',
+              onPressed: () {
+                provider.addCurrency(
+                    currency); // Possibly re-add the item if user undoes
+              },
+            ),
+          ),
+        ); */
+      },
       child: InkWell(
         onTap: () => _navigateToConverter(context, currency),
         child: CurrencyListItem(currency: currency),

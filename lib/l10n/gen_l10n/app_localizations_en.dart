@@ -152,4 +152,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sell => 'Sell';
+
+  @override
+  String get confirm_delete_title => 'Confirm Deletion';
+
+  @override
+  String get confirm_delete_message => 'Are you sure you want to delete this currency?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
 }

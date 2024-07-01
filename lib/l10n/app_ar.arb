@@ -195,5 +195,21 @@
   "sell": "بيع",
   "@sell": {
     "description": "Sell"
+  },
+  "confirm_delete_title": "تأكيد الحذف",
+  "@confirm_delete_title": {
+    "description": "Title for the delete confirmation dialog."
+  },
+  "confirm_delete_message": "هل أنت متأكد من أنك تريد حذف هذه العملة؟",
+  "@confirm_delete_message": {
+    "description": "Message asking for delete confirmation."
+  },
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Label for cancel button."
+  },
+  "delete": "حذف",
+  "@delete": {
+    "description": "Label for delete button."
   }
 }
