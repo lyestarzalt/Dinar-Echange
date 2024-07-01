@@ -113,11 +113,13 @@ class AppInitializationProvider with ChangeNotifier {
         androidProvider: AndroidProvider.playIntegrity,
         //appleProvider: AppleProvider.deviceCheck,
       );
+      AppLogger.logInfo('App Check activated: production');
     } else {
       await FirebaseAppCheck.instance.activate(
         androidProvider: AndroidProvider.debug,
         //appleProvider: AppleProvider.debug,
       );
+      AppLogger.logInfo('App Check activated: debug');
       try {
         String? token = await FirebaseAppCheck.instance.getToken(false);
         AppLogger.logDebug("Temp token: $token");
@@ -126,7 +128,6 @@ class AppInitializationProvider with ChangeNotifier {
         // Implement a fallback mechanism or exponential backoff retry logic if needed
       }
     }
-    AppLogger.logInfo('App Check activated.');
   }
 
   Future<void> _initializeMobileAds() async {
