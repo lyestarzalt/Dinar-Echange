@@ -18,85 +18,73 @@ import 'package:flutter/foundation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  AppLogger.logInfo('Firebase initialized successfully.');
-
+  AppLogger.logInfo('Firebase Core initialized.');
   await PreferencesService().init();
-
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  // The app is only usable in portrait mode
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]).then((_) => runApp(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => AppProvider()),
-            ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
-            ChangeNotifierProvider(create: (_) => AdProvider()),
-          ],
-          child: const DinarEchange(),
-        ),
-      ));
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(const DinarEchange());
 }
 
-class DinarEchange extends StatefulWidget {
-  const DinarEchange({super.key});
-
-  @override
-  DinarEchangeState createState() => DinarEchangeState();
-}
-
-class DinarEchangeState extends State<DinarEchange> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() =>
-        Provider.of<AppInitializationProvider>(context, listen: false)
-            .initializeApp());
-  }
+class DinarEchange extends StatelessWidget {
+  const DinarEchange({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final MaterialTheme materialTheme = MaterialTheme();
-    return Consumer<AppProvider>(
-      builder: (context, appProvider, _) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: !kReleaseMode,
-          debugShowMaterialGrid: false,
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.app_title,
-          theme: materialTheme.light(),
-          darkTheme: materialTheme.dark(),
-          themeMode: appProvider.themeMode,
-          highContrastTheme: materialTheme.lightHighContrast(),
-          highContrastDarkTheme: materialTheme.darkHighContrast(),
-          locale: appProvider.currentLocale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Consumer<AppInitializationProvider>(
-            builder: (context, currenciesProvider, _) {
-              bool isLoading = currenciesProvider.Paralleltate.isLoading &&
-                  currenciesProvider.officialState.isLoading;
-              bool hasError = currenciesProvider.Paralleltate.isError ||
-                  currenciesProvider.officialState.isError;
-              if (isLoading) {
-                return const Scaffold(
-                  body: Center(child: LinearProgressIndicator()),
-                );
-              } else if (hasError) {
-                return ErrorApp(
-                  onRetry: () => currenciesProvider.initializeApp(),
-                );
-              } else {
-                return AppNavigation(
-                  currencies: currenciesProvider.currencies!,
-                  officialCurrencies: currenciesProvider.officialCurrencies!,
-                );
-              }
-            },
-          ),
-        );
+    final materialTheme = MaterialTheme();
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppProvider()),
+        ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+        ChangeNotifierProvider(create: (_) => AdProvider()),
+      ],
+      child: Consumer<AppProvider>(
+        builder: (context, appProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: !kReleaseMode,
+            debugShowMaterialGrid: false,
+            //
+            onGenerateTitle: (BuildContext context) =>
+                AppLocalizations.of(context)!.app_title,
+            //
+            theme: materialTheme.light(),
+            darkTheme: materialTheme.dark(),
+            highContrastTheme: materialTheme.lightHighContrast(),
+            highContrastDarkTheme: materialTheme.darkHighContrast(),
+            themeMode: appProvider.themeMode,
+            //
+            locale: appProvider.currentLocale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            //
+            home: const AppStartup(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AppStartup extends StatelessWidget {
+  const AppStartup({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AppInitializationProvider>(context, listen: false)
+          .initializeApp();
+    });
+    return Consumer<AppInitializationProvider>(
+      builder: (context, initProvider, _) {
+        if (initProvider.Paralleltate.isLoading ||
+            initProvider.officialState.isLoading) {
+          return const Scaffold(body: Center(child: LinearProgressIndicator()));
+        } else if (initProvider.Paralleltate.isError ||
+            initProvider.officialState.isError) {
+          return ErrorApp(onRetry: () => initProvider.initializeApp());
+        }
+        return const AppNavigation();
       },
     );
   }

@@ -7,13 +7,12 @@ import 'package:animations/animations.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dinar_echange/providers/appinit_provider.dart';
 
 class AppNavigation extends StatelessWidget {
-  final List<Currency> currencies;
-  final List<Currency> officialCurrencies;
-
-  const AppNavigation(
-      {super.key, required this.currencies, required this.officialCurrencies});
+  const AppNavigation({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class AppNavigation extends StatelessWidget {
                   child: child,
                 );
               },
-              child: _getPageWidget(navigationProvider.selectedIndex),
+              child: _getPageWidget(context, navigationProvider.selectedIndex),
             );
           },
         ),
@@ -52,25 +51,32 @@ class AppNavigation extends StatelessWidget {
     );
   }
 
-  Widget _getPageWidget(int index) {
-    switch (index) {
-      case 0:
-        return MainView(
-          alternativeMarketCurrencies: currencies,
-          officialMarketCurrencies: officialCurrencies,
-        );
-      case 1:
-        return HistoryPage(
-          currencies: currencies,
-        );
-      case 2:
-        return const SettingsPage();
-      default:
-        return MainView(
-          alternativeMarketCurrencies: currencies,
-          officialMarketCurrencies: officialCurrencies,
-        );
-    }
+  Widget _getPageWidget(BuildContext context, int index) {
+    return Consumer<AppInitializationProvider>(
+        builder: (context, initProvider, child) {
+      List<Currency> currencies = initProvider.currencies!;
+      List<Currency> officialCurrencies = initProvider.officialCurrencies!;
+
+      switch (index) {
+        case 0:
+          return MainView(
+            alternativeMarketCurrencies: currencies,
+            officialMarketCurrencies: officialCurrencies,
+          );
+        case 1:
+          return HistoryPage(
+            currencies:
+                currencies, // Assuming HistoryPage needs a list of all currencies
+          );
+        case 2:
+          return const SettingsPage();
+        default:
+          return MainView(
+            alternativeMarketCurrencies: currencies,
+            officialMarketCurrencies: officialCurrencies,
+          );
+      }
+    });
   }
 }
 
