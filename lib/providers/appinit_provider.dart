@@ -31,13 +31,9 @@ class AppInitializationProvider with ChangeNotifier {
       await Firebase.initializeApp();
       AppLogger.logInfo('Firebase Core initialized.');
       _activateAppCheck();
-      await Future.wait([
-        _signInAnonymously(),
-        _enableFirebaseAnalytics(),
-      ]);
+      await Future.wait([_signInAnonymously(), _activateAppCheck()]);
 
-      // Load both sets of currencies concurrently
-      var fetchedResults = await Future.wait([
+      List<List<Currency>> fetchedResults = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
       ]);
@@ -46,14 +42,12 @@ class AppInitializationProvider with ChangeNotifier {
       List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
       _parallelstate = AppState.success(fetchedCurrencies);
       _officialState = AppState.success(fetchedOfficialCurrencies);
-      // Log the fetch time
+      FlutterNativeSplash.remove();
 
-      // Initialize other services asynchronously after the essential data is loaded
       _deferOtherInitializations();
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
-      FlutterNativeSplash.remove();
       notifyListeners();
     }
   }
@@ -61,6 +55,7 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> _deferOtherInitializations() async {
     await Future.wait([
       _initializeMobileAds(),
+      _enableFirebaseAnalytics(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
       _loadInterstitialAd(),
