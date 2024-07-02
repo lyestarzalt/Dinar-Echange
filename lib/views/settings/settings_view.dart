@@ -187,15 +187,17 @@ class SettingsPageState extends State<SettingsPage> {
               segments: <ButtonSegment>[
                 ButtonSegment(
                     value: ThemeOption.auto,
-                    label: Text(text.auto_button),
+                    label: FittedBox(child: Text(text.auto_button)),
                     icon: const Icon(Icons.brightness_auto)),
                 ButtonSegment(
                     value: ThemeOption.dark,
-                    label: Text(text.dark_button),
+                    label: FittedBox(
+                      child: Text(text.dark_button),
+                    ),
                     icon: const Icon(Icons.nights_stay)),
                 ButtonSegment(
                     value: ThemeOption.light,
-                    label: Text(text.light_button),
+                    label: FittedBox(child: Text(text.light_button)),
                     icon: const Icon(Icons.wb_sunny)),
               ],
               selected: {currentThemeOption},
