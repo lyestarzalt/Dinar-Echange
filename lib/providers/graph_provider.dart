@@ -29,9 +29,11 @@ class GraphProvider with ChangeNotifier {
   }
 
   Future<void> fetchCurrencies(List<Currency> allCurrencies) async {
+    if (_isDisposed) return;
+
     try {
       _state = AppState.loading();
-      notifyListeners();
+      _notifySafe();
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
       selectedCurrency = coreCurrencies.firstWhere(
@@ -40,7 +42,7 @@ class GraphProvider with ChangeNotifier {
       );
       await loadCurrencyHistory();
       _state = AppState.success(filteredHistoryEntries);
-      notifyListeners();
+      _notifySafe();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
       _state = AppState.error(e.toString());
@@ -52,10 +54,12 @@ class GraphProvider with ChangeNotifier {
   }
 
   bool _isDisposed = false;
-
   @override
   void dispose() {
     _isDisposed = true;
+    touchedIndex.dispose();
+    selectedValue.dispose();
+    selectedDate.dispose();
     super.dispose();
   }
 
@@ -66,6 +70,8 @@ class GraphProvider with ChangeNotifier {
   }
 
   void updateSelectedData(int index) {
+    if (_isDisposed) return;
+
     if (index >= 0 && index < filteredHistoryEntries.length) {
       var entry = filteredHistoryEntries[index];
       touchedIndex.value = index;
@@ -75,11 +81,13 @@ class GraphProvider with ChangeNotifier {
   }
 
   Future<void> loadCurrencyHistory() async {
+    if (_isDisposed) return;
+
     if (selectedCurrency == null) {
       const errorMessage = 'Selected currency is not set.';
       AppLogger.logError(errorMessage);
       _state = AppState.error(errorMessage);
-      notifyListeners();
+      _notifySafe();
       throw Exception(errorMessage);
     }
 
