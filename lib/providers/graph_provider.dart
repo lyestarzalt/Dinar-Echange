@@ -70,7 +70,7 @@ class GraphProvider with ChangeNotifier {
   }
 
   void updateSelectedData(int index) {
-    if (_isDisposed) return;
+        if (_isDisposed) return;
 
     if (index >= 0 && index < filteredHistoryEntries.length) {
       var entry = filteredHistoryEntries[index];

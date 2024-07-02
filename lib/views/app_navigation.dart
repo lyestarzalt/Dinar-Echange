@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/views/settings/settings_view.dart';
 import 'package:dinar_echange/views/currencies_list/main_view.dart';
 import 'package:dinar_echange/views/graph/graph_view.dart';
@@ -7,7 +6,6 @@ import 'package:animations/animations.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_echange/providers/appinit_provider.dart';
 
 class AppNavigation extends StatelessWidget {
   const AppNavigation({
@@ -52,31 +50,16 @@ class AppNavigation extends StatelessWidget {
   }
 
   Widget _getPageWidget(BuildContext context, int index) {
-    return Consumer<AppInitializationProvider>(
-        builder: (context, initProvider, child) {
-      List<Currency> currencies = initProvider.currencies!;
-      List<Currency> officialCurrencies = initProvider.officialCurrencies!;
-
-      switch (index) {
-        case 0:
-          return MainView(
-            alternativeMarketCurrencies: currencies,
-            officialMarketCurrencies: officialCurrencies,
-          );
-        case 1:
-          return HistoryPage(
-            currencies:
-                currencies, // Assuming HistoryPage needs a list of all currencies
-          );
-        case 2:
-          return const SettingsPage();
-        default:
-          return MainView(
-            alternativeMarketCurrencies: currencies,
-            officialMarketCurrencies: officialCurrencies,
-          );
-      }
-    });
+    switch (index) {
+      case 0:
+        return const MainView();
+      case 1:
+        return const HistoryPage();
+      case 2:
+        return const SettingsPage();
+      default:
+        return const MainView();
+    }
   }
 }
 
