@@ -1,3 +1,16 @@
+## 1.4.0 (2024-07-02)
+
+### New feature:
+
+- screen reader is not able to read error message screen([`ed12263`](https://github.com/lyestarzalt/Dinar_watch/commit/ed12263d068f0403cf686b85f5d0f323ce9ae1c9)) (by Lyes)
+
+### Bugs fixed:
+
+- Theme text overflow on small screen size([`0d3d4ef`](https://github.com/lyestarzalt/Dinar_watch/commit/0d3d4ef08b719024e711af03071a28f7b71ba6b0)) (by Lyes)
+- Graph provider used when its disposed.([`309c599`](https://github.com/lyestarzalt/Dinar_watch/commit/309c5999f88dbf2a2acbad74426f86291fe20e09)) (by Lyes)
+- slow start time([`79d8fb0`](https://github.com/lyestarzalt/Dinar_watch/commit/79d8fb0d816c6600c5d34b17f54d8c5c302ff0b5)) (by Lyes)
+- arabic revert to english, dart format broke auto generated intl files([`c021912`](https://github.com/lyestarzalt/Dinar_watch/commit/c0219125079966d1500e6492abcbd8edc660135f)) (by Lyes)
+
 ## 1.4.0 (2024-07-01)
 
 ### New feature:
