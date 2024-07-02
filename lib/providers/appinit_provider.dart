@@ -28,8 +28,6 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> initializeApp() async {
     try {
-      await Firebase.initializeApp();
-      AppLogger.logInfo('Firebase Core initialized.');
       _activateAppCheck();
       await Future.wait([_signInAnonymously(), _activateAppCheck()]);
 
@@ -75,6 +73,8 @@ class AppInitializationProvider with ChangeNotifier {
           error: e, stackTrace: stackTrace, isFatal: true);
       _parallelstate =
           AppState.error('Failed to load essential data: ${e.message}');
+      _officialState =
+          AppState.error('Failed to load essential data: ${e.message}');
     } else {
       AppLogger.logError(
           'initializeApp: Unhandled exception during initialization',
@@ -82,6 +82,8 @@ class AppInitializationProvider with ChangeNotifier {
           stackTrace: stackTrace,
           isFatal: true);
       _parallelstate =
+          AppState.error('Unhandled exception during initialization');
+      _officialState =
           AppState.error('Unhandled exception during initialization');
     }
   }
