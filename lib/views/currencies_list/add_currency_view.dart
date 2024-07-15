@@ -30,6 +30,7 @@ class AddCurrencyPage extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 20.0),
                   child: FloatingActionButton(
                     mini: true,
+                    heroTag: 'AddCurrencyFAB${provider.marketType}',
                     onPressed: () {
                       provider.saveSelectedCurrencies();
                       Navigator.pop(context);

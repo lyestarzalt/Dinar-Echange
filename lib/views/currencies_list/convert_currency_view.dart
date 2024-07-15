@@ -9,7 +9,9 @@ import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
-  const CurrencyConverterPage({super.key});
+  final String marketType;
+
+  const CurrencyConverterPage({super.key, required this.marketType});
 
   @override
   CurrencyConverterPageState createState() => CurrencyConverterPageState();
@@ -51,7 +53,11 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 /*                 CurrencyValueCard(
                   currency: provider.currency,
                 ), */
-                Converter(context: context, provider: provider),
+                Converter(
+                  context: context,
+                  provider: provider,
+                  marketType: widget.marketType,
+                ),
                 ChangeNotifierProvider<AdProvider>(
                   create: (_) => AdProvider(),
                   child: Consumer<AdProvider>(
@@ -82,12 +88,12 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 }
 
 class Converter extends StatelessWidget {
-  const Converter({
-    super.key,
-    required this.context,
-    required this.provider,
-  });
-
+  const Converter(
+      {super.key,
+      required this.context,
+      required this.provider,
+      required this.marketType});
+  final String marketType;
   final BuildContext context;
   final ConvertProvider provider;
 
@@ -162,6 +168,9 @@ class Converter extends StatelessWidget {
                 tooltip: AppLocalizations.of(context)!.switch_tooltip,
                 onPressed: provider.toggleConversionDirection,
                 elevation: 2,
+                heroTag:
+                    'AddCurrencyFAB${marketType}', // Dynamically setting heroTag using marketType
+
                 child: const Icon(Icons.swap_vert),
               ),
             ),

@@ -146,7 +146,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
       MaterialPageRoute(
         builder: (_) => ChangeNotifierProvider(
           create: (_) => ConvertProvider(currency),
-          child: const CurrencyConverterPage(),
+          child: CurrencyConverterPage(marketType: widget.marketType),
         ),
       ),
     );
