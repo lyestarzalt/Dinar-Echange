@@ -28,9 +28,9 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> initializeApp() async {
     try {
-      _activateAppCheck();
-      await Future.wait([_signInAnonymously(), _activateAppCheck()]);
-
+      await _activateAppCheck();      
+      await _signInAnonymously();
+      
       List<List<Currency>> fetchedResults = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
