@@ -39,30 +39,37 @@ class AppLogger {
   static void logError(String message,
       {Object? error, StackTrace? stackTrace, bool isFatal = false}) {
     _instance._logger.e(message, error: error, stackTrace: stackTrace);
-    FirebaseCrashlytics.instance.recordError(
-      error,
-      stackTrace,
-      reason: message,
-      fatal: isFatal,
-    );
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        reason: message,
+        fatal: isFatal,
+      );
+    }
   }
 
   static Future<void> trackScreenView(
       String screenName, String screenClass) async {
-    await _analytics.logScreenView(
-      screenName: screenName,
-      screenClass: screenClass,
-    );
+    if (kReleaseMode) {
+      await _analytics.logScreenView(
+        screenName: screenName,
+        screenClass: screenClass,
+      );
+    }
+
     logDebug('Screen View Logged: $screenName, Class: $screenClass');
   }
 
   static Future<void> logEvent(
       String eventName, Map<String, Object> parameters) async {
-    await _analytics.logEvent(
-      name: eventName,
-      parameters: parameters,
-    );
     logDebug('Event Logged: $eventName, Details: $parameters');
+    if (kReleaseMode) {
+      await _analytics.logEvent(
+        name: eventName,
+        parameters: parameters,
+      );
+    }
   }
 }
 
