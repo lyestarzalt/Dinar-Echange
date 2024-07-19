@@ -6,6 +6,9 @@ import 'package:animations/animations.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
+import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/services/remote_config_service.dart';
 
 class AppNavigation extends StatelessWidget {
   const AppNavigation({
@@ -40,8 +43,9 @@ class AppNavigation extends StatelessWidget {
           builder: (context, navigationProvider, child) {
             return MainNavigation(
               selectedIndex: navigationProvider.selectedIndex,
-              onItemSelected: (index) =>
-                  navigationProvider.selectedIndex = index,
+              onItemSelected: (index) {
+                navigationProvider.selectedIndex = index;
+              },
             );
           },
         ),
@@ -63,6 +67,12 @@ class AppNavigation extends StatelessWidget {
   }
 }
 
+Future<bool> shouldShowAd(String type) async {
+  int chanceToShowAd =
+      await RemoteConfigService.instance.fetchAdShowChance(type);
+  return Random().nextInt(100) < chanceToShowAd;
+}
+
 class MainNavigation extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
@@ -70,9 +80,11 @@ class MainNavigation extends StatelessWidget {
       {super.key, required this.selectedIndex, required this.onItemSelected});
   @override
   Widget build(BuildContext context) {
+    AdProvider adProvider = Provider.of<AdProvider>(context, listen: false);
     return NavigationBar(
       selectedIndex: selectedIndex,
-      onDestinationSelected: onItemSelected,
+      onDestinationSelected: (index) =>
+          _handleSelection(context, index, adProvider),
       destinations: [
         NavigationDestination(
           icon: const Icon(Icons.list),
@@ -88,5 +100,19 @@ class MainNavigation extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleSelection(
+      BuildContext context, int index, AdProvider adProvider) async {
+    if (await shouldShowAd('ad_show_chance_nav')) {
+      if (adProvider.isInterstitialAdLoaded) {
+        adProvider.showInterstitialAd();
+        adProvider.onAdDismissed(() => onItemSelected(index));
+      } else {
+        onItemSelected(index);
+      }
+    } else {
+      onItemSelected(index);
+    }
   }
 }

@@ -10,6 +10,8 @@ import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/utils/logging.dart';
+import 'dart:math';
+import 'package:dinar_echange/services/remote_config_service.dart';
 
 class CurrencyListScreen extends StatefulWidget {
   final String marketType;
@@ -128,18 +130,6 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
     );
   }
 
-  void _showAddCurrencyPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ChangeNotifierProvider.value(
-          value: Provider.of<ListCurrencyProvider>(context, listen: false),
-          child: const AddCurrencyPage(),
-        ),
-      ),
-    );
-  }
-
   void _navigateToConverter(BuildContext context, Currency currency) {
     Navigator.push(
       context,
@@ -156,26 +146,38 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
   bool get wantKeepAlive => true;
 }
 
-void showAddCurrencyPage(
-    BuildContext context, ListCurrencyProvider selectionProvider) {
-  AppLogger.trackScreenView('AddCurrencies_Screen', 'MainList');
-  final adProvider = Provider.of<AdProvider>(context, listen: false);
+Future<void> _showAddCurrencyPage(BuildContext context) async {
+  final AdProvider adProvider = Provider.of<AdProvider>(context, listen: false);
 
-  adProvider.ensureAdIsReadyToShow(
-    onReadyToShow: () => _navigateToAddCurrencyPage(context, selectionProvider),
-    onFailToShow: () => _navigateToAddCurrencyPage(context, selectionProvider),
-  );
+  if (await shouldShowAd('ad_show_chance_open')) {
+    // 30% chance to show the ad
+    if (adProvider.isInterstitialAdLoaded) {
+      adProvider.showInterstitialAd();
+      adProvider.onAdDismissed(() {
+        _navigateToAddCurrencyPage(context);
+      });
+    } else {
+      _navigateToAddCurrencyPage(context);
+    }
+  } else {
+  
+    _navigateToAddCurrencyPage(context);
+  }
 }
 
-void _navigateToAddCurrencyPage(
-    BuildContext context, ListCurrencyProvider selectionProvider) {
+void _navigateToAddCurrencyPage(BuildContext context) {
   Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ChangeNotifierProvider.value(
-        value: selectionProvider,
-        child: const AddCurrencyPage(),
-      ),
-    ),
-  );
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: Provider.of<ListCurrencyProvider>(context, listen: false),
+          child: const AddCurrencyPage(),
+        ),
+      ));
+}
+
+Future<bool> shouldShowAd(String type) async {
+  int chanceToShowAd =
+      await RemoteConfigService.instance.fetchAdShowChance(type);
+  return Random().nextInt(100) < chanceToShowAd;
 }

@@ -21,8 +21,8 @@ class PreferencesService {
   Future<List<String>> getSelectedCurrencies(String marketType) async {
     String key = '${marketType}_selectedCurrencies';
     List<String> selectedCurrencies = _pref.getStringList(key) ?? [];
-    AppLogger.logDebug(
-        'Loaded selected currencies for $marketType: $selectedCurrencies');
+/*     AppLogger.logDebug(
+        'Loaded selected currencies for $marketType: $selectedCurrencies'); */
     return selectedCurrencies;
   }
 

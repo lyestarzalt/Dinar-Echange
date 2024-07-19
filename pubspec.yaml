@@ -58,6 +58,7 @@ dependencies:
   package_info_plus: ^8.0.0
   flutter_gen: any
   in_app_review: ^2.0.9
+  firebase_remote_config: ^5.0.3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

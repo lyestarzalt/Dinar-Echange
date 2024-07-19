@@ -15,11 +15,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_echange/utils/state.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/services/remote_config_service.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
-
+  AdProvider _adProvider = AdProvider();
   AppState get Paralleltate => _parallelstate;
   AppState get officialState => _officialState;
 
@@ -28,14 +29,13 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> initializeApp() async {
     try {
-      await _activateAppCheck();      
+      await _activateAppCheck();
       await _signInAnonymously();
-      
+
       List<List<Currency>> fetchedResults = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
       ]);
-
       List<Currency> fetchedCurrencies = fetchedResults[0];
       List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
       _parallelstate = AppState.success(fetchedCurrencies);
@@ -57,6 +57,7 @@ class AppInitializationProvider with ChangeNotifier {
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
       _loadInterstitialAd(),
+      RemoteConfigService.instance.initialize()
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
@@ -90,8 +91,8 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> _loadInterstitialAd() async {
     try {
-      final adProvider = AdProvider();
-      adProvider.loadInterstitialAd();
+      _adProvider.loadInterstitialAd();
+
       AppLogger.logInfo('InterstitialAd loading initiated.');
     } catch (error, stackTrace) {
       AppLogger.logError('Failed to load InterstitialAd.',
