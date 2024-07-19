@@ -50,7 +50,8 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-/*                 CurrencyValueCard(
+                  /*               
+                  CurrencyValueCard(
                   currency: provider.currency,
                 ), */
                 Converter(
@@ -216,8 +217,8 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        _buildRateDisplay(context, "Buy", currency.buy),
-        _buildRateDisplay(context, "Sell", currency.sell),
+        _buildRateDisplay(context, AppLocalizations.of(context)!.buy, currency.buy),
+        _buildRateDisplay(context, AppLocalizations.of(context)!.sell, currency.sell),
         const SizedBox(width: 16), // Right padding for the last item
       ],
       elevation: 0,
