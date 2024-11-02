@@ -105,10 +105,10 @@ class Converter extends StatelessWidget {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final middlePoint = screenHeight * 0.17;
     final cardHeight = screenHeight / 8;
-    const gapBetweenCards = 5;
+    const gapBetweenCards = 8;
     final topCardTopPosition = middlePoint - cardHeight;
     final bottomCardTopPosition = middlePoint + gapBetweenCards;
-    const fabSize = 56.0;
+    const fabSize = 55.0;
     final fabTopPosition = middlePoint - (fabSize / 2);
 
     return SizedBox(
@@ -165,14 +165,18 @@ class Converter extends StatelessWidget {
             child: Semantics(
               button: true,
               label: AppLocalizations.of(context)!.switch_tooltip,
-              child: FloatingActionButton(
-                tooltip: AppLocalizations.of(context)!.switch_tooltip,
-                onPressed: provider.toggleConversionDirection,
-                elevation: 2,
-                heroTag:
-                    'AddCurrencyFAB${marketType}', // Dynamically setting heroTag using marketType
 
-                child: const Icon(Icons.swap_vert),
+              child: SizedBox(
+                width: 50, // Adjust the width as desired
+                height: 50, // Adjust the height as desired
+                child: FloatingActionButton(
+                  tooltip: AppLocalizations.of(context)!.switch_tooltip,
+                  onPressed: provider.toggleConversionDirection,
+                  elevation: 2,
+                  child: const Icon(Icons.swap_vert,
+                      size: 20), // Adjust icon size if needed
+                ),
+
               ),
             ),
           ),
