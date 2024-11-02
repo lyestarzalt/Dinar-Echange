@@ -100,6 +100,15 @@ class HistoryPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          ChangeNotifierProvider<AdProvider>(
+            create: (_) => AdProvider(),
+            child: Consumer<AdProvider>(
+              builder: (context, adProvider, _) => ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 100),
+                child: const AdBannerWidget(),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
@@ -196,15 +205,6 @@ class HistoryPage extends StatelessWidget {
           const SizedBox(height: 20),
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.setTimeSpan(days),
-          ),
-          ChangeNotifierProvider<AdProvider>(
-            create: (_) => AdProvider(),
-            child: Consumer<AdProvider>(
-              builder: (context, adProvider, _) => ConstrainedBox(
-                constraints: BoxConstraints(minHeight: 50),
-                child: const AdBannerWidget(),
-              ),
-            ),
           ),
         ],
       ),
