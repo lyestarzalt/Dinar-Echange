@@ -2,7 +2,7 @@ name: dinar_echange
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,14 +16,14 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.3.9+4
+version: 1.4.4+45
 
 # Documenting the current Flutter and Dart SDK versions used in development:
 # Flutter (Channel stable, 3.22.1, on Microsoft Windows [Version 10.0.22631.3155], locale en-MY)
 # Dart SDK version: 3.4.1 (stable) (Tue May 21 15:46:25 2024 +0000) on "windows_x64"
 
 environment:
-  sdk: '>=3.3.3 <4.0.0'
+  sdk: ">=3.3.3 <4.0.0"
   flutter: 3.22.1
 
 # Dependencies specify other packages that your package needs in order to work.
@@ -58,7 +58,8 @@ dependencies:
   package_info_plus: ^8.0.0
   flutter_gen: any
   in_app_review: ^2.0.9
-  
+  firebase_remote_config: ^5.0.3
+
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
@@ -82,7 +83,7 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo/light_large.png"
+  image_path: "assets/logo/app_logo.png"
   min_sdk_android: 21
   remove_alpha_ios: true
 
@@ -118,4 +119,3 @@ flutter_intl:
   output-dir: lib/l10n
   output-localization-file: lib/l10n/app_localizations.dart
   synthetic-package: false
-  

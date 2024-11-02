@@ -86,13 +86,13 @@ class MainRepository implements CurrencyRepository {
   Future<T> _getFallbackCacheData<T>(
       String baseKey, T Function(dynamic) fromJson) async {
     int DaysLookBack = 7; // Limit to 7days
-    for (int i = 1; i <= DaysLookBack; i++) {      String historicalKey = _cacheManager.generateCacheKey(baseKey,
+    for (int i = 1; i <= DaysLookBack; i++) {
+      String historicalKey = _cacheManager.generateCacheKey(baseKey,
           suffix: DateFormat('yyyy-MM-dd')
               .format(DateTime.now().subtract(Duration(days: i))));
       Map<String, dynamic>? data = await _cacheManager.getCache(historicalKey);
       if (data != null && data['data'] != null) {
-        AppLogger.logInfo(
-            'Fallback cache hit for key: $historicalKey');
+        AppLogger.logInfo('Fallback cache hit for key: $historicalKey');
         return fromJson(data['data']);
       }
     }

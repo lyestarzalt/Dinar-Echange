@@ -24,6 +24,8 @@ class AppProvider with ChangeNotifier {
   String get htmlContent => _htmlContent;
   bool get isLoading => _isLoading;
 
+  int _selectedIndex = 0;
+
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'unknown',
@@ -38,6 +40,31 @@ class AppProvider with ChangeNotifier {
     loadSelectedLanguage();
     loadAppVersion();
   }
+
+  // Navigation-related methods
+  int get selectedIndex => _selectedIndex;
+
+  set selectedIndex(int index) {
+    if (_selectedIndex != index) {
+      _selectedIndex = index;
+      notifyListeners();
+      AppLogger.trackScreenView(
+        _screenNames[index] ?? 'Unknown_Screen',
+        _screenClasses[index] ?? 'UnknownClass',
+      );
+    }
+  }
+  final Map<int, String> _screenNames = {
+    0: 'MainView_Screen',
+    1: 'Trends_Screen',
+    2: 'Settings_Screen',
+  };
+
+  final Map<int, String> _screenClasses = {
+    0: 'MainList',
+    1: 'Trends',
+    2: 'Settings',
+  };
 
   // Load Theme Mode
   Future<void> loadThemeMode() async {

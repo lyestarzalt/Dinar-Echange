@@ -195,5 +195,21 @@
   "sell": "Vente",
   "@sell": {
     "description": "Sell"
+  },
+  "confirm_delete_title": "Confirmer la suppression",
+  "@confirm_delete_title": {
+    "description": "Title for the delete confirmation dialog."
+  },
+  "confirm_delete_message": "Êtes-vous sûr de vouloir supprimer cette devise?",
+  "@confirm_delete_message": {
+    "description": "Message asking for delete confirmation."
+  },
+  "cancel": "Annuler",
+  "@cancel": {
+    "description": "Label for cancel button."
+  },
+  "delete": "Supprimer",
+  "@delete": {
+    "description": "Label for delete button."
   }
 }

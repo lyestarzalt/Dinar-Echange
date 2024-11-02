@@ -1,4 +1,54 @@
-#  (2024-06-14)
+# [1.4.2] (2024-07-18)
+
+### Bug Fixes
+
+* app check init twice ([900a449](https://github.com/lyestarzalt/Dinar_watch/commit/900a449d0f425988d3eeb6da8f5ad2047cb73ea3))
+* FloatingActionButton has choppy animation when transitioning pages ([ba927c2](https://github.com/lyestarzalt/Dinar_watch/commit/ba927c2a9db207d8e859579552cd2af71303393e))
+
+
+
+## [1.4.1](https://github.com/lyestarzalt/Dinar_watch/compare/1.4.0...1.4.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* arabic revert to english, dart format broke auto generated intl files ([c021912](https://github.com/lyestarzalt/Dinar_watch/commit/c0219125079966d1500e6492abcbd8edc660135f))
+* slow start time ([79d8fb0](https://github.com/lyestarzalt/Dinar_watch/commit/79d8fb0d816c6600c5d34b17f54d8c5c302ff0b5))
+* Theme text overflow on small screen size ([0d3d4ef](https://github.com/lyestarzalt/Dinar_watch/commit/0d3d4ef08b719024e711af03071a28f7b71ba6b0))
+
+
+### Features
+
+* screen reader is not able to read error message screen ([ed12263](https://github.com/lyestarzalt/Dinar_watch/commit/ed12263d068f0403cf686b85f5d0f323ce9ae1c9))
+
+
+
+# [1.4.0](https://github.com/lyestarzalt/Dinar_watch/compare/1.3.9...1.4.0) (2024-07-01)
+
+
+### Bug Fixes
+
+* android/play store adding background color depending on the user's theme mode on their device. ([cce78cc](https://github.com/lyestarzalt/Dinar_watch/commit/cce78cc81ffba8b47352a235ddb206cc1c8008e1))
+* appbar text in convert page overflow ([40d4d09](https://github.com/lyestarzalt/Dinar_watch/commit/40d4d09a1c0982d37f5e3a64ae00d11d54551267))
+* Convert switch button is not picked up by Google play auto review ([c035a82](https://github.com/lyestarzalt/Dinar_watch/commit/c035a8256a36aae82da77687dfdab28c5350ea4b))
+* currency input glitched (squeezed) ([ddd415b](https://github.com/lyestarzalt/Dinar_watch/commit/ddd415bef6a8aa0f4c7316d3333594de940298a6))
+* info logging only in none release ([85544c7](https://github.com/lyestarzalt/Dinar_watch/commit/85544c769761767f80381a339703a395973a67a7))
+
+
+### Features
+
+* Show confirmation dialogue before removing the currency from the list. ([054cefd](https://github.com/lyestarzalt/Dinar_watch/commit/054cefd57d924763a1ba419d00bf3afe24e00840))
+
+
+
+## [1.3.9](https://github.com/lyestarzalt/Dinar_watch/compare/1.3.8...1.3.9) (2024-06-14)
+
+
+### Bug Fixes
+
+* Generate Changelog github actions fails because the tag is not created yet ([0c681e8](https://github.com/lyestarzalt/Dinar_watch/commit/0c681e86a3b73f80ef0ed998c0d8bcfb1c17d2c2))
+* Must provide either input tag OR (fromTag and toTag) ([ebe351c](https://github.com/lyestarzalt/Dinar_watch/commit/ebe351c2d412a81c91dbbfa331dae6661f5f9486))
+* revert back to prev workflow without generating changelog ([1cb87e2](https://github.com/lyestarzalt/Dinar_watch/commit/1cb87e2a378c354764d611ab868d470c913da173))
 
 
 

@@ -15,11 +15,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
 import 'package:dinar_echange/utils/state.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/services/remote_config_service.dart';
 
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
-
+  AdProvider _adProvider = AdProvider();
   AppState get Paralleltate => _parallelstate;
   AppState get officialState => _officialState;
 
@@ -28,32 +29,23 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> initializeApp() async {
     try {
-      await Firebase.initializeApp();
-      AppLogger.logInfo('Firebase Core initialized.');
-      _activateAppCheck();
-      await Future.wait([
-        _signInAnonymously(),
-        _enableFirebaseAnalytics(),
-      ]);
+      await _activateAppCheck();
+      await _signInAnonymously();
 
-      // Load both sets of currencies concurrently
-      var fetchedResults = await Future.wait([
+      List<List<Currency>> fetchedResults = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
       ]);
-
       List<Currency> fetchedCurrencies = fetchedResults[0];
       List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
       _parallelstate = AppState.success(fetchedCurrencies);
       _officialState = AppState.success(fetchedOfficialCurrencies);
-      // Log the fetch time
+      FlutterNativeSplash.remove();
 
-      // Initialize other services asynchronously after the essential data is loaded
       _deferOtherInitializations();
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
-      FlutterNativeSplash.remove();
       notifyListeners();
     }
   }
@@ -61,9 +53,11 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> _deferOtherInitializations() async {
     await Future.wait([
       _initializeMobileAds(),
+      _enableFirebaseAnalytics(),
       _requestNotificationPermissions(),
       _setupFirebaseMessaging(),
       _loadInterstitialAd(),
+      RemoteConfigService.instance.initialize()
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
@@ -80,6 +74,8 @@ class AppInitializationProvider with ChangeNotifier {
           error: e, stackTrace: stackTrace, isFatal: true);
       _parallelstate =
           AppState.error('Failed to load essential data: ${e.message}');
+      _officialState =
+          AppState.error('Failed to load essential data: ${e.message}');
     } else {
       AppLogger.logError(
           'initializeApp: Unhandled exception during initialization',
@@ -88,13 +84,15 @@ class AppInitializationProvider with ChangeNotifier {
           isFatal: true);
       _parallelstate =
           AppState.error('Unhandled exception during initialization');
+      _officialState =
+          AppState.error('Unhandled exception during initialization');
     }
   }
 
   Future<void> _loadInterstitialAd() async {
     try {
-      final adProvider = AdProvider();
-      adProvider.loadInterstitialAd();
+      _adProvider.loadInterstitialAd();
+
       AppLogger.logInfo('InterstitialAd loading initiated.');
     } catch (error, stackTrace) {
       AppLogger.logError('Failed to load InterstitialAd.',
@@ -113,11 +111,13 @@ class AppInitializationProvider with ChangeNotifier {
         androidProvider: AndroidProvider.playIntegrity,
         //appleProvider: AppleProvider.deviceCheck,
       );
+      AppLogger.logInfo('App Check activated: production');
     } else {
       await FirebaseAppCheck.instance.activate(
         androidProvider: AndroidProvider.debug,
         //appleProvider: AppleProvider.debug,
       );
+      AppLogger.logInfo('App Check activated: debug');
       try {
         String? token = await FirebaseAppCheck.instance.getToken(false);
         AppLogger.logDebug("Temp token: $token");
@@ -126,7 +126,6 @@ class AppInitializationProvider with ChangeNotifier {
         // Implement a fallback mechanism or exponential backoff retry logic if needed
       }
     }
-    AppLogger.logInfo('App Check activated.');
   }
 
   Future<void> _initializeMobileAds() async {

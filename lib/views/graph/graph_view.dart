@@ -16,45 +16,49 @@ import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/error_message.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/providers/appinit_provider.dart';
 
 class HistoryPage extends StatelessWidget {
-  final List<Currency> currencies;
-
-  const HistoryPage({super.key, required this.currencies});
+  const HistoryPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<GraphProvider>(
-      create: (_) => GraphProvider(currencies),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.trends_app_bar_title),
-        ),
-        floatingActionButton: Consumer<GraphProvider>(
-          builder: (context, provider, _) =>
-              _buildFloatingActionButton(context, provider),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Consumer<GraphProvider>(
-            builder: (context, provider, _) {
-              switch (provider.state.state) {
-                case LoadState.loading:
-                  return const Center(child: LinearProgressIndicator());
-                case LoadState.success:
-                  return _buildCurrencyContent(context, provider);
-                case LoadState.error:
-                  return ErrorMessage(
-                    onRetry: () => provider.fetchCurrencies(currencies),
-                  );
-                default:
-                  return ErrorMessage(
-                    onRetry: () => provider.fetchCurrencies(currencies),
-                  );
-              }
-            },
+    return Consumer<AppInitializationProvider>(
+      builder: (context, initProvider, _) {
+        List<Currency> currencies = initProvider.currencies!;
+        return ChangeNotifierProvider<GraphProvider>(
+          create: (_) => GraphProvider(currencies),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.trends_app_bar_title),
+            ),
+            floatingActionButton: Consumer<GraphProvider>(
+              builder: (context, provider, _) =>
+                  _buildFloatingActionButton(context, provider),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Consumer<GraphProvider>(
+                builder: (context, provider, _) {
+                  switch (provider.state.state) {
+                    case LoadState.loading:
+                      return const Center(child: LinearProgressIndicator());
+                    case LoadState.success:
+                      return _buildCurrencyContent(context, provider);
+                    case LoadState.error:
+                      return ErrorMessage(
+                        onRetry: () => provider.fetchCurrencies(currencies),
+                      );
+                    default:
+                      return ErrorMessage(
+                        onRetry: () => provider.fetchCurrencies(currencies),
+                      );
+                  }
+                },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -206,6 +210,18 @@ class HistoryPage extends StatelessWidget {
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.setTimeSpan(days),
           ),
+<<<<<<< HEAD
+=======
+          ChangeNotifierProvider<AdProvider>(
+            create: (_) => AdProvider(),
+            child: Consumer<AdProvider>(
+              builder: (context, adProvider, _) => ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 50),
+                child: const AdBannerWidget(),
+              ),
+            ),
+          ),
+>>>>>>> f62b9104c055fc3e40a8f68cdaca28a4819b614c
         ],
       ),
     );

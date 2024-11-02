@@ -5,6 +5,4 @@ abstract class CurrencyRepository {
 
   Future<Currency> getCurrencyHistory(Currency currency);
   Future<List<Currency>> getOfficialDailyCurrencies();
-
-
 }

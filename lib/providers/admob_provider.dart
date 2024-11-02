@@ -4,6 +4,7 @@ import 'package:dinar_echange/utils/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 
 class AdProvider with ChangeNotifier {
   BannerAd? _bannerAd;
@@ -16,14 +17,24 @@ class AdProvider with ChangeNotifier {
   bool get isBannerAdLoaded => _isBannerAdLoaded;
   bool get isInterstitialAdLoaded => _isInterstitialAdLoaded;
   BannerAd? get bannerAd => _bannerAd;
+  bool _isAdLoaded = false;
 
-  final String bannerAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
+  // Constructor
+  AdProvider() {
+    loadInterstitialAd();
+  }
 
-  final String interstitialAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1033173712'
-      : 'ca-app-pub-3940256099942544/4411468910';
+  final String bannerAdUnitId = kReleaseMode
+      ? 'ca-app-pub-7264503053372654/2483013282' // Production ad unit ID
+      : Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/6300978111' // Test ad unit ID for Android
+          : 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
+
+  final String interstitialAdUnitId = kReleaseMode
+      ? 'ca-app-pub-7264503053372654/8856849944' // Production ad unit ID
+      : Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/1033173712' // Test ad unit ID for Android
+          : 'ca-app-pub-3940256099942544/4411468910'; // Test ad unit ID for iOS
 
   Future<void> loadInlineAdaptiveBannerAd(BuildContext context,
       {int maxHeight = 0}) async {
@@ -58,99 +69,78 @@ class AdProvider with ChangeNotifier {
     notifyListeners();
   }
 
-//
   void loadInterstitialAd() {
-    if (_isInterstitialAdLoaded || _interstitialAd != null) {
-      AppLogger.logInfo(
-          'Attempted to load ad again but one is already loaded or loading.');
-      return;
-    }
-
     InterstitialAd.load(
-      adUnitId: interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          AppLogger.logInfo('InterstitialAd loaded.');
-          _interstitialAd = ad;
-          _isInterstitialAdLoaded = true;
-          notifyListeners();
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          AppLogger.logError('InterstitialAd failed to load: $error');
-          _isInterstitialAdLoaded = false;
-          notifyListeners();
-        },
-      ),
-    );
+        adUnitId: interstitialAdUnitId,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            _interstitialAd = ad;
+            _isInterstitialAdLoaded = true;
+            setInterstitialAdCallbacks(ad);
+            AppLogger.logInfo('Interstitial ad loaded.');
+            notifyListeners();
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            AppLogger.logError('Interstitial ad failed to load: $error');
+            _isInterstitialAdLoaded = false;
+            notifyListeners();
+          },
+        ));
   }
 
-  void ensureAdIsReadyToShow({
-    required VoidCallback onReadyToShow,
-    VoidCallback? onFailToShow,
-  }) {
-    AppLogger.logDebug('message');
-    if (_isInterstitialAdLoaded && _interstitialAd != null) {
-      _showInterstitialAd(
-        onAdClosed: onReadyToShow,
-        onAdFailedToShow: onFailToShow,
-      );
-    } else {
-      loadInterstitialAd();
-      Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_isInterstitialAdLoaded && _interstitialAd != null) {
-          timer.cancel();
-          _showInterstitialAd(
-            onAdClosed: onReadyToShow,
-            onAdFailedToShow: onFailToShow,
-          );
-        }
-      });
-    }
+  void setInterstitialAdCallbacks(InterstitialAd ad) {
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (InterstitialAd ad) {
+      AppLogger.logInfo('Ad showed full screen content.');
+    }, onAdImpression: (InterstitialAd ad) {
+      AppLogger.logInfo('Ad impression recorded.');
+    }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+      AppLogger.logError('Ad failed to show full screen content: $error');
+      ad.dispose();
+      _interstitialAd = null;
+      _isInterstitialAdLoaded = false;
+      notifyListeners();
+    }, onAdDismissedFullScreenContent: (InterstitialAd ad) {
+      AppLogger.logInfo('Ad dismissed full screen content.');
+      ad.dispose();
+      _interstitialAd = null;
+      _isInterstitialAdLoaded = false;
+      loadInterstitialAd(); // Reload ad for future use
+      notifyListeners();
+    }, onAdClicked: (InterstitialAd ad) {
+      AppLogger.logInfo('Ad clicked.');
+    });
   }
 
-  void prepareAndShowInterstitialAd({
-    required VoidCallback onAdClosed,
-    VoidCallback? onAdFailedToShow,
-  }) {
-    AppLogger.logInfo(
-        'Preparing to show ad. Ad loaded: $_isInterstitialAdLoaded');
-    if (_isInterstitialAdLoaded && _interstitialAd != null) {
-      AppLogger.logInfo('Ad is loaded, showing now...');
-      _showInterstitialAd(
-          onAdClosed: onAdClosed, onAdFailedToShow: onAdFailedToShow);
-    } else {
-      AppLogger.logInfo('Ad not loaded, loading now...');
-      loadInterstitialAd();
-    }
-  }
-
-  void _showInterstitialAd({
-    required VoidCallback onAdClosed,
-    VoidCallback? onAdFailedToShow,
-  }) {
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        AppLogger.logInfo('Ad dismissed full screen content.');
-        onAdClosed();
+  void onAdDismissed(VoidCallback callback) {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (InterstitialAd ad) {
         ad.dispose();
         _interstitialAd = null;
         _isInterstitialAdLoaded = false;
         loadInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        AppLogger.logError('Ad failed to show full screen content: $error');
-        onAdFailedToShow?.call();
+        notifyListeners();
+        callback();
+      }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         ad.dispose();
         _interstitialAd = null;
         _isInterstitialAdLoaded = false;
-        loadInterstitialAd(); // Manage loading logic based on your strategy
-      },
-    );
+        loadInterstitialAd();
+        notifyListeners();
+        callback(); // Even if the ad fails, proceed with navigation
+      });
+    }
+  }
 
-    _interstitialAd!.show();
-    _isInterstitialAdLoaded =
-        false; // Update state to reflect that the ad is being shown
+  void showInterstitialAd() {
+    if (_isInterstitialAdLoaded && _interstitialAd != null) {
+      _interstitialAd!.show();
+    } else {
+      AppLogger.logInfo('Interstitial ad not ready to be shown.');
+      loadInterstitialAd(); // Ensure an ad is being loaded
+    }
   }
 
   void disposeAd() {

@@ -195,5 +195,21 @@
   "sell": "Sell",
   "@sell": {
     "description": "Sell"
+  },
+  "confirm_delete_title": "Confirm Deletion",
+  "@confirm_delete_title": {
+    "description": "Title for the delete confirmation dialog."
+  },
+  "confirm_delete_message": "Are you sure you want to delete this currency?",
+  "@confirm_delete_message": {
+    "description": "Message asking for delete confirmation."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Label for cancel button."
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Label for delete button."
   }
 }

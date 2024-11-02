@@ -152,4 +152,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sell => 'Vente';
+
+  @override
+  String get confirm_delete_title => 'Confirmer la suppression';
+
+  @override
+  String get confirm_delete_message => 'Êtes-vous sûr de vouloir supprimer cette devise?';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get delete => 'Supprimer';
 }

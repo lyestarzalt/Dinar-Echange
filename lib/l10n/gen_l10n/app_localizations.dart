@@ -388,6 +388,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sell'**
   String get sell;
+
+  /// Title for the delete confirmation dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Deletion'**
+  String get confirm_delete_title;
+
+  /// Message asking for delete confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this currency?'**
+  String get confirm_delete_message;
+
+  /// Label for cancel button.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Label for delete button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

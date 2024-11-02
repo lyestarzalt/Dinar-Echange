@@ -22,7 +22,7 @@ class CurrencyMenu extends StatefulWidget {
 class _CurrencyMenuState extends State<CurrencyMenu> {
   @override
   void initState() {
-AppLogger.trackScreenView('ChooseCurrenciesGraph_Screen', 'Trends');
+    AppLogger.trackScreenView('ChooseCurrenciesGraph_Screen', 'Trends');
 
     super.initState();
   }
