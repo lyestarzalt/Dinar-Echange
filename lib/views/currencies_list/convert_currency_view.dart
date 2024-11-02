@@ -50,7 +50,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                  /*               
+                /*               
                   CurrencyValueCard(
                   currency: provider.currency,
                 ), */
@@ -165,18 +165,6 @@ class Converter extends StatelessWidget {
             child: Semantics(
               button: true,
               label: AppLocalizations.of(context)!.switch_tooltip,
-<<<<<<< HEAD
-              child: SizedBox(
-                width: 50, // Adjust the width as desired
-                height: 50, // Adjust the height as desired
-                child: FloatingActionButton(
-                  tooltip: AppLocalizations.of(context)!.switch_tooltip,
-                  onPressed: provider.toggleConversionDirection,
-                  elevation: 2,
-                  child: const Icon(Icons.swap_vert,
-                      size: 20), // Adjust icon size if needed
-                ),
-=======
               child: FloatingActionButton(
                 tooltip: AppLocalizations.of(context)!.switch_tooltip,
                 onPressed: provider.toggleConversionDirection,
@@ -185,7 +173,6 @@ class Converter extends StatelessWidget {
                     'AddCurrencyFAB${marketType}', // Dynamically setting heroTag using marketType
 
                 child: const Icon(Icons.swap_vert),
->>>>>>> f62b9104c055fc3e40a8f68cdaca28a4819b614c
               ),
             ),
           ),
@@ -230,8 +217,10 @@ class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        _buildRateDisplay(context, AppLocalizations.of(context)!.buy, currency.buy),
-        _buildRateDisplay(context, AppLocalizations.of(context)!.sell, currency.sell),
+        _buildRateDisplay(
+            context, AppLocalizations.of(context)!.buy, currency.buy),
+        _buildRateDisplay(
+            context, AppLocalizations.of(context)!.sell, currency.sell),
         const SizedBox(width: 16), // Right padding for the last item
       ],
       elevation: 0,

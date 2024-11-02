@@ -108,6 +108,15 @@ class HistoryPage extends StatelessWidget {
             create: (_) => AdProvider(),
             child: Consumer<AdProvider>(
               builder: (context, adProvider, _) => ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 100),
+                child: const AdBannerWidget(),
+              ),
+            ),
+          ),
+          ChangeNotifierProvider<AdProvider>(
+            create: (_) => AdProvider(),
+            child: Consumer<AdProvider>(
+              builder: (context, adProvider, _) => ConstrainedBox(
                 constraints: BoxConstraints(minHeight: 100),
                 child: const AdBannerWidget(),
               ),
@@ -210,18 +219,6 @@ class HistoryPage extends StatelessWidget {
           TimeSpanButtons(
             onTimeSpanSelected: (days) => provider.setTimeSpan(days),
           ),
-<<<<<<< HEAD
-=======
-          ChangeNotifierProvider<AdProvider>(
-            create: (_) => AdProvider(),
-            child: Consumer<AdProvider>(
-              builder: (context, adProvider, _) => ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 50),
-                child: const AdBannerWidget(),
-              ),
-            ),
-          ),
->>>>>>> f62b9104c055fc3e40a8f68cdaca28a4819b614c
         ],
       ),
     );
