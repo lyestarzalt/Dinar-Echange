@@ -191,19 +191,15 @@ class HistoryPage extends StatelessWidget {
           const SizedBox(height: 16),
           AspectRatio(
             aspectRatio: 1.0,
-            child: LineChart(
-              buildMainData(
-                  context: context,
-                  minYValue: provider.minYValue,
-                  midYValue: provider.midYValue,
-                  maxYValue: provider.maxYValue,
-                  touchedIndex: provider.touchedIndex.value,
-                  maxX: provider.maxX,
-                  historyEntries: provider.filteredHistoryEntries,
-                  onIndexChangeCallback:
-                      (int index, List<CurrencyHistoryEntry> entries) {
-                    provider.updateSelectedData(index);
-                  }),
+            child: LineGraph(
+              historyEntries: provider.filteredHistoryEntries,
+              touchedIndex: provider.touchedIndex.value,
+              minYValue: provider.minYValue,
+              midYValue: provider.midYValue,
+              maxYValue: provider.maxYValue,
+              maxX: provider.maxX,
+              onIndexChangeCallback: (index, entries) =>
+                  provider.updateSelectedData(index),
             ),
           ),
           const SizedBox(height: 20),
