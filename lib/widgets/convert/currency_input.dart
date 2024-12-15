@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/utils/textfield_format.dart';
 
@@ -23,49 +24,55 @@ Widget buildCurrencyInput({
         width: focusNode.hasFocus ? 3.0 : 0.5,
       ),
     ),
-    margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    margin: EdgeInsets.zero,
     color: Theme.of(context).colorScheme.surface,
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (currencyCode == 'DZD')
-            Image.asset('assets/dz_flag.png', width: 50, height: 40)
-          else if (flag!.isNotEmpty)
-            FlagContainer(
-              imageUrl: flag,
-              width: 50,
-              height: 40,
-              borderRadius: BorderRadius.circular(1),
-            ),
-          const SizedBox(width: 8.0),
+          SizedBox(
+            width: 50,
+            height: 40,
+            child: currencyCode == 'DZD'
+                ? Image.asset('assets/dz_flag.png', fit: BoxFit.contain)
+                : flag!.isNotEmpty
+                    ? FlagContainer(
+                        imageUrl: flag,
+                        width: 50,
+                        height: 40,
+                        borderRadius: BorderRadius.circular(1),
+                      )
+                    : null,
+          ),
+          const SizedBox(width: 12.0),
+
           Expanded(
             child: TextField(
-              inputFormatters: [InputFormatter()],
+              inputFormatters: InputFormatter.getFormatters(),
               focusNode: focusNode,
               controller: controller,
               decoration: InputDecoration(
                 labelText: currencyCode.toUpperCase(),
                 labelStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300),
-                hintStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
-                  fontSize: 16,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w300,
                 ),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
               ),
               style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  height: 0.0),
-              keyboardType: TextInputType.number,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               textAlign: TextAlign.right,
               enabled: isInputEnabled,
+              textInputAction: TextInputAction.done,
             ),
           ),
         ],
