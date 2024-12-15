@@ -27,7 +27,7 @@ void main() async {
 }
 
 class DinarEchange extends StatelessWidget {
-  const DinarEchange({Key? key}) : super(key: key);
+  const DinarEchange({super.key});
 
   @override
   Widget build(BuildContext context) {

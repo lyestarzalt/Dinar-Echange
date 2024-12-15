@@ -9,7 +9,6 @@ import 'package:dinar_echange/views/currencies_list/convert_currency_view.dart';
 import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
-import 'package:dinar_echange/utils/logging.dart';
 import 'dart:math';
 import 'package:dinar_echange/services/remote_config_service.dart';
 
