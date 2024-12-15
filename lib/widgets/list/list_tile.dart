@@ -32,7 +32,7 @@ class CurrencyListItem extends StatelessWidget {
                 Text(
                   currency.currencyCode,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -54,7 +54,7 @@ class CurrencyListItem extends StatelessWidget {
                           ? currency.buy.toStringAsFixed(0)
                           : currency.buy.toStringAsFixed(1),
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -82,7 +82,7 @@ class CurrencyListItem extends StatelessWidget {
                           ? currency.sell.toStringAsFixed(0)
                           : currency.sell.toStringAsFixed(1),
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
