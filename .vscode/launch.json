@@ -4,34 +4,24 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    {
-        "name": "PowerShell: Launch Current File",
-        "type": "PowerShell",
-        "request": "launch",
-        "script": "${workspaceFolder}/win_build.ps1",
-        "args": [],
-        "cwd": "${workspaceFolder}"
-    },
         {
             "name": "debug mode",
             "request": "launch",
             "type": "dart",
-          
         },
-            {
-                "name": "impeller",
-                "request": "launch",
-                "type": "dart",
-                "args": [
-                    "--enable-impeller"
-                ]
-            },
+        {
+            "name": "impeller",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--enable-impeller"
+            ]
+        },
         {
             "name": "profile mode",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
-        
         },
         {
             "name": "release mode",
