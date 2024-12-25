@@ -193,7 +193,7 @@ class _LineGraphPainter extends CustomPainter {
       );
 
       final textSpan = TextSpan(
-        text: value.toStringAsFixed(3),
+        text: value.toStringAsFixed(1),
         style: TextStyle(color: labelColor, fontSize: 12),
       );
       final textPainter = TextPainter(
