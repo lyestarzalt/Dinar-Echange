@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
+import 'package:dinar_echange/utils/logging.dart';
 class CustomLineGraph extends StatefulWidget {
   final List<double> dataPoints;
   final List<DateTime> dates;
@@ -126,23 +126,40 @@ class _CustomLineGraphState extends State<CustomLineGraph>
     );
   }
 
-  void _updateSelectedIndex(Offset position, double width) {
-    if (widget.dataPoints.isEmpty) return;
+   void _updateSelectedIndex(Offset position, double width) {
+    if (widget.dataPoints.isEmpty) {
+      AppLogger.logDebug('Cannot update index: no data points available');
+      return;
+    }
 
-    final pointWidth = width / (widget.dataPoints.length - 1);
-    final index = (position.dx / pointWidth).round();
+    try {
+      final pointWidth = width / (widget.dataPoints.length - 1);
+      final index = (position.dx / pointWidth).round();
 
-    if (index >= 0 && index < widget.dataPoints.length) {
-      setState(() {
-        selectedIndex = index;
-        touchPosition = position;
-      });
+      if (index >= 0 && index < widget.dataPoints.length) {
+        setState(() {
+          selectedIndex = index;
+          touchPosition = position;
+        });
 
-      widget.onPointSelected?.call(
-        index,
-        widget.dates[index],
-        widget.dataPoints[index],
-      );
+        final value = widget.dataPoints[index];
+        final date = widget.dates[index];
+
+        AppLogger.logDebug(
+            'Point selected: index=$index, value=$value, date=$date');
+        AppLogger.logEvent('graph_point_selected', {
+          'index': index,
+          'value': value,
+          'date': date.toString(),
+          'x_position': position.dx,
+          'y_position': position.dy,
+        });
+
+        widget.onPointSelected?.call(index, date, value);
+      }
+    } catch (e, stackTrace) {
+      AppLogger.logError('Error updating selected index',
+          error: e, stackTrace: stackTrace);
     }
   }
 }
@@ -180,14 +197,24 @@ class _LineGraphPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _drawReferenceLines(canvas, size);
-    if (showBottomLabels) {
-      _drawBottomLabels(canvas, size);
-    }
-    _drawAnimatedLine(canvas, size);
-    if (selectedIndex != null && touchPosition != null) {
-      _drawVerticalLine(canvas, size);
-      _drawSelectedPoint(canvas, size);
+    try {
+      AppLogger.logDebug(
+          'Starting to paint graph: ${size.width}x${size.height}');
+
+      _drawReferenceLines(canvas, size);
+      if (showBottomLabels) {
+        _drawBottomLabels(canvas, size);
+      }
+      _drawAnimatedLine(canvas, size);
+      if (selectedIndex != null && touchPosition != null) {
+        _drawVerticalLine(canvas, size);
+        _drawSelectedPoint(canvas, size);
+      }
+
+      AppLogger.logDebug('Graph painting completed successfully');
+    } catch (e, stackTrace) {
+      AppLogger.logError('Error while painting graph',
+          error: e, stackTrace: stackTrace);
     }
   }
 
@@ -274,8 +301,7 @@ class _LineGraphPainter extends CustomPainter {
             path, splitIndex == pointsToShow - 1 ? leftPaint : rightPaint);
       }
     } catch (e) {
-      // Handle any potential errors during drawing
-      print('Error drawing line: $e');
+      AppLogger.logError('Error drawing line',error: e);
     }
   }
 

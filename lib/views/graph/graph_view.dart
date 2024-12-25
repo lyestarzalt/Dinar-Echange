@@ -15,6 +15,7 @@ import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/error_message.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
+import 'package:dinar_echange/utils/logging.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
@@ -188,7 +189,7 @@ class HistoryPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Padding(
-            padding: const EdgeInsets.only(right: 50.0), // padding for labels
+            padding: const EdgeInsets.only(right: 50.0),
             child: AspectRatio(
               aspectRatio: 1.0,
               child: Padding(
@@ -202,8 +203,8 @@ class HistoryPage extends StatelessWidget {
                       .toList(),
                   gridColor: Theme.of(context).colorScheme.outline,
                   labelColor: Theme.of(context).colorScheme.onSurface,
-                  upTrendColor: Colors.green, // Customize trend colors
-                  downTrendColor: Colors.red, // Customize trend colors
+                  upTrendColor: Colors.green,
+                  downTrendColor: Colors.red,
                   showBottomLabels: false,
                   maxValue: provider.maxYValue,
                   minValue: provider.minYValue,
