@@ -210,6 +210,7 @@ class _LineGraphPainter extends CustomPainter {
 
   void _drawAnimatedLine(Canvas canvas, Size size) {
     if (dataPoints.isEmpty) return;
+    if (size.width <= 0 || size.height <= 0) return;
 
     final leftPaint = Paint()
       ..color = lineColor
@@ -225,35 +226,56 @@ class _LineGraphPainter extends CustomPainter {
     final pointsToShow = (dataPoints.length * animationValue).ceil();
     final splitIndex = selectedIndex ?? pointsToShow - 1;
 
-    // Draw animated path up to the current animation point
-    for (int i = 0; i < pointsToShow; i++) {
-      final x = size.width * (i / (dataPoints.length - 1));
-      final y = _getYPosition(dataPoints[i], size.height);
+    if (pointsToShow <= 0) return;
 
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
+    try {
+      for (int i = 0; i < pointsToShow; i++) {
+        if (i >= dataPoints.length) break;
+
+        final xRatio = i / (dataPoints.length - 1);
+        if (xRatio.isNaN) continue;
+
+        final x = size.width * xRatio;
+        final y = _getYPosition(dataPoints[i], size.height);
+
+        if (x.isNaN || y.isNaN) continue;
+
+        if (i == 0) {
+          path.moveTo(x, y);
+        } else {
+          path.lineTo(x, y);
+        }
+
+        if (i == splitIndex) {
+          if (path.computeMetrics().isNotEmpty) {
+            canvas.drawPath(path, leftPaint);
+          }
+          path.reset();
+          path.moveTo(x, y);
+        }
       }
 
-      if (i == splitIndex) {
-        canvas.drawPath(path, leftPaint);
-        path.reset();
-        path.moveTo(x, y);
+      // Draw remaining path with reduced opacity if needed
+      if (path.computeMetrics().isNotEmpty) {
+        canvas.drawPath(
+            path, splitIndex == pointsToShow - 1 ? leftPaint : rightPaint);
       }
-    }
-
-    // Draw remaining path with reduced opacity if needed
-    if (path.computeMetrics().isNotEmpty) {
-      canvas.drawPath(
-          path, splitIndex == pointsToShow - 1 ? leftPaint : rightPaint);
+    } catch (e) {
+      // Handle any potential errors during drawing
+      print('Error drawing line: $e');
     }
   }
 
   void _drawVerticalLine(Canvas canvas, Size size) {
     if (selectedIndex == null) return;
+    if (selectedIndex! >= dataPoints.length) return;
+    if (dataPoints.isEmpty) return;
 
-    final x = size.width * (selectedIndex! / (dataPoints.length - 1));
+    final xRatio = selectedIndex! / (dataPoints.length - 1);
+    if (xRatio.isNaN) return;
+
+    final x = size.width * xRatio;
+    if (x.isNaN) return;
 
     final paint = Paint()
       ..color = lineColor.withOpacity(0.3)
@@ -265,20 +287,31 @@ class _LineGraphPainter extends CustomPainter {
     double startY = 0;
 
     while (startY < size.height) {
-      canvas.drawLine(
-        Offset(x, startY),
-        Offset(x, math.min(startY + dashHeight, size.height)),
-        paint,
-      );
+      final endY = math.min(startY + dashHeight, size.height);
+      if (!startY.isNaN && !endY.isNaN) {
+        canvas.drawLine(
+          Offset(x, startY),
+          Offset(x, endY),
+          paint,
+        );
+      }
       startY += dashHeight + gapHeight;
     }
   }
 
   void _drawSelectedPoint(Canvas canvas, Size size) {
     if (selectedIndex == null || selectedIndex! >= dataPoints.length) return;
+    if (dataPoints.isEmpty) return;
 
-    final x = size.width * (selectedIndex! / (dataPoints.length - 1));
+    final xRatio = selectedIndex! / (dataPoints.length - 1);
+    if (xRatio.isNaN) return;
+
+    final x = size.width * xRatio;
     final y = _getYPosition(dataPoints[selectedIndex!], size.height);
+
+    // Skip drawing if we have invalid coordinates
+    if (x.isNaN || y.isNaN) return;
+
     final center = Offset(x, y);
 
     // Draw white border
@@ -314,7 +347,14 @@ class _LineGraphPainter extends CustomPainter {
   }
 
   double _getYPosition(double value, double height) {
-    return height * (1 - ((value - minValue) / (maxValue - minValue)));
+    // Handle edge cases where values might cause NaN
+    if (maxValue == minValue) return height / 2;
+    if (value.isNaN || maxValue.isNaN || minValue.isNaN) return 0;
+
+    final normalizedValue = (value - minValue) / (maxValue - minValue);
+    if (normalizedValue.isNaN) return 0;
+
+    return height * (1 - normalizedValue);
   }
 
   @override
