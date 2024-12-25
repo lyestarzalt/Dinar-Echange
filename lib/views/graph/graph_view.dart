@@ -4,10 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/data/models/currency.dart';
 import 'package:dinar_echange/widgets/graph/core_currency_menu.dart';
 import 'package:dinar_echange/widgets/graph/time_span_buttons.dart';
-import 'package:dinar_echange/widgets/graph/line_graph.dart';
+import 'package:dinar_echange/widgets/graph/custom_line_graph.dart';
 import 'package:animations/animations.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:dinar_echange/data/models/currency_history.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:dinar_echange/providers/app_provider.dart';
@@ -20,6 +18,7 @@ import 'package:dinar_echange/providers/appinit_provider.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppInitializationProvider>(
@@ -147,9 +146,7 @@ class HistoryPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   ValueListenableBuilder<String>(
                     valueListenable: provider.selectedValue,
                     builder: (context, value, child) {
@@ -169,9 +166,10 @@ class HistoryPage extends StatelessWidget {
                       return ValueListenableBuilder<DateTime>(
                         valueListenable: provider.selectedDate,
                         builder: (context, value, child) {
-                          String date = DateFormat('d MMMM y',
-                                  languageProvider.currentLocale.toString())
-                              .format(value);
+                          String date = DateFormat(
+                            'd MMMM y',
+                            languageProvider.currentLocale.toString(),
+                          ).format(value);
 
                           return Text(
                             date,
@@ -191,15 +189,20 @@ class HistoryPage extends StatelessWidget {
           const SizedBox(height: 16),
           AspectRatio(
             aspectRatio: 1.0,
-            child: LineGraph(
-              historyEntries: provider.filteredHistoryEntries,
-              touchedIndex: provider.touchedIndex.value,
-              minYValue: provider.minYValue,
-              midYValue: provider.midYValue,
-              maxYValue: provider.maxYValue,
-              maxX: provider.maxX,
-              onIndexChangeCallback: (index, entries) =>
-                  provider.updateSelectedData(index),
+            child: CustomLineGraph(
+              dataPoints: provider.filteredHistoryEntries
+                  .map((entry) => entry.buy)
+                  .toList(),
+              dates: provider.filteredHistoryEntries
+                  .map((entry) => entry.date)
+                  .toList(),
+              lineColor: Theme.of(context).colorScheme.primary,
+              fillColor: Theme.of(context).colorScheme.primary,
+              gridColor: Theme.of(context).colorScheme.outline,
+              labelColor: Theme.of(context).colorScheme.onSurface,
+              onPointSelected: (index, date, value) {
+                provider.updateSelectedData(index);
+              },
             ),
           ),
           const SizedBox(height: 20),
