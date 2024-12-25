@@ -6,10 +6,13 @@ class CustomLineGraph extends StatefulWidget {
   final List<double> dataPoints;
   final List<DateTime> dates;
   final Color lineColor;
-  final Color fillColor;
   final Color gridColor;
   final Color labelColor;
   final double strokeWidth;
+  final bool showBottomLabels;
+  final double maxValue;
+  final double minValue;
+  final double midValue;
   final Function(int index, DateTime date, double value)? onPointSelected;
 
   const CustomLineGraph({
@@ -17,10 +20,13 @@ class CustomLineGraph extends StatefulWidget {
     required this.dataPoints,
     required this.dates,
     this.lineColor = Colors.blue,
-    this.fillColor = Colors.blue,
     this.gridColor = Colors.grey,
     this.labelColor = Colors.black,
-    this.strokeWidth = 2.0,
+    this.strokeWidth = 4.0, // Increased line thickness
+    this.showBottomLabels = false,
+    required this.maxValue,
+    required this.minValue,
+    required this.midValue,
     this.onPointSelected,
   }) : super(key: key);
 
@@ -54,10 +60,13 @@ class _CustomLineGraphState extends State<CustomLineGraph> {
               dataPoints: widget.dataPoints,
               dates: widget.dates,
               lineColor: widget.lineColor,
-              fillColor: widget.fillColor.withOpacity(0.2),
               gridColor: widget.gridColor,
               labelColor: widget.labelColor,
               strokeWidth: widget.strokeWidth,
+              showBottomLabels: widget.showBottomLabels,
+              maxValue: widget.maxValue,
+              minValue: widget.minValue,
+              midValue: widget.midValue,
               selectedIndex: selectedIndex,
               touchPosition: touchPosition,
             ),
@@ -92,10 +101,13 @@ class _LineGraphPainter extends CustomPainter {
   final List<double> dataPoints;
   final List<DateTime> dates;
   final Color lineColor;
-  final Color fillColor;
   final Color gridColor;
   final Color labelColor;
   final double strokeWidth;
+  final bool showBottomLabels;
+  final double maxValue;
+  final double minValue;
+  final double midValue;
   final int? selectedIndex;
   final Offset? touchPosition;
 
@@ -103,73 +115,49 @@ class _LineGraphPainter extends CustomPainter {
     required this.dataPoints,
     required this.dates,
     required this.lineColor,
-    required this.fillColor,
     required this.gridColor,
     required this.labelColor,
     required this.strokeWidth,
+    required this.showBottomLabels,
+    required this.maxValue,
+    required this.minValue,
+    required this.midValue,
     this.selectedIndex,
     this.touchPosition,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = lineColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final fillPaint = Paint()
-      ..color = fillColor
-      ..style = PaintingStyle.fill;
-
-    _drawGrid(canvas, size);
-    _drawLabels(canvas, size);
-    _drawLine(canvas, size, paint);
-    _drawFill(canvas, size, fillPaint);
-
+    _drawReferenceLines(canvas, size);
+    if (showBottomLabels) {
+      _drawBottomLabels(canvas, size);
+    }
+    _drawSplitLine(canvas, size);
     if (selectedIndex != null && touchPosition != null) {
+      _drawVerticalLine(canvas, size);
       _drawSelectedPoint(canvas, size);
     }
   }
 
-  void _drawGrid(Canvas canvas, Size size) {
+  void _drawReferenceLines(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = gridColor.withOpacity(0.3)
-      ..strokeWidth = 0.5;
+      ..strokeWidth = 1.0;
 
-    // Draw horizontal grid lines
-    for (int i = 0; i <= 4; i++) {
-      final y = size.height * (i / 4);
+    // Draw max, min, and mid lines
+    final values = [maxValue, midValue, minValue];
+    for (var value in values) {
+      final y = _getYPosition(value, size.height);
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),
         paint,
       );
-    }
 
-    // Draw vertical grid lines
-    for (int i = 0; i <= 6; i++) {
-      final x = size.width * (i / 6);
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
-    }
-  }
-
-  void _drawLabels(Canvas canvas, Size size) {
-    if (dataPoints.isEmpty) return;
-
-    final maxValue = dataPoints.reduce(math.max);
-    final minValue = dataPoints.reduce(math.min);
-
-    // Draw Y-axis labels
-    for (int i = 0; i <= 4; i++) {
-      final value = minValue + (maxValue - minValue) * (i / 4);
+      // Draw value labels on the right
       final textSpan = TextSpan(
-        text: value.toStringAsFixed(2),
-        style: TextStyle(color: labelColor, fontSize: 10),
+        text: value.toStringAsFixed(1),
+        style: TextStyle(color: labelColor, fontSize: 12),
       );
       final textPainter = TextPainter(
         text: textSpan,
@@ -178,12 +166,102 @@ class _LineGraphPainter extends CustomPainter {
 
       textPainter.paint(
         canvas,
-        Offset(-textPainter.width - 5,
-            size.height * (1 - i / 4) - textPainter.height / 2),
+        Offset(size.width + 5, y - textPainter.height / 2),
       );
     }
+  }
 
-    // Draw X-axis labels (dates)
+  void _drawSplitLine(Canvas canvas, Size size) {
+    if (dataPoints.isEmpty) return;
+
+    final leftPaint = Paint()
+      ..color = lineColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final rightPaint = Paint()
+      ..color = lineColor.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final path = Path();
+    int splitIndex = selectedIndex ?? dataPoints.length - 1;
+
+    // Draw left part of the line (before selected point)
+    for (int i = 0; i <= splitIndex; i++) {
+      final x = size.width * (i / (dataPoints.length - 1));
+      final y = _getYPosition(dataPoints[i], size.height);
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    canvas.drawPath(path, leftPaint);
+
+    // Draw right part of the line (after selected point)
+    if (splitIndex < dataPoints.length - 1) {
+      final rightPath = Path();
+      final x = size.width * (splitIndex / (dataPoints.length - 1));
+      final y = _getYPosition(dataPoints[splitIndex], size.height);
+      rightPath.moveTo(x, y);
+
+      for (int i = splitIndex + 1; i < dataPoints.length; i++) {
+        final x = size.width * (i / (dataPoints.length - 1));
+        final y = _getYPosition(dataPoints[i], size.height);
+        rightPath.lineTo(x, y);
+      }
+      canvas.drawPath(rightPath, rightPaint);
+    }
+  }
+
+  void _drawVerticalLine(Canvas canvas, Size size) {
+    if (selectedIndex == null) return;
+
+    final x = size.width * (selectedIndex! / (dataPoints.length - 1));
+
+    // Create dotted line effect
+    final paint = Paint()
+      ..color = lineColor.withOpacity(0.3)
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    double dashHeight = 5;
+    double gapHeight = 3;
+    double startY = 0;
+
+    while (startY < size.height) {
+      canvas.drawLine(
+        Offset(x, startY),
+        Offset(x, math.min(startY + dashHeight, size.height)),
+        paint,
+      );
+      startY += dashHeight + gapHeight;
+    }
+  }
+
+  void _drawSelectedPoint(Canvas canvas, Size size) {
+    if (selectedIndex == null || selectedIndex! >= dataPoints.length) return;
+
+    final x = size.width * (selectedIndex! / (dataPoints.length - 1));
+    final y = _getYPosition(dataPoints[selectedIndex!], size.height);
+    final center = Offset(x, y);
+
+    // Draw white border
+    final outerCirclePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, 8, outerCirclePaint);
+
+    // Draw colored inner circle
+    final innerCirclePaint = Paint()
+      ..color = lineColor
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, 5, innerCirclePaint);
+  }
+
+  void _drawBottomLabels(Canvas canvas, Size size) {
     for (int i = 0; i < dates.length; i += dates.length ~/ 6) {
       final textSpan = TextSpan(
         text: '${dates[i].month}/${dates[i].day}',
@@ -202,109 +280,8 @@ class _LineGraphPainter extends CustomPainter {
     }
   }
 
-  void _drawLine(Canvas canvas, Size size, Paint paint) {
-    if (dataPoints.isEmpty) return;
-
-    final path = Path();
-    final maxValue = dataPoints.reduce(math.max);
-    final minValue = dataPoints.reduce(math.min);
-    final range = maxValue - minValue;
-
-    for (int i = 0; i < dataPoints.length; i++) {
-      final x = size.width * (i / (dataPoints.length - 1));
-      final normalizedY = (dataPoints[i] - minValue) / range;
-      final y = size.height * (1 - normalizedY);
-
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawFill(Canvas canvas, Size size, Paint fillPaint) {
-    if (dataPoints.isEmpty) return;
-
-    final path = Path();
-    final maxValue = dataPoints.reduce(math.max);
-    final minValue = dataPoints.reduce(math.min);
-    final range = maxValue - minValue;
-
-    // Start from bottom-left
-    path.moveTo(0, size.height);
-
-    // Draw line through all points
-    for (int i = 0; i < dataPoints.length; i++) {
-      final x = size.width * (i / (dataPoints.length - 1));
-      final normalizedY = (dataPoints[i] - minValue) / range;
-      final y = size.height * (1 - normalizedY);
-      path.lineTo(x, y);
-    }
-
-    // Complete the path to create a closed shape
-    path.lineTo(size.width, size.height);
-    path.close();
-
-    canvas.drawPath(path, fillPaint);
-  }
-
-  void _drawSelectedPoint(Canvas canvas, Size size) {
-    if (selectedIndex == null || selectedIndex! >= dataPoints.length) return;
-
-    final maxValue = dataPoints.reduce(math.max);
-    final minValue = dataPoints.reduce(math.min);
-    final range = maxValue - minValue;
-
-    final x = size.width * (selectedIndex! / (dataPoints.length - 1));
-    final normalizedY = (dataPoints[selectedIndex!] - minValue) / range;
-    final y = size.height * (1 - normalizedY);
-
-    // Draw point
-    final pointPaint = Paint()
-      ..color = lineColor
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(x, y), 6, pointPaint);
-
-    // Draw value label
-    final value = dataPoints[selectedIndex!];
-    final textSpan = TextSpan(
-      text: value.toStringAsFixed(2),
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-    final textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    // Draw label background
-    final labelPaint = Paint()
-      ..color = lineColor
-      ..style = PaintingStyle.fill;
-    final labelRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(x, y - 20),
-        width: textPainter.width + 16,
-        height: textPainter.height + 8,
-      ),
-      const Radius.circular(4),
-    );
-    canvas.drawRRect(labelRect, labelPaint);
-
-    // Draw label text
-    textPainter.paint(
-      canvas,
-      Offset(
-        x - textPainter.width / 2,
-        y - 20 - textPainter.height / 2,
-      ),
-    );
+  double _getYPosition(double value, double height) {
+    return height * (1 - ((value - minValue) / (maxValue - minValue)));
   }
 
   @override

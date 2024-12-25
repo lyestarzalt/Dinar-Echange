@@ -187,22 +187,29 @@ class HistoryPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          AspectRatio(
-            aspectRatio: 1.0,
-            child: CustomLineGraph(
-              dataPoints: provider.filteredHistoryEntries
-                  .map((entry) => entry.buy)
-                  .toList(),
-              dates: provider.filteredHistoryEntries
-                  .map((entry) => entry.date)
-                  .toList(),
-              lineColor: Theme.of(context).colorScheme.primary,
-              fillColor: Theme.of(context).colorScheme.primary,
-              gridColor: Theme.of(context).colorScheme.outline,
-              labelColor: Theme.of(context).colorScheme.onSurface,
-              onPointSelected: (index, date, value) {
-                provider.updateSelectedData(index);
-              },
+          Padding(
+            padding: const EdgeInsets.only(
+                right: 50.0), // padding for labels
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: CustomLineGraph(
+                dataPoints: provider.filteredHistoryEntries
+                    .map((entry) => entry.buy)
+                    .toList(),
+                dates: provider.filteredHistoryEntries
+                    .map((entry) => entry.date)
+                    .toList(),
+                lineColor: Theme.of(context).colorScheme.primary,
+                gridColor: Theme.of(context).colorScheme.outline,
+                labelColor: Theme.of(context).colorScheme.onSurface,
+                showBottomLabels: false,
+                maxValue: provider.maxYValue,
+                minValue: provider.minYValue,
+                midValue: provider.midYValue,
+                onPointSelected: (index, date, value) {
+                  provider.updateSelectedData(index);
+                },
+              ),
             ),
           ),
           const SizedBox(height: 20),
