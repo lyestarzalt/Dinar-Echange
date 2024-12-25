@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'dart:math' as math;
 
 class CustomLineGraph extends StatefulWidget {
@@ -22,7 +21,7 @@ class CustomLineGraph extends StatefulWidget {
     this.lineColor = Colors.blue,
     this.gridColor = Colors.grey,
     this.labelColor = Colors.black,
-    this.strokeWidth = 4.0, // Increased line thickness
+    this.strokeWidth = 4.0,
     this.showBottomLabels = false,
     required this.maxValue,
     required this.minValue,
@@ -34,9 +33,41 @@ class CustomLineGraph extends StatefulWidget {
   State<CustomLineGraph> createState() => _CustomLineGraphState();
 }
 
-class _CustomLineGraphState extends State<CustomLineGraph> {
+class _CustomLineGraphState extends State<CustomLineGraph>
+    with SingleTickerProviderStateMixin {
   int? selectedIndex;
   Offset? touchPosition;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void didUpdateWidget(CustomLineGraph oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dataPoints != widget.dataPoints) {
+      _animationController.reset();
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +85,28 @@ class _CustomLineGraphState extends State<CustomLineGraph> {
               touchPosition = null;
             });
           },
-          child: CustomPaint(
-            size: Size(constraints.maxWidth, constraints.maxHeight),
-            painter: _LineGraphPainter(
-              dataPoints: widget.dataPoints,
-              dates: widget.dates,
-              lineColor: widget.lineColor,
-              gridColor: widget.gridColor,
-              labelColor: widget.labelColor,
-              strokeWidth: widget.strokeWidth,
-              showBottomLabels: widget.showBottomLabels,
-              maxValue: widget.maxValue,
-              minValue: widget.minValue,
-              midValue: widget.midValue,
-              selectedIndex: selectedIndex,
-              touchPosition: touchPosition,
-            ),
+          child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return CustomPaint(
+                size: Size(constraints.maxWidth, constraints.maxHeight),
+                painter: _LineGraphPainter(
+                  dataPoints: widget.dataPoints,
+                  dates: widget.dates,
+                  lineColor: widget.lineColor,
+                  gridColor: widget.gridColor,
+                  labelColor: widget.labelColor,
+                  strokeWidth: widget.strokeWidth,
+                  showBottomLabels: widget.showBottomLabels,
+                  maxValue: widget.maxValue,
+                  minValue: widget.minValue,
+                  midValue: widget.midValue,
+                  selectedIndex: selectedIndex,
+                  touchPosition: touchPosition,
+                  animationValue: _animation.value,
+                ),
+              );
+            },
           ),
         );
       },
@@ -110,6 +147,7 @@ class _LineGraphPainter extends CustomPainter {
   final double midValue;
   final int? selectedIndex;
   final Offset? touchPosition;
+  final double animationValue;
 
   _LineGraphPainter({
     required this.dataPoints,
@@ -122,6 +160,7 @@ class _LineGraphPainter extends CustomPainter {
     required this.maxValue,
     required this.minValue,
     required this.midValue,
+    required this.animationValue,
     this.selectedIndex,
     this.touchPosition,
   });
@@ -132,7 +171,7 @@ class _LineGraphPainter extends CustomPainter {
     if (showBottomLabels) {
       _drawBottomLabels(canvas, size);
     }
-    _drawSplitLine(canvas, size);
+    _drawAnimatedLine(canvas, size);
     if (selectedIndex != null && touchPosition != null) {
       _drawVerticalLine(canvas, size);
       _drawSelectedPoint(canvas, size);
@@ -141,10 +180,9 @@ class _LineGraphPainter extends CustomPainter {
 
   void _drawReferenceLines(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = gridColor.withOpacity(0.3)
+      ..color = gridColor.withOpacity(0.2)
       ..strokeWidth = 1.0;
 
-    // Draw max, min, and mid lines
     final values = [maxValue, midValue, minValue];
     for (var value in values) {
       final y = _getYPosition(value, size.height);
@@ -154,9 +192,8 @@ class _LineGraphPainter extends CustomPainter {
         paint,
       );
 
-      // Draw value labels on the right
       final textSpan = TextSpan(
-        text: value.toStringAsFixed(1),
+        text: value.toStringAsFixed(3),
         style: TextStyle(color: labelColor, fontSize: 12),
       );
       final textPainter = TextPainter(
@@ -171,7 +208,7 @@ class _LineGraphPainter extends CustomPainter {
     }
   }
 
-  void _drawSplitLine(Canvas canvas, Size size) {
+  void _drawAnimatedLine(Canvas canvas, Size size) {
     if (dataPoints.isEmpty) return;
 
     final leftPaint = Paint()
@@ -185,10 +222,11 @@ class _LineGraphPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     final path = Path();
-    int splitIndex = selectedIndex ?? dataPoints.length - 1;
+    final pointsToShow = (dataPoints.length * animationValue).ceil();
+    final splitIndex = selectedIndex ?? pointsToShow - 1;
 
-    // Draw left part of the line (before selected point)
-    for (int i = 0; i <= splitIndex; i++) {
+    // Draw animated path up to the current animation point
+    for (int i = 0; i < pointsToShow; i++) {
       final x = size.width * (i / (dataPoints.length - 1));
       final y = _getYPosition(dataPoints[i], size.height);
 
@@ -197,22 +235,18 @@ class _LineGraphPainter extends CustomPainter {
       } else {
         path.lineTo(x, y);
       }
-    }
-    canvas.drawPath(path, leftPaint);
 
-    // Draw right part of the line (after selected point)
-    if (splitIndex < dataPoints.length - 1) {
-      final rightPath = Path();
-      final x = size.width * (splitIndex / (dataPoints.length - 1));
-      final y = _getYPosition(dataPoints[splitIndex], size.height);
-      rightPath.moveTo(x, y);
-
-      for (int i = splitIndex + 1; i < dataPoints.length; i++) {
-        final x = size.width * (i / (dataPoints.length - 1));
-        final y = _getYPosition(dataPoints[i], size.height);
-        rightPath.lineTo(x, y);
+      if (i == splitIndex) {
+        canvas.drawPath(path, leftPaint);
+        path.reset();
+        path.moveTo(x, y);
       }
-      canvas.drawPath(rightPath, rightPaint);
+    }
+
+    // Draw remaining path with reduced opacity if needed
+    if (path.computeMetrics().isNotEmpty) {
+      canvas.drawPath(
+          path, splitIndex == pointsToShow - 1 ? leftPaint : rightPaint);
     }
   }
 
@@ -221,7 +255,6 @@ class _LineGraphPainter extends CustomPainter {
 
     final x = size.width * (selectedIndex! / (dataPoints.length - 1));
 
-    // Create dotted line effect
     final paint = Paint()
       ..color = lineColor.withOpacity(0.3)
       ..strokeWidth = 3
@@ -288,6 +321,7 @@ class _LineGraphPainter extends CustomPainter {
   bool shouldRepaint(covariant _LineGraphPainter oldDelegate) {
     return oldDelegate.dataPoints != dataPoints ||
         oldDelegate.selectedIndex != selectedIndex ||
-        oldDelegate.touchPosition != touchPosition;
+        oldDelegate.touchPosition != touchPosition ||
+        oldDelegate.animationValue != animationValue;
   }
 }
