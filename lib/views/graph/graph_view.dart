@@ -188,27 +188,30 @@ class HistoryPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Padding(
-            padding: const EdgeInsets.only(
-                right: 50.0), // padding for labels
+            padding: const EdgeInsets.only(right: 50.0), // padding for labels
             child: AspectRatio(
               aspectRatio: 1.0,
-              child: CustomLineGraph(
-                dataPoints: provider.filteredHistoryEntries
-                    .map((entry) => entry.buy)
-                    .toList(),
-                dates: provider.filteredHistoryEntries
-                    .map((entry) => entry.date)
-                    .toList(),
-                lineColor: Theme.of(context).colorScheme.primary,
-                gridColor: Theme.of(context).colorScheme.outline,
-                labelColor: Theme.of(context).colorScheme.onSurface,
-                showBottomLabels: false,
-                maxValue: provider.maxYValue,
-                minValue: provider.minYValue,
-                midValue: provider.midYValue,
-                onPointSelected: (index, date, value) {
-                  provider.updateSelectedData(index);
-                },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: CustomLineGraph(
+                  dataPoints: provider.filteredHistoryEntries
+                      .map((entry) => entry.buy)
+                      .toList(),
+                  dates: provider.filteredHistoryEntries
+                      .map((entry) => entry.date)
+                      .toList(),
+                  gridColor: Theme.of(context).colorScheme.outline,
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  upTrendColor: Colors.green, // Customize trend colors
+                  downTrendColor: Colors.red, // Customize trend colors
+                  showBottomLabels: false,
+                  maxValue: provider.maxYValue,
+                  minValue: provider.minYValue,
+                  midValue: provider.midYValue,
+                  onPointSelected: (index, date, value) {
+                    provider.updateSelectedData(index);
+                  },
+                ),
               ),
             ),
           ),

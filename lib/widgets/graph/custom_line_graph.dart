@@ -13,7 +13,8 @@ class CustomLineGraph extends StatefulWidget {
   final double minValue;
   final double midValue;
   final Function(int index, DateTime date, double value)? onPointSelected;
-
+  final Color upTrendColor;
+  final Color downTrendColor;
   const CustomLineGraph({
     Key? key,
     required this.dataPoints,
@@ -27,6 +28,8 @@ class CustomLineGraph extends StatefulWidget {
     required this.minValue,
     required this.midValue,
     this.onPointSelected,
+    this.upTrendColor = Colors.green,
+    this.downTrendColor = Colors.red,
   }) : super(key: key);
 
   @override
@@ -39,6 +42,16 @@ class _CustomLineGraphState extends State<CustomLineGraph>
   Offset? touchPosition;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  Color get _trendColor {
+    if (widget.dataPoints.isEmpty) return widget.upTrendColor;
+
+    final firstValue = widget.dataPoints.first;
+    final lastValue = widget.dataPoints.last;
+
+    return lastValue >= firstValue
+        ? widget.upTrendColor
+        : widget.downTrendColor;
+  }
 
   @override
   void initState() {
@@ -93,7 +106,7 @@ class _CustomLineGraphState extends State<CustomLineGraph>
                 painter: _LineGraphPainter(
                   dataPoints: widget.dataPoints,
                   dates: widget.dates,
-                  lineColor: widget.lineColor,
+                  lineColor: _trendColor, // Use trend color
                   gridColor: widget.gridColor,
                   labelColor: widget.labelColor,
                   strokeWidth: widget.strokeWidth,
