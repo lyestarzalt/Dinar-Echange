@@ -50,7 +50,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rate_us_button => 'قيّم التطبيق';
 
   @override
-  String get about_body => 'شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.';
+  String get about_body => 'شكرًا لاختيارك Dinar Echange. يوفّر هذا التطبيق تحديثات وميزات تساعدك على متابعة تغيّرات العملات.';
 
   @override
   String get about_app_button => 'حول التطبيق';
@@ -74,7 +74,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_currencies_message => 'لا توجد عملات';
 
   @override
-  String get errormessage_message => 'تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+  String get errormessage_message => 'تعذر تحميل البيانات. تحقق من الاتصال وحاول مرة أخرى.';
 
   @override
   String get search_hint => 'بحث';
@@ -101,7 +101,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dzd_symbol => 'دج';
 
   @override
-  String get centime_explanation => 'في الجزائر، يُستخدم مصطلح \'سنتيم\' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.';
+  String get centime_explanation => 'في الجزائر، يُستخدم مصطلح \'السنتيم\' بشكل غير رسمي للإشارة إلى جميع المبالغ المالية، كبيرة أو صغيرة. على سبيل المثال، إذا قيل إن هاتفًا ما يكلف 5 ملايين، فعادةً ما يشير ذلك إلى 50,000 دج.';
 
   @override
   String get why_centime_title => 'استخدام \'السنتيم';
@@ -133,10 +133,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get latest_updates_on => 'آخر التحديثات في';
 
   @override
-  String get parallel_market => 'السوق الموازي';
+  String get parallel_market => 'السوق البديل';
 
   @override
-  String get official_market => 'السوق الرسمي';
+  String get official_market => 'السوق الرئيسية';
 
   @override
   String get retry => 'إعادة المحاولة';

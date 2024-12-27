@@ -60,7 +60,7 @@
   "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "about_body": "شكرًا لاستخدامك Dinar Echange، أداتك لمراقبة العملات. نحن نقدم تحديثات في الوقت المناسب ونسعى جاهدًا لتقديم ميزات سهلة الاستخدام تدعم احتياجاتك المالية.",
+  "about_body": "شكرًا لاختيارك Dinar Echange. يوفّر هذا التطبيق تحديثات وميزات تساعدك على متابعة تغيّرات العملات.",
   "@about_body": {
     "description": "App's detailed description"
   },
@@ -92,7 +92,7 @@
   "@no_currencies_message": {
     "description": "Message for no currency data."
   },
-  "errormessage_message": "تعذر تحميل البيانات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.",
+  "errormessage_message": "تعذر تحميل البيانات. تحقق من الاتصال وحاول مرة أخرى.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
@@ -128,7 +128,7 @@
   "@dzd_symbol": {
     "description": "Algerian dinar"
   },
-  "centime_explanation": "في الجزائر، يُستخدم مصطلح 'سنتيم' غير الرسمي لتمثيل مبالغ أقل من العملة. على سبيل المثال، عندما يُقال أن شيئًا ما يكلف مليون، فإن ذلك يعني أنه بقيمة 10,000 دج.",
+  "centime_explanation": "في الجزائر، يُستخدم مصطلح 'السنتيم' بشكل غير رسمي للإشارة إلى جميع المبالغ المالية، كبيرة أو صغيرة. على سبيل المثال، إذا قيل إن هاتفًا ما يكلف 5 ملايين، فعادةً ما يشير ذلك إلى 50,000 دج.",
   "@centime_explanation": {
     "description": "Explanation of the term 'centime' in Algeria"
   },
@@ -168,11 +168,11 @@
   "@latest_updates_on": {
     "description": "Latest updates on"
   },
-  "parallel_market": "السوق الموازي",
+  "parallel_market": "السوق البديل",
   "@parallel_market": {
     "description": "Tab title for the non-official market"
   },
-  "official_market": "السوق الرسمي",
+  "official_market": "السوق الرئيسية",
   "@official_market": {
     "description": "Tab title for the official market"
   },

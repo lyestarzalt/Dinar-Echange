@@ -188,7 +188,7 @@ abstract class AppLocalizations {
   /// App's detailed description
   ///
   /// In en, this message translates to:
-  /// **'Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.'**
+  /// **'Thank you for choosing Dinar Echange. This app shares updates and features to help you track currency changes.'**
   String get about_body;
 
   /// About the App
@@ -236,7 +236,7 @@ abstract class AppLocalizations {
   /// Detailed text explaining the error.
   ///
   /// In en, this message translates to:
-  /// **'Unable to load the data. Please check your connection and try again.'**
+  /// **'Unable to load the data. Check your connection and try again.'**
   String get errormessage_message;
 
   /// Option to search
@@ -290,7 +290,7 @@ abstract class AppLocalizations {
   /// Explanation of the term 'centime' in Algeria
   ///
   /// In en, this message translates to:
-  /// **'In Algerian society, \'centime\' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it\'s 10,000 DZD'**
+  /// **'In Algeria, \'centime\' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.'**
   String get centime_explanation;
 
   /// Title for centime use
@@ -350,13 +350,13 @@ abstract class AppLocalizations {
   /// Tab title for the non-official market
   ///
   /// In en, this message translates to:
-  /// **'Parallel Market'**
+  /// **'Alternative Market'**
   String get parallel_market;
 
   /// Tab title for the official market
   ///
   /// In en, this message translates to:
-  /// **'Official Market'**
+  /// **'Main Market'**
   String get official_market;
 
   /// Retry button text

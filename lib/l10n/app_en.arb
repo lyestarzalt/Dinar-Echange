@@ -60,7 +60,7 @@
   "@rate_us_button": {
     "description": "Invitation to rate the app."
   },
-  "about_body": "Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.",
+  "about_body": "Thank you for choosing Dinar Echange. This app shares updates and features to help you track currency changes.",
   "@about_body": {
     "description": "App's detailed description"
   },
@@ -92,7 +92,7 @@
   "@no_currencies_message": {
     "description": "Message for no currency data."
   },
-  "errormessage_message": "Unable to load the data. Please check your connection and try again.",
+  "errormessage_message": "Unable to load the data. Check your connection and try again.",
   "@errormessage_message": {
     "description": "Detailed text explaining the error."
   },
@@ -128,7 +128,7 @@
   "@dzd_symbol": {
     "description": "Algerian dinar"
   },
-  "centime_explanation": "In Algerian society, 'centime' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it's 10,000 DZD",
+  "centime_explanation": "In Algeria, 'centime' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.",
   "@centime_explanation": {
     "description": "Explanation of the term 'centime' in Algeria"
   },
@@ -168,11 +168,11 @@
   "@latest_updates_on": {
     "description": "Latest updates on"
   },
-  "parallel_market": "Parallel Market",
+  "parallel_market": "Alternative Market",
   "@parallel_market": {
     "description": "Tab title for the non-official market"
   },
-  "official_market": "Official Market",
+  "official_market": "Main Market",
   "@official_market": {
     "description": "Tab title for the official market"
   },

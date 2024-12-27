@@ -50,7 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rate_us_button => 'Rate the App';
 
   @override
-  String get about_body => 'Thank you for using Dinar Echange, your tool for currency monitoring. We provide timely updates and strive to offer user-friendly features that support your financial tracking needs.';
+  String get about_body => 'Thank you for choosing Dinar Echange. This app shares updates and features to help you track currency changes.';
 
   @override
   String get about_app_button => 'About the App';
@@ -74,7 +74,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_currencies_message => 'No currencies';
 
   @override
-  String get errormessage_message => 'Unable to load the data. Please check your connection and try again.';
+  String get errormessage_message => 'Unable to load the data. Check your connection and try again.';
 
   @override
   String get search_hint => 'Search';
@@ -101,7 +101,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dzd_symbol => 'DZD';
 
   @override
-  String get centime_explanation => 'In Algerian society, \'centime\' is informally used to simplify discussions about money. For example, if you hear something costs 1 million, it means it\'s 10,000 DZD';
+  String get centime_explanation => 'In Algeria, \'centime\' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.';
 
   @override
   String get why_centime_title => 'The Usage of \'Centime';
@@ -133,10 +133,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get latest_updates_on => 'Latest updates on';
 
   @override
-  String get parallel_market => 'Parallel Market';
+  String get parallel_market => 'Alternative Market';
 
   @override
-  String get official_market => 'Official Market';
+  String get official_market => 'Main Market';
 
   @override
   String get retry => 'Retry';

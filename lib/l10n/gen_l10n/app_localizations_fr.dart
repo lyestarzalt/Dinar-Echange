@@ -50,7 +50,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rate_us_button => 'Évaluez l\'application';
 
   @override
-  String get about_body => 'Merci d\'utiliser Dinar Echange, votre outil de suivi des devises. Nous fournissons des mises à jour opportunes et nous efforçons d\'offrir des fonctionnalités conviviales qui soutiennent vos besoins de suivi financier.';
+  String get about_body => 'Merci d\'avoir choisi Dinar Echange. Cette application fournit des mises à jour et des fonctionnalités pour vous aider à suivre l\'évolution des devises.';
 
   @override
   String get about_app_button => 'À propos de l\'application';
@@ -74,7 +74,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get no_currencies_message => 'Pas de devises';
 
   @override
-  String get errormessage_message => 'Impossible de charger les données. Veuillez vérifier votre connexion et réessayer.';
+  String get errormessage_message => 'Impossible de charger les données. Vérifiez votre connexion et réessayez.';
 
   @override
   String get search_hint => 'Recherche';
@@ -101,7 +101,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dzd_symbol => 'DZD';
 
   @override
-  String get centime_explanation => 'En Algérie, le terme \'centime\' est utilisé de manière informelle pour représenter de plus petites quantités de monnaie. Par exemple, lorsque l\'on dit que quelque chose coûte 1 million, cela signifie en réalité 10 000 DZD';
+  String get centime_explanation => 'En Algérie, le \'centime\' est utilisé de manière informelle pour toutes les sommes, grandes ou petites. Par exemple, si l\'on dit qu\'un téléphone coûte 5 millions, cela fait généralement référence à 50 000 DZD.';
 
   @override
   String get why_centime_title => 'L\'utilisation du \'Centime';
@@ -133,10 +133,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get latest_updates_on => 'Dernières mises à jour le';
 
   @override
-  String get parallel_market => 'Marché Parallèle';
+  String get parallel_market => 'Marché Alternatif';
 
   @override
-  String get official_market => 'Marché Officiel';
+  String get official_market => 'Marché Principal';
 
   @override
   String get retry => 'Réessayer';
