@@ -105,10 +105,10 @@ class Converter extends StatelessWidget {
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final middlePoint = screenHeight * 0.17;
     final cardHeight = screenHeight / 8;
-    const gapBetweenCards = 8;
-    final topCardTopPosition = middlePoint - cardHeight;
-    final bottomCardTopPosition = middlePoint + gapBetweenCards;
-    const fabSize = 55.0;
+    const gapBetweenCards = 24.0; // Increased gap between cards
+    final topCardTopPosition = middlePoint - cardHeight - (gapBetweenCards / 2);
+    final bottomCardTopPosition = middlePoint + (gapBetweenCards / 2);
+    const fabSize = 45.0; // Slightly smaller FAB
     final fabTopPosition = middlePoint - (fabSize / 2);
 
     return SizedBox(
