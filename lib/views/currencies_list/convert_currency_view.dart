@@ -170,7 +170,7 @@ class Converter extends StatelessWidget {
                 onPressed: provider.toggleConversionDirection,
                 elevation: 2,
                 heroTag:
-                    'AddCurrencyFAB${marketType}', // Dynamically setting heroTag using marketType
+                    'AddCurrencyFAB$marketType',
 
                 child: const Icon(Icons.swap_vert),
               ),
