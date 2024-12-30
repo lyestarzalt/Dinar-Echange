@@ -5,15 +5,11 @@ import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyConverterProvider with ChangeNotifier {
   final Currency currency;
-
-  // Controllers
   final TextEditingController amountController;
   final TextEditingController resultController;
   final FocusNode amountFocusNode;
   final FocusNode resultFocusNode;
-
-  // State
-  bool _isDZDtoCurrency = false; // false: Foreign->DZD, true: DZD->Foreign
+  bool _isDZDtoCurrency = false;
   bool _useCentimes = false;
 
   CurrencyConverterProvider(this.currency)
@@ -24,17 +20,19 @@ class CurrencyConverterProvider with ChangeNotifier {
     _initializeConverter();
   }
 
-  // Getters
   bool get isDZDtoCurrency => _isDZDtoCurrency;
   bool get useCentimes => _useCentimes;
 
   double get conversionRate =>
       _isDZDtoCurrency ? _getInverseRate() : currency.sell;
 
-  // Public Methods
   void toggleConversionDirection() {
     _isDZDtoCurrency = !_isDZDtoCurrency;
-    _swapControllerValues();
+    final amount = amountController.text;
+    final result = resultController.text;
+    amountController.text = result;
+    resultController.text = amount;
+    _updateConversion();
     notifyListeners();
   }
 
@@ -44,17 +42,13 @@ class CurrencyConverterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Private Methods
   void _initializeConverter() {
     AppLogger.logEvent(
         'converter_opened', {'currency_code': currency.currencyCode});
-
     amountController.addListener(_updateConversion);
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
-
     _updateConversion();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       amountFocusNode.requestFocus();
     });
@@ -62,9 +56,10 @@ class CurrencyConverterProvider with ChangeNotifier {
 
   double _getInverseRate() => currency.buy > 0 ? 1 / currency.buy : 0;
 
-  bool _isValidAmount(String amount) {
+  bool _isValidAmount(String input) {
     try {
-      final parsedAmount = double.tryParse(amount);
+      final cleanInput = input.replaceAll(',', '');
+      final parsedAmount = double.tryParse(cleanInput);
       return parsedAmount != null &&
           parsedAmount > 0 &&
           !parsedAmount.isNaN &&
@@ -79,20 +74,18 @@ class CurrencyConverterProvider with ChangeNotifier {
   void _updateConversion() {
     try {
       final inputAmount = amountController.text;
-
       if (inputAmount.isEmpty) {
         resultController.clear();
         return;
       }
-
-      if (!_isValidAmount(inputAmount)) {
+      final cleanInput = inputAmount.replaceAll(',', '');
+      if (!_isValidAmount(cleanInput)) {
         resultController.clear();
         return;
       }
-
-      final amount = double.parse(inputAmount);
-      final convertedAmount = amount * conversionRate;
-
+      final amount = double.parse(cleanInput);
+      final rate = conversionRate;
+      final convertedAmount = amount * rate;
       resultController.text = _formatAmount(convertedAmount);
     } catch (e, stack) {
       AppLogger.logError('Conversion failed', error: e, stackTrace: stack);
@@ -112,6 +105,9 @@ class CurrencyConverterProvider with ChangeNotifier {
     final tempAmount = amountController.text;
     amountController.text = resultController.text;
     resultController.text = tempAmount;
+    final currentAmount = amountController.text;
+    amountController.text = '';
+    amountController.text = currentAmount;
   }
 
   @override
