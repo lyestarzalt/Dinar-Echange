@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
-import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_echange/utils/logging.dart';

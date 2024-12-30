@@ -1,4 +1,4 @@
-import 'package:dinar_echange/data/models/currency_history.dart';
+import 'package:dinar_echange/data/models/historical_rate_model.dart';
 import 'dart:math' as math;
 
 class Currency {

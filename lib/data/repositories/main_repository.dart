@@ -1,6 +1,6 @@
 import 'package:dinar_echange/data/currency_repository.dart';
-import 'package:dinar_echange/data/services/currency_firestore_service.dart';
-import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/services/firestore_service.dart';
+import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/services/cache_service.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,8 @@ class MainRepository implements CurrencyRepository {
   Future<List<Currency>> getDailyCurrencies() async {
     return _getCachedData<List<Currency>>(
       baseKey: 'dailyCurrencies',
-      fetchFromFirestore: _firestoreService.fetchCurrenciesFromFirestore,
+      fetchFromFirestore: () =>
+          _firestoreService.fetchCurrenciesFromFirestore(isBankRate: false),
       fromJson: (data) => (data as List<dynamic>)
           .map((model) => Currency.fromJson(model as Map<String, dynamic>))
           .toList(),
@@ -25,8 +26,8 @@ class MainRepository implements CurrencyRepository {
   Future<List<Currency>> getOfficialDailyCurrencies() async {
     return _getCachedData<List<Currency>>(
       baseKey: 'officialDailyCurrencies',
-      fetchFromFirestore:
-          _firestoreService.fetchOfficialCurrenciesFromFirestore,
+      fetchFromFirestore: () =>
+          _firestoreService.fetchCurrenciesFromFirestore(isBankRate: true),
       fromJson: (data) => (data as List<dynamic>)
           .map((model) => Currency.fromJson(model as Map<String, dynamic>))
           .toList(),
@@ -39,7 +40,7 @@ class MainRepository implements CurrencyRepository {
       baseKey: 'currencyWithHistory',
       suffix: currency.currencyCode,
       fetchFromFirestore: () =>
-          _firestoreService.fetchCurrencyHistoryFromFirestore(currency),
+          _firestoreService.fetchCurrencyHistory(currency),
       fromJson: (data) => Currency.fromJson(data as Map<String, dynamic>),
     );
   }
@@ -80,12 +81,14 @@ class MainRepository implements CurrencyRepository {
       String historicalKey = _cacheManager.generateCacheKey(baseKey,
           suffix: DateFormat('yyyy-MM-dd')
               .format(DateTime.now().subtract(Duration(days: i))));
+
       Map<String, dynamic>? data = await _cacheManager.getCache(historicalKey);
       if (data != null && data['data'] != null) {
         AppLogger.logInfo('Fallback cache hit for key: $historicalKey');
         return fromJson(data['data']);
       }
     }
+
     String errorMsg =
         'No valid cache data available as fallback for base key: $baseKey';
     AppLogger.logError(errorMsg, isFatal: true);

@@ -1,7 +1,7 @@
 import 'package:dinar_echange/providers/graph_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/widgets/graph/core_currency_menu.dart';
 import 'package:dinar_echange/widgets/graph/time_span_buttons.dart';
 import 'package:dinar_echange/widgets/graph/custom_line_graph.dart';

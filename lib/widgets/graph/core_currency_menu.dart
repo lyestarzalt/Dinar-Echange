@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/logging.dart';

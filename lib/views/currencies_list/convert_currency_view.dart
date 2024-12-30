@@ -6,7 +6,7 @@ import 'package:dinar_echange/providers/converter_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
-import 'package:dinar_echange/data/models/currency.dart';
+import 'package:dinar_echange/data/models/currency_model.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   final String marketType;
