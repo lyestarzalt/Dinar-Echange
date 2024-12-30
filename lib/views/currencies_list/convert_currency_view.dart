@@ -38,7 +38,7 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ConvertProvider>(context);
+    final provider = Provider.of<CurrencyConverterProvider>(context);
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
@@ -96,11 +96,11 @@ class Converter extends StatelessWidget {
       required this.marketType});
   final String marketType;
   final BuildContext context;
-  final ConvertProvider provider;
+  final CurrencyConverterProvider provider;
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ConvertProvider>(context);
+    final provider = Provider.of<CurrencyConverterProvider>(context);
     final screenHeight =
         MediaQuery.of(context).size.height - AppBar().preferredSize.height;
     final middlePoint = screenHeight * 0.17;

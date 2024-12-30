@@ -8,7 +8,7 @@ class NumberToWordsDisplay extends StatefulWidget {
   final Currency currency;
   final bool isDZDtoCurrency;
   final TextEditingController numberController;
-  final ConvertProvider provider;
+  final CurrencyConverterProvider provider;
 
   const NumberToWordsDisplay({
     super.key,

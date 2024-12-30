@@ -1,98 +1,117 @@
 import 'package:flutter/material.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:intl/intl.dart';
-
 import 'package:dinar_echange/utils/logging.dart';
 
-class ConvertProvider with ChangeNotifier {
+class CurrencyConverterProvider with ChangeNotifier {
   final Currency currency;
-  TextEditingController amountController = TextEditingController(text: "100");
-  TextEditingController resultController = TextEditingController();
-  FocusNode amountFocusNode = FocusNode();
-  FocusNode resultFocusNode = FocusNode();
-  bool isDZDtoCurrency = false; // Conversion direction flag
 
-  ConvertProvider(this.currency) {
+  // Controllers
+  final TextEditingController amountController;
+  final TextEditingController resultController;
+  final FocusNode amountFocusNode;
+  final FocusNode resultFocusNode;
+
+  // State
+  bool _isDZDtoCurrency = false; // false: Foreign->DZD, true: DZD->Foreign
+  bool _useCentimes = false;
+
+  CurrencyConverterProvider(this.currency)
+      : amountController = TextEditingController(text: "100"),
+        resultController = TextEditingController(),
+        amountFocusNode = FocusNode(),
+        resultFocusNode = FocusNode() {
+    _initializeConverter();
+  }
+
+  // Getters
+  bool get isDZDtoCurrency => _isDZDtoCurrency;
+  bool get useCentimes => _useCentimes;
+
+  double get conversionRate =>
+      _isDZDtoCurrency ? _getInverseRate() : currency.sell;
+
+  // Public Methods
+  void toggleConversionDirection() {
+    _isDZDtoCurrency = !_isDZDtoCurrency;
+    _swapControllerValues();
+    notifyListeners();
+  }
+
+  void toggleCentimes() {
+    _useCentimes = !_useCentimes;
+    _updateConversion();
+    notifyListeners();
+  }
+
+  // Private Methods
+  void _initializeConverter() {
     AppLogger.logEvent(
-        'currency_converted', {'currency_code': currency.currencyCode});
-    AppLogger.trackScreenView('Converter_Screen', 'MainList');
+        'converter_opened', {'currency_code': currency.currencyCode});
 
-    amountController.addListener(convertCurrency);
+    amountController.addListener(_updateConversion);
     amountFocusNode.addListener(notifyListeners);
     resultFocusNode.addListener(notifyListeners);
-    // a callback to set the focus once the widget is built
-    convertCurrency();
 
-    // show the keypad after we open the page
+    _updateConversion();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       amountFocusNode.requestFocus();
     });
   }
-  bool _useCentimes = false;
-  bool get useCentimes => _useCentimes;
 
-  void toggleUseCentimes() {
-    _useCentimes = !_useCentimes;
-    notifyListeners();
-  }
+  double _getInverseRate() => currency.buy > 0 ? 1 / currency.buy : 0;
 
-  void toggleConversionDirection() {
-    isDZDtoCurrency = !isDZDtoCurrency;
-    swapTextControllers();
-    notifyListeners();
-  }
-
-  static double getRate(bool isDZDtoCurrency, Currency currency) {
-    //TODO: revise this
-    if (isDZDtoCurrency) {
-      return currency.buy > 0 ? 1 / currency.buy : 0;
-    } else {
-      return currency.sell;
-    }
-  }
-
-  bool validateInput(String input) {
+  bool _isValidAmount(String amount) {
     try {
-      double? parsedAmount = double.tryParse(input);
-      bool isValid = parsedAmount != null &&
+      final parsedAmount = double.tryParse(amount);
+      return parsedAmount != null &&
           parsedAmount > 0 &&
           !parsedAmount.isNaN &&
           !parsedAmount.isInfinite;
-      return isValid;
-    } catch (e, stackTrace) {
-      AppLogger.logError('Error validating input',
-          error: e, stackTrace: stackTrace);
+    } catch (e, stack) {
+      AppLogger.logError('Input validation failed',
+          error: e, stackTrace: stack);
       return false;
     }
   }
 
-  void convertCurrency() {
+  void _updateConversion() {
     try {
-      if (amountController.text.isEmpty) {
+      final inputAmount = amountController.text;
+
+      if (inputAmount.isEmpty) {
         resultController.clear();
-      } else if (validateInput(amountController.text)) {
-        double parsedAmount = double.parse(amountController.text);
-        double rate = getRate(isDZDtoCurrency, currency);
-        double result = parsedAmount * rate;
-        String formattedResult =
-            NumberFormat.currency(locale: 'en_US', decimalDigits: 2, symbol: '')
-                .format(result);
-        resultController.text = formattedResult;
-      } else {
-        resultController.clear();
+        return;
       }
-      notifyListeners();
-    } catch (e, stackTrace) {
-      AppLogger.logError('Failed to convert currency',
-          error: e, stackTrace: stackTrace);
+
+      if (!_isValidAmount(inputAmount)) {
+        resultController.clear();
+        return;
+      }
+
+      final amount = double.parse(inputAmount);
+      final convertedAmount = amount * conversionRate;
+
+      resultController.text = _formatAmount(convertedAmount);
+    } catch (e, stack) {
+      AppLogger.logError('Conversion failed', error: e, stackTrace: stack);
+      resultController.clear();
+    } finally {
       notifyListeners();
     }
   }
 
-  void swapTextControllers() {
-    String amountValue = amountController.text;
+  String _formatAmount(double amount) {
+    return NumberFormat.currency(
+            locale: 'en_US', decimalDigits: useCentimes ? 2 : 0, symbol: '')
+        .format(amount);
+  }
+
+  void _swapControllerValues() {
+    final tempAmount = amountController.text;
     amountController.text = resultController.text;
-    resultController.text = amountValue;
+    resultController.text = tempAmount;
   }
 
   @override
