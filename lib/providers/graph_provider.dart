@@ -10,15 +10,20 @@ class GraphProvider with ChangeNotifier {
   final MainRepository _mainRepository = MainRepository();
   List<Currency> coreCurrencies = [];
   Currency? selectedCurrency;
-  List<CurrencyHistoryEntry> filteredHistoryEntries = [];
-  final ValueNotifier<int> touchedIndex = ValueNotifier<int>(-1);
-  final ValueNotifier<String> selectedValue = ValueNotifier<String>('');
+  List<CurrencyHistoryEntry> historicalData = [];
+
+  final ValueNotifier<int> selectedPointIndex = ValueNotifier<int>(-1);
+  final ValueNotifier<String> selectedExchangeRate = ValueNotifier<String>('');
   final ValueNotifier<DateTime> selectedDate =
       ValueNotifier<DateTime>(DateTime.now());
 
-  double maxYValue = 0, minYValue = 0, midYValue = 0, maxX = 0;
-  int timeSpan = 180; // Default to 6 months
-  final String defaultCurrencyCode = 'EUR'; // Default currency
+  double maxExchangeRate = 0;
+  double minExchangeRate = 0;
+  double averageExchangeRate = 0;
+  double totalDataPoints = 0;
+
+  int displayPeriodDays = 180; // Default to 6 months
+  final String defaultCurrencyCode = 'EUR';
   final String dateformat = 'd MMMM y';
   AppState _state = AppState.loading();
 
@@ -34,31 +39,31 @@ class GraphProvider with ChangeNotifier {
     try {
       _state = AppState.loading();
       _notifySafe();
+
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
       selectedCurrency = coreCurrencies.firstWhere(
         (currency) => currency.currencyCode == defaultCurrencyCode,
         orElse: () => coreCurrencies.first,
       );
+
       await loadCurrencyHistory();
-      _state = AppState.success(filteredHistoryEntries);
+      _state = AppState.success(historicalData);
       _notifySafe();
     } catch (e) {
       AppLogger.logError("Failed to fetch currencies", error: e);
       _state = AppState.error(e.toString());
-      //TODO
-      /*       FlutterError (A GraphProvider was used after being disposed.
-        Once you have called dispose() on a GraphProvider, it can no longer be used.) */
       _notifySafe();
     }
   }
 
   bool _isDisposed = false;
+
   @override
   void dispose() {
     _isDisposed = true;
-    touchedIndex.dispose();
-    selectedValue.dispose();
+    selectedPointIndex.dispose();
+    selectedExchangeRate.dispose();
     selectedDate.dispose();
     super.dispose();
   }
@@ -69,14 +74,14 @@ class GraphProvider with ChangeNotifier {
     }
   }
 
-  void updateSelectedData(int index) {
-        if (_isDisposed) return;
+  void updateSelectedPoint(int index) {
+    if (_isDisposed) return;
 
-    if (index >= 0 && index < filteredHistoryEntries.length) {
-      var entry = filteredHistoryEntries[index];
-      touchedIndex.value = index;
-      selectedValue.value = '${entry.buy.toStringAsFixed(2)} DZD';
-      selectedDate.value = entry.date;
+    if (index >= 0 && index < historicalData.length) {
+      var dataPoint = historicalData[index];
+      selectedPointIndex.value = index;
+      selectedExchangeRate.value = '${dataPoint.buy.toStringAsFixed(2)} DZD';
+      selectedDate.value = dataPoint.date;
     }
   }
 
@@ -107,54 +112,51 @@ class GraphProvider with ChangeNotifier {
         throw Exception(errorMessage);
       }
 
-      filteredHistoryEntries = selectedCurrency!.history!;
-      processData(days: timeSpan);
+      historicalData = selectedCurrency!.history!;
+      updateDisplayPeriod(days: displayPeriodDays);
 
-      _state = AppState.success(filteredHistoryEntries);
+      _state = AppState.success(historicalData);
       notifyListeners();
     } catch (e) {
-      AppLogger.logError('Error loading currency history: ${e.toString()}',
-          error: e);
+      AppLogger.logError('Error loading currency history', error: e);
       _state = AppState.error(e.toString());
       notifyListeners();
-      //_Exception (Exception: Failed to load currency history due to an error: [cloud_firestore/unavailable]
-      //The service is currently unavailable. This is a most likely a transient condition and may be corrected
-      // by retrying with a backoff.)
-      throw Exception(
-          'Failed to load currency history due to an error: ${e.toString()}');
+      throw Exception('Failed to load currency history: ${e.toString()}');
     }
   }
 
-  void setTimeSpan(int days) {
-    if (timeSpan != days) {
-      timeSpan = days;
-      processData(days: timeSpan);
-      AppLogger.logEvent('time_span_changed', {
-        'new_time_span_days': days,
+  void setDisplayPeriod(int days) {
+    if (displayPeriodDays != days) {
+      displayPeriodDays = days;
+      updateDisplayPeriod(days: displayPeriodDays);
+      AppLogger.logEvent('display_period_changed', {
+        'new_period_days': days,
         'currency_code': selectedCurrency?.currencyCode ?? 'N/A'
       });
     }
   }
 
-  void processData({int days = 180}) {
+  void updateDisplayPeriod({int days = 180}) {
     if (selectedCurrency == null) return;
 
-    filteredHistoryEntries = selectedCurrency!.getFilteredHistory(days);
-    List<double> allBuyValues =
-        filteredHistoryEntries.map((e) => e.buy).toList();
-    const bufferPercent = 0.02; // 2% buffer
-    double maxDataValue = allBuyValues.reduce(math.max);
-    double minDataValue = allBuyValues.reduce(math.min);
-    double bufferValue = (maxDataValue - minDataValue) * bufferPercent;
-    selectedValue.value = filteredHistoryEntries.isNotEmpty
-        ? filteredHistoryEntries.last.buy.toStringAsFixed(2)
-        : '';
-    selectedDate.value = filteredHistoryEntries.last.date;
+    historicalData = selectedCurrency!.getFilteredHistory(days);
+    List<double> exchangeRates = historicalData.map((e) => e.buy).toList();
 
-    maxYValue = maxDataValue + bufferValue;
-    minYValue = minDataValue - bufferValue;
-    midYValue = (maxYValue + minYValue) / 2;
-    maxX = filteredHistoryEntries.length.toDouble() - 1;
+    const bufferPercent = 0.02; // 2% buffer for graph visualization
+    double highestRate = exchangeRates.reduce(math.max);
+    double lowestRate = exchangeRates.reduce(math.min);
+    double buffer = (highestRate - lowestRate) * bufferPercent;
+
+    selectedExchangeRate.value = historicalData.isNotEmpty
+        ? historicalData.last.buy.toStringAsFixed(2)
+        : '';
+    selectedDate.value = historicalData.last.date;
+
+    maxExchangeRate = highestRate + buffer;
+    minExchangeRate = lowestRate - buffer;
+    averageExchangeRate = (maxExchangeRate + minExchangeRate) / 2;
+    totalDataPoints = historicalData.length.toDouble() - 1;
+
     notifyListeners();
   }
 }

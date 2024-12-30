@@ -15,7 +15,6 @@ import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/error_message.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
-import 'package:dinar_echange/utils/logging.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
@@ -149,7 +148,7 @@ class HistoryPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   ValueListenableBuilder<String>(
-                    valueListenable: provider.selectedValue,
+                    valueListenable: provider.selectedExchangeRate,
                     builder: (context, value, child) {
                       return Text(
                         '1 ${provider.selectedCurrency!.currencyCode} = $value',
@@ -195,10 +194,10 @@ class HistoryPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 5.0),
                 child: CustomLineGraph(
-                  dataPoints: provider.filteredHistoryEntries
+                  dataPoints: provider.historicalData
                       .map((entry) => entry.buy)
                       .toList(),
-                  dates: provider.filteredHistoryEntries
+                  dates: provider.historicalData
                       .map((entry) => entry.date)
                       .toList(),
                   gridColor: Theme.of(context).colorScheme.outline,
@@ -206,11 +205,11 @@ class HistoryPage extends StatelessWidget {
                   upTrendColor: Colors.green,
                   downTrendColor: Colors.red,
                   showBottomLabels: false,
-                  maxValue: provider.maxYValue,
-                  minValue: provider.minYValue,
-                  midValue: provider.midYValue,
+                  maxValue: provider.maxExchangeRate,
+                  minValue: provider.minExchangeRate,
+                  midValue: provider.averageExchangeRate,
                   onPointSelected: (index, date, value) {
-                    provider.updateSelectedData(index);
+                    provider.updateSelectedPoint(index);
                   },
                 ),
               ),
@@ -218,7 +217,7 @@ class HistoryPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           TimeSpanButtons(
-            onTimeSpanSelected: (days) => provider.setTimeSpan(days),
+            onTimeSpanSelected: (days) => provider.setDisplayPeriod(days),
           ),
         ],
       ),
