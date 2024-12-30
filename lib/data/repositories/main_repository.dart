@@ -61,32 +61,22 @@ class MainRepository implements CurrencyRepository {
 
       AppLogger.logInfo(
           'Cache miss. Fetching from Firestore for key: $cacheKey');
-
-      // Start timing here, right before fetching from Firestore
-      Stopwatch stopwatch = Stopwatch()..start();
       T data = await fetchFromFirestore();
-      stopwatch.stop();
       await _cacheManager.setCache(cacheKey, {'data': data});
-      AppLogger.logEvent('fetch_currency_duration', {
-        'duration_ms': stopwatch.elapsedMilliseconds,
-        'cache_key': cacheKey
-      });
-
       return data;
     } catch (e, stackTrace) {
       AppLogger.logError(
-          '_getCachedData: Failed to fetch data for key: $cacheKey. Error: $e',
+          '_getCachedData: Failed to fetch data for key: $cacheKey',
           error: e,
           stackTrace: stackTrace);
-      // Attempt to retrieve the most recent valid cache if fetch fails
       return await _getFallbackCacheData(baseKey, fromJson);
     }
   }
 
   Future<T> _getFallbackCacheData<T>(
       String baseKey, T Function(dynamic) fromJson) async {
-    int DaysLookBack = 7; // Limit to 7days
-    for (int i = 1; i <= DaysLookBack; i++) {
+    int daysLookBack = 7;
+    for (int i = 1; i <= daysLookBack; i++) {
       String historicalKey = _cacheManager.generateCacheKey(baseKey,
           suffix: DateFormat('yyyy-MM-dd')
               .format(DateTime.now().subtract(Duration(days: i))));
@@ -97,7 +87,7 @@ class MainRepository implements CurrencyRepository {
       }
     }
     String errorMsg =
-        'No valid cache data available as fallback for base key: $baseKey. All attempts to fetch data failed.';
+        'No valid cache data available as fallback for base key: $baseKey';
     AppLogger.logError(errorMsg, isFatal: true);
     throw DataFetchFailureException(errorMsg, canContinue: false);
   }
