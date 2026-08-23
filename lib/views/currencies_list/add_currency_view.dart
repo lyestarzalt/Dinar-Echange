@@ -70,7 +70,7 @@ class AddCurrencyPage extends StatelessWidget {
                                   child: Text(currency.currencyName ?? '')),
                             ],
                           ),
-                          trailing: Checkbox(
+                          trailing: Checkbox.adaptive(
                             value: isSelected,
                             onChanged: (bool? value) {
                               if (value != null) {

@@ -1,63 +1,175 @@
+import 'dart:io' show Platform;
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:dinar_echange/theme/material_scheme.dart';
 
 class MaterialTheme {
-  ThemeData theme(ColorScheme colorScheme) => ThemeData(
-        useMaterial3: true,
-        brightness: colorScheme.brightness,
-        colorScheme: colorScheme,
-        textTheme: _createCustomTextTheme(
-            colorScheme.brightness == Brightness.light
-                ? ThemeData.light().textTheme
-                : ThemeData.dark().textTheme),
-        scaffoldBackgroundColor: colorScheme.surface,
-        canvasColor: colorScheme.surface,
-        segmentedButtonTheme: SegmentedButtonThemeData(
-          style: ButtonStyle(
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            side: WidgetStateProperty.all(
-              BorderSide(color: colorScheme.onSurface, width: 1.0),
-            ),
-            backgroundColor: WidgetStateProperty.all(colorScheme.surface),
-            foregroundColor: WidgetStateProperty.all(colorScheme.onSurface),
-            textStyle: WidgetStateProperty.all(
-              TextStyle(color: colorScheme.onSurface),
-            ),
-            padding: WidgetStateProperty.all(
-              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            ),
+  ThemeData theme(ColorScheme colorScheme) {
+    final isDark = colorScheme.brightness == Brightness.dark;
+    final baseTextTheme =
+        isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
+    final buttonShape =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12));
+    const buttonPadding =
+        EdgeInsets.symmetric(horizontal: 20, vertical: 14);
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: colorScheme.brightness,
+      colorScheme: colorScheme,
+      textTheme: _createCustomTextTheme(baseTextTheme),
+      scaffoldBackgroundColor: colorScheme.surface,
+      canvasColor: colorScheme.surface,
+
+      // Native page transitions per platform (iOS swipe-back, Android
+      // predictive back on 3.24+).
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+
+      appBarTheme: AppBarTheme(
+        toolbarHeight: Platform.isIOS ? 44 : 64,
+        centerTitle: Platform.isIOS,
+        surfaceTintColor: Platform.isIOS ? Colors.transparent : null,
+        scrolledUnderElevation: Platform.isIOS ? 0.1 : 1.0,
+        systemOverlayStyle:
+            isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      ),
+
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: colorScheme.surfaceContainerLow,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        clipBehavior: Clip.antiAlias,
+      ),
+
+      dialogTheme: DialogThemeData(
+        backgroundColor: colorScheme.surfaceContainerHigh,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      ),
+
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colorScheme.surfaceContainerLow,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        showDragHandle: true,
+      ),
+
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: colorScheme.inverseSurface,
+        contentTextStyle: TextStyle(color: colorScheme.onInverseSurface),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 0,
+      ),
+
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          shape: buttonShape,
+          padding: buttonPadding,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          shape: buttonShape,
+          padding: buttonPadding,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          shape: buttonShape,
+          padding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        ),
+      ),
+
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surfaceContainerLow,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+        ),
+      ),
+
+      chipTheme: ChipThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           ),
         ),
-        appBarTheme: const AppBarTheme(toolbarHeight: 90),
-        navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: WidgetStateProperty.all(
-            TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          iconTheme: WidgetStateProperty.all(
-            const IconThemeData(
-              size: 24,
-            ),
-          ),
-          height: 70,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+
+      navigationBarTheme: NavigationBarThemeData(
+        labelTextStyle: WidgetStateProperty.all(
+          TextStyle(fontSize: 12, color: colorScheme.onSurface),
         ),
-        checkboxTheme: CheckboxThemeData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          fillColor: WidgetStateProperty.resolveWith<Color?>(
-            (Set<WidgetState> states) {
-              if (states.contains(WidgetState.selected)) {
-                return colorScheme.secondary;
-              }
-              return colorScheme.onSurface.withValues(alpha: 0.6);
-            },
-          ),
+        iconTheme:
+            WidgetStateProperty.all(const IconThemeData(size: 24)),
+        height: 70,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        indicatorColor: colorScheme.secondaryContainer,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+
+      checkboxTheme: CheckboxThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        fillColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.selected)) {
+              return colorScheme.secondary;
+            }
+            return colorScheme.onSurface.withValues(alpha: 0.6);
+          },
         ),
-      );
+      ),
+
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: colorScheme.primary,
+        linearTrackColor: colorScheme.surfaceContainerHigh,
+        circularTrackColor: colorScheme.surfaceContainerHigh,
+      ),
+
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineVariant,
+        thickness: 1,
+        space: 1,
+      ),
+    );
+  }
+
   static TextTheme _createCustomTextTheme(TextTheme base) {
     return base.apply(fontFamily: 'Geologica');
   }

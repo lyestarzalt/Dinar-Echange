@@ -33,10 +33,10 @@ class _NumberToWordsDisplayState extends State<NumberToWordsDisplay> {
             alignment: Alignment.topRight,
             child: IconButton(
               onPressed: () {
-                showDialog<void>(
+                showAdaptiveDialog<void>(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
+                    return AlertDialog.adaptive(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

@@ -80,10 +80,10 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
       ),
       direction: DismissDirection.endToStart,
       confirmDismiss: (DismissDirection direction) async {
-        return await showDialog<bool>(
+        return await showAdaptiveDialog<bool>(
               context: context,
               builder: (BuildContext context) {
-                return AlertDialog(
+                return AlertDialog.adaptive(
                   title:
                       Text(AppLocalizations.of(context)!.confirm_delete_title),
                   content: Text(

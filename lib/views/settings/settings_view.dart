@@ -169,7 +169,7 @@ class SettingsContent extends StatelessWidget {
     final text = AppLocalizations.of(context)!;
     AppLogger.trackScreenView('Language_Selection', 'Settings');
 
-    showDialog<void>(
+    showAdaptiveDialog<void>(
       context: context,
       builder: (BuildContext context) {
         String currentLanguage = languageCodes.entries
@@ -179,7 +179,7 @@ class SettingsContent extends StatelessWidget {
             )
             .key;
 
-        return AlertDialog(
+        return AlertDialog.adaptive(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -223,10 +223,10 @@ class SettingsContent extends StatelessWidget {
     final text = AppLocalizations.of(context)!;
     AppLogger.trackScreenView('About_App', 'Settings');
 
-    showDialog<void>(
+    showAdaptiveDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
