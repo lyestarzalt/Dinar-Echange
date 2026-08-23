@@ -1,7 +1,6 @@
-import 'dart:ui';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,40 +19,47 @@ import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/services/remote_config_service.dart';
 
 class AppInitializationProvider with ChangeNotifier {
-  AppState<List<Currency>> _parallelstate = AppState.loading();
+  AppState<List<Currency>> _parallelState = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
   final AdProvider _adProvider = AdProvider();
-  AppState<List<Currency>> get Paralleltate => _parallelstate;
+  AppState<List<Currency>> get parallelState => _parallelState;
   AppState<List<Currency>> get officialState => _officialState;
 
-  List<Currency>? get currencies => _parallelstate.data;
+  List<Currency>? get currencies => _parallelState.data;
   List<Currency>? get officialCurrencies => _officialState.data;
 
   Future<void> initializeApp() async {
-    try {
-      await _activateAppCheck();
-      await _signInAnonymously();
+    // Retry from ErrorApp lands here too: reset both states so the UI shows
+    // loading instead of the previous error.
+    if (_parallelState.isError || _officialState.isError) {
+      _parallelState = AppState.loading();
+      _officialState = AppState.loading();
+      notifyListeners();
+    }
 
-      List<List<Currency>> fetchedResults = await Future.wait([
+    try {
+      final fetched = await Future.wait([
         MainRepository().getDailyCurrencies(),
         MainRepository().getOfficialDailyCurrencies(),
       ]);
-      List<Currency> fetchedCurrencies = fetchedResults[0];
-      List<Currency> fetchedOfficialCurrencies = fetchedResults[1];
-      _parallelstate = AppState.success(fetchedCurrencies);
-      _officialState = AppState.success(fetchedOfficialCurrencies);
-      FlutterNativeSplash.remove();
-
-      _deferOtherInitializations();
+      _parallelState = AppState.success(fetched[0]);
+      _officialState = AppState.success(fetched[1]);
     } catch (e, stackTrace) {
       handleInitializationError(e, stackTrace);
     } finally {
       notifyListeners();
+      // Remove native splash only after this frame renders so the transition
+      // goes native-splash → real UI with no blank flash in between.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlutterNativeSplash.remove();
+      });
+      _deferOtherInitializations();
     }
   }
 
   Future<void> _deferOtherInitializations() async {
     await Future.wait([
+      _activateAppCheck(),
       _initializeMobileAds(),
       _enableFirebaseAnalytics(),
       _requestNotificationPermissions(),
@@ -69,12 +75,11 @@ class AppInitializationProvider with ChangeNotifier {
             isFatal: true));
   }
 
-  Future<void> handleInitializationError(
-      Object? e, StackTrace stackTrace) async {
+  void handleInitializationError(Object? e, StackTrace stackTrace) {
     if (e is DataFetchFailureException) {
       AppLogger.logError('initializeApp: Failed during app initialization.',
           error: e, stackTrace: stackTrace, isFatal: true);
-      _parallelstate =
+      _parallelState =
           AppState.error('Failed to load essential data: ${e.message}');
       _officialState =
           AppState.error('Failed to load essential data: ${e.message}');
@@ -84,7 +89,7 @@ class AppInitializationProvider with ChangeNotifier {
           error: e,
           stackTrace: stackTrace,
           isFatal: true);
-      _parallelstate =
+      _parallelState =
           AppState.error('Unhandled exception during initialization');
       _officialState =
           AppState.error('Unhandled exception during initialization');
@@ -125,7 +130,6 @@ class AppInitializationProvider with ChangeNotifier {
         AppLogger.logDebug("Temp token: $token");
       } catch (e) {
         AppLogger.logError('Error fetching App Check token: $e');
-        // Implement a fallback mechanism or exponential backoff retry logic if needed
       }
     }
   }
@@ -152,11 +156,6 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> _setupFirebaseMessaging() async {
     await setupFirebaseMessaging();
     AppLogger.logInfo('Firebase Messaging setup completed.');
-  }
-
-  Future<void> _signInAnonymously() async {
-    await FirebaseAuth.instance.signInAnonymously();
-    AppLogger.logInfo('Signed in anonymously to Firebase Auth.');
   }
 
   Future<void> requestNotificationPermissions() async {

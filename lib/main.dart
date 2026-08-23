@@ -16,20 +16,32 @@ import 'package:flutter/services.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // Keep the native splash on-screen until AppInitializationProvider tears
+  // it down after the first real frame is rendered.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   AppLogger.logInfo('Firebase Core initialized.');
   await PreferencesService().init();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(const DinarEchange());
+
+  // Kick off the daily-rates fetch before runApp so the network work overlaps
+  // with the widget tree building.
+  final appInit = AppInitializationProvider()..initializeApp();
+
+  runApp(DinarEchange(appInit: appInit));
 }
 
 class DinarEchange extends StatelessWidget {
-  const DinarEchange({super.key});
+  const DinarEchange({super.key, required this.appInit});
+
+  final AppInitializationProvider appInit;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +50,7 @@ class DinarEchange extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppProvider()),
-        ChangeNotifierProvider(create: (_) => AppInitializationProvider()),
+        ChangeNotifierProvider.value(value: appInit),
         ChangeNotifierProvider(create: (_) => AdProvider()),
       ],
       child: Consumer<AppProvider>(
@@ -75,16 +87,15 @@ class AppStartup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AppInitializationProvider>(context, listen: false)
-          .initializeApp();
-    });
     return Consumer<AppInitializationProvider>(
       builder: (context, initProvider, _) {
-        if (initProvider.Paralleltate.isLoading ||
+        if (initProvider.parallelState.isLoading ||
             initProvider.officialState.isLoading) {
+          // On first launch the native splash is still covering this widget.
+          // On a manual retry from ErrorApp, the splash is already gone, so
+          // the skeleton takes over.
           return const Scaffold(body: CurrencyListSkeleton());
-        } else if (initProvider.Paralleltate.isError ||
+        } else if (initProvider.parallelState.isError ||
             initProvider.officialState.isError) {
           return ErrorApp(onRetry: () => initProvider.initializeApp());
         }
