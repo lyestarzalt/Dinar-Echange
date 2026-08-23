@@ -7,6 +7,7 @@ import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/theme/theme.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:dinar_echange/widgets/offline_banner.dart';
+import 'package:dinar_echange/widgets/skeletons.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
 import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -82,7 +83,7 @@ class AppStartup extends StatelessWidget {
       builder: (context, initProvider, _) {
         if (initProvider.Paralleltate.isLoading ||
             initProvider.officialState.isLoading) {
-          return const Scaffold(body: Center(child: LinearProgressIndicator()));
+          return const Scaffold(body: CurrencyListSkeleton());
         } else if (initProvider.Paralleltate.isError ||
             initProvider.officialState.isError) {
           return ErrorApp(onRetry: () => initProvider.initializeApp());

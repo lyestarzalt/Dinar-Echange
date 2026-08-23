@@ -58,7 +58,17 @@ Widget buildCurrencyInput({
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
                 ),
+                // Opt out of the global InputDecorationTheme: this field
+                // uses the surrounding Card for its border, and the theme's
+                // filled background + focus ring would appear as a
+                // duplicate inner outline.
+                filled: false,
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
               ),

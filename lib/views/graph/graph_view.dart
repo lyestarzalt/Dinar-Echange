@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/error_message.dart';
+import 'package:dinar_echange/widgets/skeletons.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
 
@@ -40,7 +41,7 @@ class HistoryPage extends StatelessWidget {
                 builder: (context, provider, _) {
                   switch (provider.state.state) {
                     case LoadState.loading:
-                      return const Center(child: LinearProgressIndicator());
+                      return const GraphSkeleton();
                     case LoadState.success:
                       return _buildCurrencyContent(context, provider);
                     case LoadState.error:
