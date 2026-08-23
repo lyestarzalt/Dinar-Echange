@@ -74,10 +74,9 @@ class AppNavigation extends StatelessWidget {
   }
 }
 
-Future<bool> shouldShowAd(String type) async {
-  int chanceToShowAd =
-      await RemoteConfigService.instance.fetchAdShowChance(type);
-  return Random().nextInt(100) < chanceToShowAd;
+bool shouldShowAd(String type) {
+  final chance = RemoteConfigService.instance.fetchAdShowChance(type);
+  return Random().nextInt(100) < chance;
 }
 
 class MainNavigation extends StatelessWidget {
@@ -110,15 +109,11 @@ class MainNavigation extends StatelessWidget {
   }
 
   void _handleSelection(
-      BuildContext context, int index, AdProvider adProvider) async {
+      BuildContext context, int index, AdProvider adProvider) {
     HapticFeedback.selectionClick();
-    if (await shouldShowAd('ad_show_chance_nav')) {
-      if (adProvider.isInterstitialAdLoaded) {
-        adProvider.showInterstitialAd();
-        adProvider.onAdDismissed(() => onItemSelected(index));
-      } else {
-        onItemSelected(index);
-      }
+    if (shouldShowAd('ad_show_chance_nav') && adProvider.isInterstitialAdLoaded) {
+      adProvider.showInterstitialAd();
+      adProvider.onAdDismissed(() => onItemSelected(index));
     } else {
       onItemSelected(index);
     }

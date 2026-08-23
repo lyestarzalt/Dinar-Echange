@@ -43,10 +43,10 @@ class RemoteConfigService {
     }
   }
 
-  // Kept async for backwards compatibility with existing `await` call sites;
-  // now reads the currently-active value (default or last-fetched) without
-  // touching the network.
-  Future<int> fetchAdShowChance(String key) async {
+  // Reads the currently-active value (default or last-fetched) synchronously.
+  // The network refresh runs in the background via _refreshInBackground, so no
+  // UI code needs to await this.
+  int fetchAdShowChance(String key) {
     final chance = _remoteConfig.getInt(key);
     AppLogger.logInfo("Remote Config read $key: $chance");
     return chance;

@@ -145,21 +145,13 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
   bool get wantKeepAlive => true;
 }
 
-Future<void> _showAddCurrencyPage(BuildContext context) async {
+void _showAddCurrencyPage(BuildContext context) {
   final AdProvider adProvider = Provider.of<AdProvider>(context, listen: false);
-
-  final shouldShow = await shouldShowAd('ad_show_chance_open');
-  if (!context.mounted) return;
-
-  if (shouldShow) {
-    if (adProvider.isInterstitialAdLoaded) {
-      adProvider.showInterstitialAd();
-      adProvider.onAdDismissed(() {
-        if (context.mounted) _navigateToAddCurrencyPage(context);
-      });
-    } else {
-      _navigateToAddCurrencyPage(context);
-    }
+  if (shouldShowAd('ad_show_chance_open') && adProvider.isInterstitialAdLoaded) {
+    adProvider.showInterstitialAd();
+    adProvider.onAdDismissed(() {
+      if (context.mounted) _navigateToAddCurrencyPage(context);
+    });
   } else {
     _navigateToAddCurrencyPage(context);
   }
@@ -176,8 +168,7 @@ void _navigateToAddCurrencyPage(BuildContext context) {
       ));
 }
 
-Future<bool> shouldShowAd(String type) async {
-  int chanceToShowAd =
-      await RemoteConfigService.instance.fetchAdShowChance(type);
-  return Random().nextInt(100) < chanceToShowAd;
+bool shouldShowAd(String type) {
+  final chance = RemoteConfigService.instance.fetchAdShowChance(type);
+  return Random().nextInt(100) < chance;
 }
