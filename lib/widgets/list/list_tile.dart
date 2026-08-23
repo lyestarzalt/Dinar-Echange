@@ -1,115 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/widgets/list/animated_rate.dart';
 
 class CurrencyListItem extends StatelessWidget {
   final Currency currency;
 
-  const CurrencyListItem({
-    super.key,
-    required this.currency,
+  const CurrencyListItem({super.key, required this.currency});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final scheme = t.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final numberFmt = NumberFormat.decimalPattern();
+
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Row(
+          children: [
+            _CircleFlag(imageUrl: currency.flag, size: 40),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                currency.currencyCode,
+                style: t.textTheme.titleLarge,
+              ),
+            ),
+            _RateColumn(
+              value: currency.buy,
+              label: l10n.buy,
+              numberFmt: numberFmt,
+              scheme: scheme,
+              textTheme: t.textTheme,
+            ),
+            const SizedBox(width: 20),
+            _RateColumn(
+              value: currency.sell,
+              label: l10n.sell,
+              numberFmt: numberFmt,
+              scheme: scheme,
+              textTheme: t.textTheme,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RateColumn extends StatelessWidget {
+  final double value;
+  final String label;
+  final NumberFormat numberFmt;
+  final ColorScheme scheme;
+  final TextTheme textTheme;
+
+  const _RateColumn({
+    required this.value,
+    required this.label,
+    required this.numberFmt,
+    required this.scheme,
+    required this.textTheme,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            // Flag and Currency Code Group
-            Row(
-              children: [
-                FlagContainer(
-                  imageUrl: currency.flag,
-                  width: 32,
-                  height: 24,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  currency.currencyCode,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+    String format(double v) => v >= 100
+        ? numberFmt.format(v.round())
+        : v.toStringAsFixed(1);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        AnimatedRate(
+          value: value,
+          format: format,
+          style: textTheme.displaySmall!,
+          baseColor: scheme.onSurface,
+          upColor: Colors.green.shade600,
+          downColor: Colors.red.shade600,
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label.toUpperCase(),
+          style: textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+        ),
+      ],
+    );
+  }
+}
 
-            const Spacer(),
+class _CircleFlag extends StatelessWidget {
+  final String? imageUrl;
+  final double size;
+  const _CircleFlag({required this.imageUrl, this.size = 40});
 
-            // Buy/Sell Values Group
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Buy Value
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      currency.buy >= 100
-                          ? currency.buy.toStringAsFixed(0)
-                          : currency.buy.toStringAsFixed(1),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.buy,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(width: 24),
-
-                // Sell Value
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      currency.sell >= 100
-                          ? currency.sell.toStringAsFixed(0)
-                          : currency.sell.toStringAsFixed(1),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.sell,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(width: 8),
-
-                Icon(
-                  Icons.chevron_right,
-                  size: 20,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-                ),
-              ],
-            ),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: scheme.outlineVariant, width: 1),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: FlagContainer(
+          imageUrl: imageUrl,
+          width: size,
+          height: size,
+          borderRadius: BorderRadius.circular(size / 2),
         ),
       ),
     );

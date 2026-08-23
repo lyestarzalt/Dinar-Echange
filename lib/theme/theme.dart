@@ -171,7 +171,51 @@ class MaterialTheme {
   }
 
   static TextTheme _createCustomTextTheme(TextTheme base) {
-    return base.apply(fontFamily: 'Geologica');
+    const tabular = <FontFeature>[FontFeature.tabularFigures()];
+    final geologica = base.apply(fontFamily: 'Geologica');
+    return geologica.copyWith(
+      // Hero rate values on the featured card.
+      displayLarge: geologica.displayLarge?.copyWith(
+        fontSize: 56,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.5,
+        height: 1.0,
+        fontFeatures: tabular,
+      ),
+      // Rate values in currency rows.
+      displaySmall: geologica.displaySmall?.copyWith(
+        fontSize: 26,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+        height: 1.0,
+        fontFeatures: tabular,
+      ),
+      headlineMedium: geologica.headlineMedium?.copyWith(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+      ),
+      // Currency codes.
+      titleLarge: geologica.titleLarge?.copyWith(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2,
+      ),
+      titleMedium: geologica.titleMedium?.copyWith(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+      // BUY / SELL and similar tags: uppercase, wide tracking, small.
+      labelSmall: geologica.labelSmall?.copyWith(
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 1.5,
+      ),
+      labelMedium: geologica.labelMedium?.copyWith(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.4,
+      ),
+    );
   }
 
   MaterialTheme();
