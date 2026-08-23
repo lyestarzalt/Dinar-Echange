@@ -58,5 +58,27 @@
 			<string>fetch</string>
 			<string>remote-notification</string>
 		</array>
+		<!-- App Store: declares the app does not use non-exempt encryption
+		     so we're not asked at every submission. Set to true if you later
+		     add anything beyond HTTPS/Apple's platform crypto. -->
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
+		<!-- Shown to the user when the app calls
+		     AppTrackingTransparency.requestTrackingAuthorization. Required
+		     by Apple whenever a third-party SDK (here: AdMob) uses IDFA. -->
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Your identifier will be used to deliver personalized ads.</string>
+		<!-- SKAdNetwork identifiers for ad attribution on iOS 14.5+.
+		     The full canonical list of Google Mobile Ads partner networks
+		     is published at https://developers.google.com/admob/ios/quick-start.
+		     Paste the full array from those docs before shipping to iOS;
+		     the entry below is Google's own network id to bootstrap. -->
+		<key>SKAdNetworkItems</key>
+		<array>
+			<dict>
+				<key>SKAdNetworkIdentifier</key>
+				<string>cstr6suwn9.skadnetwork</string>
+			</dict>
+		</array>
 	</dict>
 </plist>

@@ -12,6 +12,8 @@ import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart' hide AppState;
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'dart:io' show Platform;
 import 'package:dinar_echange/utils/state.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
@@ -129,6 +131,15 @@ class AppInitializationProvider with ChangeNotifier {
   }
 
   Future<void> _initializeMobileAds() async {
+    // iOS 14.5+ requires an ATT prompt before IDFA is available to AdMob.
+    // The plugin is a no-op on Android and older iOS.
+    if (Platform.isIOS) {
+      final status =
+          await AppTrackingTransparency.trackingAuthorizationStatus;
+      if (status == TrackingStatus.notDetermined) {
+        await AppTrackingTransparency.requestTrackingAuthorization();
+      }
+    }
     MobileAds.instance.initialize();
     AppLogger.logInfo('MobileAds activated.');
   }
