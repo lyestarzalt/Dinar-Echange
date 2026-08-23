@@ -65,6 +65,14 @@ class PreferencesService {
     await _pref.setString('selectedLanguage', languageCode);
   }
 
+  Future<String?> getFcmSubscribedLanguage() async {
+    return _pref.getString('fcmSubscribedLanguage');
+  }
+
+  Future<void> setFcmSubscribedLanguage(String languageCode) async {
+    await _pref.setString('fcmSubscribedLanguage', languageCode);
+  }
+
   Future<String?> getString(String key) async {
     return _pref.getString(key);
   }

@@ -169,27 +169,37 @@ class AppInitializationProvider with ChangeNotifier {
   }
 
   Future<void> setupFirebaseMessaging() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    final messaging = FirebaseMessaging.instance;
+    final prefs = PreferencesService();
 
-    String? token = await messaging.getToken();
+    final token = await messaging.getToken();
     AppLogger.logDebug("FCM Token: $token");
-    const List<Locale> supportedLocales = AppLocalizations.supportedLocales;
 
-    List<String> languageTopics = supportedLocales
-        .map((locale) => 'allDevices_${locale.languageCode}')
-        .toList();
+    final desiredLanguage = await prefs.getSelectedLanguage() ?? 'en';
+    final subscribedLanguage = await prefs.getFcmSubscribedLanguage();
 
-    // Unsubscribe from all language topics
-    for (String topic in languageTopics) {
-      await messaging.unsubscribeFromTopic(topic);
+    if (subscribedLanguage == desiredLanguage) {
+      AppLogger.logInfo(
+          "FCM: already subscribed to 'allDevices_$desiredLanguage', skipping.");
+    } else if (subscribedLanguage == null) {
+      // First run on this fix: purge any topic subscriptions the previous
+      // "unsubscribe-all-then-resubscribe" code path may have left behind,
+      // then subscribe to the current language exactly once.
+      const supportedLocales = AppLocalizations.supportedLocales;
+      for (final locale in supportedLocales) {
+        await messaging.unsubscribeFromTopic('allDevices_${locale.languageCode}');
+      }
+      await messaging.subscribeToTopic('allDevices_$desiredLanguage');
+      await prefs.setFcmSubscribedLanguage(desiredLanguage);
+      AppLogger.logInfo(
+          "FCM: migrated topic subscription to 'allDevices_$desiredLanguage'.");
+    } else {
+      await messaging.unsubscribeFromTopic('allDevices_$subscribedLanguage');
+      await messaging.subscribeToTopic('allDevices_$desiredLanguage');
+      await prefs.setFcmSubscribedLanguage(desiredLanguage);
+      AppLogger.logInfo(
+          "FCM: swapped topic 'allDevices_$subscribedLanguage' → 'allDevices_$desiredLanguage'.");
     }
-
-    String languageCode =
-        await PreferencesService().getSelectedLanguage() ?? 'en';
-    String topic = 'allDevices_$languageCode';
-
-    await messaging.subscribeToTopic(topic);
-    AppLogger.logInfo("Subscribed to '$topic' topic");
 
     // Setup background message handling
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
