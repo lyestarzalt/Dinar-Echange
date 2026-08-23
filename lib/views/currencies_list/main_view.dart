@@ -7,6 +7,7 @@ import 'package:dinar_echange/providers/list_currency_provider.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
+import 'package:dinar_echange/widgets/list/hero_currency_card.dart';
 
 class MainView extends StatefulWidget {
   const MainView({
@@ -57,6 +58,21 @@ class _MainViewState extends State<MainView>
       List<Currency> officialMarketCurrencies =
           initProvider.officialCurrencies!;
 
+      // Featured currency = first entry in parallel list; match the same
+      // currency code in official to show both markets side by side.
+      final featured = alternativeMarketCurrencies.isNotEmpty
+          ? alternativeMarketCurrencies.first
+          : null;
+      Currency? officialCounterpart;
+      if (featured != null) {
+        for (final c in officialMarketCurrencies) {
+          if (c.currencyCode == featured.currencyCode) {
+            officialCounterpart = c;
+            break;
+          }
+        }
+      }
+
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.currencies_app_bar_title),
@@ -72,30 +88,41 @@ class _MainViewState extends State<MainView>
               ),
             ),
           ],
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: AppLocalizations.of(context)!.parallel_market),
-              Tab(text: AppLocalizations.of(context)!.official_market),
-            ],
-          ),
         ),
-        body: TabBarView(
-          controller: _tabController,
+        body: Column(
           children: [
-            ChangeNotifierProvider(
-              create: (_) => ListCurrencyProvider(
-                currencies: alternativeMarketCurrencies,
-                marketType: 'alternative',
+            if (featured != null)
+              HeroCurrencyCard(
+                parallel: featured,
+                official: officialCounterpart,
               ),
-              child: const CurrencyListScreen(marketType: 'alternative'),
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: AppLocalizations.of(context)!.parallel_market),
+                Tab(text: AppLocalizations.of(context)!.official_market),
+              ],
             ),
-            ChangeNotifierProvider(
-              create: (_) => ListCurrencyProvider(
-                currencies: officialMarketCurrencies,
-                marketType: 'official',
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  ChangeNotifierProvider(
+                    create: (_) => ListCurrencyProvider(
+                      currencies: alternativeMarketCurrencies,
+                      marketType: 'alternative',
+                    ),
+                    child: const CurrencyListScreen(marketType: 'alternative'),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (_) => ListCurrencyProvider(
+                      currencies: officialMarketCurrencies,
+                      marketType: 'official',
+                    ),
+                    child: const CurrencyListScreen(marketType: 'official'),
+                  ),
+                ],
               ),
-              child: const CurrencyListScreen(marketType: 'official'),
             ),
           ],
         ),

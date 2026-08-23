@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/providers/list_currency_provider.dart';
 import 'package:dinar_echange/widgets/list/list_tile.dart';
-import 'package:dinar_echange/widgets/list/hero_currency_card.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:dinar_echange/views/currencies_list/add_currency_view.dart';
@@ -33,21 +32,13 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
           child: Consumer<ListCurrencyProvider>(
-            builder: (_, provider, __) {
-              final featured = provider.selectedCurrencies.isNotEmpty
-                  ? provider.selectedCurrencies.first
-                  : null;
-              return ReorderableListView.builder(
-                shrinkWrap: true,
-                header: featured == null
-                    ? null
-                    : HeroCurrencyCard(currency: featured),
-                itemCount: provider.selectedCurrencies.length,
-                itemBuilder: (context, index) =>
-                    _buildCurrencyItem(context, provider, index),
-                onReorderItem: provider.reorderCurrencies,
-              );
-            },
+            builder: (_, provider, __) => ReorderableListView.builder(
+              shrinkWrap: true,
+              itemCount: provider.selectedCurrencies.length,
+              itemBuilder: (context, index) =>
+                  _buildCurrencyItem(context, provider, index),
+              onReorderItem: provider.reorderCurrencies,
+            ),
           ),
         ),
       ),
