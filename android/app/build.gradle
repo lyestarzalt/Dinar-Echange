@@ -30,12 +30,12 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     sourceSets {
@@ -64,9 +64,7 @@ android {
                 storeFile file(System.getenv("SIGNING_KEY_PATH"))
                 storePassword System.getenv("SIGNING_KEY_STORE_PASSWORD")
             } else {
-                
-        throw  FileNotFoundException("SIGNING_KEY_PATH environment variable is not set. Please ensure all signing environment variables are properly configured.")
-
+                throw new GradleException("SIGNING_KEY_PATH environment variable is not set. Please ensure all signing environment variables are properly configured.")
             }
         }
     }
