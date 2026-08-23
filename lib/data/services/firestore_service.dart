@@ -63,18 +63,19 @@ class FirestoreService {
     final ratesData = ratesSnapshot.data() as Map<String, dynamic>;
     final snapshotDate = ratesSnapshot.id;
 
-    return ratesData.entries
-        .map((currencyData) => Currency(
-              currencyCode: currencyData.key.toUpperCase(),
-              buy: currencyData.value['buy']?.toDouble() ?? 0.0,
-              sell: currencyData.value['sell']?.toDouble() ?? 0.0,
-              date: DateTime.parse(snapshotDate),
-              isCore: currencyData.value['is_core'] ?? false,
-              currencyName: currencyData.value['name'],
-              currencySymbol: currencyData.value['symbol'],
-              flag: currencyData.value['flag'],
-            ))
-        .toList();
+    return ratesData.entries.map((currencyData) {
+      final value = currencyData.value as Map<String, dynamic>;
+      return Currency(
+        currencyCode: currencyData.key.toUpperCase(),
+        buy: (value['buy'] as num?)?.toDouble() ?? 0.0,
+        sell: (value['sell'] as num?)?.toDouble() ?? 0.0,
+        date: DateTime.parse(snapshotDate),
+        isCore: value['is_core'] as bool? ?? false,
+        currencyName: value['name'] as String?,
+        currencySymbol: value['symbol'] as String?,
+        flag: value['flag'] as String?,
+      );
+    }).toList();
   }
 
   List<CurrencyHistoryEntry> _convertFirestoreDataToHistoricalRates(
@@ -84,7 +85,7 @@ class FirestoreService {
     final historicalRates = historicalData.entries
         .map((entry) => CurrencyHistoryEntry(
               date: DateTime.tryParse(entry.key) ?? DateTime.now(),
-              buy: (entry.value is num) ? entry.value.toDouble() : 0.0,
+              buy: (entry.value is num) ? (entry.value as num).toDouble() : 0.0,
             ))
         .toList();
 

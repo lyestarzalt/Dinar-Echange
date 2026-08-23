@@ -75,7 +75,7 @@ Future<bool> shouldShowAd(String type) async {
 
 class MainNavigation extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onItemSelected;
+  final void Function(int) onItemSelected;
   const MainNavigation(
       {super.key, required this.selectedIndex, required this.onItemSelected});
   @override

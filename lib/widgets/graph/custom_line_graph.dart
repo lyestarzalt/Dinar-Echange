@@ -12,7 +12,7 @@ class CustomLineGraph extends StatefulWidget {
   final double maxValue;
   final double minValue;
   final double midValue;
-  final Function(int index, DateTime date, double value)? onPointSelected;
+  final void Function(int index, DateTime date, double value)? onPointSelected;
   final Color upTrendColor;
   final Color downTrendColor;
   const CustomLineGraph({

@@ -67,7 +67,7 @@ class CacheManager {
 
   bool isCacheDateValid(Map<String, dynamic> cachedData) {
     DateTime cachedDate =
-        DateTime.fromMillisecondsSinceEpoch(cachedData['timestamp']).toUtc();
+        DateTime.fromMillisecondsSinceEpoch(cachedData['timestamp'] as int).toUtc();
     DateTime currentDateInAlgeriaTime = getCurrentDateInAlgeriaTime();
 
     bool isBeforeUpdateTime = currentDateInAlgeriaTime.hour < 9;
@@ -85,10 +85,8 @@ class CacheManager {
         // For a list of currencies, we check that it's not empty.
         return data.isNotEmpty;
       } else if (data is Map<String, dynamic>) {
-        // For a single currency with history, we check for non-empty history.
-        return data.containsKey('history') &&
-            data['history'] is List &&
-            data['history'].isNotEmpty;
+        final history = data['history'];
+        return history is List && history.isNotEmpty;
       }
     }
     // Default to false if none of the above conditions are met.

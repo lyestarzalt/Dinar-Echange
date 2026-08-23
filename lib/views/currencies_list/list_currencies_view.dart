@@ -132,7 +132,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
   void _navigateToConverter(BuildContext context, Currency currency) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => ChangeNotifierProvider(
           create: (_) => CurrencyConverterProvider(currency),
           child: CurrencyConverterPage(marketType: widget.marketType),
@@ -168,7 +168,7 @@ Future<void> _showAddCurrencyPage(BuildContext context) async {
 void _navigateToAddCurrencyPage(BuildContext context) {
   Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => ChangeNotifierProvider.value(
           value: Provider.of<ListCurrencyProvider>(context, listen: false),
           child: const AddCurrencyPage(),

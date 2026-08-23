@@ -25,9 +25,9 @@ class GraphProvider with ChangeNotifier {
   int displayPeriodDays = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR';
   final String dateformat = 'd MMMM y';
-  AppState _state = AppState.loading();
+  AppState<List<CurrencyHistoryEntry>> _state = AppState.loading();
 
-  AppState get state => _state;
+  AppState<List<CurrencyHistoryEntry>> get state => _state;
 
   GraphProvider(List<Currency> allCurrencies) {
     fetchCurrencies(allCurrencies);

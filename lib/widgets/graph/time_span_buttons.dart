@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:dinar_echange/providers/graph_provider.dart';
 
 class TimeSpanButtons extends StatelessWidget {
-  final Function(int) onTimeSpanSelected;
+  final void Function(int) onTimeSpanSelected;
 
   const TimeSpanButtons({super.key, required this.onTimeSpanSelected});
 

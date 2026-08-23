@@ -21,8 +21,8 @@ class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
   final AdProvider _adProvider = AdProvider();
-  AppState get Paralleltate => _parallelstate;
-  AppState get officialState => _officialState;
+  AppState<List<Currency>> get Paralleltate => _parallelstate;
+  AppState<List<Currency>> get officialState => _officialState;
 
   List<Currency>? get currencies => _parallelstate.data;
   List<Currency>? get officialCurrencies => _officialState.data;
@@ -61,7 +61,7 @@ class AppInitializationProvider with ChangeNotifier {
     ])
         .then((_) => AppLogger.logInfo(
             'Deferred Firebase and related services initialized.'))
-        .catchError((error) => AppLogger.logError(
+        .catchError((Object error) => AppLogger.logError(
             'Deferred initialization error',
             error: error,
             isFatal: true));

@@ -160,7 +160,7 @@ class SettingsContent extends StatelessWidget {
       'document_type': type.toString(),
     });
 
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (context) => LegalDocumentsScreen(documentType: type),
     ));
   }
@@ -169,7 +169,7 @@ class SettingsContent extends StatelessWidget {
     final text = AppLocalizations.of(context)!;
     AppLogger.trackScreenView('Language_Selection', 'Settings');
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         String currentLanguage = languageCodes.entries
@@ -223,7 +223,7 @@ class SettingsContent extends StatelessWidget {
     final text = AppLocalizations.of(context)!;
     AppLogger.trackScreenView('About_App', 'Settings');
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -296,7 +296,7 @@ class _DebugSection extends StatelessWidget {
 
 class _ThemeSelector extends StatelessWidget {
   final ThemeMode currentTheme;
-  final Function(ThemeOption) onThemeChanged;
+  final void Function(ThemeOption) onThemeChanged;
 
   const _ThemeSelector({
     required this.currentTheme,

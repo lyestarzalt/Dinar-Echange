@@ -17,15 +17,15 @@ jobs:
           fetch-depth: 0 # Fetch all history to enable proper tagging
 
       - name: Setup Java and Flutter
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
-          distribution: "adopt"
+          distribution: "temurin"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.1"
+          flutter-version: "3.47.1"
           channel: stable
 
       - name: Decode Keystore File
@@ -51,7 +51,7 @@ jobs:
           VERSION_BASE=$(echo $VERSION_LINE | cut -d '+' -f 1 | awk '{print $2}')
           echo "VERSION_BASE=$VERSION_BASE" >> $GITHUB_ENV
           echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
-          echo "::set-output name=version::$VERSION_BASE"  # Output the version for later use
+          echo "version=$VERSION_BASE" >> $GITHUB_OUTPUT
 
       - name: Build App Bundle
         run: |

@@ -15,8 +15,8 @@ class HttpService {
 
   Future<String> getLegalHtml(String urlPath) async {
     try {
-      Response response = await _dio.get(urlPath);
-      return response.data;
+      final Response<String> response = await _dio.get<String>(urlPath);
+      return response.data ?? '';
     } on DioException catch (e, stackTrace) {
       AppLogger.logError('Failed to fetch Html from $baseURL$urlPath',
           error: e, stackTrace: stackTrace);

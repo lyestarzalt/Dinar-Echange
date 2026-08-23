@@ -6,7 +6,7 @@ import 'package:dinar_echange/utils/logging.dart';
 
 class CurrencyMenu extends StatefulWidget {
   final List<Currency> coreCurrencies;
-  final Function(Currency) onCurrencySelected;
+  final void Function(Currency) onCurrencySelected;
   final BuildContext parentContext;
 
   const CurrencyMenu({
