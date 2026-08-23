@@ -231,7 +231,12 @@ class _Chart extends StatelessWidget {
     final brand = context.brand;
     return SizedBox(
       height: 230,
-      child: CustomLineGraph(
+      // The painter draws the y-axis labels past `size.width` (they sit
+      // to the right of the plot area), so reserve room for them here
+      // instead of letting them clip.
+      child: Padding(
+        padding: const EdgeInsets.only(right: 44),
+        child: CustomLineGraph(
         dataPoints: provider.historicalData.map((e) => e.buy).toList(),
         dates: provider.historicalData.map((e) => e.date).toList(),
         gridColor: scheme.outlineVariant,
@@ -245,6 +250,7 @@ class _Chart extends StatelessWidget {
         midValue: provider.averageExchangeRate,
         onPointSelected: (index, date, value) =>
             provider.updateSelectedPoint(index),
+        ),
       ),
     );
   }

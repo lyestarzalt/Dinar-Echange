@@ -88,7 +88,9 @@ class GraphProvider with ChangeNotifier {
     if (index >= 0 && index < historicalData.length) {
       var dataPoint = historicalData[index];
       selectedPointIndex.value = index;
-      selectedExchangeRate.value = '${dataPoint.buy.toStringAsFixed(2)} DZD';
+      // Match updateDisplayPeriod's format — bare number, no suffix.
+      // The "DZD" label is a UI concern, not a provider concern.
+      selectedExchangeRate.value = dataPoint.buy.toStringAsFixed(2);
       selectedDate.value = dataPoint.date;
     }
   }
