@@ -20,11 +20,8 @@ class MaterialScheme {
     required this.onError,
     required this.errorContainer,
     required this.onErrorContainer,
-    required this.background,
-    required this.onBackground,
     required this.surface,
     required this.onSurface,
-    required this.surfaceVariant,
     required this.onSurfaceVariant,
     required this.outline,
     required this.outlineVariant,
@@ -72,11 +69,8 @@ class MaterialScheme {
   final Color onError;
   final Color errorContainer;
   final Color onErrorContainer;
-  final Color background;
-  final Color onBackground;
   final Color surface;
   final Color onSurface;
-  final Color surfaceVariant;
   final Color onSurfaceVariant;
   final Color outline;
   final Color outlineVariant;
