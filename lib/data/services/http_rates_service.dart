@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/utils/logging.dart';
+import 'package:meta/meta.dart';
 
 class HttpRatesService {
   static const String _baseUrl =
@@ -26,7 +27,7 @@ class HttpRatesService {
       if (data == null) {
         throw Exception('Empty response body from $path');
       }
-      return _parseRates(data);
+      return parseRates(data);
     } on DioException catch (e, stackTrace) {
       AppLogger.logError('Failed to fetch $path',
           error: e, stackTrace: stackTrace);
@@ -34,7 +35,8 @@ class HttpRatesService {
     }
   }
 
-  List<Currency> _parseRates(Map<String, dynamic> data) {
+  @visibleForTesting
+  static List<Currency> parseRates(Map<String, dynamic> data) {
     final ratesMap = data['rates'] as Map<String, dynamic>?;
     final dateStr = data['date'] as String?;
     if (ratesMap == null || dateStr == null) {
