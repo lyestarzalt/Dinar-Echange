@@ -185,25 +185,27 @@ class SettingsContent extends StatelessWidget {
           ),
           title: Text(text.chose_language_title),
           content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: languageCodes.entries.map((entry) {
-                return RadioListTile<String>(
-                  title: Text(entry.key),
-                  value: entry.key,
-                  groupValue: currentLanguage,
-                  onChanged: (String? value) {
-                    if (value != null) {
-                      appProvider
-                          .setLanguage(Locale(languageCodes[value] ?? 'en'));
-                      AppLogger.logEvent('language_changed', {
-                        'language_code': languageCodes[value] ?? 'en',
-                      });
-                      Navigator.of(context).pop();
-                    }
-                  },
-                );
-              }).toList(),
+            child: RadioGroup<String>(
+              groupValue: currentLanguage,
+              onChanged: (String? value) {
+                if (value != null) {
+                  appProvider
+                      .setLanguage(Locale(languageCodes[value] ?? 'en'));
+                  AppLogger.logEvent('language_changed', {
+                    'language_code': languageCodes[value] ?? 'en',
+                  });
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: languageCodes.entries.map((entry) {
+                  return RadioListTile<String>(
+                    title: Text(entry.key),
+                    value: entry.key,
+                  );
+                }).toList(),
+              ),
             ),
           ),
           actions: [
@@ -356,7 +358,6 @@ class _ThemeSelector extends StatelessWidget {
       case ThemeMode.light:
         return ThemeOption.light;
       case ThemeMode.system:
-      default:
         return ThemeOption.auto;
     }
   }

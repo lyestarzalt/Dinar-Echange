@@ -128,9 +128,6 @@ class ListCurrencyProvider with ChangeNotifier {
   }
 
   void reorderCurrencies(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
     final Currency item = _selectedCurrencies.removeAt(oldIndex);
     _selectedCurrencies.insert(newIndex, item);
     _saveCurrencyOrder();

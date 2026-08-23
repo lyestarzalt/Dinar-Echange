@@ -19,7 +19,7 @@ Widget buildCurrencyInput({
       side: BorderSide(
         color: focusNode.hasFocus
             ? Theme.of(context).colorScheme.onPrimaryContainer
-            : Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.3),
+            : Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
         width: focusNode.hasFocus ? 3.0 : 0.5,
       ),
     ),

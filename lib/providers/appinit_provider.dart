@@ -20,7 +20,7 @@ import 'package:dinar_echange/services/remote_config_service.dart';
 class AppInitializationProvider with ChangeNotifier {
   AppState<List<Currency>> _parallelstate = AppState.loading();
   AppState<List<Currency>> _officialState = AppState.loading();
-  AdProvider _adProvider = AdProvider();
+  final AdProvider _adProvider = AdProvider();
   AppState get Paralleltate => _parallelstate;
   AppState get officialState => _officialState;
 
@@ -108,13 +108,13 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> _activateAppCheck() async {
     if (kReleaseMode) {
       await FirebaseAppCheck.instance.activate(
-        androidProvider: AndroidProvider.playIntegrity,
+        providerAndroid: const AndroidPlayIntegrityProvider(),
         //appleProvider: AppleProvider.deviceCheck,
       );
       AppLogger.logInfo('App Check activated: production');
     } else {
       await FirebaseAppCheck.instance.activate(
-        androidProvider: AndroidProvider.debug,
+        providerAndroid: const AndroidDebugProvider(),
         //appleProvider: AppleProvider.debug,
       );
       AppLogger.logInfo('App Check activated: debug');

@@ -16,7 +16,7 @@ class CustomLineGraph extends StatefulWidget {
   final Color upTrendColor;
   final Color downTrendColor;
   const CustomLineGraph({
-    Key? key,
+    super.key,
     required this.dataPoints,
     required this.dates,
     this.lineColor = Colors.blue,
@@ -30,7 +30,7 @@ class CustomLineGraph extends StatefulWidget {
     this.onPointSelected,
     this.upTrendColor = Colors.green,
     this.downTrendColor = Colors.red,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomLineGraph> createState() => _CustomLineGraphState();
@@ -220,7 +220,7 @@ class _LineGraphPainter extends CustomPainter {
 
   void _drawReferenceLines(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = gridColor.withOpacity(0.2)
+      ..color = gridColor.withValues(alpha: 0.2)
       ..strokeWidth = 1.0;
 
     final values = [maxValue, midValue, minValue];
@@ -258,7 +258,7 @@ class _LineGraphPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     final rightPaint = Paint()
-      ..color = lineColor.withOpacity(0.3)
+      ..color = lineColor.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
 
@@ -317,7 +317,7 @@ class _LineGraphPainter extends CustomPainter {
     if (x.isNaN) return;
 
     final paint = Paint()
-      ..color = lineColor.withOpacity(0.3)
+      ..color = lineColor.withValues(alpha: 0.3)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
 

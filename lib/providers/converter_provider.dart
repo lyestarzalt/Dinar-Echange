@@ -101,15 +101,6 @@ class CurrencyConverterProvider with ChangeNotifier {
         .format(amount);
   }
 
-  void _swapControllerValues() {
-    final tempAmount = amountController.text;
-    amountController.text = resultController.text;
-    resultController.text = tempAmount;
-    final currentAmount = amountController.text;
-    amountController.text = '';
-    amountController.text = currentAmount;
-  }
-
   @override
   void dispose() {
     amountController.dispose();

@@ -53,7 +53,7 @@ class MaterialTheme {
               if (states.contains(WidgetState.selected)) {
                 return colorScheme.secondary;
               }
-              return colorScheme.onSurface.withOpacity(0.6);
+              return colorScheme.onSurface.withValues(alpha: 0.6);
             },
           ),
         ),

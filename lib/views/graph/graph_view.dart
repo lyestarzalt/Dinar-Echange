@@ -47,10 +47,6 @@ class HistoryPage extends StatelessWidget {
                       return ErrorMessage(
                         onRetry: () => provider.fetchCurrencies(currencies),
                       );
-                    default:
-                      return ErrorMessage(
-                        onRetry: () => provider.fetchCurrencies(currencies),
-                      );
                   }
                 },
               ),

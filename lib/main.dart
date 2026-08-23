@@ -67,7 +67,7 @@ class DinarEchange extends StatelessWidget {
 }
 
 class AppStartup extends StatelessWidget {
-  const AppStartup({Key? key}) : super(key: key);
+  const AppStartup({super.key});
 
   @override
   Widget build(BuildContext context) {

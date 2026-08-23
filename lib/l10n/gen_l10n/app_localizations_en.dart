@@ -1,4 +1,9 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
 
 /// The translations for English (`en`).
 class AppLocalizationsEn extends AppLocalizations {
@@ -50,7 +55,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rate_us_button => 'Rate the App';
 
   @override
-  String get about_body => 'Thank you for choosing Dinar Echange. This app shares updates and features to help you track currency changes.';
+  String get about_body =>
+      'Thank you for choosing Dinar Echange. This app shares updates and features to help you track currency changes.';
 
   @override
   String get about_app_button => 'About the App';
@@ -74,7 +80,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_currencies_message => 'No currencies';
 
   @override
-  String get errormessage_message => 'Unable to load the data. Check your connection and try again.';
+  String get errormessage_message =>
+      'Unable to load the data. Check your connection and try again.';
 
   @override
   String get search_hint => 'Search';
@@ -101,13 +108,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dzd_symbol => 'DZD';
 
   @override
-  String get centime_explanation => 'In Algeria, \'centime\' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.';
+  String get centime_explanation =>
+      'In Algeria, \'centime\' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.';
 
   @override
   String get why_centime_title => 'The Usage of \'Centime';
 
   @override
-  String currency_buy_sell_explanation(Object buy_rate, Object currency_code, Object sell_rate) {
+  String currency_buy_sell_explanation(
+    Object buy_rate,
+    Object currency_code,
+    Object sell_rate,
+  ) {
     return 'The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, to buy 1 $currency_code, it costs $buy_rate DZD, and to sell 1 $currency_code, you\'ll receive $sell_rate DZD.';
   }
 
@@ -145,7 +157,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error_title => 'Something Went Wrong';
 
   @override
-  String get error_message => 'Oops! Something didn\'t go as planned. Please try again.';
+  String get error_message =>
+      'Oops! Something didn\'t go as planned. Please try again.';
 
   @override
   String get buy => 'Buy';
@@ -157,7 +170,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm_delete_title => 'Confirm Deletion';
 
   @override
-  String get confirm_delete_message => 'Are you sure you want to delete this currency?';
+  String get confirm_delete_message =>
+      'Are you sure you want to delete this currency?';
 
   @override
   String get cancel => 'Cancel';

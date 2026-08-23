@@ -46,7 +46,6 @@ class PreferencesService {
       case ThemeOption.light:
         return ThemeMode.light;
       case ThemeOption.auto:
-      default:
         Brightness brightness =
             SchedulerBinding.instance.platformDispatcher.platformBrightness;
         return brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;

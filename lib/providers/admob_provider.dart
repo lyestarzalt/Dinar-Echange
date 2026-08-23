@@ -17,9 +17,7 @@ class AdProvider with ChangeNotifier {
   bool get isBannerAdLoaded => _isBannerAdLoaded;
   bool get isInterstitialAdLoaded => _isInterstitialAdLoaded;
   BannerAd? get bannerAd => _bannerAd;
-  bool _isAdLoaded = false;
 
-  // Constructor
   AdProvider() {
     loadInterstitialAd();
   }

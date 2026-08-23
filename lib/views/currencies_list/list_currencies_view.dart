@@ -37,7 +37,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
               itemCount: provider.selectedCurrencies.length,
               itemBuilder: (context, index) =>
                   _buildCurrencyItem(context, provider, index),
-              onReorder: provider.reorderCurrencies,
+              onReorderItem: provider.reorderCurrencies,
             ),
           ),
         ),
@@ -148,18 +148,19 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
 Future<void> _showAddCurrencyPage(BuildContext context) async {
   final AdProvider adProvider = Provider.of<AdProvider>(context, listen: false);
 
-  if (await shouldShowAd('ad_show_chance_open')) {
-    // 30% chance to show the ad
+  final shouldShow = await shouldShowAd('ad_show_chance_open');
+  if (!context.mounted) return;
+
+  if (shouldShow) {
     if (adProvider.isInterstitialAdLoaded) {
       adProvider.showInterstitialAd();
       adProvider.onAdDismissed(() {
-        _navigateToAddCurrencyPage(context);
+        if (context.mounted) _navigateToAddCurrencyPage(context);
       });
     } else {
       _navigateToAddCurrencyPage(context);
     }
   } else {
-  
     _navigateToAddCurrencyPage(context);
   }
 }
