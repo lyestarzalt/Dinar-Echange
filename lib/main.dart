@@ -6,6 +6,7 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/theme/theme.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
+import 'package:dinar_echange/widgets/offline_banner.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
 import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -58,6 +59,8 @@ class DinarEchange extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             //
+            builder: (context, child) =>
+                OfflineBanner(child: child ?? const SizedBox.shrink()),
             home: const AppStartup(),
           );
         },
