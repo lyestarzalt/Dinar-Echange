@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dinar_echange/views/settings/settings_view.dart';
 import 'package:dinar_echange/views/currencies_list/main_view.dart';
 import 'package:dinar_echange/views/graph/graph_view.dart';
@@ -104,6 +105,7 @@ class MainNavigation extends StatelessWidget {
 
   void _handleSelection(
       BuildContext context, int index, AdProvider adProvider) async {
+    HapticFeedback.selectionClick();
     if (await shouldShowAd('ad_show_chance_nav')) {
       if (adProvider.isInterstitialAdLoaded) {
         adProvider.showInterstitialAd();

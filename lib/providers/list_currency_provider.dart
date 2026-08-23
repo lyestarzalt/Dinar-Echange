@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
@@ -108,6 +109,7 @@ class ListCurrencyProvider with ChangeNotifier {
   }
 
   void addOrRemoveCurrency(Currency currency, bool isSelected) async {
+    HapticFeedback.lightImpact();
     try {
       if (isSelected) {
         if (!_selectedCurrencies.contains(currency)) {
@@ -128,6 +130,7 @@ class ListCurrencyProvider with ChangeNotifier {
   }
 
   void reorderCurrencies(int oldIndex, int newIndex) {
+    HapticFeedback.mediumImpact();
     final Currency item = _selectedCurrencies.removeAt(oldIndex);
     _selectedCurrencies.insert(newIndex, item);
     _saveCurrencyOrder();

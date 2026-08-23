@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:intl/intl.dart';
 import 'package:dinar_echange/utils/logging.dart';
@@ -27,6 +28,7 @@ class CurrencyConverterProvider with ChangeNotifier {
       _isDZDtoCurrency ? _getInverseRate() : currency.sell;
 
   void toggleConversionDirection() {
+    HapticFeedback.selectionClick();
     _isDZDtoCurrency = !_isDZDtoCurrency;
     final amount = amountController.text;
     final result = resultController.text;
@@ -37,6 +39,7 @@ class CurrencyConverterProvider with ChangeNotifier {
   }
 
   void toggleCentimes() {
+    HapticFeedback.selectionClick();
     _useCentimes = !_useCentimes;
     _updateConversion();
     notifyListeners();
