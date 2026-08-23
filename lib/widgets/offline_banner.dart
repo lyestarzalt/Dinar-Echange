@@ -10,22 +10,30 @@ class OfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bg = Theme.of(context).scaffoldBackgroundColor;
     return StreamBuilder<List<ConnectivityResult>>(
       stream: Connectivity().onConnectivityChanged,
       builder: (context, snapshot) {
         final isOffline = snapshot.hasData &&
             snapshot.data!.every((r) => r == ConnectivityResult.none);
-        return Column(
-          children: [
-            AnimatedSize(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              child: isOffline
-                  ? _OfflineBar()
-                  : const SizedBox(width: double.infinity),
-            ),
-            Expanded(child: child),
-          ],
+        // Paint the scaffold background behind the Navigator so any
+        // route-transition frame where the incoming Scaffold hasn't
+        // fully painted (predictive back / cupertino slide) still lands
+        // on paper instead of the Material default white.
+        return ColoredBox(
+          color: bg,
+          child: Column(
+            children: [
+              AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+                child: isOffline
+                    ? _OfflineBar()
+                    : const SizedBox(width: double.infinity),
+              ),
+              Expanded(child: child),
+            ],
+          ),
         );
       },
     );

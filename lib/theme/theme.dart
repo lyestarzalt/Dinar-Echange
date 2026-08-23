@@ -77,10 +77,13 @@ class MaterialTheme {
         ),
       ],
 
-      // Platform-native transitions (Cupertino swipe-back on iOS).
+      // Platform-native transitions (Cupertino swipe-back on iOS,
+      // Material zoom on Android). Predictive-back was tried but flashed
+      // white on some emulators when the incoming Scaffold hadn't
+      // painted its background before the animation started.
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+          TargetPlatform.android: ZoomPageTransitionsBuilder(),
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
           TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
         },
