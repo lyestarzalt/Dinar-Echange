@@ -1,5 +1,6 @@
 import 'package:dinar_echange/data/currency_repository.dart';
 import 'package:dinar_echange/data/services/firestore_service.dart';
+import 'package:dinar_echange/data/services/http_rates_service.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/services/cache_service.dart';
 import 'package:dinar_echange/utils/logging.dart';
@@ -7,6 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:dinar_echange/utils/custom_exception.dart';
 
 class MainRepository implements CurrencyRepository {
+  // Latest daily rates come from Cloudflare R2 (public JSON, edge-cached).
+  // History still comes from Firestore until the R2 trend files have
+  // accumulated enough data points to be useful.
+  final HttpRatesService _httpRatesService = HttpRatesService();
   final FirestoreService _firestoreService = FirestoreService();
   final CacheManager _cacheManager = CacheManager();
 
@@ -14,8 +19,8 @@ class MainRepository implements CurrencyRepository {
   Future<List<Currency>> getDailyCurrencies() async {
     return _getCachedData<List<Currency>>(
       baseKey: 'dailyCurrencies',
-      fetchFromFirestore: () =>
-          _firestoreService.fetchCurrenciesFromFirestore(isBankRate: false),
+      fetchFromRemote: () =>
+          _httpRatesService.fetchLatestCurrencies(isBankRate: false),
       fromJson: (data) => (data as List<dynamic>)
           .map((model) => Currency.fromJson(model as Map<String, dynamic>))
           .toList(),
@@ -26,8 +31,8 @@ class MainRepository implements CurrencyRepository {
   Future<List<Currency>> getOfficialDailyCurrencies() async {
     return _getCachedData<List<Currency>>(
       baseKey: 'officialDailyCurrencies',
-      fetchFromFirestore: () =>
-          _firestoreService.fetchCurrenciesFromFirestore(isBankRate: true),
+      fetchFromRemote: () =>
+          _httpRatesService.fetchLatestCurrencies(isBankRate: true),
       fromJson: (data) => (data as List<dynamic>)
           .map((model) => Currency.fromJson(model as Map<String, dynamic>))
           .toList(),
@@ -39,8 +44,7 @@ class MainRepository implements CurrencyRepository {
     return _getCachedData<Currency>(
       baseKey: 'currencyWithHistory',
       suffix: currency.currencyCode,
-      fetchFromFirestore: () =>
-          _firestoreService.fetchCurrencyHistory(currency),
+      fetchFromRemote: () => _firestoreService.fetchCurrencyHistory(currency),
       fromJson: (data) => Currency.fromJson(data as Map<String, dynamic>),
     );
   }
@@ -48,7 +52,7 @@ class MainRepository implements CurrencyRepository {
   Future<T> _getCachedData<T>({
     required String baseKey,
     String? suffix,
-    required Future<T> Function() fetchFromFirestore,
+    required Future<T> Function() fetchFromRemote,
     required T Function(dynamic) fromJson,
   }) async {
     String cacheKey = _cacheManager.generateCacheKey(baseKey, suffix: suffix);
@@ -60,9 +64,8 @@ class MainRepository implements CurrencyRepository {
         return fromJson(cachedData['data']);
       }
 
-      AppLogger.logInfo(
-          'Cache miss. Fetching from Firestore for key: $cacheKey');
-      T data = await fetchFromFirestore();
+      AppLogger.logInfo('Cache miss. Fetching from remote for key: $cacheKey');
+      T data = await fetchFromRemote();
       await _cacheManager.setCache(cacheKey, {'data': data});
       return data;
     } catch (e, stackTrace) {
