@@ -25,7 +25,23 @@ class CurrencyConverterProvider with ChangeNotifier {
   bool get useCentimes => _useCentimes;
 
   double get conversionRate =>
-      _isDZDtoCurrency ? _getInverseRate() : currency.sell;
+      rateFor(currency: currency, isDZDtoCurrency: _isDZDtoCurrency);
+
+  // Rates follow the universal FX convention where `buy` is the exchanger's
+  // BID (lower, what they pay to buy foreign from the customer) and `sell` is
+  // their ASK (higher, what they charge to sell foreign to the customer).
+  //  - Foreign → DZD: customer SELLS foreign → exchanger uses BID → `buy`.
+  //  - DZD → foreign: customer BUYS foreign → exchanger uses ASK → `1/sell`.
+  @visibleForTesting
+  static double rateFor({
+    required Currency currency,
+    required bool isDZDtoCurrency,
+  }) {
+    if (isDZDtoCurrency) {
+      return currency.sell > 0 ? 1 / currency.sell : 0;
+    }
+    return currency.buy;
+  }
 
   void toggleConversionDirection() {
     HapticFeedback.selectionClick();
@@ -56,8 +72,6 @@ class CurrencyConverterProvider with ChangeNotifier {
       amountFocusNode.requestFocus();
     });
   }
-
-  double _getInverseRate() => currency.buy > 0 ? 1 / currency.buy : 0;
 
   bool _isValidAmount(String input) {
     try {
