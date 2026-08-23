@@ -1,0 +1,23 @@
+PODS:
+  - Flutter (1.0.0)
+  - sqflite (0.0.3):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - sqflite (from `.symlinks/plugins/sqflite/darwin`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+
+PODFILE CHECKSUM: ce2a4dd764e1c7aeed6a7cdc5e61d092b6dc6d32
+
+COCOAPODS: 1.16.2
