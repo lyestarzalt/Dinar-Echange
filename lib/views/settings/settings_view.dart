@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -26,12 +28,41 @@ class SettingsPage extends StatelessWidget {
         final textDirection = appProvider.currentLocale.languageCode == 'ar'
             ? TextDirection.rtl
             : TextDirection.ltr;
+        final title = Text(l10n.settings_app_bar_title);
+        final body = _SettingsBody(appProvider: appProvider);
+
+        if (Platform.isIOS) {
+          // iOS-native large-title nav bar that collapses on scroll.
+          // Uses the Material Scaffold for the surrounding chrome so
+          // the bottom NavigationBar we already have keeps working.
+          final scheme = Theme.of(context).colorScheme;
+          return Scaffold(
+            body: Directionality(
+              textDirection: textDirection,
+              child: CustomScrollView(
+                slivers: [
+                  CupertinoSliverNavigationBar(
+                    backgroundColor:
+                        scheme.surface.withValues(alpha: 0.72),
+                    largeTitle: title,
+                  ),
+                  SliverSafeArea(
+                    top: false,
+                    sliver: SliverToBoxAdapter(child: body),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
 
         return Scaffold(
-          appBar: AppBar(title: Text(l10n.settings_app_bar_title)),
+          appBar: AppBar(title: title),
           body: Directionality(
             textDirection: textDirection,
-            child: SafeArea(child: _SettingsBody(appProvider: appProvider)),
+            child: SafeArea(
+              child: SingleChildScrollView(child: body),
+            ),
           ),
         );
       },
@@ -59,7 +90,10 @@ class _SettingsBody extends StatelessWidget {
         )
         .key;
 
-    return SingleChildScrollView(
+    // Body is intentionally non-scrolling; the parent SettingsPage picks
+    // the right scroll container per platform (CustomScrollView on iOS
+    // for the sliver nav bar, SingleChildScrollView on Android).
+    return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -137,11 +171,7 @@ class _SettingsBody extends StatelessWidget {
     final t = Theme.of(context);
     final currentCode = appProvider.currentLocale.languageCode;
 
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: Padding(
+    Widget content(BuildContext ctx) => Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -165,9 +195,23 @@ class _SettingsBody extends StatelessWidget {
                 ),
             ],
           ),
+        );
+
+    if (Platform.isIOS) {
+      showCupertinoSheet<void>(
+        context: context,
+        scrollableBuilder: (ctx, controller) => SingleChildScrollView(
+          controller: controller,
+          child: SafeArea(child: content(ctx)),
         ),
-      ),
-    );
+      );
+    } else {
+      showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        builder: (ctx) => SafeArea(child: content(ctx)),
+      );
+    }
   }
 
   void _openAboutSheet(BuildContext context, AppProvider appProvider) {
@@ -180,11 +224,7 @@ class _SettingsBody extends StatelessWidget {
     final buildMode = appProvider.getBuildMode();
     final versionLine = 'v${info.version} · build ${info.buildNumber} · $buildMode';
 
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: Padding(
+    Widget content(BuildContext ctx) => Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -192,7 +232,8 @@ class _SettingsBody extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(l10n.about_app_button, style: t.textTheme.titleLarge),
+                child:
+                    Text(l10n.about_app_button, style: t.textTheme.titleLarge),
               ),
               const SizedBox(height: 8),
               Text(l10n.about_body, style: t.textTheme.bodyLarge),
@@ -208,9 +249,23 @@ class _SettingsBody extends StatelessWidget {
               ),
             ],
           ),
+        );
+
+    if (Platform.isIOS) {
+      showCupertinoSheet<void>(
+        context: context,
+        scrollableBuilder: (ctx, controller) => SingleChildScrollView(
+          controller: controller,
+          child: SafeArea(child: content(ctx)),
         ),
-      ),
-    );
+      );
+    } else {
+      showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        builder: (ctx) => SafeArea(child: content(ctx)),
+      );
+    }
   }
 
   void _showLicensesPage(BuildContext context, String appName, String version) {

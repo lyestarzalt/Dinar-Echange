@@ -31,6 +31,18 @@ class MaterialTheme {
   ThemeData lightHighContrast() => _build(Brightness.light, contrast: true);
   ThemeData darkHighContrast() => _build(Brightness.dark, contrast: true);
 
+  /// Corner shape that reads as an Apple continuous "squircle" on iOS
+  /// and a normal rounded rectangle on Android. This is what makes the
+  /// same widget feel native on both platforms without duplicating
+  /// widget code — cards, dialogs, sheets, buttons all pick it up
+  /// through the ThemeData.
+  static OutlinedBorder _shape(double radius) {
+    final br = BorderRadius.circular(radius);
+    return Platform.isIOS
+        ? ContinuousRectangleBorder(borderRadius: br)
+        : RoundedRectangleBorder(borderRadius: br);
+  }
+
   ThemeData _build(Brightness brightness, {required bool contrast}) {
     final isDark = brightness == Brightness.dark;
     final paper = isDark ? _night : _paper;
@@ -111,10 +123,15 @@ class MaterialTheme {
         elevation: 0,
         color: paper,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: sand.withValues(alpha: 0.2), width: 1),
-        ),
+        shape: Platform.isIOS
+            ? ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+                side: BorderSide(color: sand.withValues(alpha: 0.2), width: 1),
+              )
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: sand.withValues(alpha: 0.2), width: 1),
+              ),
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
       ),
@@ -123,10 +140,15 @@ class MaterialTheme {
         backgroundColor: paper,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: sand.withValues(alpha: 0.25)),
-        ),
+        shape: Platform.isIOS
+            ? ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+                side: BorderSide(color: sand.withValues(alpha: 0.25)),
+              )
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: sand.withValues(alpha: 0.25)),
+              ),
       ),
 
       bottomSheetTheme: BottomSheetThemeData(
@@ -143,7 +165,7 @@ class MaterialTheme {
         behavior: SnackBarBehavior.floating,
         backgroundColor: ink,
         contentTextStyle: GoogleFonts.instrumentSans(color: paper, fontSize: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: _shape(12),
         elevation: 0,
       ),
 
@@ -151,7 +173,7 @@ class MaterialTheme {
         style: FilledButton.styleFrom(
           backgroundColor: ink,
           foregroundColor: paper,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: _shape(14),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           textStyle: GoogleFonts.instrumentSans(
             fontWeight: FontWeight.w600,
@@ -163,7 +185,7 @@ class MaterialTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: ink,
           side: BorderSide(color: sand.withValues(alpha: 0.4)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: _shape(14),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           textStyle: GoogleFonts.instrumentSans(fontWeight: FontWeight.w500),
         ),
@@ -171,7 +193,7 @@ class MaterialTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: ink,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: _shape(12),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           textStyle: GoogleFonts.instrumentSans(fontWeight: FontWeight.w500),
         ),
@@ -273,9 +295,9 @@ class MaterialTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: ink,
         foregroundColor: paper,
+        shape: _shape(18),
         elevation: 0,
         highlightElevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
     );
   }
