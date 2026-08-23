@@ -10,6 +10,21 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 
 class AppProvider with ChangeNotifier {
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  // Call this instead of notifyListeners() from any code path that
+  // continues after an `await` — the provider may have been disposed
+  // while the future was pending.
+  void _safeNotify() {
+    if (!_disposed) notifyListeners();
+  }
+
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
   TabController? _tabController;
@@ -69,7 +84,7 @@ class AppProvider with ChangeNotifier {
   // Load Theme Mode
   Future<void> loadThemeMode() async {
     _themeMode = await PreferencesService().getThemeMode();
-    notifyListeners();
+    _safeNotify();
   }
 
   // Set Theme Mode
@@ -85,7 +100,7 @@ class AppProvider with ChangeNotifier {
         _themeMode = ThemeMode.system;
     }
     await PreferencesService().setThemeMode(option);
-    notifyListeners();
+    _safeNotify();
   }
 
   String getDatetime(DateTime currentDateTime) {
@@ -116,7 +131,7 @@ class AppProvider with ChangeNotifier {
           systemLocales.isNotEmpty ? systemLocales.first : const Locale('en');
     }
 
-    notifyListeners();
+    _safeNotify();
   }
 
   // Set Language
@@ -124,7 +139,7 @@ class AppProvider with ChangeNotifier {
     if (newLocale != _currentLocale) {
       _currentLocale = newLocale;
       await PreferencesService().setSelectedLanguage(newLocale.languageCode);
-      notifyListeners();
+      _safeNotify();
     }
   }
 
@@ -142,13 +157,13 @@ class AppProvider with ChangeNotifier {
       _htmlContent = await rootBundle.loadString('assets/$path');
     } finally {
       _isLoading = false;
-      notifyListeners();
+      _safeNotify();
     }
   }
 
   Future<void> loadAppVersion() async {
     _packageInfo = await PackageInfo.fromPlatform();
-    notifyListeners();
+    _safeNotify();
   }
 
   String getBuildMode() {
