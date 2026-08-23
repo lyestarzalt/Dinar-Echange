@@ -44,13 +44,13 @@ android {
 
     defaultConfig {
         applicationId "com.dinarexchange.app"
-        minSdkVersion 23
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-     signingConfigs {
+    signingConfigs {
         debug {
             storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
             storePassword 'android'
@@ -58,13 +58,12 @@ android {
             keyPassword 'android'
         }
         release {
-            if (System.getenv("SIGNING_KEY_PATH") != null) {
+            def signingKeyPath = System.getenv("SIGNING_KEY_PATH")
+            if (signingKeyPath != null) {
                 keyAlias System.getenv("SIGNING_KEY_ALIAS")
                 keyPassword System.getenv("SIGNING_KEY_PASSWORD")
-                storeFile file(System.getenv("SIGNING_KEY_PATH"))
+                storeFile file(signingKeyPath)
                 storePassword System.getenv("SIGNING_KEY_STORE_PASSWORD")
-            } else {
-                throw new GradleException("SIGNING_KEY_PATH environment variable is not set. Please ensure all signing environment variables are properly configured.")
             }
         }
     }
@@ -75,6 +74,20 @@ android {
         debug {
             signingConfig signingConfigs.debug
         }
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    def isReleaseBuild = graph.allTasks.any {
+        def name = it.name.toLowerCase()
+        (name.contains('assemblerelease') || name.contains('bundlerelease'))
+    }
+    if (isReleaseBuild && System.getenv("SIGNING_KEY_PATH") == null) {
+        throw new GradleException(
+            "SIGNING_KEY_PATH environment variable is not set. " +
+            "Set SIGNING_KEY_PATH, SIGNING_KEY_ALIAS, SIGNING_KEY_PASSWORD, " +
+            "and SIGNING_KEY_STORE_PASSWORD before running a release build."
+        )
     }
 }
 
