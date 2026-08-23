@@ -22,6 +22,14 @@ class GraphProvider with ChangeNotifier {
   double averageExchangeRate = 0;
   double totalDataPoints = 0;
 
+  // Un-buffered period statistics for the stats strip. These reflect the
+  // actual data, not the chart's plotting range (which pads by 2%).
+  double periodHigh = 0;
+  double periodLow = 0;
+  double periodAvg = 0;
+  double periodChange = 0;
+  double periodChangePct = 0;
+
   int displayPeriodDays = 180; // Default to 6 months
   final String defaultCurrencyCode = 'EUR';
   final String dateformat = 'd MMMM y';
@@ -141,21 +149,33 @@ class GraphProvider with ChangeNotifier {
 
     historicalData = selectedCurrency!.getFilteredHistory(days);
     List<double> exchangeRates = historicalData.map((e) => e.buy).toList();
+    if (exchangeRates.isEmpty) return;
 
     const bufferPercent = 0.02; // 2% buffer for graph visualization
     double highestRate = exchangeRates.reduce(math.max);
     double lowestRate = exchangeRates.reduce(math.min);
     double buffer = (highestRate - lowestRate) * bufferPercent;
 
-    selectedExchangeRate.value = historicalData.isNotEmpty
-        ? historicalData.last.buy.toStringAsFixed(2)
-        : '';
+    selectedExchangeRate.value = historicalData.last.buy.toStringAsFixed(2);
     selectedDate.value = historicalData.last.date;
 
     maxExchangeRate = highestRate + buffer;
     minExchangeRate = lowestRate - buffer;
     averageExchangeRate = (maxExchangeRate + minExchangeRate) / 2;
     totalDataPoints = historicalData.length.toDouble() - 1;
+
+    // Period stats reflect the data itself, not the chart's padded range.
+    final firstVal = exchangeRates.first;
+    final lastVal = exchangeRates.last;
+    double sum = 0;
+    for (final v in exchangeRates) {
+      sum += v;
+    }
+    periodHigh = highestRate;
+    periodLow = lowestRate;
+    periodAvg = sum / exchangeRates.length;
+    periodChange = lastVal - firstVal;
+    periodChangePct = firstVal > 0 ? (periodChange / firstVal) * 100 : 0;
 
     notifyListeners();
   }

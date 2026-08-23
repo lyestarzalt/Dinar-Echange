@@ -15,6 +15,9 @@ class CustomLineGraph extends StatefulWidget {
   final void Function(int index, DateTime date, double value)? onPointSelected;
   final Color upTrendColor;
   final Color downTrendColor;
+  /// Optional color used to draw a vertical fade under the line — a
+  /// visual "atmosphere" that ties the chart to the rest of the theme.
+  final Color? fillColor;
   const CustomLineGraph({
     super.key,
     required this.dataPoints,
@@ -30,6 +33,7 @@ class CustomLineGraph extends StatefulWidget {
     this.onPointSelected,
     this.upTrendColor = Colors.green,
     this.downTrendColor = Colors.red,
+    this.fillColor,
   });
 
   @override
@@ -117,6 +121,7 @@ class _CustomLineGraphState extends State<CustomLineGraph>
                   selectedIndex: selectedIndex,
                   touchPosition: touchPosition,
                   animationValue: _animation.value,
+                  fillColor: widget.fillColor,
                 ),
               );
             },
@@ -178,6 +183,7 @@ class _LineGraphPainter extends CustomPainter {
   final int? selectedIndex;
   final Offset? touchPosition;
   final double animationValue;
+  final Color? fillColor;
 
   _LineGraphPainter({
     required this.dataPoints,
@@ -193,6 +199,7 @@ class _LineGraphPainter extends CustomPainter {
     required this.animationValue,
     this.selectedIndex,
     this.touchPosition,
+    this.fillColor,
   });
 
   @override
@@ -204,6 +211,9 @@ class _LineGraphPainter extends CustomPainter {
       _drawReferenceLines(canvas, size);
       if (showBottomLabels) {
         _drawBottomLabels(canvas, size);
+      }
+      if (fillColor != null) {
+        _drawFillArea(canvas, size);
       }
       _drawAnimatedLine(canvas, size);
       if (selectedIndex != null && touchPosition != null) {
@@ -246,6 +256,53 @@ class _LineGraphPainter extends CustomPainter {
         Offset(size.width + 5, y - textPainter.height / 2),
       );
     }
+  }
+
+  /// Soft vertical gradient under the line, from `fillColor` at the
+  /// line down to fully transparent at the bottom of the chart area.
+  /// Uses the same animation window as the line so they extend together.
+  void _drawFillArea(Canvas canvas, Size size) {
+    if (dataPoints.isEmpty || fillColor == null) return;
+    if (size.width <= 0 || size.height <= 0) return;
+
+    final pointsToShow = (dataPoints.length * animationValue).ceil();
+    if (pointsToShow <= 1) return;
+
+    final path = Path();
+    bool started = false;
+    double lastX = 0;
+    for (int i = 0; i < pointsToShow && i < dataPoints.length; i++) {
+      final xRatio = i / (dataPoints.length - 1);
+      if (xRatio.isNaN) continue;
+      final x = size.width * xRatio;
+      final y = _getYPosition(dataPoints[i], size.height);
+      if (x.isNaN || y.isNaN) continue;
+      if (!started) {
+        path.moveTo(x, y);
+        started = true;
+      } else {
+        path.lineTo(x, y);
+      }
+      lastX = x;
+    }
+    if (!started) return;
+    // Close down to the bottom of the chart to form a filled area.
+    path.lineTo(lastX, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    final paint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          fillColor!.withValues(alpha: 0.28),
+          fillColor!.withValues(alpha: 0.0),
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    canvas.drawPath(path, paint);
   }
 
   void _drawAnimatedLine(Canvas canvas, Size size) {
