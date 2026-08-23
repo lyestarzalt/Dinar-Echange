@@ -23,6 +23,11 @@ class AppNavigation extends StatelessWidget {
       child: Scaffold(
         body: Consumer<AppProvider>(
           builder: (context, navigationProvider, child) {
+            // FadeThroughTransition briefly fades both pages to
+            // fillColor at the transition midpoint; if fillColor is
+            // left null it resolves to Material's canvas (white) and
+            // flashes. Pin it to the scaffold background.
+            final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
             return PageTransitionSwitcher(
               duration: const Duration(milliseconds: 400),
               transitionBuilder: (
@@ -33,6 +38,7 @@ class AppNavigation extends StatelessWidget {
                 return FadeThroughTransition(
                   animation: animation,
                   secondaryAnimation: secondaryAnimation,
+                  fillColor: scaffoldBg,
                   child: child,
                 );
               },
