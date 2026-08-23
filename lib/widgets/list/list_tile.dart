@@ -23,7 +23,12 @@ class CurrencyListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(
           children: [
-            _CircleFlag(imageUrl: currency.flag, size: 40),
+            FlagContainer(
+              imageUrl: currency.flag,
+              width: 36,
+              height: 26,
+              borderRadius: BorderRadius.circular(3),
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -94,31 +99,3 @@ class _RateColumn extends StatelessWidget {
   }
 }
 
-class _CircleFlag extends StatelessWidget {
-  final String? imageUrl;
-  final double size;
-  const _CircleFlag({required this.imageUrl, this.size = 40});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: scheme.outlineVariant, width: 1),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: FlagContainer(
-          imageUrl: imageUrl,
-          width: size,
-          height: size,
-          borderRadius: BorderRadius.circular(size / 2),
-        ),
-      ),
-    );
-  }
-}

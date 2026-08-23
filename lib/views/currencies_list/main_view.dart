@@ -58,20 +58,18 @@ class _MainViewState extends State<MainView>
       List<Currency> officialMarketCurrencies =
           initProvider.officialCurrencies!;
 
-      // Featured currency = first entry in parallel list; match the same
-      // currency code in official to show both markets side by side.
-      final featured = alternativeMarketCurrencies.isNotEmpty
-          ? alternativeMarketCurrencies.first
-          : null;
-      Currency? officialCounterpart;
-      if (featured != null) {
-        for (final c in officialMarketCurrencies) {
-          if (c.currencyCode == featured.currencyCode) {
-            officialCounterpart = c;
-            break;
-          }
+      // Featured currency: prefer EUR (the reference rate most Algerians
+      // check), otherwise the first parallel-market entry.
+      Currency? featured;
+      for (final c in alternativeMarketCurrencies) {
+        if (c.currencyCode == 'EUR') {
+          featured = c;
+          break;
         }
       }
+      featured ??= alternativeMarketCurrencies.isNotEmpty
+          ? alternativeMarketCurrencies.first
+          : null;
 
       return Scaffold(
         appBar: AppBar(
@@ -91,11 +89,7 @@ class _MainViewState extends State<MainView>
         ),
         body: Column(
           children: [
-            if (featured != null)
-              HeroCurrencyCard(
-                parallel: featured,
-                official: officialCounterpart,
-              ),
+            if (featured != null) HeroCurrencyCard(currency: featured),
             TabBar(
               controller: _tabController,
               tabs: [
