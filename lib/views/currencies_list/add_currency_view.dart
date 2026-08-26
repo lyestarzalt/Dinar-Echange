@@ -1,85 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
-import 'dart:ui' as ui;
-import 'package:dinar_echange/data/models/currency_model.dart';
-import 'package:dinar_echange/widgets/flag_container.dart';
-import 'package:dinar_echange/providers/list_currency_provider.dart';
 
+import 'package:dinar_echange/data/models/currency_model.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/providers/list_currency_provider.dart';
+import 'package:dinar_echange/widgets/flag_container.dart';
+
+/// Pick which currencies to keep in the list. Search field pinned under
+/// the AppBar; a persistent scrollable list below; a done button in the
+/// AppBar's trailing slot (replaces the previous FloatingActionButton-
+/// in-actions anti-pattern).
 class AddCurrencyPage extends StatelessWidget {
   const AddCurrencyPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ListCurrencyProvider>(
-      builder: (context, provider, child) {
+      builder: (context, provider, _) {
+        final l10n = AppLocalizations.of(context)!;
         return Directionality(
-          textDirection: ui.TextDirection.ltr,
+          textDirection: TextDirection.ltr,
           child: Scaffold(
             appBar: AppBar(
-              toolbarHeight: 90,
-              title: TextField(
-                controller: provider.searchController,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.search_hint,
-                  border: InputBorder.none,
-                  prefixIcon: const Icon(Icons.search),
-                ),
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
               ),
+              title: Text(l10n.add_currencies_tooltip),
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: FloatingActionButton(
-                    mini: true,
-                    heroTag: 'AddCurrencyFAB${provider.marketType}',
-                    onPressed: () {
-                      provider.saveSelectedCurrencies();
-                      Navigator.pop(context);
-                    },
-                    tooltip: AppLocalizations.of(context)!
-                        .add_selected_currencies_tooltip,
-                    child: const Icon(Icons.check),
-                  ),
+                IconButton(
+                  tooltip: l10n.add_selected_currencies_tooltip,
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                    provider.saveSelectedCurrencies();
+                    Navigator.pop(context);
+                  },
                 ),
+                const SizedBox(width: 4),
               ],
             ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            body: SafeArea(
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: TextField(
+                      controller: provider.searchController,
+                      textInputAction: TextInputAction.search,
+                      decoration: InputDecoration(
+                        hintText: l10n.search_hint,
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: ListView.separated(
-                      separatorBuilder: (context, index) => const Divider(),
+                      padding: const EdgeInsets.only(bottom: 16),
                       itemCount: provider.filteredCurrencies.length,
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                      ),
                       itemBuilder: (context, index) {
-                        final Currency currency =
-                            provider.filteredCurrencies[index];
-                        final bool isSelected =
+                        final currency = provider.filteredCurrencies[index];
+                        final isSelected =
                             provider.selectedCurrencies.contains(currency);
-                        return ListTile(
-                          leading: FlagContainer(
-                            imageUrl: currency.flag,
-                            width: 50,
-                            height: 40,
-                            borderRadius: BorderRadius.circular(1),
-                          ),
-                          title: Row(
-                            children: [
-                              Text(currency.currencyCode),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                  child: Text(currency.currencyName ?? '')),
-                            ],
-                          ),
-                          trailing: Checkbox.adaptive(
-                            value: isSelected,
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                provider.addOrRemoveCurrency(currency, value);
-                              }
-                            },
-                          ),
-                          onTap: () => provider.addOrRemoveCurrency(
-                              currency, !isSelected),
+                        return _CurrencyPickRow(
+                          currency: currency,
+                          isSelected: isSelected,
+                          onToggle: () =>
+                              provider.addOrRemoveCurrency(currency, !isSelected),
                         );
                       },
                     ),
@@ -90,6 +82,64 @@ class AddCurrencyPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _CurrencyPickRow extends StatelessWidget {
+  final Currency currency;
+  final bool isSelected;
+  final VoidCallback onToggle;
+
+  const _CurrencyPickRow({
+    required this.currency,
+    required this.isSelected,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final scheme = t.colorScheme;
+    return InkWell(
+      onTap: onToggle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            FlagContainer(
+              imageUrl: currency.flag,
+              width: 36,
+              height: 26,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(currency.currencyCode, style: t.textTheme.titleLarge),
+                  if (currency.currencyName != null &&
+                      currency.currencyName!.isNotEmpty)
+                    Text(
+                      currency.currencyName!,
+                      style: t.textTheme.labelMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
+            Checkbox.adaptive(
+              value: isSelected,
+              onChanged: (v) {
+                if (v != null) onToggle();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

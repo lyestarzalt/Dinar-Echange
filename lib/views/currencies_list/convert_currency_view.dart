@@ -1,40 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'package:dinar_echange/data/models/currency_model.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/providers/admob_provider.dart';
+import 'package:dinar_echange/providers/converter_provider.dart';
+import 'package:dinar_echange/widgets/adbanner.dart';
 import 'package:dinar_echange/widgets/convert/currency_input.dart';
 import 'package:dinar_echange/widgets/convert/number_words.dart';
-import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
-import 'package:dinar_echange/providers/converter_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:dinar_echange/widgets/adbanner.dart';
-import 'package:dinar_echange/providers/admob_provider.dart';
-import 'package:dinar_echange/data/models/currency_model.dart';
 
-class CurrencyConverterPage extends StatefulWidget {
+/// Two-input converter for a single currency pair. Foreign row on top,
+/// DZD row on bottom — visual order swaps when the direction toggles.
+class CurrencyConverterPage extends StatelessWidget {
   final String marketType;
 
   const CurrencyConverterPage({super.key, required this.marketType});
-
-  @override
-  CurrencyConverterPageState createState() => CurrencyConverterPageState();
-}
-
-class CurrencyConverterPageState extends State<CurrencyConverterPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,43 +24,139 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
       textDirection: TextDirection.ltr,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: CurrencyAppBar(currency: provider.currency),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                /*               
-                  CurrencyValueCard(
-                  currency: provider.currency,
-                ), */
-                Converter(
-                  context: context,
-                  provider: provider,
-                  marketType: widget.marketType,
-                ),
-                ChangeNotifierProvider<AdProvider>(
-                  create: (_) => AdProvider(),
-                  child: Consumer<AdProvider>(
-                    builder: (context, adProvider, _) => ConstrainedBox(
-                      constraints: const BoxConstraints(minHeight: 50),
-                      child: const AdBannerWidget(),
-                    ),
+        appBar: _CurrencyAppBar(currency: provider.currency),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  child: Column(
+                    children: [
+                      _Converter(
+                        provider: provider,
+                        marketType: marketType,
+                      ),
+                      const SizedBox(height: 24),
+                      if (!provider.isDZDtoCurrency)
+                        NumberToWordsDisplay(
+                          currency: provider.currency,
+                          isDZDtoCurrency: !provider.isDZDtoCurrency,
+                          numberController: provider.resultController,
+                          provider: provider,
+                        ),
+                    ],
                   ),
                 ),
-                Visibility(
-                  visible: !provider.isDZDtoCurrency,
-                  child: NumberToWordsDisplay(
-                    currency: provider.currency,
-                    isDZDtoCurrency: !provider.isDZDtoCurrency,
-                    numberController: provider.isDZDtoCurrency
-                        ? provider.amountController
-                        : provider.resultController,
-                    provider: provider,
-                  ),
-                )
-              ],
+              ),
+              _BottomAd(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Converter extends StatelessWidget {
+  final CurrencyConverterProvider provider;
+  final String marketType;
+
+  const _Converter({required this.provider, required this.marketType});
+
+  @override
+  Widget build(BuildContext context) {
+    final foreignRow = buildCurrencyInput(
+      controller: provider.isDZDtoCurrency
+          ? provider.resultController
+          : provider.amountController,
+      inputController: provider.amountController,
+      currencyCode: provider.currency.currencyCode,
+      flag: provider.currency.flag,
+      focusNode: provider.isDZDtoCurrency
+          ? provider.resultFocusNode
+          : provider.amountFocusNode,
+      context: context,
+    );
+
+    final dzdRow = buildCurrencyInput(
+      controller: provider.isDZDtoCurrency
+          ? provider.amountController
+          : provider.resultController,
+      inputController: provider.amountController,
+      currencyCode: 'DZD',
+      flag: provider.currency.flag,
+      focusNode: provider.isDZDtoCurrency
+          ? provider.amountFocusNode
+          : provider.resultFocusNode,
+      context: context,
+    );
+
+    // When DZD→foreign, DZD sits on top (source you type in). When
+    // foreign→DZD (default), the foreign row is on top. This keeps the
+    // "you type here → you read there" reading direction stable.
+    final top = provider.isDZDtoCurrency ? dzdRow : foreignRow;
+    final bottom = provider.isDZDtoCurrency ? foreignRow : dzdRow;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 220),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (child, animation) =>
+          FadeTransition(opacity: animation, child: child),
+      child: Column(
+        key: ValueKey(provider.isDZDtoCurrency),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          top,
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _SwapButton(
+              onTap: provider.toggleConversionDirection,
+              marketType: marketType,
+            ),
+          ),
+          const SizedBox(height: 8),
+          bottom,
+        ],
+      ),
+    );
+  }
+}
+
+/// Small pill button that swaps the conversion direction. Replaces the
+/// old FloatingActionButton — a screen-level FAB was overkill for a
+/// button that lives inline between two inputs.
+class _SwapButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final String marketType;
+
+  const _SwapButton({required this.onTap, required this.marketType});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final scheme = t.colorScheme;
+    return Semantics(
+      button: true,
+      label: AppLocalizations.of(context)!.switch_tooltip,
+      child: Material(
+        color: scheme.primaryContainer,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: SizedBox(
+            height: 44,
+            width: 44,
+            child: Icon(
+              Icons.swap_vert,
+              color: scheme.onPrimaryContainer,
+              size: 22,
             ),
           ),
         ),
@@ -88,165 +165,113 @@ class CurrencyConverterPageState extends State<CurrencyConverterPage>
   }
 }
 
-class Converter extends StatelessWidget {
-  const Converter(
-      {super.key,
-      required this.context,
-      required this.provider,
-      required this.marketType});
-  final String marketType;
-  final BuildContext context;
-  final CurrencyConverterProvider provider;
-
-  @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<CurrencyConverterProvider>(context);
-    final screenHeight =
-        MediaQuery.of(context).size.height - AppBar().preferredSize.height;
-    final middlePoint = screenHeight * 0.17;
-    final cardHeight = screenHeight / 8;
-    const gapBetweenCards = 24.0; // Increased gap between cards
-    final topCardTopPosition = middlePoint - cardHeight - (gapBetweenCards / 2);
-    final bottomCardTopPosition = middlePoint + (gapBetweenCards / 2);
-    const fabSize = 45.0; // Slightly smaller FAB
-    final fabTopPosition = middlePoint - (fabSize / 2);
-
-    return SizedBox(
-      height: screenHeight / 3,
-      child: Stack(
-        children: [
-          // Top Card - Foreign currency input field
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            top: provider.isDZDtoCurrency
-                ? topCardTopPosition
-                : bottomCardTopPosition,
-            left: 0,
-            right: 0,
-            height: cardHeight,
-            child: buildCurrencyInput(
-                controller: provider.isDZDtoCurrency
-                    ? provider.amountController
-                    : provider.resultController,
-                inputController: provider.amountController,
-                currencyCode: 'DZD',
-                flag: provider.currency.flag,
-                focusNode: provider.isDZDtoCurrency
-                    ? provider.amountFocusNode
-                    : provider.resultFocusNode,
-                context: context),
-          ),
-          // Bottom Card - Algerian currency field
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            top: provider.isDZDtoCurrency
-                ? bottomCardTopPosition
-                : topCardTopPosition,
-            left: 0,
-            right: 0,
-            height: cardHeight,
-            child: buildCurrencyInput(
-                controller: provider.isDZDtoCurrency
-                    ? provider.resultController
-                    : provider.amountController,
-                inputController: provider.amountController,
-                currencyCode: provider.currency.currencyCode,
-                flag: provider.currency.flag,
-                focusNode: provider.isDZDtoCurrency
-                    ? provider.resultFocusNode
-                    : provider.amountFocusNode,
-                context: context),
-          ),
-          Positioned(
-            top: fabTopPosition,
-            right: 8,
-            child: Semantics(
-              button: true,
-              label: AppLocalizations.of(context)!.switch_tooltip,
-              child: FloatingActionButton(
-                tooltip: AppLocalizations.of(context)!.switch_tooltip,
-                onPressed: provider.toggleConversionDirection,
-                elevation: 2,
-                heroTag:
-                    'AddCurrencyFAB${marketType}', // Dynamically setting heroTag using marketType
-
-                child: const Icon(Icons.swap_vert),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
+/// Themed app bar for the converter route: back button on the left,
+/// currency code + name in the title area, buy/sell rate at the right.
+/// Everything reads through Theme.of(context).textTheme instead of the
+/// old hardcoded fontSize/bold combos.
+class _CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Currency currency;
 
-  const CurrencyAppBar({
-    super.key,
-    required this.currency,
-  });
+  const _CurrencyAppBar({required this.currency});
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final scheme = t.colorScheme;
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Container(
-        alignment: Alignment.centerLeft, // Align title to the left
-        width:
-            double.infinity, // Ensure the container takes all available space
-        child: RichText(
-          text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: [
-              TextSpan(
-                text: "${currency.currencyName} ",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        _buildRateDisplay(
-            context, AppLocalizations.of(context)!.buy, currency.buy),
-        _buildRateDisplay(
-            context, AppLocalizations.of(context)!.sell, currency.sell),
-        const SizedBox(width: 16), // Right padding for the last item
-      ],
-      elevation: 0,
-      centerTitle: true, // Center the title
-    );
-  }
-
-  Widget _buildRateDisplay(BuildContext context, String label, double rate) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
+      titleSpacing: 0,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-          Text(
-            rate.toStringAsFixed(2),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
+          Text(currency.currencyCode, style: t.textTheme.titleLarge),
+          if (currency.currencyName != null && currency.currencyName!.isNotEmpty)
+            Text(
+              currency.currencyName!,
+              style: t.textTheme.labelMedium
+                  ?.copyWith(color: scheme.onSurfaceVariant),
+              overflow: TextOverflow.ellipsis,
+            ),
         ],
       ),
+      centerTitle: false,
+      actions: [
+        _RatePair(buy: currency.buy, sell: currency.sell),
+        const SizedBox(width: 16),
+      ],
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _RatePair extends StatelessWidget {
+  final double buy;
+  final double sell;
+  const _RatePair({required this.buy, required this.sell});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final scheme = t.colorScheme;
+
+    String fmt(double v) =>
+        v >= 100 ? v.round().toString() : v.toStringAsFixed(1);
+    final l10n = AppLocalizations.of(context)!;
+
+    Widget cell(String label, double v) => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: t.textTheme.labelSmall
+                  ?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              fmt(v),
+              style: t.textTheme.titleMedium?.copyWith(
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ],
+        );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        children: [
+          cell(l10n.buy, buy),
+          const SizedBox(width: 16),
+          cell(l10n.sell, sell),
+        ],
+      ),
+    );
+  }
+}
+
+class _BottomAd extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ChangeNotifierProvider<AdProvider>(
+      create: (_) => AdProvider(),
+      child: Consumer<AdProvider>(
+        builder: (context, adProvider, _) => Container(
+          constraints: const BoxConstraints(minHeight: 60),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: scheme.outlineVariant)),
+          ),
+          padding: const EdgeInsets.only(top: 8),
+          child: const AdBannerWidget(),
+        ),
+      ),
+    );
+  }
 }
