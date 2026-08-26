@@ -5,8 +5,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:flutter/foundation.dart';
 import 'package:dinar_echange/services/preferences_service.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -59,7 +57,6 @@ class AppInitializationProvider with ChangeNotifier {
 
   Future<void> _deferOtherInitializations() async {
     await Future.wait([
-      _activateAppCheck(),
       _initializeMobileAds(),
       _enableFirebaseAnalytics(),
       _requestNotificationPermissions(),
@@ -110,28 +107,6 @@ class AppInitializationProvider with ChangeNotifier {
   Future<void> _enableFirebaseAnalytics() async {
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
     AppLogger.logInfo('Firebase Analytics collection enabled.');
-  }
-
-  Future<void> _activateAppCheck() async {
-    if (kReleaseMode) {
-      await FirebaseAppCheck.instance.activate(
-        providerAndroid: const AndroidPlayIntegrityProvider(),
-        //appleProvider: AppleProvider.deviceCheck,
-      );
-      AppLogger.logInfo('App Check activated: production');
-    } else {
-      await FirebaseAppCheck.instance.activate(
-        providerAndroid: const AndroidDebugProvider(),
-        //appleProvider: AppleProvider.debug,
-      );
-      AppLogger.logInfo('App Check activated: debug');
-      try {
-        String? token = await FirebaseAppCheck.instance.getToken(false);
-        AppLogger.logDebug("Temp token: $token");
-      } catch (e) {
-        AppLogger.logError('Error fetching App Check token: $e');
-      }
-    }
   }
 
   Future<void> _initializeMobileAds() async {
