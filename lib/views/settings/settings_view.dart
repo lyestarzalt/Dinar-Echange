@@ -202,7 +202,14 @@ class _SettingsBody extends StatelessWidget {
         context: context,
         scrollableBuilder: (ctx, controller) => SingleChildScrollView(
           controller: controller,
-          child: SafeArea(child: content(ctx)),
+          // Cupertino sheet subtree doesn't include a Material ancestor,
+          // and the language rows use InkWell for the row ripple — wrap
+          // the content in a transparent Material so InkWell can paint
+          // its splash without contributing a visible surface.
+          child: Material(
+            type: MaterialType.transparency,
+            child: SafeArea(child: content(ctx)),
+          ),
         ),
       );
     } else {
