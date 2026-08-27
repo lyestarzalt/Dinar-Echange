@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,65 +15,18 @@ import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/views/settings/legal_view.dart';
 import 'package:dinar_echange/widgets/adbanner.dart';
 
-/// Editorial-style settings: tracked-uppercase section labels with
-/// hairline rules, generous whitespace, chevron-only tap affordance,
-/// version stamp at the foot. No Material list-tile chunk.
+/// Settings screen. Structure follows Flutter's idiomatic patterns:
+///   - Scaffold + Material AppBar on Android, CustomScrollView +
+///     CupertinoSliverNavigationBar on iOS for the large-title look.
+///   - Items are standard ListTiles, which carry their own Material
+///     ancestry so we don't have to fight "No Material widget found"
+///     inside every popup.
+///   - Popups use showModalBottomSheet on both platforms — its builder
+///     inherits the app's BottomSheetThemeData (paper background,
+///     rounded top, drag handle) and provides Material context by
+///     default.
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<AppProvider>(
-      builder: (context, appProvider, _) {
-        final l10n = AppLocalizations.of(context)!;
-        final textDirection = appProvider.currentLocale.languageCode == 'ar'
-            ? TextDirection.rtl
-            : TextDirection.ltr;
-        final title = Text(l10n.settings_app_bar_title);
-        final body = _SettingsBody(appProvider: appProvider);
-
-        if (Platform.isIOS) {
-          // iOS-native large-title nav bar that collapses on scroll.
-          // Uses the Material Scaffold for the surrounding chrome so
-          // the bottom NavigationBar we already have keeps working.
-          final scheme = Theme.of(context).colorScheme;
-          return Scaffold(
-            body: Directionality(
-              textDirection: textDirection,
-              child: CustomScrollView(
-                slivers: [
-                  CupertinoSliverNavigationBar(
-                    backgroundColor:
-                        scheme.surface.withValues(alpha: 0.72),
-                    largeTitle: title,
-                  ),
-                  SliverSafeArea(
-                    top: false,
-                    sliver: SliverToBoxAdapter(child: body),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Scaffold(
-          appBar: AppBar(title: title),
-          body: Directionality(
-            textDirection: textDirection,
-            child: SafeArea(
-              child: SingleChildScrollView(child: body),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _SettingsBody extends StatelessWidget {
-  final AppProvider appProvider;
-  const _SettingsBody({required this.appProvider});
 
   static const _languageChoices = <String, String>{
     'English': 'en',
@@ -82,6 +36,45 @@ class _SettingsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, _) {
+        final l10n = AppLocalizations.of(context)!;
+        final textDirection = appProvider.currentLocale.languageCode == 'ar'
+            ? TextDirection.rtl
+            : TextDirection.ltr;
+        final title = l10n.settings_app_bar_title;
+        final items = _items(context, appProvider);
+
+        return Directionality(
+          textDirection: textDirection,
+          child: Platform.isIOS
+              ? Scaffold(
+                  body: CustomScrollView(
+                    slivers: [
+                      CupertinoSliverNavigationBar(
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surface
+                            .withValues(alpha: 0.72),
+                        largeTitle: Text(title),
+                      ),
+                      SliverSafeArea(
+                        top: false,
+                        sliver: SliverList.list(children: items),
+                      ),
+                    ],
+                  ),
+                )
+              : Scaffold(
+                  appBar: AppBar(title: Text(title)),
+                  body: SafeArea(child: ListView(children: items)),
+                ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _items(BuildContext context, AppProvider appProvider) {
     final l10n = AppLocalizations.of(context)!;
     final currentLanguageLabel = _languageChoices.entries
         .firstWhere(
@@ -90,76 +83,62 @@ class _SettingsBody extends StatelessWidget {
         )
         .key;
 
-    // Body is intentionally non-scrolling; the parent SettingsPage picks
-    // the right scroll container per platform (CustomScrollView on iOS
-    // for the sliver nav bar, SingleChildScrollView on Android).
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (kDebugMode)
-            _DebugRow(onClear: () async {
-              await PreferencesService().clearAllPreferences();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Cache cleared!')),
-                );
-              }
-            }),
+    return [
+      if (kDebugMode) _DebugTile(),
+      const SizedBox(height: 8),
 
-          const SizedBox(height: 8),
-          _Section(label: l10n.theme_title),
-          const SizedBox(height: 4),
-          _ThemeSelector(
-            currentTheme: appProvider.themeMode,
-            onThemeChanged: appProvider.setThemeMode,
-          ),
-          const SizedBox(height: 20),
-          _NavRow(
-            label: l10n.chose_language_title,
-            trailing: currentLanguageLabel,
-            onTap: () => _openLanguageSheet(context, appProvider),
-          ),
-
-          const SizedBox(height: 32),
-          _Section(label: l10n.general_title),
-          _NavRow(
-            label: l10n.rate_us_button,
-            onTap: () => InAppReview.instance.openStoreListing(
-              appStoreId: 'com.dinarexchange.app',
-              microsoftStoreId: '...',
-            ),
-          ),
-          _NavRow(
-            label: l10n.about_app_button,
-            onTap: () => _openAboutSheet(context, appProvider),
-          ),
-
-          const SizedBox(height: 32),
-          _Section(label: l10n.legal_title),
-          _NavRow(
-            label: l10n.terms_title,
-            onTap: () => _openLegal(context, LegalDocumentType.terms),
-          ),
-          _NavRow(
-            label: l10n.privacy_title,
-            onTap: () => _openLegal(context, LegalDocumentType.privacy),
-          ),
-
-          const SizedBox(height: 40),
-          _VersionFooter(appProvider: appProvider),
-          const SizedBox(height: 16),
-          _BottomAd(),
-        ],
+      _SectionHeader(l10n.theme_title),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: _ThemeSelector(
+          currentTheme: appProvider.themeMode,
+          onThemeChanged: appProvider.setThemeMode,
+        ),
       ),
-    );
+      ListTile(
+        title: Text(l10n.chose_language_title),
+        trailing: Text(currentLanguageLabel),
+        onTap: () => _openLanguageSheet(context, appProvider),
+      ),
+
+      const SizedBox(height: 24),
+      _SectionHeader(l10n.general_title),
+      ListTile(
+        title: Text(l10n.rate_us_button),
+        onTap: () => InAppReview.instance.openStoreListing(
+          appStoreId: 'com.dinarexchange.app',
+          microsoftStoreId: '...',
+        ),
+      ),
+      ListTile(
+        title: Text(l10n.about_app_button),
+        onTap: () => _openAbout(context, appProvider),
+      ),
+
+      const SizedBox(height: 24),
+      _SectionHeader(l10n.legal_title),
+      ListTile(
+        title: Text(l10n.terms_title),
+        onTap: () => _openLegal(context, LegalDocumentType.terms),
+      ),
+      ListTile(
+        title: Text(l10n.privacy_title),
+        onTap: () => _openLegal(context, LegalDocumentType.privacy),
+      ),
+
+      const SizedBox(height: 40),
+      _VersionFooter(appProvider: appProvider),
+      const SizedBox(height: 16),
+      _BottomAd(),
+    ];
   }
 
   void _openLegal(BuildContext context, LegalDocumentType type) {
     AppLogger.trackScreenView('${type.toString()}_Document', 'Settings');
     AppLogger.logEvent(
-        'legal_document_accessed', {'document_type': type.toString()});
+      'legal_document_accessed',
+      {'document_type': type.toString()},
+    );
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => LegalDocumentsScreen(documentType: type),
     ));
@@ -171,216 +150,88 @@ class _SettingsBody extends StatelessWidget {
     final t = Theme.of(context);
     final currentCode = appProvider.currentLocale.languageCode;
 
-    Widget content(BuildContext ctx) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+    // Standard modal bottom sheet — inherits BottomSheetThemeData from
+    // the theme (paper background, rounded top, drag handle), provides
+    // Material context automatically. Works identically on iOS and
+    // Android without special casing.
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: RadioGroup<String>(
+          groupValue: currentCode,
+          onChanged: (v) {
+            if (v == null) return;
+            appProvider.setLanguage(Locale(v));
+            AppLogger.logEvent('language_changed', {'language_code': v});
+            Navigator.of(ctx).pop();
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Text(l10n.chose_language_title,
                     style: t.textTheme.titleLarge),
               ),
               for (final entry in _languageChoices.entries)
-                _LanguageRow(
-                  label: entry.key,
-                  isSelected: entry.value == currentCode,
-                  onTap: () {
-                    appProvider.setLanguage(Locale(entry.value));
-                    AppLogger.logEvent(
-                        'language_changed', {'language_code': entry.value});
-                    Navigator.of(ctx).pop();
-                  },
+                RadioListTile<String>.adaptive(
+                  title: Text(entry.key),
+                  value: entry.value,
                 ),
+              const SizedBox(height: 8),
             ],
-          ),
-        );
-
-    if (Platform.isIOS) {
-      showCupertinoSheet<void>(
-        context: context,
-        scrollableBuilder: (ctx, controller) => SingleChildScrollView(
-          controller: controller,
-          // Cupertino sheet subtree doesn't include a Material ancestor,
-          // and the language rows use InkWell for the row ripple — wrap
-          // the content in a transparent Material so InkWell can paint
-          // its splash without contributing a visible surface.
-          child: Material(
-            type: MaterialType.transparency,
-            child: SafeArea(child: content(ctx)),
           ),
         ),
-      );
-    } else {
-      showModalBottomSheet<void>(
-        context: context,
-        showDragHandle: true,
-        builder: (ctx) => SafeArea(child: content(ctx)),
-      );
-    }
-  }
-
-  void _openAboutSheet(BuildContext context, AppProvider appProvider) {
-    AppLogger.trackScreenView('About_App', 'Settings');
-    final l10n = AppLocalizations.of(context)!;
-    final t = Theme.of(context);
-    final info = appProvider.packageInfo;
-    // Locale-agnostic version line — universal dot separators, no
-    // English "Version:" / "Build Number:" prefixes.
-    final buildMode = appProvider.getBuildMode();
-    final versionLine = 'v${info.version} · build ${info.buildNumber} · $buildMode';
-
-    Widget content(BuildContext ctx) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child:
-                    Text(l10n.about_app_button, style: t.textTheme.titleLarge),
-              ),
-              const SizedBox(height: 8),
-              Text(l10n.about_body, style: t.textTheme.bodyLarge),
-              const SizedBox(height: 16),
-              Text(versionLine, style: t.textTheme.labelSmall),
-              const SizedBox(height: 20),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                  _showLicensesPage(context, info.appName, info.version);
-                },
-                child: Text(l10n.licenses),
-              ),
-            ],
-          ),
-        );
-
-    // About is a short read + one action button. showCupertinoSheet
-    // presents as a full-screen inset route that looks empty when the
-    // content is short and has no visible dismiss affordance beyond the
-    // drag; the modal bottom sheet is the right shape here on both
-    // platforms and inherits the theme's BottomSheetThemeData
-    // (paper background, 24 px top radius, drag handle).
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(child: content(ctx)),
+      ),
     );
   }
 
-  void _showLicensesPage(BuildContext context, String appName, String version) {
-    AppLogger.trackScreenView('Licenses', 'Settings');
-    showLicensePage(
+  void _openAbout(BuildContext context, AppProvider appProvider) {
+    AppLogger.trackScreenView('About_App', 'Settings');
+    final l10n = AppLocalizations.of(context)!;
+    final info = appProvider.packageInfo;
+
+    // Use Flutter's built-in about dialog — it provides Material +
+    // Cupertino-adaptive presentation, a proper Licenses button that
+    // routes to the license page, and shows the app name + version
+    // consistently across platforms.
+    showAboutDialog(
       context: context,
+      applicationName: info.appName,
+      applicationVersion:
+          'v${info.version} · build ${info.buildNumber} · ${appProvider.getBuildMode()}',
       applicationIcon: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Image.asset('assets/logo/light_large.png', scale: 4),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Image.asset('assets/logo/light_large.png',
+            width: 48, height: 48),
       ),
-      applicationName: appName,
-      applicationVersion: version,
+      children: [
+        const SizedBox(height: 12),
+        Text(l10n.about_body),
+      ],
     );
   }
 }
 
-/// Uppercase tracked label followed by a hairline rule — the app's
-/// signature structural device on the settings screen.
-class _Section extends StatelessWidget {
+/// Tracked-uppercase section label. Sits directly above its group of
+/// ListTiles.
+class _SectionHeader extends StatelessWidget {
   final String label;
-  const _Section({required this.label});
+  const _SectionHeader(this.label);
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final scheme = t.colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            label.toUpperCase(),
-            style: t.textTheme.labelSmall
-                ?.copyWith(color: scheme.onSurfaceVariant),
-          ),
-          const SizedBox(height: 8),
-          Container(height: 1, color: scheme.outlineVariant),
-        ],
-      ),
-    );
-  }
-}
-
-/// Interactive row: title on the left, optional trailing value, chevron
-/// as the tap affordance. No leading icon — settings are read by label.
-class _NavRow extends StatelessWidget {
-  final String label;
-  final String? trailing;
-  final VoidCallback onTap;
-
-  const _NavRow({
-    required this.label,
-    this.trailing,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final scheme = t.colorScheme;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
-        child: Row(
-          children: [
-            Expanded(child: Text(label, style: t.textTheme.bodyLarge)),
-            if (trailing != null) ...[
-              Text(
-                trailing!,
-                style: t.textTheme.bodyMedium
-                    ?.copyWith(color: scheme.onSurfaceVariant),
-              ),
-              const SizedBox(width: 8),
-            ],
-            Icon(Icons.chevron_right, color: scheme.onSurfaceVariant, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LanguageRow extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _LanguageRow({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final scheme = t.colorScheme;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
-        child: Row(
-          children: [
-            Expanded(child: Text(label, style: t.textTheme.bodyLarge)),
-            if (isSelected)
-              Icon(Icons.check, color: scheme.onSurface, size: 20),
-          ],
-        ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Text(
+        label.toUpperCase(),
+        style: t.textTheme.labelSmall
+            ?.copyWith(color: scheme.onSurfaceVariant),
       ),
     );
   }
@@ -395,39 +246,6 @@ class _ThemeSelector extends StatelessWidget {
     required this.onThemeChanged,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final current = _asOption(currentTheme);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: SegmentedButton<ThemeOption>(
-        segments: [
-          ButtonSegment(
-            value: ThemeOption.auto,
-            label: FittedBox(child: Text(l10n.auto_button)),
-            icon: const Icon(Icons.brightness_auto),
-          ),
-          ButtonSegment(
-            value: ThemeOption.dark,
-            label: FittedBox(child: Text(l10n.dark_button)),
-            icon: const Icon(Icons.nights_stay),
-          ),
-          ButtonSegment(
-            value: ThemeOption.light,
-            label: FittedBox(child: Text(l10n.light_button)),
-            icon: const Icon(Icons.wb_sunny),
-          ),
-        ],
-        selected: {current},
-        onSelectionChanged: (Set<ThemeOption> next) {
-          onThemeChanged(next.first);
-          AppLogger.logEvent('theme_changed', {'theme_mode': next.first.name});
-        },
-      ),
-    );
-  }
-
   ThemeOption _asOption(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.dark:
@@ -437,6 +255,35 @@ class _ThemeSelector extends StatelessWidget {
       case ThemeMode.system:
         return ThemeOption.auto;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return SegmentedButton<ThemeOption>(
+      segments: [
+        ButtonSegment(
+          value: ThemeOption.auto,
+          label: FittedBox(child: Text(l10n.auto_button)),
+          icon: const Icon(Icons.brightness_auto),
+        ),
+        ButtonSegment(
+          value: ThemeOption.dark,
+          label: FittedBox(child: Text(l10n.dark_button)),
+          icon: const Icon(Icons.nights_stay),
+        ),
+        ButtonSegment(
+          value: ThemeOption.light,
+          label: FittedBox(child: Text(l10n.light_button)),
+          icon: const Icon(Icons.wb_sunny),
+        ),
+      ],
+      selected: {_asOption(currentTheme)},
+      onSelectionChanged: (next) {
+        onThemeChanged(next.first);
+        AppLogger.logEvent('theme_changed', {'theme_mode': next.first.name});
+      },
+    );
   }
 }
 
@@ -449,14 +296,13 @@ class _VersionFooter extends StatelessWidget {
     final t = Theme.of(context);
     final scheme = t.colorScheme;
     final info = appProvider.packageInfo;
-    final buildMode = appProvider.getBuildMode();
     return Center(
       child: Column(
         children: [
           Text('Dinar Echange', style: t.textTheme.titleMedium),
           const SizedBox(height: 4),
           Text(
-            'v${info.version} · build ${info.buildNumber} · $buildMode',
+            'v${info.version} · build ${info.buildNumber} · ${appProvider.getBuildMode()}',
             style: t.textTheme.labelSmall
                 ?.copyWith(color: scheme.onSurfaceVariant),
           ),
@@ -466,25 +312,24 @@ class _VersionFooter extends StatelessWidget {
   }
 }
 
-class _DebugRow extends StatelessWidget {
-  final VoidCallback onClear;
-  const _DebugRow({required this.onClear});
-
+class _DebugTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final scheme = t.colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: OutlinedButton.icon(
-        onPressed: onClear,
-        icon: Icon(Icons.delete_forever_outlined, color: scheme.error),
-        label: Text('Clear cache (debug)',
-            style: t.textTheme.labelMedium?.copyWith(color: scheme.error)),
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: scheme.error.withValues(alpha: 0.35)),
-        ),
+    final scheme = Theme.of(context).colorScheme;
+    return ListTile(
+      leading: Icon(Icons.delete_forever_outlined, color: scheme.error),
+      title: Text(
+        'Clear cache (debug)',
+        style: TextStyle(color: scheme.error),
       ),
+      onTap: () async {
+        await PreferencesService().clearAllPreferences();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cache cleared!')),
+          );
+        }
+      },
     );
   }
 }
@@ -499,9 +344,7 @@ class _BottomAd extends StatelessWidget {
         builder: (context, adProvider, _) => Container(
           constraints: const BoxConstraints(minHeight: 60),
           decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: scheme.outlineVariant),
-            ),
+            border: Border(top: BorderSide(color: scheme.outlineVariant)),
           ),
           padding: const EdgeInsets.only(top: 8),
           child: const AdBannerWidget(),
