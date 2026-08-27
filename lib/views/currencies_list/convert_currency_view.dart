@@ -59,6 +59,10 @@ class CurrencyConverterPage extends StatelessWidget {
 }
 
 class _Converter extends StatelessWidget {
+  static const _rowHeight = 84.0;
+  static const _gap = 12.0;
+  static const _swapSize = 44.0;
+
   final CurrencyConverterProvider provider;
   final String marketType;
 
@@ -66,6 +70,12 @@ class _Converter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Two rows keep their identity (foreign stays foreign, DZD stays
+    // DZD). Only their vertical position swaps when the direction
+    // toggles — the "you type on top, you read on bottom" reading
+    // relationship is preserved by AnimatedPositioned sliding them past
+    // each other. Layout math is fixed (row heights are known), so no
+    // MediaQuery.size dependency and it works at every screen size.
     final foreignRow = buildCurrencyInput(
       controller: provider.isDZDtoCurrency
           ? provider.resultController
@@ -78,7 +88,6 @@ class _Converter extends StatelessWidget {
           : provider.amountFocusNode,
       context: context,
     );
-
     final dzdRow = buildCurrencyInput(
       controller: provider.isDZDtoCurrency
           ? provider.amountController
@@ -92,33 +101,50 @@ class _Converter extends StatelessWidget {
       context: context,
     );
 
-    // When DZD→foreign, DZD sits on top (source you type in). When
-    // foreign→DZD (default), the foreign row is on top. This keeps the
-    // "you type here → you read there" reading direction stable.
-    final top = provider.isDZDtoCurrency ? dzdRow : foreignRow;
-    final bottom = provider.isDZDtoCurrency ? foreignRow : dzdRow;
+    final reducedMotion = MediaQuery.disableAnimationsOf(context);
+    final duration =
+        reducedMotion ? Duration.zero : const Duration(milliseconds: 320);
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 220),
-      switchInCurve: Curves.easeOut,
-      switchOutCurve: Curves.easeIn,
-      transitionBuilder: (child, animation) =>
-          FadeTransition(opacity: animation, child: child),
-      child: Column(
-        key: ValueKey(provider.isDZDtoCurrency),
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    final totalHeight = _rowHeight * 2 + _gap * 2 + _swapSize;
+    final topPos = 0.0;
+    final bottomPos = _rowHeight + _gap * 2 + _swapSize;
+    final swapPos = _rowHeight + _gap;
+
+    return SizedBox(
+      height: totalHeight,
+      child: Stack(
         children: [
-          top,
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
+          // Foreign row: top when foreign→DZD, bottom when DZD→foreign.
+          AnimatedPositioned(
+            duration: duration,
+            curve: Curves.easeInOutCubic,
+            top: provider.isDZDtoCurrency ? bottomPos : topPos,
+            left: 0,
+            right: 0,
+            height: _rowHeight,
+            child: foreignRow,
+          ),
+          // DZD row: bottom when foreign→DZD, top when DZD→foreign.
+          AnimatedPositioned(
+            duration: duration,
+            curve: Curves.easeInOutCubic,
+            top: provider.isDZDtoCurrency ? topPos : bottomPos,
+            left: 0,
+            right: 0,
+            height: _rowHeight,
+            child: dzdRow,
+          ),
+          // Fixed pivot in the middle gap.
+          Positioned(
+            top: swapPos,
+            right: 4,
+            height: _swapSize,
+            width: _swapSize,
             child: _SwapButton(
               onTap: provider.toggleConversionDirection,
               marketType: marketType,
             ),
           ),
-          const SizedBox(height: 8),
-          bottom,
         ],
       ),
     );
