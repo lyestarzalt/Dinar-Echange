@@ -36,6 +36,9 @@ class _ShimmerWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // Respect the OS "Reduce Motion" setting: static placeholder instead
+    // of a shimmering one for users who've asked for less animation.
+    if (MediaQuery.disableAnimationsOf(context)) return child;
     return Shimmer.fromColors(
       baseColor: scheme.surfaceContainerHigh,
       highlightColor: scheme.surfaceContainerHighest,

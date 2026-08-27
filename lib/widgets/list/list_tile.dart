@@ -4,6 +4,7 @@ import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/widgets/list/animated_rate.dart';
+import 'package:dinar_echange/widgets/rate_gestures.dart';
 
 class CurrencyListItem extends StatelessWidget {
   final Currency currency;
@@ -16,42 +17,50 @@ class CurrencyListItem extends StatelessWidget {
     final scheme = t.colorScheme;
     final l10n = AppLocalizations.of(context)!;
     final numberFmt = NumberFormat.decimalPattern();
+    String format(double v) => v >= 100
+        ? numberFmt.format(v.round())
+        : v.toStringAsFixed(1);
 
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        child: Row(
-          children: [
-            FlagContainer(
-              imageUrl: currency.flag,
-              width: 36,
-              height: 26,
-              borderRadius: BorderRadius.circular(3),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                currency.currencyCode,
-                style: t.textTheme.titleLarge,
+      child: Semantics(
+        container: true,
+        label:
+            '${currency.currencyName ?? currency.currencyCode}, ${l10n.buy} ${format(currency.buy)}, ${l10n.sell} ${format(currency.sell)}',
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            children: [
+              FlagContainer(
+                imageUrl: currency.flag,
+                width: 36,
+                height: 26,
+                borderRadius: BorderRadius.circular(3),
               ),
-            ),
-            _RateColumn(
-              value: currency.buy,
-              label: l10n.buy,
-              numberFmt: numberFmt,
-              scheme: scheme,
-              textTheme: t.textTheme,
-            ),
-            const SizedBox(width: 20),
-            _RateColumn(
-              value: currency.sell,
-              label: l10n.sell,
-              numberFmt: numberFmt,
-              scheme: scheme,
-              textTheme: t.textTheme,
-            ),
-          ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  currency.currencyCode,
+                  style: t.textTheme.titleLarge,
+                ),
+              ),
+              _RateColumn(
+                value: currency.buy,
+                label: l10n.buy,
+                format: format,
+                scheme: scheme,
+                textTheme: t.textTheme,
+              ),
+              const SizedBox(width: 20),
+              _RateColumn(
+                value: currency.sell,
+                label: l10n.sell,
+                format: format,
+                scheme: scheme,
+                textTheme: t.textTheme,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -61,41 +70,40 @@ class CurrencyListItem extends StatelessWidget {
 class _RateColumn extends StatelessWidget {
   final double value;
   final String label;
-  final NumberFormat numberFmt;
+  final String Function(double) format;
   final ColorScheme scheme;
   final TextTheme textTheme;
 
   const _RateColumn({
     required this.value,
     required this.label,
-    required this.numberFmt,
+    required this.format,
     required this.scheme,
     required this.textTheme,
   });
 
   @override
   Widget build(BuildContext context) {
-    String format(double v) => v >= 100
-        ? numberFmt.format(v.round())
-        : v.toStringAsFixed(1);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        AnimatedRate(
-          value: value,
-          format: format,
-          style: textTheme.displaySmall!,
-          baseColor: scheme.onSurface,
-          upColor: Colors.green.shade600,
-          downColor: Colors.red.shade600,
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label.toUpperCase(),
-          style: textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
-        ),
-      ],
+    return CopyableRate(
+      value: format(value),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          AnimatedRate(
+            value: value,
+            format: format,
+            style: textTheme.displaySmall!,
+            baseColor: scheme.onSurface,
+            upColor: Colors.green.shade600,
+            downColor: Colors.red.shade600,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label.toUpperCase(),
+            style: textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+        ],
+      ),
     );
   }
 }
-

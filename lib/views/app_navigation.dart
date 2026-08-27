@@ -28,8 +28,11 @@ class AppNavigation extends StatelessWidget {
             // left null it resolves to Material's canvas (white) and
             // flashes. Pin it to the scaffold background.
             final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+            final reducedMotion = MediaQuery.disableAnimationsOf(context);
             return PageTransitionSwitcher(
-              duration: const Duration(milliseconds: 400),
+              duration: reducedMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 400),
               transitionBuilder: (
                 Widget child,
                 Animation<double> animation,

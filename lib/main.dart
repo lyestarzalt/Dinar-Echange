@@ -6,7 +6,6 @@ import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/views/app_navigation.dart';
 import 'package:dinar_echange/theme/theme.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
-import 'package:dinar_echange/widgets/offline_banner.dart';
 import 'package:dinar_echange/widgets/skeletons.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
 import 'package:dinar_echange/firebase_options.dart';
@@ -72,8 +71,20 @@ class DinarEchange extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             //
-            builder: (context, child) =>
-                OfflineBanner(child: child ?? const SizedBox.shrink()),
+            builder: (context, child) {
+              // Clamp Dynamic Type / font-scale so the 64pt hero rate
+              // doesn't overflow the card at extreme accessibility
+              // sizes — but still let users scale up meaningfully.
+              final mq = MediaQuery.of(context);
+              final clamped = mq.copyWith(
+                textScaler: mq.textScaler
+                    .clamp(minScaleFactor: 0.9, maxScaleFactor: 1.3),
+              );
+              return MediaQuery(
+                data: clamped,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
             home: const AppStartup(),
           );
         },
