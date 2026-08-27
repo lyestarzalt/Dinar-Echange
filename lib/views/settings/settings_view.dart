@@ -251,21 +251,17 @@ class _SettingsBody extends StatelessWidget {
           ),
         );
 
-    if (Platform.isIOS) {
-      showCupertinoSheet<void>(
-        context: context,
-        scrollableBuilder: (ctx, controller) => SingleChildScrollView(
-          controller: controller,
-          child: SafeArea(child: content(ctx)),
-        ),
-      );
-    } else {
-      showModalBottomSheet<void>(
-        context: context,
-        showDragHandle: true,
-        builder: (ctx) => SafeArea(child: content(ctx)),
-      );
-    }
+    // About is a short read + one action button. showCupertinoSheet
+    // presents as a full-screen inset route that looks empty when the
+    // content is short and has no visible dismiss affordance beyond the
+    // drag; the modal bottom sheet is the right shape here on both
+    // platforms and inherits the theme's BottomSheetThemeData
+    // (paper background, 24 px top radius, drag handle).
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(child: content(ctx)),
+    );
   }
 
   void _showLicensesPage(BuildContext context, String appName, String version) {
