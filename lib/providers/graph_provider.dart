@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dinar_echange/data/currency_repository.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/data/repositories/main_repository.dart';
 import 'package:dinar_echange/data/models/historical_rate_model.dart';
@@ -7,7 +8,7 @@ import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/utils/state.dart';
 
 class GraphProvider with ChangeNotifier {
-  final MainRepository _mainRepository = MainRepository();
+  final CurrencyRepository _mainRepository;
   List<Currency> coreCurrencies = [];
   Currency? selectedCurrency;
   List<CurrencyHistoryEntry> historicalData = [];
@@ -37,7 +38,8 @@ class GraphProvider with ChangeNotifier {
 
   AppState<List<CurrencyHistoryEntry>> get state => _state;
 
-  GraphProvider(List<Currency> allCurrencies) {
+  GraphProvider(List<Currency> allCurrencies, {CurrencyRepository? repository})
+      : _mainRepository = repository ?? MainRepository() {
     fetchCurrencies(allCurrencies);
   }
 
@@ -45,9 +47,6 @@ class GraphProvider with ChangeNotifier {
     if (_isDisposed) return;
 
     try {
-      _state = AppState.loading();
-      _notifySafe();
-
       coreCurrencies =
           allCurrencies.where((currency) => currency.isCore).toList();
       selectedCurrency = coreCurrencies.firstWhere(
@@ -55,11 +54,13 @@ class GraphProvider with ChangeNotifier {
         orElse: () => coreCurrencies.first,
       );
 
+      // loadCurrencyHistory owns the success/error state transition —
+      // do NOT overwrite it here. Previously this method blindly set
+      // AppState.success after the await, silently clobbering the
+      // error state set by an empty-history or repo-throw path.
       await loadCurrencyHistory();
-      _state = AppState.success(historicalData);
-      _notifySafe();
     } catch (e) {
-      AppLogger.logError("Failed to fetch currencies", error: e);
+      AppLogger.logError('Failed to fetch currencies', error: e);
       _state = AppState.error(e.toString());
       _notifySafe();
     }
