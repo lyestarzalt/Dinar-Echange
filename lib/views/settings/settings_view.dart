@@ -323,10 +323,11 @@ class _DebugTile extends StatelessWidget {
         style: TextStyle(color: scheme.error),
       ),
       onTap: () async {
+        final l10n = AppLocalizations.of(context)!;
         await PreferencesService().clearAllPreferences();
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cache cleared!')),
+            SnackBar(content: Text(l10n.cache_cleared)),
           );
         }
       },

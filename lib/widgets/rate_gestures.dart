@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 
 /// Wraps a widget with a long-press-to-copy gesture. Copies `value` to
 /// the clipboard, fires a medium haptic, and shows a short confirmation
@@ -20,11 +21,12 @@ class CopyableRate extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: value));
     HapticFeedback.mediumImpact();
     if (!context.mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(snackbarMessage ?? 'Copied $value'),
+          content: Text(snackbarMessage ?? l10n.copied_snackbar(value)),
           duration: const Duration(milliseconds: 1400),
         ),
       );

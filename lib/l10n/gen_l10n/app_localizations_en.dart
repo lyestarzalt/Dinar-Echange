@@ -112,7 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'In Algeria, \'centime\' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.';
 
   @override
-  String get why_centime_title => 'The Usage of \'Centime';
+  String get why_centime_title => 'The Usage of \'Centime\'';
 
   @override
   String currency_buy_sell_explanation(
@@ -178,4 +178,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String copied_snackbar(Object value) {
+    return 'Copied $value';
+  }
+
+  @override
+  String get cache_cleared => 'Cache cleared';
 }

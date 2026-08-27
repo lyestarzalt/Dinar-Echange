@@ -1,6 +1,6 @@
 {
   "@@locale": "ar",
-  "app_title": "دينار إيشانج",
+  "app_title": "Dinar Echange",
   "@app_title": {
     "description": "The app's name as shown in system contexts like the home screen or app switcher."
   },
@@ -36,7 +36,7 @@
   "@dark_button": {
     "description": "Option to enable a dark color scheme for the app's interface."
   },
-  "light_button": "مضيء",
+  "light_button": "فاتح",
   "@light_button": {
     "description": "Option to enable a light color scheme for the app's interface."
   },
@@ -132,7 +132,7 @@
   "@centime_explanation": {
     "description": "Explanation of the term 'centime' in Algeria"
   },
-  "why_centime_title": "استخدام 'السنتيم",
+  "why_centime_title": "استخدام 'السنتيم'",
   "@why_centime_title": {
     "description": "Title for centime use"
   },
@@ -172,7 +172,7 @@
   "@parallel_market": {
     "description": "Tab title for the non-official market"
   },
-  "official_market": "السوق الرئيسية",
+  "official_market": "السوق الرئيسي",
   "@official_market": {
     "description": "Tab title for the official market"
   },
@@ -211,5 +211,13 @@
   "delete": "حذف",
   "@delete": {
     "description": "Label for delete button."
+  },
+  "copied_snackbar": "تم نسخ {value}",
+  "@copied_snackbar": {
+    "description": "Toast confirming that a rate value has been copied to the clipboard."
+  },
+  "cache_cleared": "تم مسح الذاكرة المؤقتة",
+  "@cache_cleared": {
+    "description": "Confirmation shown after the debug 'clear cache' action succeeds."
   }
 }

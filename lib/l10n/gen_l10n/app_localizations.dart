@@ -301,7 +301,7 @@ abstract class AppLocalizations {
   /// Title for centime use
   ///
   /// In en, this message translates to:
-  /// **'The Usage of \'Centime'**
+  /// **'The Usage of \'Centime\''**
   String get why_centime_title;
 
   /// Detailed explanation of the difference between buy and sell
@@ -421,6 +421,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// Toast confirming that a rate value has been copied to the clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {value}'**
+  String copied_snackbar(Object value);
+
+  /// Confirmation shown after the debug 'clear cache' action succeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleared'**
+  String get cache_cleared;
 }
 
 class _AppLocalizationsDelegate

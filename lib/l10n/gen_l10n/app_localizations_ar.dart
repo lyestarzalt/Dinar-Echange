@@ -10,7 +10,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get app_title => 'دينار إيشانج';
+  String get app_title => 'Dinar Echange';
 
   @override
   String get currencies_app_bar_title => 'العملات';
@@ -37,7 +37,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dark_button => 'مظلم';
 
   @override
-  String get light_button => 'مضيء';
+  String get light_button => 'فاتح';
 
   @override
   String get languages_button => 'اللغات';
@@ -112,7 +112,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'في الجزائر، يُستخدم مصطلح \'السنتيم\' بشكل غير رسمي للإشارة إلى جميع المبالغ المالية، كبيرة أو صغيرة. على سبيل المثال، إذا قيل إن هاتفًا ما يكلف 5 ملايين، فعادةً ما يشير ذلك إلى 50,000 دج.';
 
   @override
-  String get why_centime_title => 'استخدام \'السنتيم';
+  String get why_centime_title => 'استخدام \'السنتيم\'';
 
   @override
   String currency_buy_sell_explanation(
@@ -148,7 +148,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get parallel_market => 'السوق البديل';
 
   @override
-  String get official_market => 'السوق الرئيسية';
+  String get official_market => 'السوق الرئيسي';
 
   @override
   String get retry => 'إعادة المحاولة';
@@ -178,4 +178,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get delete => 'حذف';
+
+  @override
+  String copied_snackbar(Object value) {
+    return 'تم نسخ $value';
+  }
+
+  @override
+  String get cache_cleared => 'تم مسح الذاكرة المؤقتة';
 }

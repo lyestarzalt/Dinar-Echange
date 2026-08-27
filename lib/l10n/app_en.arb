@@ -132,7 +132,7 @@
   "@centime_explanation": {
     "description": "Explanation of the term 'centime' in Algeria"
   },
-  "why_centime_title": "The Usage of 'Centime",
+  "why_centime_title": "The Usage of 'Centime'",
   "@why_centime_title": {
     "description": "Title for centime use"
   },
@@ -211,5 +211,13 @@
   "delete": "Delete",
   "@delete": {
     "description": "Label for delete button."
+  },
+  "copied_snackbar": "Copied {value}",
+  "@copied_snackbar": {
+    "description": "Toast confirming that a rate value has been copied to the clipboard."
+  },
+  "cache_cleared": "Cache cleared",
+  "@cache_cleared": {
+    "description": "Confirmation shown after the debug 'clear cache' action succeeds."
   }
 }

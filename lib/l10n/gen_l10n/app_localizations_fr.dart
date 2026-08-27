@@ -37,7 +37,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dark_button => 'Sombre';
 
   @override
-  String get light_button => 'Lumière';
+  String get light_button => 'Clair';
 
   @override
   String get languages_button => 'Langues';
@@ -68,10 +68,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get six_months_button => '6M';
 
   @override
-  String get one_year_button => '1Y';
+  String get one_year_button => '1A';
 
   @override
-  String get two_years_button => '2Y';
+  String get two_years_button => '2A';
 
   @override
   String get add_selected_currencies_tooltip =>
@@ -85,7 +85,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de charger les données. Vérifiez votre connexion et réessayez.';
 
   @override
-  String get search_hint => 'Recherche';
+  String get search_hint => 'Rechercher';
 
   @override
   String get add_currencies_tooltip => 'Ajouter des devises';
@@ -114,7 +114,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'En Algérie, le \'centime\' est utilisé de manière informelle pour toutes les sommes, grandes ou petites. Par exemple, si l\'on dit qu\'un téléphone coûte 5 millions, cela fait généralement référence à 50 000 DZD.';
 
   @override
-  String get why_centime_title => 'L\'utilisation du \'Centime';
+  String get why_centime_title => 'L\'utilisation du \'Centime\'';
 
   @override
   String currency_buy_sell_explanation(
@@ -122,7 +122,7 @@ class AppLocalizationsFr extends AppLocalizations {
     Object currency_code,
     Object sell_rate,
   ) {
-    return 'Le taux d\'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 $currency_code, cela vous coûtera $buy_rate DZD, et si vous voulez vendre 1 Euro, vous recevrez $sell_rate DZD.';
+    return 'Le taux d\'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 $currency_code, cela vous coûtera $buy_rate DZD, et si vous voulez vendre 1 $currency_code, vous recevrez $sell_rate DZD.';
   }
 
   @override
@@ -180,4 +180,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get delete => 'Supprimer';
+
+  @override
+  String copied_snackbar(Object value) {
+    return '$value copié';
+  }
+
+  @override
+  String get cache_cleared => 'Cache vidé';
 }

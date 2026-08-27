@@ -1,5 +1,5 @@
 ﻿Keys,Description,en,fr,ar
-app_title,The app's name as shown in system contexts like the home screen or app switcher.,Dinar Echange,Dinar Échange,دينار إيشانج
+app_title,The app's name as shown in system contexts like the home screen or app switcher.,Dinar Echange,Dinar Échange,Dinar Echange
 currencies_app_bar_title,A list of all available currencies in the app.,Currencies,Devises,العملات
 settings_app_bar_title,Section to customize app preferences and configurations.,Settings,Paramètres,إعدادات
 convert_app_bar_title,Option to convert values between dzd and currencies.,Convert,Convertir,تحويل
@@ -8,7 +8,7 @@ trends_app_bar_title,Page displaying the latest trends and movements in differen
 close_button,Button or option to close the app or a specific section within the app.,Close,Fermer,إغلاق
 auto_button,Option for automatic settings or operations within the app.,Auto,Auto,تلقائي
 dark_button,Option to enable a dark color scheme for the app's interface.,Dark,Sombre,مظلم
-light_button,Option to enable a light color scheme for the app's interface.,Light,Lumière,مضيء
+light_button,Option to enable a light color scheme for the app's interface.,Light,Clair,فاتح
 languages_button,List of available languages,Languages,Langues,اللغات
 chose_language_title,Option to select a language,Choose Language,Choisissez la langue,اختر اللغة
 theme_title,Option for visual theme customization.,Theme,Thème,المظهر
@@ -18,12 +18,12 @@ about_body,App's detailed description,"Thank you for choosing Dinar Echange. Thi
 about_app_button,About the App,About the App,À propos de l'application,حول التطبيق
 one_month_button,Short time filter for viewing currency data over the past month.,1M,1M,1ش
 six_months_button,Short time filter for viewing currency data over the past six months.,6M,6M,6ش
-one_year_button,Short time filter for viewing currency data over the past year.,1Y,1Y,1س
-two_years_button,Short time filter for viewing currency data over the past two years.,2Y,2Y,2س
+one_year_button,Short time filter for viewing currency data over the past year.,1Y,1A,1س
+two_years_button,Short time filter for viewing currency data over the past two years.,2Y,2A,2س
 add_selected_currencies_tooltip,Option to add selected currencies to the list|,Add Selected Currencies,Ajouter les devises sélectionnées,أضف العملات المختارة
 no_currencies_message,Message for no currency data.,No currencies,Pas de devises,لا توجد عملات
 errormessage_message,Detailed text explaining the error.,Unable to load the data. Check your connection and try again.,Impossible de charger les données. Vérifiez votre connexion et réessayez.,تعذر تحميل البيانات. تحقق من الاتصال وحاول مرة أخرى.
-search_hint,Option to search,Search,Recherche,بحث
+search_hint,Option to search,Search,Rechercher,بحث
 add_currencies_tooltip,Option to add currencies,Add Currencies,Ajouter des devises,إضافة العملات
 switch_tooltip,Option to switch from buy to sell,Swap currencies,Échanger des devises,تبديل العملات
 use_centime_tooltip,Option to switch to centime as counting method,Use centimes,Utiliser des centimes,استخدام السنتيم
@@ -32,8 +32,8 @@ pull_refresh_tooltip,Option to fetch latest currencies information,Fetch latest 
 centime_symbol,Algerian centime,centimes,centimes,سنتيم
 dzd_symbol,Algerian dinar,DZD,DZD,دج
 centime_explanation,Explanation of the term 'centime' in Algeria,"In Algeria, 'centime' is used informally for all amounts, whether large or small. For example, if you hear something costs 5 million, that usually refers to 50,000 DZD.","En Algérie, le 'centime' est utilisé de manière informelle pour toutes les sommes, grandes ou petites. Par exemple, si l'on dit qu'un téléphone coûte 5 millions, cela fait généralement référence à 50 000 DZD.","في الجزائر، يُستخدم مصطلح 'السنتيم' بشكل غير رسمي للإشارة إلى جميع المبالغ المالية، كبيرة أو صغيرة. على سبيل المثال، إذا قيل إن هاتفًا ما يكلف 5 ملايين، فعادةً ما يشير ذلك إلى 50,000 دج."
-why_centime_title,Title for centime use,The Usage of 'Centime,L'utilisation du 'Centime,استخدام 'السنتيم
-currency_buy_sell_explanation,"Detailed explanation of the difference between buy and sell","The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, to buy 1 {currency_code}, it costs {buy_rate} DZD, and to sell 1 {currency_code}, you'll receive {sell_rate} DZD.","Le taux d'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 {currency_code}, cela vous coûtera {buy_rate} DZD, et si vous voulez vendre 1 Euro, vous recevrez {sell_rate} DZD.","سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 {currency_code}، فسيكلفك ذلك {buy_rate} دج، وإذا أردت بيع 1 {currency_code}، ستتلقى {sell_rate} دج."
+why_centime_title,Title for centime use,The Usage of 'Centime',L'utilisation du 'Centime',استخدام 'السنتيم'
+currency_buy_sell_explanation,"Detailed explanation of the difference between buy and sell","The buy rate is the price at which you can purchase a currency, while the sell rate is what you can sell it for. For example, to buy 1 {currency_code}, it costs {buy_rate} DZD, and to sell 1 {currency_code}, you'll receive {sell_rate} DZD.","Le taux d'achat est le prix auquel vous pouvez acheter une devise, tandis que le taux de vente est le prix auquel vous pouvez la vendre. Par exemple, si vous voulez acheter 1 {currency_code}, cela vous coûtera {buy_rate} DZD, et si vous voulez vendre 1 {currency_code}, vous recevrez {sell_rate} DZD.","سعر الشراء هو السعر الذي يمكنك به شراء عملة، بينما سعر البيع هو السعر الذي يمكنك به بيعها. على سبيل المثال، إذا أردت شراء 1 {currency_code}، فسيكلفك ذلك {buy_rate} دج، وإذا أردت بيع 1 {currency_code}، ستتلقى {sell_rate} دج."
 terms_title,Title for the terms and conditions page,Terms and Conditions,Conditions générales,شروط وأحكام
 continue_button,Button to proceed or accept conditions,Continue,Continuer,استمر
 decline_button,Button to reject conditions or navigate back,Decline,Refuser,رفض
@@ -42,7 +42,7 @@ legal_title,Title for the legal section in the settings,Legal,Légal,قانون�
 licenses,Word for licenses,Licenses,Licences,رخص
 latest_updates_on,Latest updates on,Latest updates on,Dernières mises à jour le,آخر التحديثات في
 parallel_market,Tab title for the non-official market,Alternative Market,Marché Alternatif,السوق البديل
-official_market,Tab title for the official market,Main Market,Marché Principal,السوق الرئيسية
+official_market,Tab title for the official market,Main Market,Marché Principal,السوق الرئيسي
 retry,Retry button text,Retry,Réessayer,إعادة المحاولة
 error_title,Title for generic error messages,"Something Went Wrong","Un problème est survenu","حدث خطأ ما"
 error_message,Generic error message suggesting a retry,"Oops! Something didn't go as planned. Please try again.","Oups ! Quelque chose n'a pas fonctionné comme prévu. Veuillez réessayer.","أوه! لم تسر الأمور كما كان مخططًا لها. يرجى المحاولة مرة أخرى."
@@ -52,3 +52,5 @@ confirm_delete_title,Title for the delete confirmation dialog.,Confirm Deletion,
 confirm_delete_message,Message asking for delete confirmation.,Are you sure you want to delete this currency?,Êtes-vous sûr de vouloir supprimer cette devise?,هل أنت متأكد من أنك تريد حذف هذه العملة؟
 cancel,Label for cancel button.,Cancel,Annuler,إلغاء
 delete,Label for delete button.,Delete,Supprimer,حذف
+copied_snackbar,Toast confirming that a rate value has been copied to the clipboard.,Copied {value},{value} copié,تم نسخ {value}
+cache_cleared,Confirmation shown after the debug 'clear cache' action succeeds.,Cache cleared,Cache vidé,تم مسح الذاكرة المؤقتة
