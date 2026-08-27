@@ -1,7 +1,7 @@
-import 'package:logger/logger.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AppLogger {
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
@@ -18,7 +18,6 @@ class AppLogger {
       printer: PrettyPrinter(
         excludePaths: ['package:dinar_echange/utils/logging.dart'],
         noBoxingByDefault: false,
-        //stackTraceBeginIndex: 1,
         methodCount: 2,
         errorMethodCount: 8,
         lineLength: 80,
@@ -28,24 +27,49 @@ class AppLogger {
       ),
     );
   }
+
   static void logInfo(dynamic message) {
-    if (!kReleaseMode) _instance._logger.i(message);
+    if (kReleaseMode) return;
+    _instance._logger.i(message);
   }
 
+  /// Debug log. Fully compiled out in release: neither the string nor
+  /// the underlying logger call executes, so callers can freely
+  /// interpolate expensive values without paying for them in release.
   static void logDebug(dynamic message) {
+    if (kReleaseMode) return;
     _instance._logger.d(message);
   }
 
-  static void logError(String message,
-      {Object? error, StackTrace? stackTrace, bool isFatal = false}) {
+  /// Records an error.
+  ///
+  /// In debug: pretty-prints the error + stack via the logger package.
+  /// In release: forwarded to Sentry unless [reportToSentry] is false.
+  ///   Use `reportToSentry: false` for expected / already-handled failure
+  ///   paths (ad load failures, offline network, missing history,
+  ///   asset fallback taken) so the Sentry issue list stays a real
+  ///   signal instead of noise.
+  static void logError(
+    String message, {
+    Object? error,
+    StackTrace? stackTrace,
+    bool isFatal = false,
+    bool reportToSentry = true,
+  }) {
     _instance._logger.e(message, error: error, stackTrace: stackTrace);
-    if (kReleaseMode) {
-      FirebaseCrashlytics.instance.recordError(
+    if (!reportToSentry) return;
+    final level = isFatal ? SentryLevel.fatal : SentryLevel.error;
+    if (error != null) {
+      Sentry.captureException(
         error,
-        stackTrace,
-        reason: message,
-        fatal: isFatal,
+        stackTrace: stackTrace,
+        withScope: (scope) {
+          scope.level = level;
+          scope.setContexts('log', {'message': message});
+        },
       );
+    } else {
+      Sentry.captureMessage(message, level: level);
     }
   }
 
@@ -56,19 +80,18 @@ class AppLogger {
         screenName: screenName,
         screenClass: screenClass,
       );
+    } else {
+      _instance._logger
+          .d('Screen View Logged: $screenName, Class: $screenClass');
     }
-
-    logDebug('Screen View Logged: $screenName, Class: $screenClass');
   }
 
   static Future<void> logEvent(
       String eventName, Map<String, Object> parameters) async {
-    logDebug('Event Logged: $eventName, Details: $parameters');
     if (kReleaseMode) {
-      await _analytics.logEvent(
-        name: eventName,
-        parameters: parameters,
-      );
+      await _analytics.logEvent(name: eventName, parameters: parameters);
+    } else {
+      _instance._logger.d('Event Logged: $eventName, Details: $parameters');
     }
   }
 }
@@ -77,7 +100,6 @@ class CustomLogFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
     if (kReleaseMode) {
-      // In release mode, only log events that are errors or more severe
       return event.level.index >= Level.error.index;
     } else {
       return true;

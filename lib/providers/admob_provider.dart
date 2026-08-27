@@ -53,7 +53,11 @@ class AdProvider with ChangeNotifier {
           notifyListeners();
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('BannerAd failed to load: $error');
+          AppLogger.logError(
+            'BannerAd failed to load',
+            error: error,
+            reportToSentry: false,
+          );
           ad.dispose();
           _isBannerAdLoaded = false;
           notifyListeners();
@@ -80,7 +84,11 @@ class AdProvider with ChangeNotifier {
             notifyListeners();
           },
           onAdFailedToLoad: (LoadAdError error) {
-            AppLogger.logError('Interstitial ad failed to load: $error');
+            AppLogger.logError(
+              'Interstitial ad failed to load',
+              error: error,
+              reportToSentry: false,
+            );
             _isInterstitialAdLoaded = false;
             notifyListeners();
           },
@@ -94,7 +102,11 @@ class AdProvider with ChangeNotifier {
     }, onAdImpression: (InterstitialAd ad) {
       AppLogger.logInfo('Ad impression recorded.');
     }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-      AppLogger.logError('Ad failed to show full screen content: $error');
+      AppLogger.logError(
+        'Ad failed to show full screen content',
+        error: error,
+        reportToSentry: false,
+      );
       ad.dispose();
       _interstitialAd = null;
       _isInterstitialAdLoaded = false;

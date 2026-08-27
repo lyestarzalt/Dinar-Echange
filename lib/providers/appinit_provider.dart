@@ -99,8 +99,12 @@ class AppInitializationProvider with ChangeNotifier {
 
       AppLogger.logInfo('InterstitialAd loading initiated.');
     } catch (error, stackTrace) {
-      AppLogger.logError('Failed to load InterstitialAd.',
-          error: error, stackTrace: stackTrace);
+      AppLogger.logError(
+        'Failed to load InterstitialAd.',
+        error: error,
+        stackTrace: stackTrace,
+        reportToSentry: false,
+      );
     }
   }
 
@@ -147,8 +151,14 @@ class AppInitializationProvider with ChangeNotifier {
     final messaging = FirebaseMessaging.instance;
     final prefs = PreferencesService();
 
+    // Never log the FCM token itself — it can be used to push
+    // notifications to the specific device it identifies and would
+    // leak into device logs / crash reports if included. Log
+    // presence only.
     final token = await messaging.getToken();
-    AppLogger.logDebug("FCM Token: $token");
+    AppLogger.logDebug(
+      token == null ? 'FCM token unavailable' : 'FCM token acquired',
+    );
 
     final desiredLanguage = await prefs.getSelectedLanguage() ?? 'en';
     final subscribedLanguage = await prefs.getFcmSubscribedLanguage();

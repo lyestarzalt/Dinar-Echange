@@ -48,7 +48,11 @@ class AdBannerWidgetState extends State<AdBannerWidget> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          AppLogger.logError('AdBannerWidget: Ad failed to load: $error');
+          AppLogger.logError(
+            'AdBannerWidget: Ad failed to load',
+            error: error,
+            reportToSentry: false,
+          );
           ad.dispose();
         },
       ),

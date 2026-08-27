@@ -100,7 +100,7 @@ class GraphProvider with ChangeNotifier {
 
     if (selectedCurrency == null) {
       const errorMessage = 'Selected currency is not set.';
-      AppLogger.logError(errorMessage);
+      AppLogger.logError(errorMessage, reportToSentry: false);
       _state = AppState.error(errorMessage);
       _notifySafe();
       return;
@@ -116,7 +116,7 @@ class GraphProvider with ChangeNotifier {
       if (selectedCurrency!.history!.isEmpty) {
         const errorMessage =
             'No history data available for the selected currency.';
-        AppLogger.logError(errorMessage);
+        AppLogger.logError(errorMessage, reportToSentry: false);
         _state = AppState.error(errorMessage);
         _notifySafe();
         return;

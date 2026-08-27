@@ -11,8 +11,8 @@ import 'package:dinar_echange/providers/appinit_provider.dart';
 import 'package:dinar_echange/utils/enums.dart';
 import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:dinar_echange/utils/logging.dart';
 import 'package:dinar_echange/providers/admob_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -27,15 +27,30 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   AppLogger.logInfo('Firebase Core initialized.');
   await PreferencesService().init();
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  // Kick off the daily-rates fetch before runApp so the network work overlaps
-  // with the widget tree building.
-  final appInit = AppInitializationProvider()..initializeApp();
-
-  runApp(DinarEchange(appInit: appInit));
+  // Sentry hooks FlutterError.onError + PlatformDispatcher.instance.onError
+  // itself, so uncaught framework/isolate errors flow through automatically.
+  // Only actually ship events in release — in debug the local logger is
+  // enough and dev crashes shouldn't pollute the dashboard.
+  await SentryFlutter.init(
+    (options) {
+      // Empty DSN disables sending — we only ship events in release,
+      // so debug builds don't pollute the dashboard while dev work
+      // still triggers the local logger.
+      options.dsn = kReleaseMode
+          ? 'https://f1f7a30618f258e33a66822c14ab9637@o4508345478742016.ingest.de.sentry.io/4511980717867088'
+          : '';
+      options.tracesSampleRate = 0.1;
+    },
+    appRunner: () {
+      // Kick off the daily-rates fetch before runApp so the network work
+      // overlaps with the widget tree building.
+      final appInit = AppInitializationProvider()..initializeApp();
+      runApp(DinarEchange(appInit: appInit));
+    },
+  );
 }
 
 class DinarEchange extends StatelessWidget {

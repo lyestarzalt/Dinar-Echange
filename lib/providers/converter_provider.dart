@@ -82,8 +82,12 @@ class CurrencyConverterProvider with ChangeNotifier {
           !parsedAmount.isNaN &&
           !parsedAmount.isInfinite;
     } catch (e, stack) {
-      AppLogger.logError('Input validation failed',
-          error: e, stackTrace: stack);
+      AppLogger.logError(
+        'Input validation failed',
+        error: e,
+        stackTrace: stack,
+        reportToSentry: false,
+      );
       return false;
     }
   }

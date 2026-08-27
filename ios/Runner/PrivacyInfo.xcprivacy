@@ -13,9 +13,10 @@
     <array/>
 
     <!-- Data the app itself collects. Data collected by embedded SDKs
-         (Firebase Analytics/Crashlytics, Google Mobile Ads) is declared
+         (Firebase Analytics, Google Mobile Ads, Sentry) is declared
          in those SDKs' own bundled privacy manifests and does not need
-         to be repeated here. -->
+         to be repeated here. Crash data below is our app-level
+         declaration of what Sentry captures on our behalf. -->
     <key>NSPrivacyCollectedDataTypes</key>
     <array>
         <dict>
