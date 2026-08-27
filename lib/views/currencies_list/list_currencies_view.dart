@@ -106,22 +106,13 @@ class _CurrencyListScreenState extends State<CurrencyListScreen>
             ) ??
             false; // Return false if null is returned (dialog is dismissed)
       },
-      onDismissed: (direction) {
-        //TODO
-        /*     provider.addOrRemoveCurrency(currency, false);    
-          ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Currency ${currency.currencyCode} deleted'),
-            action: SnackBarAction(
-              label: 'UNDO',
-              onPressed: () {
-                provider.addCurrency(
-                    currency); // Possibly re-add the item if user undoes
-              },
-            ),
-          ),
-        ); */
-      },
+      // Deletion is already performed inside confirmDismiss's Delete
+      // button (provider.addOrRemoveCurrency(currency, false)), so
+      // onDismissed has nothing left to do. An earlier draft here had
+      // a commented-out undo snackbar — dropped because the confirm
+      // dialog is already an explicit intent check and doubling up
+      // with a follow-up undo adds noise without meaningful safety.
+      onDismissed: (_) {},
       child: InkWell(
         onTap: () => _navigateToConverter(context, currency),
         child: CurrencyListItem(currency: currency),

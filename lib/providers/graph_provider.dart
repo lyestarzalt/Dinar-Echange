@@ -103,13 +103,13 @@ class GraphProvider with ChangeNotifier {
       AppLogger.logError(errorMessage);
       _state = AppState.error(errorMessage);
       _notifySafe();
-      throw Exception(errorMessage);
+      return;
     }
 
-    try {
-      _state = AppState.loading();
-      notifyListeners();
+    _state = AppState.loading();
+    _notifySafe();
 
+    try {
       selectedCurrency =
           await _mainRepository.getCurrencyHistory(selectedCurrency!);
 
@@ -118,20 +118,24 @@ class GraphProvider with ChangeNotifier {
             'No history data available for the selected currency.';
         AppLogger.logError(errorMessage);
         _state = AppState.error(errorMessage);
-        notifyListeners();
-        throw Exception(errorMessage);
+        _notifySafe();
+        return;
       }
 
       historicalData = selectedCurrency!.history!;
       updateDisplayPeriod(days: displayPeriodDays);
 
       _state = AppState.success(historicalData);
-      notifyListeners();
+      _notifySafe();
     } catch (e) {
+      // State is set + observers notified — do NOT rethrow. Callers
+      // (`onCurrencySelected` on the picker, the initial fetch from the
+      // constructor) don't await this future, so a rethrown exception
+      // becomes an unhandled async error that shows up in the logs as
+      // a scary uncaught trace on every currency switch that fails.
       AppLogger.logError('Error loading currency history', error: e);
       _state = AppState.error(e.toString());
-      notifyListeners();
-      throw Exception('Failed to load currency history: ${e.toString()}');
+      _notifySafe();
     }
   }
 
