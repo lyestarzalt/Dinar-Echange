@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+/// Convenience alias for the FlagContainer.assetPathFor static — kept
+/// as a top-level function because that's how it reads at call sites.
+String? flagAssetPathFor(String? url) => FlagContainer.assetPathFor(url);
+
 /// Displays a country flag.
 ///
 /// Prefers a bundled asset (assets/flags/{code}.png) when the URL is a
@@ -35,6 +39,16 @@ class FlagContainer extends StatelessWidget {
   static String? _codeFromUrl(String url) {
     final match = _flagcdnPattern.firstMatch(url);
     return match?.group(1);
+  }
+
+  /// Resolves a Currency.flag URL to the bundled asset path we would use
+  /// for it — exposed so callers (e.g. MainView's precache) can prime
+  /// the image cache at boot without duplicating the URL parsing rules.
+  static String? assetPathFor(String? url) {
+    if (url == null || url.isEmpty) return null;
+    if (url == 'DZD') return 'assets/dz_flag.png';
+    final code = _codeFromUrl(url);
+    return code == null ? null : 'assets/flags/$code.png';
   }
 
   @override

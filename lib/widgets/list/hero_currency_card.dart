@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:dinar_echange/data/models/currency_model.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
+import 'package:dinar_echange/utils/formatters.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/widgets/list/animated_rate.dart';
 import 'package:dinar_echange/widgets/rate_gestures.dart';
@@ -21,7 +21,7 @@ class HeroCurrencyCard extends StatelessWidget {
     final scheme = t.colorScheme;
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
-    final numberFmt = NumberFormat.decimalPattern(locale);
+    final numberFmt = LocaleFormatters.of(locale).number;
 
     // Delta vs. earliest history entry when history is loaded.
     double? delta;
@@ -44,7 +44,8 @@ class HeroCurrencyCard extends StatelessWidget {
         '${currency.currencyName ?? currency.currencyCode}, $valueForCopy DZD'
         '${delta != null && deltaPct != null ? ", ${wentUp ? l10n.buy : l10n.sell} ${deltaPct.abs().toStringAsFixed(2)}%" : ''}';
 
-    return Semantics(
+    return RepaintBoundary(
+      child: Semantics(
       container: true,
       label: semanticLabel,
       child: Container(
@@ -137,6 +138,7 @@ class HeroCurrencyCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

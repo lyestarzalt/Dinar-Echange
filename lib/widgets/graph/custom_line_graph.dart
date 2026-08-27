@@ -455,9 +455,22 @@ class _LineGraphPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LineGraphPainter oldDelegate) {
+    // Compare every input that affects the drawn output. Identity check
+    // on dataPoints is deliberate — the provider swaps the list ref on
+    // every update, so identity equals content in practice, and is far
+    // cheaper than deep-list equality on a 720-point history.
     return oldDelegate.dataPoints != dataPoints ||
         oldDelegate.selectedIndex != selectedIndex ||
         oldDelegate.touchPosition != touchPosition ||
-        oldDelegate.animationValue != animationValue;
+        oldDelegate.animationValue != animationValue ||
+        oldDelegate.lineColor != lineColor ||
+        oldDelegate.gridColor != gridColor ||
+        oldDelegate.labelColor != labelColor ||
+        oldDelegate.fillColor != fillColor ||
+        oldDelegate.maxValue != maxValue ||
+        oldDelegate.minValue != minValue ||
+        oldDelegate.midValue != midValue ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.showBottomLabels != showBottomLabels;
   }
 }

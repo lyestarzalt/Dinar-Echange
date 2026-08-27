@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:dinar_echange/data/models/currency_model.dart';
+import 'package:dinar_echange/utils/formatters.dart';
 import 'package:dinar_echange/widgets/flag_container.dart';
 import 'package:dinar_echange/l10n/gen_l10n/app_localizations.dart';
 import 'package:dinar_echange/widgets/list/animated_rate.dart';
@@ -16,12 +16,14 @@ class CurrencyListItem extends StatelessWidget {
     final t = Theme.of(context);
     final scheme = t.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    final numberFmt = NumberFormat.decimalPattern();
+    final locale = Localizations.localeOf(context).toString();
+    final numberFmt = LocaleFormatters.of(locale).number;
     String format(double v) => v >= 100
         ? numberFmt.format(v.round())
         : v.toStringAsFixed(1);
 
-    return Directionality(
+    return RepaintBoundary(
+      child: Directionality(
       textDirection: TextDirection.ltr,
       child: Semantics(
         container: true,
@@ -63,6 +65,7 @@ class CurrencyListItem extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
