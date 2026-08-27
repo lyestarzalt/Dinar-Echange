@@ -73,25 +73,25 @@ class _CurrencyRowSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       child: Row(
         children: [
-          const SkeletonBox(width: 40, height: 30, radius: 4),
-          const SizedBox(width: 12),
+          SkeletonBox(width: 40, height: 30, radius: 4),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 SkeletonBox(width: 60, height: 14),
                 SizedBox(height: 6),
                 SkeletonBox(width: 100, height: 10),
               ],
             ),
           ),
-          const SkeletonBox(width: 50, height: 20),
-          const SizedBox(width: 24),
-          const SkeletonBox(width: 50, height: 20),
+          SkeletonBox(width: 50, height: 20),
+          SizedBox(width: 24),
+          SkeletonBox(width: 50, height: 20),
         ],
       ),
     );
@@ -121,9 +121,9 @@ class GraphSkeleton extends StatelessWidget {
               radius: 16,
             ),
             const SizedBox(height: 16),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
+              children: [
                 SkeletonBox(width: 60, height: 32, radius: 10),
                 SkeletonBox(width: 60, height: 32, radius: 10),
                 SkeletonBox(width: 60, height: 32, radius: 10),

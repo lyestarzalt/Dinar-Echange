@@ -21,23 +21,19 @@ class AppNavigation extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
-        body: Consumer<AppProvider>(
-          builder: (context, navigationProvider, child) {
-            // FadeThroughTransition briefly fades both pages to
-            // fillColor at the transition midpoint; if fillColor is
-            // left null it resolves to Material's canvas (white) and
-            // flashes. Pin it to the scaffold background.
+        // Selector rebuilds only when the tab index actually changes;
+        // AppProvider notifies for theme / locale / package-info no
+        // longer rebuild the tab switcher or the bottom nav.
+        body: Selector<AppProvider, int>(
+          selector: (_, p) => p.selectedIndex,
+          builder: (context, selectedIndex, _) {
             final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
             final reducedMotion = MediaQuery.disableAnimationsOf(context);
             return PageTransitionSwitcher(
               duration: reducedMotion
                   ? Duration.zero
                   : const Duration(milliseconds: 400),
-              transitionBuilder: (
-                Widget child,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-              ) {
+              transitionBuilder: (child, animation, secondaryAnimation) {
                 return FadeThroughTransition(
                   animation: animation,
                   secondaryAnimation: secondaryAnimation,
@@ -45,16 +41,18 @@ class AppNavigation extends StatelessWidget {
                   child: child,
                 );
               },
-              child: _getPageWidget(context, navigationProvider.selectedIndex),
+              child: _getPageWidget(context, selectedIndex),
             );
           },
         ),
-        bottomNavigationBar: Consumer<AppProvider>(
-          builder: (context, navigationProvider, child) {
+        bottomNavigationBar: Selector<AppProvider, int>(
+          selector: (_, p) => p.selectedIndex,
+          builder: (context, selectedIndex, _) {
             return MainNavigation(
-              selectedIndex: navigationProvider.selectedIndex,
+              selectedIndex: selectedIndex,
               onItemSelected: (index) {
-                navigationProvider.selectedIndex = index;
+                Provider.of<AppProvider>(context, listen: false)
+                    .selectedIndex = index;
               },
             );
           },

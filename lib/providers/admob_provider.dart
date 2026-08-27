@@ -70,7 +70,7 @@ class AdProvider with ChangeNotifier {
   void loadInterstitialAd() {
     InterstitialAd.load(
         adUnitId: interstitialAdUnitId,
-        request: AdRequest(),
+        request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             _interstitialAd = ad;

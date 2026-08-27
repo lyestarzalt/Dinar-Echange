@@ -25,9 +25,10 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppInitializationProvider>(
-      builder: (context, initProvider, _) {
-        final List<Currency> currencies = initProvider.currencies!;
+    // Only rebuild when the parallel-market list identity changes.
+    return Selector<AppInitializationProvider, List<Currency>>(
+      selector: (_, p) => p.currencies ?? const <Currency>[],
+      builder: (context, currencies, _) {
         return ChangeNotifierProvider<GraphProvider>(
           create: (_) => GraphProvider(currencies),
           child: Scaffold(

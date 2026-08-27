@@ -8,6 +8,7 @@ import 'package:dinar_echange/theme/theme.dart';
 import 'package:dinar_echange/views/error/error_view.dart';
 import 'package:dinar_echange/widgets/skeletons.dart';
 import 'package:dinar_echange/providers/appinit_provider.dart';
+import 'package:dinar_echange/utils/enums.dart';
 import 'package:dinar_echange/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -98,17 +99,32 @@ class AppStartup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppInitializationProvider>(
-      builder: (context, initProvider, _) {
-        if (initProvider.parallelState.isLoading ||
-            initProvider.officialState.isLoading) {
+    // Only listen to the two LoadState fields we branch on. Locale /
+    // theme / package-info notifies on AppInit no longer rebuild the
+    // whole startup switch.
+    return Selector<AppInitializationProvider, ({LoadState p, LoadState o})>(
+      selector: (_, provider) => (
+        p: provider.parallelState.state,
+        o: provider.officialState.state,
+      ),
+      builder: (context, states, _) {
+        final loading = states.p == LoadState.loading ||
+            states.o == LoadState.loading;
+        final error =
+            states.p == LoadState.error || states.o == LoadState.error;
+        if (loading) {
           // On first launch the native splash is still covering this widget.
           // On a manual retry from ErrorApp, the splash is already gone, so
           // the skeleton takes over.
           return const Scaffold(body: CurrencyListSkeleton());
-        } else if (initProvider.parallelState.isError ||
-            initProvider.officialState.isError) {
-          return ErrorApp(onRetry: () => initProvider.initializeApp());
+        } else if (error) {
+          // Use listen:false — the retry callback doesn't need to hold a
+          // dependency here.
+          return ErrorApp(
+            onRetry: () => Provider.of<AppInitializationProvider>(context,
+                    listen: false)
+                .initializeApp(),
+          );
         }
         return const AppNavigation();
       },
